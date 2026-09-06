@@ -118,6 +118,16 @@ function getWorkItems(){
  const rem=JSON.parse(localStorage.getItem('miik-reminders')||'[]'); rem.forEach((x,i)=>items.push({title:x.title,date:x.date,kind:'تذكير',id:'r'+i,time:x.time||''}));
  return items.sort((a,b)=>a.date.localeCompare(b.date));
 }
+
+function openCalendarDay(dateObj){
+ const d=new Date(dateObj); d.setHours(0,0,0,0); const iso=miikISODate(d); const items=getWorkItems().filter(x=>x.date===iso);
+ hideAllPages(); calendarPage.classList.add('show');
+ const fmt=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ const title=fmt.format(d).replace(/ـ/g,'');
+ const rows=items.length?items.map((x,i)=>`<button class="day-work-row" onclick='miikOpenWork(${JSON.stringify(x)})'><span><b>${x.title}</b><small>${x.kind||''}${x.time?' · '+x.time:''}</small></span><strong>‹</strong></button>`).join(''):`<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم 🌿</div>`;
+ document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="day-view-head"><div><div class="month-title">${title}</div><div class="muted">أعمال هذا اليوم فقط</div></div><button class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="day-work-list">${rows}</div>`;
+ window.scrollTo({top:0,behavior:'smooth'});
+}
 function renderToday(){const today=new Date().toISOString().slice(0,10), all=getWorkItems().filter(x=>x.date===today), box=document.getElementById('todayList'), more=document.getElementById('todayMore'); if(!box)return; const shown=all.slice(0,4); box.innerHTML=shown.length?shown.map(x=>`<div class="today-item"><i></i><span class="time">${x.time||'اليوم'}</span><div><b>${x.title}</b><br><span style="color:var(--muted)">${x.kind}</span></div><button class="done-work" onclick="completeWork('${x.id}')">تم</button></div>`).join(''):'<div class="empty-warm">علومك طيبة اليوم.. ما عليك عمل مسجل الآن 🌿</div>'; const n=all.length-4; more.style.display=n>0?'block':'none'; if(n>0)more.textContent='عرض بقية أعمال اليوم ('+n+')'}
 function completeWork(id){let done=JSON.parse(localStorage.getItem('miik-done-work')||'[]');if(!done.includes(id))done.push(id);localStorage.setItem('miik-done-work',JSON.stringify(done));renderToday();}
 function renderAlerts(full){const today=new Date();today.setHours(0,0,0,0);const done=JSON.parse(localStorage.getItem('miik-done-work')||'[]');let rows=getWorkItems().filter(x=>!done.includes(x.id)).map(x=>{const d=new Date(x.date+'T00:00:00');const diff=Math.round((d-today)/86400000);let bucket=diff<0?'فائت':diff===0?'اليوم':diff===1?'غدًا':diff===2?'بعد غد':'اليوم الثالث';return {...x,diff,bucket}}).filter(x=>x.diff<=3);rows.sort((a,b)=>a.diff-b.diff);if(!full)rows=rows.slice(0,5);const box=document.getElementById('alertsList');box.innerHTML=rows.length?rows.map(x=>`<div class="alert-row"><span class="alert-dot"></span><div><b>${x.title}</b><br><small>${x.kind}</small></div><small>${x.bucket}</small></div>`).join(''):'<div class="empty-warm">ما عندك تنبيهات قريبة.</div>'}
@@ -222,6 +232,10 @@ const openModuleBaseV12=openModule;openModule=function(title,desc){hideAllPages(
 function openCalendar(){hideAllPages();calendarPage.classList.add('show');const labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};let cells='';for(let i=1;i<=30;i++){const weekend=(i%7===5||i%7===6),lab=labels[i];cells+=`<div class="num ${weekend?'holiday':''} ${lab&&!weekend?'event-day':''}"><b>${i}</b>${lab?`<span class="cal-label">${lab}</span>`:''}</div>`}document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="month-title">ربيع الأول 1448هـ</div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div>${cells}</div><div class="calendar-legend"><span><i class="holiday-key"></i>الجمعة والسبت</span><span><i class="event"></i>يوم فيه عمل</span></div><div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`;window.scrollTo({top:0,behavior:'smooth'})}
 function addReminder(){dialogForm('إضافة تذكير','أضف ما تحتاج تتذكره فقط.',`<label>عنوان التذكير<input name="title" required></label><label>التاريخ الهجري<input name="date" readonly onclick="openHijriPicker(this)" required></label><label>الوقت — اختياري<select name="time"><option value="">بدون وقت</option>${Array.from({length:24},(_,h)=>`<option>${String(h).padStart(2,'0')}:00</option>`).join('')}</select></label><label>ملاحظة — اختياري<textarea name="note" rows="3"></textarea></label>`,fd=>{const a=JSON.parse(localStorage.getItem('miik-reminders')||'[]');a.push(Object.fromEntries(fd));localStorage.setItem('miik-reminders',JSON.stringify(a));renderToday()})}
 </script>
+
+<style id="v15-home-day-css">
+.day-work-list{display:grid;gap:10px;margin-top:18px}.day-work-row{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;text-align:right;color:var(--ink);cursor:pointer}.day-work-row:hover{background:#f5f1e8}.day-work-row small{display:block;color:var(--muted);margin-top:5px}.day-work-row strong{font-size:24px;color:var(--olive)}.day-view-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.day-full-calendar{border:1px solid #cbd8c7;background:#edf0e7;color:var(--deep);border-radius:11px;padding:9px 12px;font-weight:800}
+</style>
 </body></html><style id="v14-home-final">
 /* v14 — الصفحة الرئيسية فقط */
 .add-menu button{font-size:14px!important;font-weight:800!important;padding:12px 15px!important}
@@ -249,7 +263,7 @@ function rollingDays(){
  for(let i=0;i<8;i++){
   const d=new Date(base); d.setDate(base.getDate()+i); const iso=miikISODate(d); const items=work.filter(x=>x.date===iso); const weekend=(d.getDay()===5||d.getDay()===6);
   const x=document.createElement('div'); x.className='day'+(i===0?' active':'')+(weekend?' weekend':'')+(items.length?' has-work':'');
-  x.innerHTML=(i===0?'اليوم':arDays[d.getDay()])+'<b>'+miikHijriDay(d)+'</b>'; x.title=items.length?items.map(a=>a.title).join(' · '):''; x.onclick=(e)=>{e.stopPropagation();openCalendar()}; el.appendChild(x);
+  x.innerHTML=(i===0?'اليوم':arDays[d.getDay()])+'<b>'+miikHijriDay(d)+'</b>'; x.title=items.length?items.map(a=>a.title).join(' · '):''; x.onclick=(e)=>{e.stopPropagation();openCalendarDay(d)}; el.appendChild(x);
  }
 }
 function renderToday(){
@@ -265,6 +279,6 @@ function renderStudentFollowups(){
 function renderAlerts(full){
  const today=new Date();today.setHours(0,0,0,0);const done=JSON.parse(localStorage.getItem('miik-done-work')||'[]');let rows=getWorkItems().filter(x=>!done.includes(x.id)).map(x=>{const d=new Date(x.date+'T00:00:00');const diff=Math.round((d-today)/86400000);return {...x,diff,bucket:diff===0?'اليوم':'غدًا'}}).filter(x=>x.diff>=0&&x.diff<=1);rows.sort((a,b)=>a.diff-b.diff);if(!full)rows=rows.slice(0,5);const box=document.getElementById('alertsList');if(!box)return;box.innerHTML=rows.length?rows.map((x,i)=>`<div class="alert-row home-link" data-alert-index="${i}"><span class="alert-dot"></span><div><b>${x.title}</b><br><small>${x.kind}</small></div><small>${x.bucket}</small></div>`).join(''):'<div class="empty-warm">ما عندك تنبيهات لليوم أو غدًا.</div>';[...box.querySelectorAll('[data-alert-index]')].forEach(n=>n.onclick=()=>miikOpenWork(rows[+n.dataset.alertIndex]));
 }
-function refreshHijri(){const el=document.querySelector('.datebar');if(el)el.textContent=hijriParts(new Date())+'هـ'}
+function refreshHijri(){const el=document.querySelector('.datebar');if(el)el.textContent=hijriParts(new Date()).replace(/ـ/g,'')}
 setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowups();renderAlerts();},0);
 </script>
