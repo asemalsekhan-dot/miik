@@ -222,4 +222,49 @@ const openModuleBaseV12=openModule;openModule=function(title,desc){hideAllPages(
 function openCalendar(){hideAllPages();calendarPage.classList.add('show');const labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};let cells='';for(let i=1;i<=30;i++){const weekend=(i%7===5||i%7===6),lab=labels[i];cells+=`<div class="num ${weekend?'holiday':''} ${lab&&!weekend?'event-day':''}"><b>${i}</b>${lab?`<span class="cal-label">${lab}</span>`:''}</div>`}document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="month-title">ربيع الأول 1448هـ</div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div>${cells}</div><div class="calendar-legend"><span><i class="holiday-key"></i>الجمعة والسبت</span><span><i class="event"></i>يوم فيه عمل</span></div><div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`;window.scrollTo({top:0,behavior:'smooth'})}
 function addReminder(){dialogForm('إضافة تذكير','أضف ما تحتاج تتذكره فقط.',`<label>عنوان التذكير<input name="title" required></label><label>التاريخ الهجري<input name="date" readonly onclick="openHijriPicker(this)" required></label><label>الوقت — اختياري<select name="time"><option value="">بدون وقت</option>${Array.from({length:24},(_,h)=>`<option>${String(h).padStart(2,'0')}:00</option>`).join('')}</select></label><label>ملاحظة — اختياري<textarea name="note" rows="3"></textarea></label>`,fd=>{const a=JSON.parse(localStorage.getItem('miik-reminders')||'[]');a.push(Object.fromEntries(fd));localStorage.setItem('miik-reminders',JSON.stringify(a));renderToday()})}
 </script>
-</body></html>
+</body></html><style id="v14-home-final">
+/* v14 — الصفحة الرئيسية فقط */
+.add-menu button{font-size:14px!important;font-weight:800!important;padding:12px 15px!important}
+.today-item.home-link{cursor:pointer;border-radius:10px;padding-inline:7px;transition:.15s}
+.today-item.home-link:hover{background:#f4f1e8}
+.today-item.home-link .go-mark{margin-inline-start:auto;color:var(--olive);font-size:16px;font-weight:900}
+.day{cursor:pointer}
+.day.weekend{background:#dfe9dc!important;color:var(--deep);outline:1px solid #cadbc6}
+.day.has-work{background:#ded7c8!important;color:var(--deep);outline:1px solid #cfc4b1}
+.day.weekend.has-work{background:#dfe9dc!important;outline:1px solid #cadbc6}
+#shalwaForm .dialog-primary{background:var(--maroon)!important;color:#fff!important}
+</style>
+<script id="v14-home-final-js">
+function miikISODate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+function miikHijriDay(d){return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{day:'numeric'}).format(d).replace(/\D/g,'')}
+function miikOpenWork(item){
+ if(!item)return;
+ if(item.kind==='من الخطة'||item.title.includes('برنامج التهيئة')){openModule('برنامج التهيئة الإرشادية','التنفيذ والتوثيق والتقرير.');return}
+ if(item.student){const card=[...document.querySelectorAll('.student-card')].find(c=>c.dataset.name===item.student||c.dataset.name.includes(item.student)||item.student.includes(c.dataset.name));if(card){card.click();return}}
+ if(item.kind==='متابعة طالب'){openStudents();return}
+ openCalendar();
+}
+function rollingDays(){
+ const el=document.getElementById('rollingWeek'); if(!el)return; const base=new Date(); base.setHours(0,0,0,0); const work=getWorkItems(); el.innerHTML='';
+ for(let i=0;i<8;i++){
+  const d=new Date(base); d.setDate(base.getDate()+i); const iso=miikISODate(d); const items=work.filter(x=>x.date===iso); const weekend=(d.getDay()===5||d.getDay()===6);
+  const x=document.createElement('div'); x.className='day'+(i===0?' active':'')+(weekend?' weekend':'')+(items.length?' has-work':'');
+  x.innerHTML=(i===0?'اليوم':arDays[d.getDay()])+'<b>'+miikHijriDay(d)+'</b>'; x.title=items.length?items.map(a=>a.title).join(' · '):''; x.onclick=(e)=>{e.stopPropagation();openCalendar()}; el.appendChild(x);
+ }
+}
+function renderToday(){
+ const today=miikISODate(new Date()), all=getWorkItems().filter(x=>x.date===today), box=document.getElementById('todayList'), more=document.getElementById('todayMore'); if(!box)return; const shown=all.slice(0,4);
+ box.innerHTML=shown.length?shown.map((x,i)=>`<div class="today-item home-link" data-work-index="${i}"><i></i><span class="time">${x.time||'اليوم'}</span><div><b>${x.title}</b><br><span style="color:var(--muted)">${x.kind}</span></div><span class="go-mark">‹</span></div>`).join(''):'<div class="empty-warm">علومك طيبة اليوم.. ما عليك عمل مسجل الآن 🌿</div>';
+ [...box.querySelectorAll('[data-work-index]')].forEach(n=>n.onclick=()=>miikOpenWork(shown[+n.dataset.workIndex])); const n=all.length-4; more.style.display=n>0?'block':'none'; if(n>0)more.textContent='عرض بقية أعمال اليوم ('+n+')';
+}
+function renderStudentFollowups(){
+ const b=document.getElementById('studentFollowups');if(!b)return;const a=JSON.parse(localStorage.getItem('miik-demo-actions')||'[]').filter(x=>['followup','session','guardian','case','emergency'].includes(x.type)).slice(0,4);
+ b.innerHTML=a.length?a.map((x,i)=>`<div class="today-item home-link" data-follow-index="${i}"><i></i><div><b>${x.title}</b><br><span style="color:var(--muted)">${x.student||''}</span></div><span class="go-mark">‹</span></div>`).join(''):'<div class="empty-warm">ما عندك متابعة طلابية مسجلة لليوم 🌿</div>';
+ [...b.querySelectorAll('[data-follow-index]')].forEach(n=>n.onclick=()=>miikOpenWork({...a[+n.dataset.followIndex],kind:'متابعة طالب'}));
+}
+function renderAlerts(full){
+ const today=new Date();today.setHours(0,0,0,0);const done=JSON.parse(localStorage.getItem('miik-done-work')||'[]');let rows=getWorkItems().filter(x=>!done.includes(x.id)).map(x=>{const d=new Date(x.date+'T00:00:00');const diff=Math.round((d-today)/86400000);return {...x,diff,bucket:diff===0?'اليوم':'غدًا'}}).filter(x=>x.diff>=0&&x.diff<=1);rows.sort((a,b)=>a.diff-b.diff);if(!full)rows=rows.slice(0,5);const box=document.getElementById('alertsList');if(!box)return;box.innerHTML=rows.length?rows.map((x,i)=>`<div class="alert-row home-link" data-alert-index="${i}"><span class="alert-dot"></span><div><b>${x.title}</b><br><small>${x.kind}</small></div><small>${x.bucket}</small></div>`).join(''):'<div class="empty-warm">ما عندك تنبيهات لليوم أو غدًا.</div>';[...box.querySelectorAll('[data-alert-index]')].forEach(n=>n.onclick=()=>miikOpenWork(rows[+n.dataset.alertIndex]));
+}
+function refreshHijri(){const el=document.querySelector('.datebar');if(el)el.textContent=hijriParts(new Date())+'هـ'}
+setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowups();renderAlerts();},0);
+</script>
