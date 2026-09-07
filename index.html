@@ -643,3 +643,85 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  };
 })();
 </script>
+
+<!-- v26: final plan refinements requested after v25 -->
+<style id="v26-plan-refinements">
+.plan-edit-card .week-add-btn{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  padding:0!important;line-height:1!important;background:#0F3D34!important;color:#fff!important;
+  border-color:#0F3D34!important;font-size:23px!important;font-weight:800!important;
+}
+.plan-edit-card .week-add-btn:hover{background:#174f43!important;border-color:#174f43!important}
+.weekly-grid-v26{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px}
+.weekly-day-v26{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:12px;min-height:180px}
+.weekly-day-v26 h3{margin:0 0 11px;text-align:center;font-size:16px}.weekly-day-v26 h3 small{display:block;margin-top:4px;color:var(--muted);font-size:12px}
+.weekly-slot-v26{background:#f5f1e7;border-radius:11px;padding:10px;margin-bottom:8px}.weekly-slot-v26 button.item-link{width:100%;border:0;background:transparent;text-align:right;font:inherit;color:var(--ink);cursor:pointer;padding:0}.weekly-slot-v26 button.item-link:hover{text-decoration:underline}.weekly-empty-v26{color:var(--muted);font-size:12px;text-align:center;padding:20px 4px}.weekly-v26-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.weekly-v26-actions{display:flex;align-items:center;gap:8px}.weekly-v26-edit{border:1px solid #cbd8c7;background:#edf0e7;color:var(--deep);border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}
+@media(max-width:850px){.weekly-grid-v26{grid-template-columns:1fr 1fr}}@media(max-width:560px){.weekly-grid-v26{grid-template-columns:1fr}}
+</style>
+<script id="v26-plan-refinements-js">
+(function(){
+ const TERM_RANGES=[
+  {label:'10–14 ربيع الأول 1448هـ',days:[['الأحد','10 ربيع الأول'],['الاثنين','11 ربيع الأول'],['الثلاثاء','12 ربيع الأول'],['الأربعاء','13 ربيع الأول'],['الخميس','14 ربيع الأول']]},
+  {label:'17–21 ربيع الأول 1448هـ',days:[['الأحد','17 ربيع الأول'],['الاثنين','18 ربيع الأول'],['الثلاثاء','19 ربيع الأول'],['الأربعاء','20 ربيع الأول'],['الخميس','21 ربيع الأول']]},
+  {label:'24–28 ربيع الأول 1448هـ',days:[['الأحد','24 ربيع الأول'],['الاثنين','25 ربيع الأول'],['الثلاثاء','26 ربيع الأول'],['الأربعاء','27 ربيع الأول'],['الخميس','28 ربيع الأول']]},
+  {label:'2–6 ربيع الثاني 1448هـ',days:[['الأحد','2 ربيع الثاني'],['الاثنين','3 ربيع الثاني'],['الثلاثاء','4 ربيع الثاني'],['الأربعاء','5 ربيع الثاني'],['الخميس','6 ربيع الثاني']]},
+  {label:'9–13 ربيع الثاني 1448هـ',days:[['الأحد','9 ربيع الثاني'],['الاثنين','10 ربيع الثاني'],['الثلاثاء','11 ربيع الثاني'],['الأربعاء','12 ربيع الثاني'],['الخميس','13 ربيع الثاني']]},
+  {label:'16–20 ربيع الثاني 1448هـ',days:[['الأحد','16 ربيع الثاني'],['الاثنين','17 ربيع الثاني'],['الثلاثاء','18 ربيع الثاني'],['الأربعاء','19 ربيع الثاني'],['الخميس','20 ربيع الثاني']]},
+  {label:'23–27 ربيع الثاني 1448هـ',days:[['الأحد','23 ربيع الثاني'],['الاثنين','24 ربيع الثاني'],['الثلاثاء','25 ربيع الثاني'],['الأربعاء','26 ربيع الثاني'],['الخميس','27 ربيع الثاني']]},
+  {label:'30 ربيع الثاني – 4 جمادى الأولى 1448هـ',days:[['الأحد','30 ربيع الثاني'],['الاثنين','1 جمادى الأولى'],['الثلاثاء','2 جمادى الأولى'],['الأربعاء','3 جمادى الأولى'],['الخميس','4 جمادى الأولى']]},
+  {label:'7–11 جمادى الأولى 1448هـ',days:[['الأحد','7 جمادى الأولى'],['الاثنين','8 جمادى الأولى'],['الثلاثاء','9 جمادى الأولى'],['الأربعاء','10 جمادى الأولى'],['الخميس','11 جمادى الأولى']]},
+  {label:'14–18 جمادى الأولى 1448هـ',days:[['الأحد','14 جمادى الأولى'],['الاثنين','15 جمادى الأولى'],['الثلاثاء','16 جمادى الأولى'],['الأربعاء','17 جمادى الأولى'],['الخميس','18 جمادى الأولى']]},
+  {label:'21–25 جمادى الأولى 1448هـ',days:[['الأحد','21 جمادى الأولى'],['الاثنين','22 جمادى الأولى'],['الثلاثاء','23 جمادى الأولى'],['الأربعاء','24 جمادى الأولى'],['الخميس','25 جمادى الأولى']]},
+  {label:'28 جمادى الأولى – 3 جمادى الثانية 1448هـ',days:[['الأحد','28 جمادى الأولى'],['الاثنين','29 جمادى الأولى'],['الثلاثاء','1 جمادى الثانية'],['الأربعاء','2 جمادى الثانية'],['الخميس','3 جمادى الثانية']]},
+  {label:'5–9 جمادى الثانية 1448هـ',days:[['الأحد','5 جمادى الثانية'],['الاثنين','6 جمادى الثانية'],['الثلاثاء','7 جمادى الثانية'],['الأربعاء','8 جمادى الثانية'],['الخميس','9 جمادى الثانية']]},
+  {label:'19–23 جمادى الثانية 1448هـ',days:[['الأحد','19 جمادى الثانية'],['الاثنين','20 جمادى الثانية'],['الثلاثاء','21 جمادى الثانية'],['الأربعاء','22 جمادى الثانية'],['الخميس','23 جمادى الثانية']]},
+  {label:'26 جمادى الثانية – 1 رجب 1448هـ',days:[['الأحد','26 جمادى الثانية'],['الاثنين','27 جمادى الثانية'],['الثلاثاء','28 جمادى الثانية'],['الأربعاء','29 جمادى الثانية'],['الخميس','1 رجب']]},
+  {label:'4–8 رجب 1448هـ',days:[['الأحد','4 رجب'],['الاثنين','5 رجب'],['الثلاثاء','6 رجب'],['الأربعاء','7 رجب'],['الخميس','8 رجب']]},
+  {label:'11–15 رجب 1448هـ',days:[['الأحد','11 رجب'],['الاثنين','12 رجب'],['الثلاثاء','13 رجب'],['الأربعاء','14 رجب'],['الخميس','15 رجب']]},
+  {label:'18–22 رجب 1448هـ',days:[['الأحد','18 رجب'],['الاثنين','19 رجب'],['الثلاثاء','20 رجب'],['الأربعاء','21 رجب'],['الخميس','22 رجب']]},
+  {label:'25–29 رجب 1448هـ',days:[['الأحد','25 رجب'],['الاثنين','26 رجب'],['الثلاثاء','27 رجب'],['الأربعاء','28 رجب'],['الخميس','29 رجب']]}
+ ];
+ window.MIIK_PLAN_TERM_RANGES=TERM_RANGES;
+ const basePlanWeeks=window.planWeeks;
+ window.planWeeks=function(){
+   let base=basePlanWeeks();
+   try{const saved=JSON.parse(localStorage.getItem('miikCounselorPlan')||'null');if(Array.isArray(saved)&&saved.length===19)base=saved}catch(e){}
+   return base.map((w,i)=>({...w,date:TERM_RANGES[i].label}));
+ };
+ function orientationPage(){
+   hideAllPages();document.getElementById('modulePage').classList.add('show');
+   document.getElementById('moduleTitle').textContent='برنامج التهيئة الإرشادية';
+   document.getElementById('moduleDesc').textContent='التنفيذ والتوثيق والتقرير من مصدر واحد.';
+   renderProgram('برنامج التهيئة الإرشادية',document.getElementById('moduleGrid'));
+   document.getElementById('drawer')?.classList.remove('show');window.scrollTo({top:0,behavior:'smooth'});
+ }
+ window.miikOpenOrientationProgram=orientationPage;
+ window.miikOpenWeeklyProgram=function(name){
+   if(String(name).includes('التهيئة')){orientationPage();const b=document.querySelector('#modulePage .module-head .students-back');if(b){b.textContent='→ العودة للخطة الأسبوعية';b.onclick=function(){openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.')}};return;}
+   const title=(typeof planProgramTitle==='function'?planProgramTitle(name):name);openModule(title,'التنفيذ والتوثيق والتقرير من مصدر واحد.');
+   const b=document.querySelector('#modulePage .module-head .students-back');if(b){b.textContent='→ العودة للخطة الأسبوعية';b.onclick=function(){openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.')}}
+ };
+ window.openHijriCalendarDay=function(day){
+   hideAllPages();document.getElementById('calendarPage').classList.add('show');
+   const labels={3:'برنامج التهيئة الإرشادية',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'},lab=labels[day];
+   let rows='<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>';
+   if(lab){const action=String(lab).includes('التهيئة')?'miikOpenOrientationProgram()':String(lab).startsWith('قيمة')?"openModule('تعزيز السلوك الإيجابي','القيمة مرتبطة ببرنامج تعزيز السلوك الإيجابي')":`openModule('${String(lab).replace(/'/g,"\\'")}','صفحة البرنامج')`;rows=`<button class="day-work-row" onclick="${action}"><span><b>${lab}</b><small>من أعمال هذا اليوم</small></span><strong>‹</strong></button>`;}
+   document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="day-view-head"><div><div class="month-title">${day} ربيع الأول 1448 <span class="hijri-abbr" dir="rtl">هـ</span></div><div class="muted">أعمال هذا اليوم فقط</div></div><button class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="day-work-list">${rows}</div>`;window.scrollTo({top:0,behavior:'smooth'});
+ };
+ function distKey(i){return 'miikWeeklyDistributionV24_'+i}
+ function getDist(i){try{const d=JSON.parse(localStorage.getItem(distKey(i))||'null');if(d)return d}catch(e){}return {programDay:0,valueDay:4}}
+ window.renderWeeklyPlan=function(g){
+   const weeks=planWeeks(),i=Math.max(0,Math.min(18,Number(window.miikSelectedPlanWeek)||0)),w=weeks[i],range=TERM_RANGES[i],d=getDist(i);
+   const stAll=JSON.parse(localStorage.getItem('miikWeeklyStatusByWeek')||'{}'),status=stAll[i]||'';
+   g.innerHTML=`<div class="weekly-plan screen-only" style="grid-column:1/-1"><div class="weekly-v26-toolbar"><div><b style="font-size:23px">${w.w}</b><div class="muted">${range.label}</div></div><div class="weekly-v26-actions"><button class="weekly-v26-edit" onclick="miikEditWeeklyV24()">تعديل توزيع الأسبوع</button>${typeof printerButton==='function'?printerButton('الخطة الأسبوعية'):''}</div></div><div class="weekly-grid-v26">${range.days.map((dd,j)=>{let slots='';if(d.programDay===j)slots+=`<div class="weekly-slot-v26"><button class="item-link" onclick="miikOpenWeeklyProgram('${String(w.program).replace(/'/g,"\\'")}')"><b>${w.program}</b></button><div class="status-actions"><button class="${status==='done'?'done':''}" onclick="miikWeeklyStatusV23(${i},'done')">نُفّذ</button><button class="${status==='notdone'?'notdone':''}" onclick="miikWeeklyStatusV23(${i},'notdone')">لم يُنفّذ</button></div></div>`;if(d.valueDay===j)slots+=`<div class="weekly-slot-v26"><button class="item-link" onclick="openModule('تعزيز السلوك الإيجابي','القيمة مرتبطة ببرنامج تعزيز السلوك الإيجابي')">القيمة: ${w.value}</button></div>`;return `<div class="weekly-day-v26"><h3>${dd[0]}<small>${dd[1]}</small></h3>${slots||'<div class="weekly-empty-v26">لا يوجد توزيع لهذا اليوم</div>'}</div>`}).join('')}</div></div><div class="print-document">${printPlanDocument('الخطة الأسبوعية',true)}</div>`;
+   const b=document.querySelector('#modulePage .module-head .students-back');if(b){b.textContent='→ العودة لخطة الموجّه الطلابي';b.onclick=miikBackToCounselorPlan}
+ };
+ const previousRender=window.renderPlan;
+ window.renderPlan=function(title,g){
+   previousRender(title,g);
+   if(title==='خطة الموجّه الطلابي'||title==='الخطة المعتمدة في مِعِك'){
+     const weeks=planWeeks();g.querySelectorAll('.semester-week').forEach((card,i)=>{const date=card.querySelector('.week-date');if(date&&TERM_RANGES[i])date.textContent=TERM_RANGES[i].label;if(title==='خطة الموجّه الطلابي'){card.classList.add('counselor-week-link');card.onclick=function(){miikOpenCounselorWeek(i)}}});
+   }
+ };
+})();
+</script>
