@@ -136,8 +136,9 @@ function getWorkItems(){
 function openCalendarDay(dateObj){
  const d=new Date(dateObj); d.setHours(0,0,0,0); const iso=miikISODate(d); const items=getWorkItems().filter(x=>x.date===iso);
  hideAllPages(); calendarPage.classList.add('show');
- const fmt=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
- const title=fmt.format(d).replace(/ـ/g,'');
+ const parts=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).formatToParts(d);
+ const get=t=>parts.find(x=>x.type===t)?.value||'';
+ const title=`${get('weekday')}، ${get('day')} ${get('month')} ${get('year')} هـ`;
  const rows=items.length?items.map((x,i)=>`<button class="day-work-row" onclick='miikOpenWork(${JSON.stringify(x)})'><span><b>${x.title}</b><small>${x.kind||''}${x.time?' · '+x.time:''}</small></span><strong>‹</strong></button>`).join(''):`<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم 🌿</div>`;
  document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="day-view-head"><div><div class="month-title">${title}</div><div class="muted">أعمال هذا اليوم فقط</div></div><button class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="day-work-list">${rows}</div>`;
  window.scrollTo({top:0,behavior:'smooth'});
