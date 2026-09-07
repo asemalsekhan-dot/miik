@@ -333,3 +333,65 @@ function renderAlerts(full){
 function refreshHijri(){const el=document.querySelector('.datebar');if(el)el.textContent=hijriParts(new Date()).replace(/ـ/g,'')}
 setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowups();renderAlerts();},0);
 </script>
+
+<style id="v20-calendar-click-week-fix">
+#calendarPage .view-switch button{cursor:pointer!important}
+#calendarPage .monthgrid .num,#calendarPage .weekly-calendar-grid .num{cursor:pointer!important}
+#calendarPage .calendar-day-button{appearance:none;-webkit-appearance:none;border:0;color:inherit;font:inherit;text-align:right;width:100%;display:block}
+#calendarPage .weekly-calendar-grid .num{min-height:95px}
+#calendarPage .weekly-calendar-grid .num .weekday-date{display:block;font-size:13px;font-weight:800;margin-bottom:6px}
+</style>
+<script id="v20-calendar-click-week-fix-js">
+(function(){
+  const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};
+  const todayHijri=24;
+  const originalOpenDay=window.openHijriCalendarDay;
+  window.miikOpenCalendarDay=function(day){
+    day=Number(day);
+    if(!Number.isFinite(day)||day<1||day>30)return;
+    if(typeof originalOpenDay==='function') originalOpenDay(day);
+    else if(typeof window.openHijriCalendarDay==='function') window.openHijriCalendarDay(day);
+  };
+  window.renderCalendarView=function(mode){
+    document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));
+    const box=document.querySelector('#calendarPage .monthbox');
+    if(!box)return;
+    if(mode==='week'){
+      let cells='';
+      for(let i=24;i<=30;i++){
+        const wi=(i-1)%7, weekend=wi===5||wi===6, lab=labels[i];
+        cells+=`<button type="button" class="num calendar-day-button ${weekend?'holiday':lab?'event-day':'plain-day'} ${i===todayHijri?'today-ring':''}" data-day="${i}"><span class="weekday-date">${DAYS[wi]} ${i}</span>${lab?`<span class="cal-label">${lab}</span>`:''}</button>`;
+      }
+      box.innerHTML=`<div class="month-title">الأسبوع الثالث · ربيع الأول 1448هـ</div><div class="weekly-calendar-grid">${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;
+      return;
+    }
+    if(mode==='semester'){
+      if(typeof MIIK_TERM1_1448!=='undefined'){
+        box.innerHTML=`<div class="month-title">الفصل الدراسي الأول 1448هـ · 19 أسبوعًا</div><div class="semester-calendar-grid">${MIIK_TERM1_1448.map((w,i)=>`<button type="button" class="semester-week-card" data-week-index="${i}"><b>${w[0]}</b><div>${w[1]}</div><small>${w[2]}</small></button>`).join('')}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;
+      }
+      return;
+    }
+    let cells='';
+    for(let i=1;i<=30;i++){
+      const wi=(i-1)%7,weekend=wi===5||wi===6,lab=labels[i];
+      cells+=`<button type="button" class="num calendar-day-button ${weekend?'holiday':lab?'event-day':'plain-day'} ${i===todayHijri?'today-ring':''}" data-day="${i}"><b>${i}</b>${lab?`<span class="cal-label">${lab}</span>`:''}</button>`;
+    }
+    box.innerHTML=`<div class="month-title">ربيع الأول 1448هـ</div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div>${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}<div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`;
+  };
+  document.addEventListener('click',function(e){
+    const dayEl=e.target.closest && e.target.closest('#calendarPage [data-day]');
+    if(dayEl){e.preventDefault();e.stopPropagation();window.miikOpenCalendarDay(dayEl.dataset.day);return;}
+    const weekEl=e.target.closest && e.target.closest('#calendarPage [data-week-index]');
+    if(weekEl){e.preventDefault();e.stopPropagation();window.renderCalendarView('week');}
+  },true);
+  function wire(){
+    const sw=document.querySelector('#calendarPage .view-switch');
+    if(!sw)return;
+    const modes=['week','month','semester'];
+    sw.querySelectorAll('button').forEach((b,i)=>{b.dataset.view=modes[i];b.style.cursor='pointer';b.onclick=function(ev){ev.preventDefault();window.renderCalendarView(modes[i]);};});
+  }
+  document.addEventListener('DOMContentLoaded',wire);
+  setTimeout(wire,0);
+})();
+</script>
