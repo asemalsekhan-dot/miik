@@ -412,6 +412,62 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
  };
 })();
 </script>
+
+<style id="v24-weekly-plan-final">
+/* v24 — الخطة الأسبوعية كتفصيل تشغيلي لخطة الموجّه */
+.weekly-v24-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.weekly-v24-actions{display:flex;gap:8px;align-items:center}.weekly-v24-edit{border:0;border-radius:11px;padding:10px 14px;background:#6E8B6B;color:#fff;font-family:inherit;font-weight:850;cursor:pointer}
+.weekly-grid-v24{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.weekly-day-v24{background:#f0eadf;border:1px solid #ded4c5;border-radius:16px;padding:14px;min-height:190px}.weekly-day-v24 h3{text-align:center;margin:0 0 12px;color:#0F3D34}.weekly-day-v24 h3 span{display:block}.weekly-day-v24 .dnum{color:#6E8B6B;font-size:14px;margin-top:4px}.weekly-slot{background:rgba(255,255,255,.52);border:1px solid rgba(15,61,52,.08);border-radius:11px;padding:10px;margin-top:8px}.weekly-slot button{width:100%;border:0;background:transparent;font-family:inherit;cursor:pointer;text-align:right;color:#0F3D34}.weekly-slot .value{color:#6E8B6B;font-weight:850}.weekly-empty{color:#8b877f;font-size:13px;text-align:center;padding:20px 4px}.weekly-edit-v24{grid-column:1/-1;background:#f0eadf;border:1px solid #ded4c5;border-radius:16px;padding:18px}.weekly-edit-v24 .edit-row{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:center;margin:10px 0}.weekly-edit-v24 select{width:100%;padding:10px;border-radius:10px;border:1px solid #d8d0c4;background:#fffdf8;font-family:inherit}.weekly-edit-v24 .save-row{display:flex;gap:9px;justify-content:flex-start;margin-top:15px}.weekly-edit-v24 .save-row button{border:0;border-radius:10px;padding:10px 16px;font-family:inherit;font-weight:850;cursor:pointer}.weekly-edit-v24 .save{background:#6E8B6B;color:#fff}.weekly-edit-v24 .cancel{background:#e7e1d5;color:#0F3D34}
+@media(max-width:900px){.weekly-grid-v24{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.weekly-grid-v24{grid-template-columns:1fr}.weekly-edit-v24 .edit-row{grid-template-columns:1fr}}
+</style>
+<script id="v24-weekly-plan-final-js">
+(function(){
+ const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
+ function monthAndStart(w){
+   const m=String(w.date||'').match(/(\d+)\s+([^\d]+?)\s+1448/);
+   return m?{start:+m[1],month:m[2].trim()}:{start:1,month:'ربيع الأول'};
+ }
+ function rangeFor(w){
+   const x=monthAndStart(w), end=x.start+4;
+   return `من ${x.start} إلى ${end} ${x.month} 1448هـ`;
+ }
+ function dayNums(w){const x=monthAndStart(w);return DAYS.map((_,i)=>x.start+i)}
+ function distKey(i){return 'miikWeeklyDistributionV24_'+i}
+ function getDist(i,w){
+   try{const d=JSON.parse(localStorage.getItem(distKey(i))||'null');if(d)return d}catch(e){}
+   return {programDay:0,valueDay:4};
+ }
+ window.miikBackToCounselorPlan=function(){openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية التي تحرك التقويم ومِعِك اليوم والتنبيهات والتقارير.')}
+ window.miikOpenWeeklyProgram=function(name){
+   const title=(typeof planProgramTitle==='function'?planProgramTitle(name):name==='التهيئة الإرشادية'?'برنامج التهيئة الإرشادية':name);
+   hideAllPages();document.getElementById('modulePage').classList.add('show');
+   document.getElementById('moduleTitle').textContent=title;document.getElementById('moduleDesc').textContent='التنفيذ والتوثيق والتقرير من مصدر واحد.';
+   const g=document.getElementById('moduleGrid');
+   if(typeof renderProgram==='function')renderProgram(title,g);else g.innerHTML='<div class="program-panel"><b>'+title+'</b></div>';
+   const b=document.querySelector('#modulePage .module-head .students-back');if(b){b.textContent='→ العودة للخطة الأسبوعية';b.onclick=function(){openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.')}}
+   window.scrollTo({top:0,behavior:'smooth'});
+ }
+ window.miikEditWeeklyV24=function(){
+   const weeks=planWeeks(),i=Math.max(0,Math.min(18,Number(window.miikSelectedPlanWeek)||0)),w=weeks[i],d=getDist(i,w),g=document.getElementById('moduleGrid');
+   const opts=DAYS.map((x,j)=>`<option value="${j}" ${d.programDay===j?'selected':''}>${x}</option>`).join('');
+   const opts2=DAYS.map((x,j)=>`<option value="${j}" ${d.valueDay===j?'selected':''}>${x}</option>`).join('');
+   g.innerHTML=`<div class="weekly-edit-v24"><h2>تعديل توزيع ${w.w}</h2><p class="muted">وزّع برنامج الأسبوع والقيمة على أيام الأحد إلى الخميس.</p><div class="edit-row"><b>${w.program}</b><select id="v24ProgramDay">${opts}</select></div><div class="edit-row"><b>القيمة: ${w.value}</b><select id="v24ValueDay">${opts2}</select></div><div class="save-row"><button class="save" onclick="miikSaveWeeklyV24()">حفظ توزيع الأسبوع</button><button class="cancel" onclick="renderWeeklyPlan(document.getElementById('moduleGrid'))">إلغاء</button></div></div>`;
+ }
+ window.miikSaveWeeklyV24=function(){
+   const i=Math.max(0,Math.min(18,Number(window.miikSelectedPlanWeek)||0));
+   const d={programDay:+document.getElementById('v24ProgramDay').value,valueDay:+document.getElementById('v24ValueDay').value};
+   localStorage.setItem(distKey(i),JSON.stringify(d));renderWeeklyPlan(document.getElementById('moduleGrid'));
+ }
+ window.renderWeeklyPlan=function(g){
+   const weeks=planWeeks(),i=Math.max(0,Math.min(weeks.length-1,Number(window.miikSelectedPlanWeek)||0)),w=weeks[i],nums=dayNums(w),d=getDist(i,w);
+   const stAll=JSON.parse(localStorage.getItem('miikWeeklyStatusByWeek')||'{}'),status=stAll[i]||'';
+   g.innerHTML=`<div class="weekly-plan screen-only" style="grid-column:1/-1"><div class="weekly-v24-toolbar"><div><b style="font-size:23px">${w.w}</b><div class="muted">${rangeFor(w)}</div></div><div class="weekly-v24-actions"><button class="weekly-v24-edit" onclick="miikEditWeeklyV24()">تعديل توزيع الأسبوع</button>${typeof printerButton==='function'?printerButton('الخطة الأسبوعية'):''}</div></div><div class="weekly-grid-v24">${DAYS.map((day,j)=>{let slots='';if(d.programDay===j)slots+=`<div class="weekly-slot"><button onclick="miikOpenWeeklyProgram('${String(w.program).replace(/'/g,"\\'")}')"><b>${w.program}</b></button><div class="status-actions"><button class="${status==='done'?'done':''}" onclick="miikWeeklyStatusV23(${i},'done')">نُفّذ</button><button class="${status==='notdone'?'notdone':''}" onclick="miikWeeklyStatusV23(${i},'notdone')">لم يُنفّذ</button></div></div>`;if(d.valueDay===j)slots+=`<div class="weekly-slot"><button class="value" onclick="openModule('تعزيز السلوك الإيجابي','القيمة مرتبطة ببرنامج تعزيز السلوك الإيجابي')">القيمة: ${w.value}</button></div>`;return `<div class="weekly-day-v24"><h3><span>${day}</span><span class="dnum">${nums[j]}</span></h3>${slots||'<div class="weekly-empty">لا يوجد توزيع لهذا اليوم</div>'}</div>`}).join('')}</div></div><div class="print-document">${printPlanDocument('الخطة الأسبوعية',true)}</div>`;
+   const b=document.querySelector('#modulePage .module-head .students-back');if(b){b.textContent='→ العودة لخطة الموجّه الطلابي';b.onclick=miikBackToCounselorPlan}
+ };
+ const prevOpen=window.openModule;
+ window.openModule=function(title,desc){prevOpen(title,desc);const b=document.querySelector('#modulePage .module-head .students-back');if(!b)return;if(title==='الخطة الأسبوعية'){b.textContent='→ العودة لخطة الموجّه الطلابي';b.onclick=miikBackToCounselorPlan}else if(title==='خطة الموجّه الطلابي'||title==='الخطة المعتمدة في مِعِك'){b.textContent='→ الرئيسية';b.onclick=goHome}}
+})();
+</script>
 </body></html><style id="v14-home-final">
 /* v14 — الصفحة الرئيسية فقط */
 .add-menu button{font-size:14px!important;font-weight:800!important;padding:12px 15px!important}
