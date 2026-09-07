@@ -343,6 +343,75 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
  setTimeout(wireV21,0);document.addEventListener('DOMContentLoaded',wireV21);
 })();
 </script>
+
+<style id="v22-plan-page-fixes">
+/* v22 — plan pages only */
+.semester-grid{gap:13px!important}
+.semester-week{background:#f0eadf!important;border:1px solid #ded4c5!important;border-radius:16px!important;padding:16px!important;min-height:132px!important;box-shadow:none!important}
+.semester-week .week-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.semester-week .week-head b{font-size:17px!important;color:var(--deep)!important}
+.semester-week .week-date{font-size:13px!important;color:#81796d!important}
+.semester-week .program-name{margin-top:12px;font-size:18px!important;font-weight:850!important;color:var(--ink)!important;line-height:1.45}
+.semester-week .week-value{margin-top:10px;font-size:14px!important;font-weight:800!important;color:#6E8B6B!important}
+.print-icon.miik-printer{display:grid!important;place-items:center!important;width:42px!important;height:42px!important;padding:0!important;border:0!important;background:transparent!important;color:#0F3D34!important;border-radius:10px!important;cursor:pointer!important}
+.print-icon.miik-printer:hover{background:#edf1e8!important}.print-icon.miik-printer svg{width:25px;height:25px;display:block}
+.adopt-actions button{cursor:pointer!important}
+.adopt-primary{background:#6E8B6B!important;color:#fff!important}
+.adopt-edit{background:#e7ede3!important;color:#0F3D34!important;border:1px solid #cdd9c9!important}
+.weekly-grid-v12{gap:13px!important}
+.week-day-v12{background:#f0eadf!important;border:1px solid #ded4c5!important;border-radius:16px!important;padding:15px!important;min-height:205px!important}
+.week-day-v12 h3{margin:0 0 12px!important;text-align:center!important;color:var(--deep)!important}
+.week-day-v12 h3 .weekday-name{display:block;font-size:17px;font-weight:900}.week-day-v12 h3 .weekday-number{display:block;font-size:15px;margin-top:4px;color:#6E8B6B;font-weight:800}
+.week-entry{background:rgba(255,255,255,.48)!important;border:1px solid rgba(15,61,52,.08)!important;border-radius:12px!important;padding:12px!important}
+.week-program-link,.week-value-link{display:block;width:100%;border:0;background:transparent;text-align:right;padding:0;cursor:pointer;color:inherit;font:inherit}
+.week-program-link b{font-size:15px}.week-value-link{margin-top:7px;color:#6E8B6B;font-size:13px;font-weight:800}
+.status-actions{margin-top:12px;display:flex;gap:7px}.status-actions button{cursor:pointer!important;flex:1;border:1px solid #cbd8c7!important;background:#f8f5ee!important;color:#0F3D34!important;font-weight:800!important;padding:8px!important;border-radius:9px!important}.status-actions button.done{background:#6E8B6B!important;color:#fff!important}.status-actions button.notdone{background:#e7ddc8!important;color:#564b3b!important}
+.plan-edit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}.plan-edit-card{background:#f0eadf;border:1px solid #ded4c5;border-radius:15px;padding:14px}.plan-edit-card b{display:block;margin-bottom:9px}.plan-edit-card input{width:100%;box-sizing:border-box;border:1px solid #d8d0c4;border-radius:10px;background:#fffdf8;padding:10px;margin-top:7px;font-family:inherit;font-size:14px;direction:rtl}.plan-edit-actions{display:flex;gap:10px;justify-content:center;margin-top:18px}.plan-edit-actions button{border:0;border-radius:12px;padding:12px 18px;font-weight:850;cursor:pointer}.plan-save-adopt{background:#6E8B6B;color:#fff}.plan-cancel-edit{background:#eee8dc;color:#0F3D34}
+@media(max-width:850px){.plan-edit-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.plan-edit-grid{grid-template-columns:1fr}}
+</style>
+<script id="v22-plan-page-fixes-js">
+(function(){
+ const WEEK_NAMES=['الأسبوع الأول','الأسبوع الثاني','الأسبوع الثالث','الأسبوع الرابع','الأسبوع الخامس','الأسبوع السادس','الأسبوع السابع','الأسبوع الثامن','الأسبوع التاسع','الأسبوع العاشر','الأسبوع الحادي عشر','الأسبوع الثاني عشر','الأسبوع الثالث عشر','الأسبوع الرابع عشر','الأسبوع الخامس عشر','الأسبوع السادس عشر','الأسبوع السابع عشر','الأسبوع الثامن عشر','الأسبوع التاسع عشر'];
+ const programs=['التهيئة الإرشادية','تعزيز السلوك الإيجابي','الاستخدام الآمن للإنترنت','التوجيه المهني','الأيام والمناسبات الوطنية والعالمية','تنمية الدافعية للتحصيل'];
+ const vals=['الانتماء','المسؤولية','الوعي','الطموح','الوطنية','المثابرة'];
+ const realDates=['10 ربيع الأول','17 ربيع الأول','24 ربيع الأول','2 ربيع الثاني','9 ربيع الثاني','16 ربيع الثاني','23 ربيع الثاني','30 ربيع الثاني','7 جمادى الأولى','14 جمادى الأولى','21 جمادى الأولى','28 جمادى الأولى','5 جمادى الثانية','19 جمادى الثانية','26 جمادى الثانية','4 رجب','11 رجب','18 رجب','25 رجب'];
+ window.planWeeks=function(){
+   const saved=JSON.parse(localStorage.getItem('miikCounselorPlan')||'null');
+   if(Array.isArray(saved)&&saved.length===19)return saved;
+   return WEEK_NAMES.map((w,i)=>({w,date:realDates[i]+' 1448هـ',program:programs[i%programs.length],value:vals[i%vals.length]}));
+ };
+ function printerButton(title){return `<button class="print-icon miik-printer" title="طباعة" onclick="printCurrentPlan('${title}')" aria-label="طباعة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="11.5" r=".8" fill="currentColor"/></svg></button>`}
+ window.miikStartPlanEdit=function(){
+   const g=document.getElementById('moduleGrid'), weeks=planWeeks();
+   document.getElementById('moduleTitle').textContent='تعديل خطة الموجّه الطلابي';
+   document.getElementById('moduleDesc').textContent='عدّل ما تحتاجه، ثم اعتمد الخطة.';
+   g.innerHTML=`<div style="grid-column:1/-1"><div class="plan-edit-grid">${weeks.map((x,i)=>`<div class="plan-edit-card"><b>${x.w}</b><input data-i="${i}" data-k="program" value="${String(x.program).replace(/"/g,'&quot;')}" aria-label="برنامج ${x.w}"><input data-i="${i}" data-k="value" value="${String(x.value).replace(/"/g,'&quot;')}" aria-label="قيمة ${x.w}"></div>`).join('')}</div><div class="plan-edit-actions"><button class="plan-save-adopt" onclick="miikSaveEditedPlan()">حفظ واعتماد الخطة</button><button class="plan-cancel-edit" onclick="openModule('الخطة المعتمدة في مِعِك','مرجع مِعِك السنوي قبل الاعتماد.')">إلغاء</button></div></div>`;
+ };
+ window.miikSaveEditedPlan=function(){
+   const weeks=planWeeks().map(x=>({...x}));
+   document.querySelectorAll('.plan-edit-card input').forEach(inp=>{const i=+inp.dataset.i,k=inp.dataset.k;if(weeks[i])weeks[i][k]=inp.value.trim()||weeks[i][k]});
+   localStorage.setItem('miikCounselorPlan',JSON.stringify(weeks));localStorage.setItem('miikPlanAdopted','1');
+   if(typeof showMiikNotice==='function')showMiikNotice('تم اعتماد الخطة','حُفظت تعديلاتك واعتمدت كخطة الموجّه الطلابي.');
+   setTimeout(()=>openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية التي تحرك التقويم ومِعِك اليوم والتنبيهات والتقارير.'),150);
+ };
+ window.miikAdoptReferencePlan=function(){
+   localStorage.removeItem('miikCounselorPlan');localStorage.setItem('miikPlanAdopted','1');
+   if(typeof showMiikNotice==='function')showMiikNotice('تم الاعتماد','اعتمدت الخطة كما هي كخطة للموجّه.');
+ };
+ function planProgramTitle(p){if(p==='التهيئة الإرشادية')return 'برنامج التهيئة الإرشادية';if(p==='تنمية الدافعية للتحصيل')return 'تنمية الدافعية لرفع مستوى التحصيل';return p}
+ window.miikWeeklyStatus=function(i,status){const obj=JSON.parse(localStorage.getItem('miikWeeklyStatus')||'{}');obj[i]=status;localStorage.setItem('miikWeeklyStatus',JSON.stringify(obj));renderPlan('الخطة الأسبوعية',document.getElementById('moduleGrid'))}
+ window.renderWeeklyPlan=function(g){
+   const tasks=[['الأحد','17','برنامج التهيئة الإرشادية','الانتماء'],['الاثنين','18','تعزيز السلوك الإيجابي','المسؤولية'],['الثلاثاء','19','اليوم العالمي للصحة النفسية','السلام'],['الأربعاء','20','الاستخدام الآمن للإنترنت','الوعي'],['الخميس','21','التوجيه المهني','الطموح']];
+   const st=JSON.parse(localStorage.getItem('miikWeeklyStatus')||'{}');
+   g.innerHTML=`<div class="weekly-plan screen-only" style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:23px">الأسبوع الحالي</b><div class="muted">17–21 ربيع الأول 1448هـ</div></div>${printerButton('الخطة الأسبوعية')}</div><div class="weekly-grid-v12">${tasks.map((t,i)=>`<div class="week-day-v12"><h3><span class="weekday-name">${t[0]}</span><span class="weekday-number">${t[1]}</span></h3><div class="week-entry"><button class="week-program-link" onclick="openModule('${t[2]==='اليوم العالمي للصحة النفسية'?'الأيام والمناسبات الوطنية والعالمية':t[2]}','صفحة البرنامج')"><b>${t[2]}</b></button><button class="week-value-link" onclick="openModule('تعزيز السلوك الإيجابي','القيمة مرتبطة ببرنامج تعزيز السلوك الإيجابي')">القيمة: ${t[3]}</button><div class="status-actions"><button class="${st[i]==='done'?'done':''}" onclick="miikWeeklyStatus(${i},'done')">نُفّذ</button><button class="${st[i]==='notdone'?'notdone':''}" onclick="miikWeeklyStatus(${i},'notdone')">لم يُنفّذ</button></div></div></div>`).join('')}</div></div><div class="print-document">${printPlanDocument('الخطة الأسبوعية',true)}</div>`;
+ };
+ window.renderPlan=function(title,g){
+   if(title==='الخطة الأسبوعية')return renderWeeklyPlan(g);
+   const weeks=planWeeks(),ref=title==='الخطة المعتمدة في مِعِك';
+   g.innerHTML=`<div class="screen-only" style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:23px">${title}</b><div class="muted">الخطة موزعة على كامل أسابيع الفصل</div></div>${printerButton(title)}</div><div class="semester-grid">${weeks.map(x=>`<div class="semester-week"><div class="week-head"><b>${x.w}</b><span class="week-date">${x.date}</span></div><div class="program-name">${x.program}</div><div class="week-value">القيمة: ${x.value}</div></div>`).join('')}</div>${ref?`<div class="adopt-actions"><button class="adopt-primary" onclick="miikAdoptReferencePlan()">اعتماد الخطة كما هي</button><button class="adopt-edit" onclick="miikStartPlanEdit()">تعديل الخطة ثم اعتمادها</button></div>`:''}</div><div class="print-document">${printPlanDocument(title,false)}</div>`;
+ };
+})();
+</script>
 </body></html><style id="v14-home-final">
 /* v14 — الصفحة الرئيسية فقط */
 .add-menu button{font-size:14px!important;font-weight:800!important;padding:12px 15px!important}
