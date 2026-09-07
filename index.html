@@ -520,3 +520,47 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
   setTimeout(wire,0);
 })();
 </script>
+
+<style id="v23-plan-week-navigation-and-greeting">
+/* v23 — توحيد الهوية الخطية وربط خطة الموجّه بالخطة الأسبوعية */
+.greeting{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif!important}
+.semester-week.counselor-week-link{cursor:pointer!important;transition:background .15s ease,border-color .15s ease}
+.semester-week.counselor-week-link:hover{background:#ebe3d4!important;border-color:#cfc3b2!important}
+</style>
+<script id="v23-plan-week-navigation-and-greeting-js">
+(function(){
+ const dayNames=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
+ window.miikOpenCounselorWeek=function(i){
+   window.miikSelectedPlanWeek=Math.max(0,Math.min(18,Number(i)||0));
+   openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.');
+ };
+ window.renderWeeklyPlan=function(g){
+   const weeks=planWeeks();
+   const i=Math.max(0,Math.min(weeks.length-1,Number(window.miikSelectedPlanWeek)||0));
+   const w=weeks[i];
+   const stAll=JSON.parse(localStorage.getItem('miikWeeklyStatusByWeek')||'{}');
+   const status=stAll[i]||'';
+   const nums=(String(w.date).match(/\d+/)||[''])[0];
+   const program=(typeof planProgramTitle==='function'?planProgramTitle(w.program):w.program);
+   g.innerHTML=`<div class="weekly-plan screen-only" style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:23px">${w.w}</b><div class="muted">${w.date}</div></div>${typeof printerButton==='function'?printerButton('الخطة الأسبوعية'):''}</div><div class="weekly-grid-v12"><div class="week-day-v12" style="grid-column:1/-1;min-height:0!important"><h3><span class="weekday-name">خطة الأسبوع</span><span class="weekday-number">${nums}</span></h3><div class="week-entry"><button class="week-program-link" onclick="openModule('${program.replace(/'/g,"\\'")}','صفحة البرنامج')"><b>${w.program}</b></button><button class="week-value-link" onclick="openModule('تعزيز السلوك الإيجابي','القيمة مرتبطة ببرنامج تعزيز السلوك الإيجابي')">القيمة: ${w.value}</button><div class="status-actions"><button class="${status==='done'?'done':''}" onclick="miikWeeklyStatusV23(${i},'done')">نُفّذ</button><button class="${status==='notdone'?'notdone':''}" onclick="miikWeeklyStatusV23(${i},'notdone')">لم يُنفّذ</button></div></div></div></div></div><div class="print-document">${printPlanDocument('الخطة الأسبوعية',true)}</div>`;
+ };
+ window.miikWeeklyStatusV23=function(i,status){
+   const all=JSON.parse(localStorage.getItem('miikWeeklyStatusByWeek')||'{}'); all[i]=status; localStorage.setItem('miikWeeklyStatusByWeek',JSON.stringify(all)); renderWeeklyPlan(document.getElementById('moduleGrid'));
+ };
+ const oldRender=window.renderPlan;
+ window.renderPlan=function(title,g){
+   if(title==='الخطة الأسبوعية') return renderWeeklyPlan(g);
+   oldRender(title,g);
+   if(title==='خطة الموجّه الطلابي'){
+     const cards=g.querySelectorAll('.semester-week');
+     cards.forEach((card,i)=>{
+       card.classList.add('counselor-week-link');
+       card.setAttribute('role','button'); card.setAttribute('tabindex','0');
+       card.setAttribute('aria-label','فتح الخطة الأسبوعية لـ '+(planWeeks()[i]?.w||''));
+       card.onclick=function(){miikOpenCounselorWeek(i)};
+       card.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();miikOpenCounselorWeek(i)}};
+     });
+   }
+ };
+})();
+</script>
