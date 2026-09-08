@@ -62,11 +62,6 @@
 <section class="students-page" id="studentsPage"><div class="students-shell"><div class="students-top"><div class="students-title"><h1>الطلاب</h1><p>كل ما يتعلق بالطالب في مكان واحد، بدون تكرار للبيانات</p></div><button class="students-back" onclick="closeStudents()">→ العودة للرئيسية</button></div>
 
 <div class="students-panel active" id="students-list"><div class="student-search"><input id="studentSearch" placeholder="ابحث باسم الطالب…" oninput="filterStudents()"><button aria-label="بحث">⌕</button></div><div class="student-filters"><button class="filter"><span>المرحلة</span><b>الكل⌄</b></button><button class="filter"><span>الصف</span><b>الكل⌄</b></button><button class="filter"><span>الفصل</span><b>الكل⌄</b></button></div><div class="student-actions"><button class="primary">إضافة طالب</button><button>استيراد بيانات الطلاب</button><button>طباعة بيانات الطلاب</button></div><p class="students-count">إجمالي الطلاب: ١٠٨ طلاب</p><div class="student-list" id="studentList">
-<div class="student-card" data-name="أحمد بن محمد العتيبي" onclick="openStudent('أحمد بن محمد العتيبي','أول متوسط','١/١','0501234567')"><div class="student-main"><div class="student-photo">١</div><div><div class="student-name">أحمد بن محمد العتيبي</div><div class="student-meta">المرحلة: المتوسطة<br>الصف: أول متوسط · الفصل: ١/١</div></div></div><div class="student-contact">جوال ولي الأمر<b>0501234567</b><div class="last-action">آخر إجراء<strong>جلسة إرشادية</strong><span class="hijri-date" data-date="2026-08-28"></span></div></div><div class="student-open">‹</div></div>
-<div class="student-card" data-name="سعد بن عبدالله الشمري" onclick="openStudent('سعد بن عبدالله الشمري','أول متوسط','١/ب','0502345678')"><div class="student-main"><div class="student-photo">٢</div><div><div class="student-name">سعد بن عبدالله الشمري</div><div class="student-meta">المرحلة: المتوسطة<br>الصف: أول متوسط · الفصل: ١/ب</div></div></div><div class="student-contact">جوال ولي الأمر<b>0502345678</b><div class="last-action">آخر إجراء<strong>ملاحظة سلوكية</strong><span class="hijri-date" data-date="2026-08-27"></span></div></div><div class="student-open">‹</div></div>
-<div class="student-card" data-name="عبدالله بن علي القحطاني" onclick="openStudent('عبدالله بن علي القحطاني','ثالث متوسط','٣/أ','0505678901')"><div class="student-main"><div class="student-photo">٣</div><div><div class="student-name">عبدالله بن علي القحطاني</div><div class="student-meta">المرحلة: المتوسطة<br>الصف: ثالث متوسط · الفصل: ٣/أ</div></div></div><div class="student-contact">جوال ولي الأمر<b>0505678901</b><div class="last-action">آخر إجراء<strong>جلسة إرشادية</strong><span class="hijri-date" data-date="2026-08-22"></span></div></div><div class="student-open">‹</div></div>
-<div class="student-card" data-name="فيصل بن ناصر الحربي" onclick="openStudent('فيصل بن ناصر الحربي','ثاني متوسط','٢/ب','0504567890')"><div class="student-main"><div class="student-photo">٤</div><div><div class="student-name">فيصل بن ناصر الحربي</div><div class="student-meta">المرحلة: المتوسطة<br>الصف: ثاني متوسط · الفصل: ٢/ب</div></div></div><div class="student-contact">جوال ولي الأمر<b>0504567890</b><div class="last-action">آخر إجراء<strong>متابعة إرشادية</strong><span class="hijri-date" data-date="2026-08-24"></span></div></div><div class="student-open">‹</div></div>
-<div class="student-card" data-name="محمد بن خالد المطيري" onclick="openStudent('محمد بن خالد المطيري','ثاني متوسط','٢/أ','0503456789')"><div class="student-main"><div class="student-photo">٥</div><div><div class="student-name">محمد بن خالد المطيري</div><div class="student-meta">المرحلة: المتوسطة<br>الصف: ثاني متوسط · الفصل: ٢/أ</div></div></div><div class="student-contact">جوال ولي الأمر<b>0503456789</b><div class="last-action">آخر إجراء<strong>زيارة ولي أمر</strong><span class="hijri-date" data-date="2026-08-25"></span></div></div><div class="student-open">‹</div></div>
 </div><div class="student-empty" id="studentEmpty">ما لقينا طالب بهذا الاسم.</div><nav class="pagination" aria-label="صفحات الطلاب"><button class="active">١</button><button>٢</button><button>٣</button><button>٤</button><button>٥</button><button>…</button><button>١١</button><button>←</button></nav></div>
 <div class="cohort-list"><div class="cohort-card"><div><h3>سعد بن عبدالله الشمري</h3><p>أول متوسط · ١/ب<br>تنبيه مدرسي مختصر: يحتاج تجنب الإجهاد الشديد</p></div><span class="tag">حالة مستمرة</span></div><div class="cohort-card"><div><h3>فيصل بن ناصر الحربي</h3><p>ثاني متوسط · ٢/ب<br>بيانات مختصرة للاستخدام الإرشادي فقط</p></div><span class="tag">مراجعة</span></div></div></div>
 </div></section>
@@ -554,6 +549,8 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
  setTimeout(fixHijriAbbr,0);
 })();
 </script>
+
+
 
 </body></html><style id="v14-home-final">
 /* v14 — الصفحة الرئيسية فقط */
@@ -1316,124 +1313,7 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
    let a=cohort();if(!a.length){showMiikNotice('الطباعة','لا يوجد طلاب في الفصل المحدد.');return}
    let w=window.open('','_blank','width=950,height=900');if(!w){showMiikNotice('الطباعة','اسمح بالنوافذ المنبثقة للطباعة.');return}
    let p=profile(),ministry=new URL('ministry-logo.png',location.href).href;
-   w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف طلاب ${E(q.grade)} - ${E(q.section)}</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:100%;margin:auto}.head{display:grid;grid-template-columns:1fr 125px 1fr;align-items:center;min-height:78px;border-bottom:2px solid #526f65;padding-bottom:8px}.gov{justify-self:end;text-align:center;min-width:225px;font-weight:700;line-height:1.75;font-size:10.5px}.logo{text-align:center}.logo img{max-width:112px;max-height:66px;object-fit:contain}.blank{min-width:225px}.title{text-align:center;color:#294b42;font-size:18px;margin:13px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:12px}.meta span{margin:0 8px;direction:rtl;unicode-bidi:isolate}.count{font-weight:700}table{width:92%;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #87978f;text-align:center;padding:6px 5px;height:31px}th{background:#e9efe9;color:#294b42;font-weight:900}.n{width:5%}.name{width:34%;text-align:right;padding-right:8px}.phone{width:16%}.follow{width:9%;white-space:nowrap}tbody tr:nth-child(even){background:#fbfaf6}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div class="blank"></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span class="count">عدد الطلاب: ${a.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${a.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button>
-
-<!-- MIIK v50: stable Noor cohort replacement fix, based strictly on v48 -->
-<script id="v50-noor-cohort-save-fix">
-(function(){
-  const $=s=>document.querySelector(s), STORE='miikStudentsV39';
-  const norm=s=>String(s??'').replace(/\s+/g,' ').trim();
-  const gradeMap={
-    'الأول المتوسط':'أول متوسط','الثاني المتوسط':'ثاني متوسط','الثالث المتوسط':'ثالث متوسط',
-    'الأول الثانوي':'أول ثانوي','الثاني الثانوي':'ثاني ثانوي','الثالث الثانوي':'ثالث ثانوي'
-  };
-  const secMap={'1':'أ','١':'أ','2':'ب','٢':'ب','3':'ج','٣':'ج','4':'د','٤':'د','5':'هـ','٥':'هـ','6':'و','٦':'و','7':'ز','٧':'ز','8':'ح','٨':'ح','9':'ط','٩':'ط','10':'ي','١٠':'ي','أ':'أ','ب':'ب','ج':'ج','د':'د','هـ':'هـ','ه':'هـ','و':'و','ز':'ز','ح':'ح','ط':'ط','ي':'ي'};
-  const canonGrade=g=>gradeMap[norm(g)]||norm(g);
-  const canonSec=s=>secMap[norm(s)]||'';
-  const stageOf=g=>g.includes('متوسط')?'المتوسطة':g.includes('ثان')?'الثانوية':g.includes('ابتد')?'الابتدائية':'';
-  function read(){try{const a=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
-  function write(a){localStorage.setItem(STORE,JSON.stringify(a))}
-  function colIndex(ref){let L=(String(ref).match(/[A-Z]+/)||['A'])[0],n=0;for(const c of L)n=n*26+c.charCodeAt(0)-64;return n-1}
-  async function allSheets(file){
-    const z=await JSZip.loadAsync(await file.arrayBuffer()); let shared=[];
-    const sf=z.file('xl/sharedStrings.xml');
-    if(sf){const d=new DOMParser().parseFromString(await sf.async('text'),'application/xml');shared=[...d.getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join(''))}
-    const names=Object.keys(z.files).filter(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort((a,b)=>(+(a.match(/sheet(\d+)/)||[])[1])-(+(b.match(/sheet(\d+)/)||[])[1]));
-    const sheets=[];
-    for(const name of names){
-      const d=new DOMParser().parseFromString(await z.file(name).async('text'),'application/xml');
-      const rows=[...d.getElementsByTagName('row')].map(row=>{let a=[];[...row.getElementsByTagName('c')].forEach(c=>{let t=c.getAttribute('t'),v='';if(t==='inlineStr')v=[...c.getElementsByTagName('t')].map(x=>x.textContent).join('');else{v=c.getElementsByTagName('v')[0]?.textContent??'';if(t==='s')v=shared[Number(v)]??v}a[colIndex(c.getAttribute('r')||'A')]=v});return a});
-      sheets.push(rows);
-    }
-    return sheets;
-  }
-  function meta(rows,label){
-    for(const r of rows){for(let i=0;i<r.length;i++){if(norm(r[i])===label){const near=[r[i-2],r[i-1],r[i+1],r[i+2]].map(norm).filter(v=>v&&v!==':'&&v!==label);if(near.length)return near[0]}}}
-    return'';
-  }
-  function validName(name){
-    if(!name||['اسم الطالب','إسم الطالب','الفصل','الشعبة'].includes(name))return false;
-    if(/^(المجموع|الإجمالي|عدد الطلاب|الصفحة|توقيع|مدير المدرسة|الموجه الطلابي)/.test(name))return false;
-    return name.split(' ').filter(Boolean).length>=2;
-  }
-  function extract(rows){
-    const grade=canonGrade(meta(rows,'الصف')), stage=stageOf(grade);
-    let currentSection=canonSec(meta(rows,'الفصل')), nc=-1, sc=-1, found=false, out=[];
-    for(const r of rows){
-      let hn=-1,hs=-1;
-      for(let c=0;c<r.length;c++){const v=norm(r[c]);if(v==='اسم الطالب'||v==='إسم الطالب')hn=c;if(v==='الفصل'||v==='الشعبة')hs=c}
-      if(hn>=0){nc=hn;if(hs>=0)sc=hs;found=true;continue}
-      if(!found||nc<0)continue;
-      const name=norm(r[nc]);if(!validName(name))continue;
-      const rowSec=sc>=0?canonSec(r[sc]):'';if(rowSec)currentSection=rowSec;
-      if(!grade||!stage||!currentSection)continue;
-      out.push({name,stage,grade,section:currentSection,phone:'',last:'لا يوجد'});
-    }
-    return out;
-  }
-  function cleanStageValues(){
-    let a=read(),changed=false;
-    a=a.map(x=>{if(!x||!x.name)return x;const g=canonGrade(x.grade), st=stageOf(g)||norm(x.stage), sec=canonSec(x.section)||norm(x.section);const valid=['المتوسطة','الثانوية','الابتدائية'].includes(st)?st:stageOf(g);if(g!==x.grade||sec!==x.section||valid!==x.stage){changed=true;return {...x,grade:g,section:sec,stage:valid}}return x});
-    if(changed)write(a);
-  }
-  function sanitizeStageDropdown(){
-    const s=$('#v39Stage');if(!s)return;
-    const allowed=['المتوسطة','الثانوية','الابتدائية'];
-    [...s.options].forEach(o=>{if(o.value && !allowed.includes(o.value))o.remove()});
-  }
-  window.v39DoImport=async function(){
-    const f=$('#v39File')?.files?.[0];
-    if(!f){showMiikNotice('اختر ملفًا','اختر ملف Excel من نظام نور أولًا.');return}
-    try{
-      const sheets=await allSheets(f);let raw=[];
-      for(const rows of sheets)raw.push(...extract(rows));
-      if(!raw.length){showMiikNotice('لم يتم الاستيراد','لم يتم العثور على بيانات الطلاب في كشف نور.');return}
-
-      // إزالة التكرار داخل نفس الكشف فقط.
-      const imported=[],seen=new Set();
-      for(const x of raw){const k=[norm(x.name),x.stage,canonGrade(x.grade),canonSec(x.section)].join('|');if(!seen.has(k)){seen.add(k);imported.push({...x,grade:canonGrade(x.grade),section:canonSec(x.section)})}}
-
-      let saved=read();
-      // احتفظ بالجوال/آخر إجراء للطالب نفسه قبل استبدال قائمة الفصل.
-      const history=new Map();
-      for(const y of saved){const n=norm(y?.name);if(!n)continue;const old=history.get(n)||{};history.set(n,{phone:old.phone||y.phone||'',last:(old.last&&old.last!=='لا يوجد')?old.last:(y.last||old.last||'لا يوجد')})}
-
-      // كل فصل موجود في كشف نور يُستبدل بكامل قائمته من الكشف.
-      const cohortKeys=new Set(imported.map(x=>[x.stage,x.grade,x.section].join('|')));
-      const importedNames=new Set(imported.map(x=>norm(x.name)));
-      saved=saved.filter(y=>{
-        if(!y||!y.name)return false;
-        const g=canonGrade(y.grade),st=stageOf(g)||norm(y.stage),sec=canonSec(y.section)||norm(y.section);
-        const ck=[st,g,sec].join('|');
-        if(cohortKeys.has(ck))return false;                 // إزالة القائمة القديمة لهذا الفصل
-        if(importedNames.has(norm(y.name)))return false;   // إزالة نسخة الطالب المربوطة بمكان خاطئ
-        return true;
-      });
-
-      for(const x of imported){const h=history.get(norm(x.name))||{};saved.push({...x,phone:h.phone||'',last:h.last||'لا يوجد'})}
-      write(saved);
-
-      // تحقق من التخزين نفسه قبل إعلان النجاح.
-      const verify=read();const groups={};
-      for(const x of imported){const k=[x.stage,x.grade,x.section].join('|');groups[k]??={stage:x.stage,grade:x.grade,section:x.section,expected:0,stored:0};groups[k].expected++}
-      for(const y of verify){const g=canonGrade(y.grade),st=stageOf(g)||norm(y.stage),sec=canonSec(y.section)||norm(y.section);const k=[st,g,sec].join('|');if(groups[k])groups[k].stored++}
-      const bad=Object.values(groups).filter(g=>g.stored!==g.expected);
-      closeMiikDialog();
-      if(bad.length){showMiikNotice('تعذر إكمال الاستيراد','تمت قراءة كشف نور، لكن لم يطابق عدد الطلاب المحفوظ العدد الموجود في الكشف. لم يتم اعتبار العملية مكتملة.');return}
-      const summary=Object.values(groups).map(g=>`${g.grade} — الفصل ${g.section}: ${g.stored} طالب`).join('، ');
-      showMiikNotice('تم الاستيراد',`تم اعتماد جميع طلاب كشف نور وربطهم بالفصل الصحيح. ${summary}`);
-      setTimeout(()=>{if(typeof openStudents==='function')openStudents();setTimeout(sanitizeStageDropdown,60)},120);
-    }catch(e){console.error('MIIK v50 Noor import',e);showMiikNotice('تعذر قراءة الملف','تعذر قراءة كشف نور. تأكد أن الملف بصيغة XLSX الأصلية.')}
-  };
-
-  cleanStageValues();
-  const oldOpen=window.openStudents;
-  if(typeof oldOpen==='function')window.openStudents=function(){cleanStageValues();const r=oldOpen.apply(this,arguments);setTimeout(sanitizeStageDropdown,50);return r};
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{cleanStageValues();sanitizeStageDropdown()},100),{once:true});
-  setTimeout(()=>{cleanStageValues();sanitizeStageDropdown()},250);
-})();
-</script>
-</body></html>`);w.document.close();
+   w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف طلاب ${E(q.grade)} - ${E(q.section)}</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:100%;margin:auto}.head{display:grid;grid-template-columns:1fr 125px 1fr;align-items:center;min-height:78px;border-bottom:2px solid #526f65;padding-bottom:8px}.gov{justify-self:end;text-align:center;min-width:225px;font-weight:700;line-height:1.75;font-size:10.5px}.logo{text-align:center}.logo img{max-width:112px;max-height:66px;object-fit:contain}.blank{min-width:225px}.title{text-align:center;color:#294b42;font-size:18px;margin:13px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:12px}.meta span{margin:0 8px;direction:rtl;unicode-bidi:isolate}.count{font-weight:700}table{width:92%;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #87978f;text-align:center;padding:6px 5px;height:31px}th{background:#e9efe9;color:#294b42;font-weight:900}.n{width:5%}.name{width:34%;text-align:right;padding-right:8px}.phone{width:16%}.follow{width:9%;white-space:nowrap}tbody tr:nth-child(even){background:#fbfaf6}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div class="blank"></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span class="count">عدد الطلاب: ${a.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${a.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>`);w.document.close();
  }
  function patchPrint(){let bs=document.querySelectorAll('#studentsPage .student-actions button');let b=bs[2];if(!b||b.dataset.v44)return;b.dataset.v44='1';b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();officialPrint()},true)}
  function clean(){purgeDemo();wireNumbering();patchPrint();setTimeout(renumberVisible,20)}
@@ -1443,159 +1323,129 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
 })();
 </script>
 
-<!-- MIIK v46: Noor multi-page import fix; preserve v44 recognition and continue after repeated headers -->
-<script id="v46-noor-import-fix">
+<!-- MIIK v51: single clean Noor importer + clean cohort filters + official print -->
+<script id="v51-students-final">
 (function(){
- const $=s=>document.querySelector(s), STORE='miikStudentsV39';
- const norm=s=>String(s??'').replace(/\s+/g,' ').trim();
- const gradeMap={'الأول المتوسط':'أول متوسط','الثاني المتوسط':'ثاني متوسط','الثالث المتوسط':'ثالث متوسط','الأول الثانوي':'أول ثانوي','الثاني الثانوي':'ثاني ثانوي','الثالث الثانوي':'ثالث ثانوي'};
- const secMap={'1':'أ','١':'أ','2':'ب','٢':'ب','3':'ج','٣':'ج','4':'د','٤':'د','5':'هـ','٥':'هـ','6':'و','٦':'و','7':'ز','٧':'ز','8':'ح','٨':'ح','9':'ط','٩':'ط','10':'ي','١٠':'ي'};
- const canonGrade=g=>gradeMap[norm(g)]||norm(g).replace(/^الأول المتوسط$/,'أول متوسط').replace(/^الثاني المتوسط$/,'ثاني متوسط').replace(/^الثالث المتوسط$/,'ثالث متوسط').replace(/^الأول الثانوي$/,'أول ثانوي').replace(/^الثاني الثانوي$/,'ثاني ثانوي').replace(/^الثالث الثانوي$/,'ثالث ثانوي');
- const canonSec=s=>secMap[norm(s)]||norm(s);
- const stageOf=g=>g.includes('متوسط')?'المتوسطة':g.includes('ثان')?'الثانوية':g.includes('ابتد')?'الابتدائية':'';
- function colIndex(ref){let L=(String(ref).match(/[A-Z]+/)||['A'])[0],n=0;for(const c of L)n=n*26+c.charCodeAt(0)-64;return n-1}
- async function allSheets(file){
-   const z=await JSZip.loadAsync(await file.arrayBuffer()); let shared=[];
-   const sf=z.file('xl/sharedStrings.xml'); if(sf){const d=new DOMParser().parseFromString(await sf.async('text'),'application/xml');shared=[...d.getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join(''))}
-   const names=Object.keys(z.files).filter(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort((a,b)=>(+(a.match(/sheet(\d+)/)||[])[1])- (+(b.match(/sheet(\d+)/)||[])[1]));
-   const sheets=[];
-   for(const name of names){const d=new DOMParser().parseFromString(await z.file(name).async('text'),'application/xml');const rows=[...d.getElementsByTagName('row')].map(row=>{let a=[];[...row.getElementsByTagName('c')].forEach(c=>{let t=c.getAttribute('t'),v='';if(t==='inlineStr')v=[...c.getElementsByTagName('t')].map(x=>x.textContent).join('');else{v=c.getElementsByTagName('v')[0]?.textContent??'';if(t==='s')v=shared[Number(v)]??v}a[colIndex(c.getAttribute('r')||'A')]=v});return a});sheets.push(rows)}
-   return sheets;
- }
- function meta(rows,label){for(const r of rows){for(let i=0;i<r.length;i++){if(norm(r[i])===label){const near=[r[i-2],r[i-1],r[i+1],r[i+2]].map(norm).filter(v=>v&&v!==':'&&v!==label);if(near.length)return near[0]}}}return''}
- function extract(rows){
-   const grade=canonGrade(meta(rows,'الصف')), defaultSec=canonSec(meta(rows,'الفصل')), stage=stageOf(grade); let nc=-1,sc=-1,foundHeader=false,out=[];
-   for(const r of rows){
-     let hn=-1,hs=-1;
-     for(let c=0;c<r.length;c++){const v=norm(r[c]);if(v==='اسم الطالب'||v==='إسم الطالب')hn=c;if(v==='الفصل'||v==='الشعبة')hs=c}
-     if(hn>=0){nc=hn;sc=hs;foundHeader=true;continue} // repeated page header: update columns and continue
-     if(!foundHeader||nc<0)continue;
-     const name=norm(r[nc]); if(!name)continue;
-     // Ignore repeated labels, totals and footer text while keeping normal Arabic student names.
-     if(['اسم الطالب','إسم الطالب','الفصل','الشعبة'].includes(name)||/^(المجموع|الإجمالي|عدد الطلاب|الصفحة)/.test(name))continue;
-     const section=canonSec(sc>=0?r[sc]:defaultSec)||defaultSec;
-     // Noor student names are multi-part; this prevents page footer cells from becoming students.
-     if(name.split(' ').filter(Boolean).length<2)continue;
-     out.push({name,stage,grade,section,phone:'',last:'لا يوجد'});
-   }
-   return out;
- }
- function read(){try{return JSON.parse(localStorage.getItem(STORE)||'[]')}catch(e){return[]}}
- function write(a){localStorage.setItem(STORE,JSON.stringify(a))}
- window.v39DoImport=async function(){
-   const f=$('#v39File')?.files?.[0]; if(!f){showMiikNotice('اختر ملفًا','اختر ملف Excel من نظام نور أولًا.');return}
-   try{
-     const sheets=await allSheets(f); let data=[];
-     for(const rows of sheets)data.push(...extract(rows));
-     if(!data.length){showMiikNotice('لم يتم الاستيراد','لم يتم العثور على بيانات الطلاب في كشف نور.');return}
-     // De-duplicate inside the workbook and against already saved students.
-     const unique=[] , seenFile=new Set(); for(const x of data){const k=[x.name,x.grade,x.section].join('|');if(!seenFile.has(k)){seenFile.add(k);unique.push(x)}}
-     const a=read(), keys=new Set(a.map(x=>[norm(x.name),canonGrade(x.grade),canonSec(x.section)].join('|'))); let added=0;
-     for(const x of unique){const k=[x.name,x.grade,x.section].join('|');if(!keys.has(k)){a.push(x);keys.add(k);added++}}
-     write(a); closeMiikDialog(); showMiikNotice('تم الاستيراد',`تم حفظ ${added} طالب من كشف نور، وتمت قراءة الكشف كاملًا حتى آخر صفحة.`);
-     setTimeout(()=>{if(typeof openStudents==='function')openStudents()},120);
-   }catch(e){console.error('MIIK v46 Noor import',e);showMiikNotice('تعذر قراءة الملف','تعذر قراءة كشف نور. تأكد أن الملف بصيغة XLSX الأصلية.')}
+ 'use strict';
+ const STORE='miikStudentsV39';
+ const $=s=>document.querySelector(s);
+ const norm=s=>String(s??'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim();
+ const E=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+ const gradeMap={
+  'الأول المتوسط':'أول متوسط','اول متوسط':'أول متوسط','أول متوسط':'أول متوسط',
+  'الثاني المتوسط':'ثاني متوسط','ثاني متوسط':'ثاني متوسط',
+  'الثالث المتوسط':'ثالث متوسط','ثالث متوسط':'ثالث متوسط',
+  'الأول الثانوي':'أول ثانوي','اول ثانوي':'أول ثانوي','أول ثانوي':'أول ثانوي',
+  'الثاني الثانوي':'ثاني ثانوي','ثاني ثانوي':'ثاني ثانوي',
+  'الثالث الثانوي':'ثالث ثانوي','ثالث ثانوي':'ثالث ثانوي',
+  'الأول الابتدائي':'أول ابتدائي','اول ابتدائي':'أول ابتدائي','أول ابتدائي':'أول ابتدائي',
+  'الثاني الابتدائي':'ثاني ابتدائي','ثاني ابتدائي':'ثاني ابتدائي',
+  'الثالث الابتدائي':'ثالث ابتدائي','ثالث ابتدائي':'ثالث ابتدائي',
+  'الرابع الابتدائي':'رابع ابتدائي','رابع ابتدائي':'رابع ابتدائي',
+  'الخامس الابتدائي':'خامس ابتدائي','خامس ابتدائي':'خامس ابتدائي',
+  'السادس الابتدائي':'سادس ابتدائي','سادس ابتدائي':'سادس ابتدائي'
  };
+ const secMap={'1':'أ','١':'أ','أ':'أ','ا':'أ','2':'ب','٢':'ب','ب':'ب','3':'ج','٣':'ج','ج':'ج','4':'د','٤':'د','د':'د','5':'هـ','٥':'هـ','هـ':'هـ','ه':'هـ','6':'و','٦':'و','و':'و','7':'ز','٧':'ز','ز':'ز','8':'ح','٨':'ح','ح':'ح','9':'ط','٩':'ط','ط':'ط','10':'ي','١٠':'ي','ي':'ي'};
+ const allowedStages=['المتوسطة','الثانوية','الابتدائية'];
+ function canonGrade(v){v=norm(v).replace(/\s*[-–—:]\s*/g,' ').replace(/\s+/g,' ');return gradeMap[v]||''}
+ function stageOf(g){g=canonGrade(g)||norm(g);return g.includes('متوسط')?'المتوسطة':g.includes('ثان')?'الثانوية':g.includes('ابتد')?'الابتدائية':''}
+ function canonSec(v){
+  v=norm(v).replace(/الفصل|الشعبة/g,'').replace(/[:：]/g,'').trim();
+  if(v.includes('/')){const parts=v.split('/').map(norm).filter(Boolean);for(let i=parts.length-1;i>=0;i--){if(secMap[parts[i]])return secMap[parts[i]]}}
+  return secMap[v]||'';
+ }
+ function readRaw(){try{const a=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
+ function normalizeRecord(x){
+  if(!x||!norm(x.name))return null;
+  const g=canonGrade(x.grade), st=stageOf(g), sec=canonSec(x.section);
+  if(!g||!st||!sec)return null;
+  return {...x,name:norm(x.name),stage:st,grade:g,section:sec,phone:norm(x.phone),last:norm(x.last)||'لا يوجد'};
+ }
+ function readValid(){return readRaw().map(normalizeRecord).filter(Boolean)}
+ function write(a){localStorage.setItem(STORE,JSON.stringify(a))}
+ function dedupe(a){
+  const out=[],pos=new Map();
+  for(const x0 of a){const x=normalizeRecord(x0);if(!x)continue;const k=[x.name,x.stage,x.grade,x.section].join('|');if(!pos.has(k)){pos.set(k,out.length);out.push(x)}else{const y=out[pos.get(k)];if(!y.phone&&x.phone)y.phone=x.phone;if((!y.last||y.last==='لا يوجد')&&x.last)y.last=x.last}}
+  return out;
+ }
+ function sanitizeStorage(){const raw=readRaw(),clean=dedupe(raw);if(JSON.stringify(raw)!==JSON.stringify(clean))write(clean);return clean}
+ function records(){return readValid()}
+ function opts(vals,label){return `<option value="">${label}</option>`+vals.map(v=>`<option value="${E(v)}">${E(v)}</option>`).join('')}
+ function gradesForStage(st){return records().filter(x=>x.stage===st).map(x=>x.grade).filter((v,i,a)=>a.indexOf(v)===i)}
+ function secsFor(st,g){return records().filter(x=>x.stage===st&&x.grade===g).map(x=>x.section).filter((v,i,a)=>a.indexOf(v)===i)}
+ function renderFilters(){
+  const stage=$('#v39Stage'),grade=$('#v39Grade'),section=$('#v39Section'); if(!stage||!grade||!section)return;
+  const stages=allowedStages.filter(st=>records().some(x=>x.stage===st));
+  stage.innerHTML=opts(stages,'المرحلة');grade.innerHTML=opts([],'الصف');section.innerHTML=opts([],'الفصل');grade.disabled=true;section.disabled=true;
+  stage.onchange=()=>{const st=stage.value;grade.innerHTML=opts(gradesForStage(st),'الصف');grade.disabled=!st;section.innerHTML=opts([],'الفصل');section.disabled=true;hideAll()};
+  grade.onchange=()=>{const st=stage.value,g=grade.value;section.innerHTML=opts(secsFor(st,g),'الفصل');section.disabled=!g;hideAll()};
+  section.onchange=()=>showCohort(stage.value,grade.value,section.value);
+ }
+ function hideAll(){document.querySelectorAll('#studentList .student-card').forEach(c=>c.style.display='none');const c=document.querySelector('.students-count');if(c)c.style.display='none'}
+ function showCohort(st,g,sec){
+  let n=0;document.querySelectorAll('#studentList .student-card[data-v39="1"]').forEach(c=>{const ok=norm(c.dataset.stage)===st&&canonGrade(c.dataset.grade)===g&&canonSec(c.dataset.section)===sec;c.style.display=ok?'grid':'none';if(ok){n++;const p=c.querySelector('.student-photo');if(p)p.textContent=n}});
+  const count=document.querySelector('.students-count');if(count){count.style.display='block';count.textContent=`طلاب الفصل: ${n} طالب`}
+ }
+ function purgeDemoDOM(){document.querySelectorAll('#studentList .student-card:not([data-v39="1"])').forEach(x=>x.remove())}
+ function setupPage(){sanitizeStorage();purgeDemoDOM();setTimeout(renderFilters,0);wirePrint()}
+ function colIndex(ref){let L=(String(ref).match(/[A-Z]+/)||['A'])[0],n=0;for(const c of L)n=n*26+c.charCodeAt(0)-64;return n-1}
+ async function readSheets(file){
+  const z=await JSZip.loadAsync(await file.arrayBuffer()), shared=[];
+  const sf=z.file('xl/sharedStrings.xml');if(sf){const d=new DOMParser().parseFromString(await sf.async('text'),'application/xml');shared.push(...[...d.getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join('')))}
+  const names=Object.keys(z.files).filter(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort((a,b)=>Number((a.match(/sheet(\d+)/)||[0,0])[1])-Number((b.match(/sheet(\d+)/)||[0,0])[1]));
+  const sheets=[];
+  for(const name of names){const d=new DOMParser().parseFromString(await z.file(name).async('text'),'application/xml');const rows=[...d.getElementsByTagName('row')].map(row=>{const a=[];[...row.getElementsByTagName('c')].forEach(c=>{const t=c.getAttribute('t');let v='';if(t==='inlineStr')v=[...c.getElementsByTagName('t')].map(x=>x.textContent).join('');else{v=c.getElementsByTagName('v')[0]?.textContent??'';if(t==='s')v=shared[Number(v)]??v}a[colIndex(c.getAttribute('r')||'A')]=v});return a});sheets.push(rows)}
+  return sheets;
+ }
+ function findGrade(rows){for(const r of rows){for(const cell of r){const g=canonGrade(cell);if(g)return g}}return''}
+ function findHeader(rows){for(let ri=0;ri<rows.length;ri++){let nameCol=-1,secCol=-1;for(let c=0;c<rows[ri].length;c++){const v=norm(rows[ri][c]);if(v==='اسم الطالب'||v==='إسم الطالب')nameCol=c;if(v==='الفصل'||v==='الشعبة')secCol=c}if(nameCol>=0)return{ri,nameCol,secCol}}return null}
+ function validName(name){if(!name)return false;if(['اسم الطالب','إسم الطالب','الفصل','الشعبة'].includes(name))return false;if(/^(المجموع|الإجمالي|عدد الطلاب|الصفحة|توقيع|مدير المدرسة|الموجه الطلابي|وزارة التعليم|المملكة العربية السعودية)/.test(name))return false;return name.split(' ').filter(Boolean).length>=2}
+ function dominantSection(rows,h){
+  const counts=new Map(); if(h.secCol>=0){for(let r=h.ri+1;r<rows.length;r++){const s=canonSec(rows[r][h.secCol]);if(s)counts.set(s,(counts.get(s)||0)+1)}}
+  if(counts.size)return [...counts.entries()].sort((a,b)=>b[1]-a[1])[0][0];
+  // fallback: search metadata rows above header for a labeled section value
+  for(let r=0;r<h.ri;r++){for(let c=0;c<rows[r].length;c++){if(norm(rows[r][c])==='الفصل'||norm(rows[r][c])==='الشعبة'){for(const j of [c-2,c-1,c+1,c+2]){const s=canonSec(rows[r][j]);if(s)return s}}}}
+  return'';
+ }
+ function extractSheet(rows){
+  const h=findHeader(rows);if(!h)return[];const grade=findGrade(rows),stage=stageOf(grade),section=dominantSection(rows,h);if(!grade||!stage||!section)return[];
+  const out=[];let nameCol=h.nameCol;
+  for(let r=h.ri+1;r<rows.length;r++){
+   // repeated printed-page header may re-state the name column; keep cohort fixed.
+   let repeated=-1;for(let c=0;c<rows[r].length;c++){const v=norm(rows[r][c]);if(v==='اسم الطالب'||v==='إسم الطالب'){repeated=c;break}}if(repeated>=0){nameCol=repeated;continue}
+   const name=norm(rows[r][nameCol]);if(!validName(name))continue;out.push({name,stage,grade,section,phone:'',last:'لا يوجد'});
+  }
+  return out;
+ }
+ window.v39DoImport=async function(){
+  const f=$('#v39File')?.files?.[0];if(!f){showMiikNotice('اختر ملفًا','اختر ملف Excel من نظام نور أولًا.');return}
+  try{
+   const sheets=await readSheets(f);let imported=[];for(const rows of sheets)imported.push(...extractSheet(rows));
+   const seen=new Set();imported=imported.filter(x=>{const k=[x.name,x.stage,x.grade,x.section].join('|');if(seen.has(k))return false;seen.add(k);return true});
+   if(!imported.length){showMiikNotice('لم يتم الاستيراد','لم يتم العثور على بيانات طلاب صالحة في كشف نور.');return}
+   let saved=sanitizeStorage();const importedNames=new Set(imported.map(x=>x.name));
+   // Remove any old/misplaced copy of the imported students, then add them back in the cohort Noor declares.
+   const oldByName=new Map();for(const y of saved){if(importedNames.has(y.name)&&!oldByName.has(y.name))oldByName.set(y.name,y)}
+   saved=saved.filter(y=>!importedNames.has(y.name));
+   for(const x of imported){const old=oldByName.get(x.name);saved.push({...x,phone:old?.phone||'',last:old?.last||'لا يوجد'})}
+   saved=dedupe(saved);write(saved);
+   const q=imported[0], actual=saved.filter(x=>x.stage===q.stage&&x.grade===q.grade&&x.section===q.section).length;
+   closeMiikDialog();
+   if(actual<imported.length){showMiikNotice('تنبيه في الاستيراد',`قرأ مِعِك ${imported.length} طالبًا، لكن تم ربط ${actual} فقط. لم يتم اعتماد النتيجة بصمت.`)}else{showMiikNotice('تم الاستيراد',`تم حفظ وربط ${imported.length} طالبًا في ${q.grade} — الفصل ${q.section}. العدد داخل الفصل الآن: ${actual}.`)}
+   setTimeout(()=>{if(typeof openStudents==='function')openStudents();setTimeout(()=>{setupPage();const st=$('#v39Stage'),g=$('#v39Grade'),sec=$('#v39Section');if(st){st.value=q.stage;st.onchange?.()}if(g){g.value=q.grade;g.onchange?.()}if(sec){sec.value=q.section;sec.onchange?.()}},80)},80);
+  }catch(e){console.error('MIIK v51 import',e);showMiikNotice('تعذر قراءة الملف','تعذر قراءة كشف نور بصيغة XLSX الأصلية.')}
+ };
+ function profile(){let p={region:'',school:''};try{for(const k of ['miikProfile','miikUser','miikSettings','miikSchoolData','schoolData']){const o=JSON.parse(localStorage.getItem(k)||'null');if(o){p.region=p.region||o.region||o.educationRegion||o.education||o.administration||'';p.school=p.school||o.school||o.schoolName||''}}}catch(e){}return{region:p.region||'القصيم',school:p.school||document.querySelector('.school-name')?.textContent?.trim()||'اسم المدرسة'}}
+ function selected(){return{stage:$('#v39Stage')?.value||'',grade:$('#v39Grade')?.value||'',section:$('#v39Section')?.value||''}}
+ function printOfficial(){
+  const q=selected();if(!q.stage||!q.grade||!q.section){showMiikNotice('الطباعة','اختر المرحلة والصف والفصل أولًا.');return}const arr=records().filter(x=>x.stage===q.stage&&x.grade===q.grade&&x.section===q.section);if(!arr.length){showMiikNotice('الطباعة','لا يوجد طلاب في الفصل المحدد.');return}
+  const w=window.open('','_blank','width=980,height=900');if(!w){showMiikNotice('الطباعة','اسمح بالنوافذ المنبثقة للطباعة.');return}const p=profile(),ministry=new URL('ministry-logo.png',location.href).href;
+  w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف بيانات الطلاب</title><style>@page{size:A4 landscape;margin:13mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:88%;margin:0 auto}.head{display:grid;grid-template-columns:1fr 110px 1fr;align-items:center;border-bottom:2px solid #526f65;padding-bottom:7px}.gov{text-align:center;line-height:1.65;font-weight:700}.logo{text-align:center}.logo img{max-width:95px;max-height:58px}.title{text-align:center;color:#294b42;font-size:18px;margin:10px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:10px}.meta span{margin:0 7px;white-space:nowrap}table{width:auto;min-width:78%;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #8b9993;text-align:center;height:30px;padding:5px 4px}th{background:#e9efe9;color:#294b42}.n{width:34px}.name{width:255px;text-align:right;padding-right:8px}.phone{width:125px}.follow{width:58px;white-space:nowrap}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span>عدد الطلاب: ${arr.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${arr.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>`);w.document.close();
+ }
+ window.v39PrintNow=printOfficial;
+ function wirePrint(){const acts=document.querySelectorAll('#studentsPage .student-actions button');const old=acts[2];if(!old||old.dataset.v51)return;const b=old.cloneNode(true);b.dataset.v51='1';b.onclick=e=>{e.preventDefault();printOfficial()};old.replaceWith(b)}
+ const prevOpen=window.openStudents;if(typeof prevOpen==='function')window.openStudents=function(){const r=prevOpen.apply(this,arguments);setTimeout(setupPage,40);return r};
+ document.addEventListener('DOMContentLoaded',()=>setTimeout(setupPage,120),{once:true});setTimeout(setupPage,220);
 })();
 </script>
 
-<!-- MIIK v48: merge/correct imported Noor student placement + refined official print -->
-<!-- MIIK v47: keep Noor cohort metadata across printed-page continuations -->
-<script id="v47-noor-page-continuation-fix">
-(function(){
- const $=s=>document.querySelector(s), STORE='miikStudentsV39';
- const norm=s=>String(s??'').replace(/\s+/g,' ').trim();
- const gradeMap={'الأول المتوسط':'أول متوسط','الثاني المتوسط':'ثاني متوسط','الثالث المتوسط':'ثالث متوسط','الأول الثانوي':'أول ثانوي','الثاني الثانوي':'ثاني ثانوي','الثالث الثانوي':'ثالث ثانوي'};
- const secMap={'1':'أ','١':'أ','2':'ب','٢':'ب','3':'ج','٣':'ج','4':'د','٤':'د','5':'هـ','٥':'هـ','6':'و','٦':'و','7':'ز','٧':'ز','8':'ح','٨':'ح','9':'ط','٩':'ط','10':'ي','١٠':'ي','أ':'أ','ب':'ب','ج':'ج','د':'د','هـ':'هـ','ه':'هـ','و':'و','ز':'ز','ح':'ح','ط':'ط','ي':'ي'};
- const canonGrade=g=>gradeMap[norm(g)]||norm(g);
- const canonSec=s=>secMap[norm(s)]||'';
- const stageOf=g=>g.includes('متوسط')?'المتوسطة':g.includes('ثان')?'الثانوية':g.includes('ابتد')?'الابتدائية':'';
- function colIndex(ref){let L=(String(ref).match(/[A-Z]+/)||['A'])[0],n=0;for(const c of L)n=n*26+c.charCodeAt(0)-64;return n-1}
- async function allSheets(file){
-   const z=await JSZip.loadAsync(await file.arrayBuffer()); let shared=[];
-   const sf=z.file('xl/sharedStrings.xml'); if(sf){const d=new DOMParser().parseFromString(await sf.async('text'),'application/xml');shared=[...d.getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join(''))}
-   const names=Object.keys(z.files).filter(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort((a,b)=>(+(a.match(/sheet(\d+)/)||[])[1])-(+(b.match(/sheet(\d+)/)||[])[1]));
-   const sheets=[];
-   for(const name of names){const d=new DOMParser().parseFromString(await z.file(name).async('text'),'application/xml');const rows=[...d.getElementsByTagName('row')].map(row=>{let a=[];[...row.getElementsByTagName('c')].forEach(c=>{let t=c.getAttribute('t'),v='';if(t==='inlineStr')v=[...c.getElementsByTagName('t')].map(x=>x.textContent).join('');else{v=c.getElementsByTagName('v')[0]?.textContent??'';if(t==='s')v=shared[Number(v)]??v}a[colIndex(c.getAttribute('r')||'A')]=v});return a});sheets.push(rows)}
-   return sheets;
- }
- function meta(rows,label){for(const r of rows){for(let i=0;i<r.length;i++){if(norm(r[i])===label){const near=[r[i-2],r[i-1],r[i+1],r[i+2]].map(norm).filter(v=>v&&v!==':'&&v!==label);if(near.length)return near[0]}}}return''}
- function validStudentName(name){if(!name)return false;if(['اسم الطالب','إسم الطالب','الفصل','الشعبة'].includes(name))return false;if(/^(المجموع|الإجمالي|عدد الطلاب|الصفحة|توقيع|مدير المدرسة|الموجه الطلابي)/.test(name))return false;return name.split(' ').filter(Boolean).length>=2}
- function extract(rows){
-   const grade=canonGrade(meta(rows,'الصف'));
-   const stage=stageOf(grade);
-   let currentSection=canonSec(meta(rows,'الفصل'));
-   let nc=-1, sc=-1, foundHeader=false, out=[];
-   for(const r of rows){
-     let hn=-1, hs=-1;
-     for(let c=0;c<r.length;c++){
-       const v=norm(r[c]);
-       if(v==='اسم الطالب'||v==='إسم الطالب')hn=c;
-       if(v==='الفصل'||v==='الشعبة')hs=c;
-     }
-     if(hn>=0){
-       nc=hn;
-       // مهم: لا نصفر عمود الفصل عند رأس صفحة مكرر لا يحتويه.
-       if(hs>=0)sc=hs;
-       foundHeader=true;
-       continue;
-     }
-     if(!foundHeader||nc<0)continue;
-     const name=norm(r[nc]);
-     if(!validStudentName(name))continue;
-     // لا نغيّر الفصل إلا إذا كانت الخلية تحمل قيمة فصل معروفة فعلًا.
-     // عند الصفحة الثانية تكون الخانة أحيانًا فارغة، فنستمر على فصل الصفحة الأولى.
-     const rowSection=sc>=0?canonSec(r[sc]):'';
-     if(rowSection)currentSection=rowSection;
-     if(!currentSection)continue;
-     out.push({name,stage,grade,section:currentSection,phone:'',last:'لا يوجد'});
-   }
-   return out;
- }
- function read(){try{return JSON.parse(localStorage.getItem(STORE)||'[]')}catch(e){return[]}}
- function write(a){localStorage.setItem(STORE,JSON.stringify(a))}
- window.v39DoImport=async function(){
-   const f=$('#v39File')?.files?.[0];
-   if(!f){showMiikNotice('اختر ملفًا','اختر ملف Excel من نظام نور أولًا.');return}
-   try{
-     const sheets=await allSheets(f); let data=[];
-     for(const rows of sheets)data.push(...extract(rows));
-     if(!data.length){showMiikNotice('لم يتم الاستيراد','لم يتم العثور على بيانات الطلاب في كشف نور.');return}
-     const unique=[], seenFile=new Set();
-     for(const x of data){const k=[norm(x.name),canonGrade(x.grade),x.section].join('|');if(!seenFile.has(k)){seenFile.add(k);unique.push(x)}}
-     const a=read(); let added=0, corrected=0;
-     // v48: كشف نور هو المرجع لموضع الطالب. إذا كان الطالب محفوظًا سابقًا
-     // بمرحلة/صف/فصل خاطئ بسبب استيراد قديم، نصحح السجل بدل تجاهله كمكرر.
-     for(const x of unique){
-       const nn=norm(x.name), gg=canonGrade(x.grade), ss=canonSec(x.section)||x.section;
-       let idx=a.findIndex(y=>norm(y.name)===nn && canonGrade(y.grade)===gg);
-       if(idx<0) idx=a.findIndex(y=>norm(y.name)===nn);
-       if(idx>=0){
-         const y=a[idx]||{};
-         const oldStage=norm(y.stage), oldGrade=canonGrade(y.grade), oldSec=canonSec(y.section)||norm(y.section);
-         if(oldStage!==x.stage || oldGrade!==gg || oldSec!==ss){
-           a[idx]={...y,name:x.name,stage:x.stage,grade:gg,section:ss,phone:y.phone||x.phone||'',last:y.last||x.last||'لا يوجد'};
-           corrected++;
-         }
-       }else{a.push({...x,grade:gg,section:ss});added++}
-     }
-     // إزالة التكرار الحقيقي لنفس الطالب/الصف/الفصل مع الإبقاء على السجل الأكثر اكتمالًا.
-     const merged=[], pos=new Map();
-     for(const y of a){
-       const k=[norm(y.name),canonGrade(y.grade),canonSec(y.section)||norm(y.section)].join('|');
-       if(!pos.has(k)){pos.set(k,merged.length);merged.push(y)}else{
-         const i=pos.get(k), keep=merged[i];
-         if(!keep.phone && y.phone) keep.phone=y.phone;
-         if((!keep.last||keep.last==='لا يوجد') && y.last) keep.last=y.last;
-         if(!keep.stage && y.stage) keep.stage=y.stage;
-       }
-     }
-     write(merged); closeMiikDialog();
-     const groups={}; for(const x of unique){const k=[x.grade,x.section].join(' — ');groups[k]=(groups[k]||0)+1}
-     const summary=Object.entries(groups).map(([k,n])=>`${k}: ${n}`).join('، ');
-     showMiikNotice('تم الاستيراد',`تمت معالجة كشف نور كاملًا. جديد: ${added}، تم تصحيح ربط: ${corrected}. ${summary}`);
-     setTimeout(()=>{if(typeof openStudents==='function')openStudents()},120);
-   }catch(e){console.error('MIIK v47 Noor import',e);showMiikNotice('تعذر قراءة الملف','تعذر قراءة كشف نور. تأكد أن الملف بصيغة XLSX الأصلية.')}
- };
-})();
-</script>
