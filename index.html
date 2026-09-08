@@ -1135,7 +1135,7 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
 <script id="v39-students-js">
 (function(){
  const $=s=>document.querySelector(s), E=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
- const STORE='miikStudents_v39';
+ const STORE='miikStudentsV39';
  const readSaved=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'[]')}catch(e){return[]}};
  const saveSaved=a=>localStorage.setItem(STORE,JSON.stringify(a));
  function existing(){return [...document.querySelectorAll('#studentList .student-card')].filter(x=>!x.dataset.v39).map(c=>{let oc=c.getAttribute('onclick')||'',m=oc.match(/openStudent\('([^']*)','([^']*)','([^']*)','([^']*)'\)/);let meta=c.querySelector('.student-meta')?.innerText||'';return{name:c.dataset.name||m?.[1]||'',grade:m?.[2]||'',section:m?.[3]||'',phone:m?.[4]||'',stage:(meta.match(/المرحلة:\s*([^\n]+)/)||[])[1]?.trim()||stageFromGrade(m?.[2]||''),last:c.querySelector('.last-action strong')?.textContent||''}})}
@@ -1245,6 +1245,17 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
 (function(){
  const $=s=>document.querySelector(s), norm=s=>String(s??'').replace(/\s+/g,' ').trim();
  const STORE='miikStudentsV39', CFG='miikSchoolStructureV42';
+ // v43: migrate any students saved by older underscore-key builds into the canonical store.
+ try{
+   const legacy=JSON.parse(localStorage.getItem('miikStudents_v39')||'[]');
+   const current=JSON.parse(localStorage.getItem(STORE)||'[]');
+   if(Array.isArray(legacy)&&legacy.length){
+     const seen=new Set((Array.isArray(current)?current:[]).map(x=>[x.name,x.grade,x.section].join('|')));
+     const merged=[...(Array.isArray(current)?current:[])];
+     legacy.forEach(x=>{const k=[x.name,x.grade,x.section].join('|');if(x&&x.name&&!seen.has(k)){merged.push(x);seen.add(k)}});
+     localStorage.setItem(STORE,JSON.stringify(merged));
+   }
+ }catch(e){}
  const grades={
   'الابتدائية':['أول ابتدائي','ثاني ابتدائي','ثالث ابتدائي','رابع ابتدائي','خامس ابتدائي','سادس ابتدائي'],
   'المتوسطة':['أول متوسط','ثاني متوسط','ثالث متوسط'],
@@ -1276,3 +1287,5 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  document.addEventListener('DOMContentLoaded',()=>{normalizeStore();setTimeout(patchAddButton,80)},{once:true});setTimeout(()=>{normalizeStore();patchAddButton()},200);
 })();
 </script>
+
+<!-- MIIK v43: unified student storage fix -->
