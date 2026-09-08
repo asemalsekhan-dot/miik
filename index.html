@@ -1289,3 +1289,39 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
 </script>
 
 <!-- MIIK v43: unified student storage fix -->
+
+<!-- MIIK v44: real student data + cohort numbering + official student print -->
+<style id="v44-students-css">
+#studentList .student-card .student-photo{font-variant-numeric:tabular-nums}
+</style>
+<script id="v44-students-js">
+(function(){
+ const $=s=>document.querySelector(s), STORE='miikStudentsV39';
+ const E=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+ const demo=new Set(['أحمد بن محمد العتيبي','سعد بن عبدالله الشمري','عبدالله بن علي القحطاني','فيصل بن ناصر الحربي','محمد بن خالد المطيري']);
+ function read(){try{let a=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
+ function write(a){localStorage.setItem(STORE,JSON.stringify(a))}
+ function purgeDemo(){
+   document.querySelectorAll('#studentList .student-card:not([data-v39="1"])').forEach(x=>x.remove());
+   let a=read(),b=a.filter(x=>x&&x.name&&!demo.has(String(x.name).trim()));if(b.length!==a.length)write(b);
+   try{localStorage.removeItem('miikStudents_v39')}catch(e){}
+ }
+ function renumberVisible(){let n=0;document.querySelectorAll('#studentList .student-card').forEach(c=>{if(getComputedStyle(c).display!=='none'){n++;let p=c.querySelector('.student-photo');if(p)p.textContent=n}})}
+ function wireNumbering(){let s=$('#v39Section');if(s&&!s.dataset.v44){s.dataset.v44='1';s.addEventListener('change',()=>setTimeout(renumberVisible,0))}}
+ function profile(){let p={region:'',school:''};try{for(const k of ['miikProfile','miikUser','miikSettings','miikSchoolData','schoolData']){let o=JSON.parse(localStorage.getItem(k)||'null');if(o){p.region=p.region||o.region||o.educationRegion||o.education||o.administration||'';p.school=p.school||o.school||o.schoolName||''}}}catch(e){};return{region:p.region||'القصيم',school:p.school||document.querySelector('.school-name')?.textContent?.trim()||'اسم المدرسة'}}
+ function selected(){return{stage:$('#v39Stage')?.value||'',grade:$('#v39Grade')?.value||'',section:$('#v39Section')?.value||''}}
+ function cohort(){let q=selected();return read().filter(x=>x.stage===q.stage&&x.grade===q.grade&&x.section===q.section)}
+ function officialPrint(){
+   let q=selected();if(!q.stage||!q.grade||!q.section){showMiikNotice('الطباعة','اختر المرحلة والصف والفصل أولًا.');return}
+   let a=cohort();if(!a.length){showMiikNotice('الطباعة','لا يوجد طلاب في الفصل المحدد.');return}
+   let w=window.open('','_blank','width=950,height=900');if(!w){showMiikNotice('الطباعة','اسمح بالنوافذ المنبثقة للطباعة.');return}
+   let p=profile(),ministry=new URL('ministry-logo.png',location.href).href;
+   w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف طلاب ${E(q.grade)} - ${E(q.section)}</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:100%;margin:auto}.head{display:grid;grid-template-columns:1fr 125px 1fr;align-items:center;min-height:78px;border-bottom:2px solid #526f65;padding-bottom:8px}.gov{justify-self:end;text-align:center;min-width:225px;font-weight:700;line-height:1.75;font-size:10.5px}.logo{text-align:center}.logo img{max-width:112px;max-height:66px;object-fit:contain}.blank{min-width:225px}.title{text-align:center;color:#294b42;font-size:18px;margin:13px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:12px}.meta span{margin:0 8px}.count{font-weight:700}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #87978f;text-align:center;padding:6px 5px;height:31px}th{background:#e9efe9;color:#294b42;font-weight:900}.n{width:36px}.name{width:26%;text-align:right;padding-right:8px}.phone{width:13%}.follow{width:auto}tbody tr:nth-child(even){background:#fbfaf6}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div class="blank"></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span class="count">عدد الطلاب: ${a.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${a.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>`);w.document.close();
+ }
+ function patchPrint(){let bs=document.querySelectorAll('#studentsPage .student-actions button');let b=bs[2];if(!b||b.dataset.v44)return;b.dataset.v44='1';b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();officialPrint()},true)}
+ function clean(){purgeDemo();wireNumbering();patchPrint();setTimeout(renumberVisible,20)}
+ purgeDemo();
+ const oldOpen=window.openStudents;if(typeof oldOpen==='function')window.openStudents=function(){purgeDemo();let r=oldOpen.apply(this,arguments);setTimeout(clean,40);return r};
+ document.addEventListener('DOMContentLoaded',()=>setTimeout(clean,120),{once:true});setTimeout(clean,250);
+})();
+</script>
