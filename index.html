@@ -526,6 +526,35 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
 })();
 </script>
 
+
+<style id="v29-release">
+/* v29 — تحسينات الحذف، وضوح أزرار السجل، بيانات الطالب في البحث، وتصحيح هـ */
+.v28-open,.v28-delete,.v28-doc{font-weight:850!important}
+.v28-doc-card .v28-doc{font-weight:850!important}
+.v29-student-meta{display:block;font-size:11px;color:var(--muted);margin-top:2px;font-weight:600}
+.v29-confirm-mark{width:52px;height:52px;border-radius:16px;background:#f3e8df;display:grid;place-items:center;margin:0 auto 10px;font-size:24px;color:#7a3434}
+.v29-danger{background:#7a3434!important;color:#fff!important;font-weight:850}
+@media(max-width:720px){.v29-student-meta{font-size:9px}}
+</style>
+<script id="v29-release-js">
+(function(){
+ const studentMeta={
+  'أحمد بن محمد العتيبي':'أول متوسط · ١/أ',
+  'سعد بن عبدالله الشمري':'أول متوسط · ١/ب',
+  'عبدالله بن علي القحطاني':'ثالث متوسط · ٣/أ',
+  'فيصل بن ناصر الحربي':'ثاني متوسط · ٢/ب',
+  'محمد بن خالد المطيري':'ثاني متوسط · ٢/أ'
+ };
+ const esc29=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+ window.v27StudentSuggestions=function(q){const b=document.getElementById('v27Suggestions');if(!b)return;q=q.trim();b.innerHTML=!q?'':Object.keys(studentMeta).filter(x=>x.includes(q)&&!ben.selected.includes(x)).map(x=>`<button type="button" style="display:block;width:100%;text-align:right;border:0;background:#fff;padding:8px" onclick="v27AddStudent('${x}')"><b>＋ ${x}</b><span class="v29-student-meta">${studentMeta[x]}</span></button>`).join('')};
+ window.v27RenderChips=function(){const box=document.getElementById('v27Chips');if(!box)return;box.innerHTML=ben.selected.map((x,i)=>`<span class="student-chip"><span>${esc29(x)}<small class="v29-student-meta">${studentMeta[x]||''}</small></span><button type="button" onclick="v27RemoveStudent(${i})">×</button></span>`).join('')};
+ window.v28DeleteExecution=function(title,i){showMiikDialog(`<div class="v29-confirm-mark">⌫</div><h2 style="text-align:center">تأكيد حذف التنفيذ</h2><p style="text-align:center">هل أنت متأكد من حذف هذا التنفيذ؟ لا يمكن التراجع عن الحذف.</p><div class="dialog-actions"><button class="v29-danger" id="v29ConfirmDelete">حذف</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);document.getElementById('v29ConfirmDelete').onclick=()=>{const key='miikExec_'+title,a=JSON.parse(localStorage.getItem(key)||'[]');a.splice(i,1);localStorage.setItem(key,JSON.stringify(a));closeMiikDialog();renderProgram(title,document.getElementById('moduleGrid'))}};
+ function fixHijriAbbr(){document.querySelectorAll('.datebar').forEach(el=>{el.textContent=el.textContent.replace(/هـه/g,'هـ').replace(/هـ\s*هـ/g,'هـ')})}
+ const oldRefresh=window.refreshHijri;window.refreshHijri=function(){if(oldRefresh)oldRefresh();fixHijriAbbr()};
+ setTimeout(fixHijriAbbr,0);
+})();
+</script>
+
 </body></html><style id="v14-home-final">
 /* v14 — الصفحة الرئيسية فقط */
 .add-menu button{font-size:14px!important;font-weight:800!important;padding:12px 15px!important}
