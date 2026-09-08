@@ -1235,3 +1235,44 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  setTimeout(()=>{cleanPage();patchImportDialog()},100);
 })();
 </script>
+
+<!-- MIIK v42: unified student store + controlled grade/section selectors -->
+<style id="v42-students-css">
+#miikDialog .v42-note{background:#f3f5ef;border:1px solid #d9e1d7;border-radius:14px;padding:10px 12px;color:#4b5f57;font-size:13px;font-weight:700;margin:0 0 14px}
+#miikDialog select{font-weight:800;color:#344b44}
+</style>
+<script id="v42-students-js">
+(function(){
+ const $=s=>document.querySelector(s), norm=s=>String(s??'').replace(/\s+/g,' ').trim();
+ const STORE='miikStudentsV39', CFG='miikSchoolStructureV42';
+ const grades={
+  'الابتدائية':['أول ابتدائي','ثاني ابتدائي','ثالث ابتدائي','رابع ابتدائي','خامس ابتدائي','سادس ابتدائي'],
+  'المتوسطة':['أول متوسط','ثاني متوسط','ثالث متوسط'],
+  'الثانوية':['أول ثانوي','ثاني ثانوي','ثالث ثانوي']
+ };
+ const arabicSections=['أ','ب','ج','د','هـ','و','ز','ح','ط','ي'];
+ function read(){try{return JSON.parse(localStorage.getItem(STORE)||'[]')}catch(e){return[]}}
+ function write(a){localStorage.setItem(STORE,JSON.stringify(a))}
+ function stageOf(g){g=norm(g);if(g.includes('متوسط'))return'المتوسطة';if(g.includes('ثان'))return'الثانوية';if(g.includes('ابتد'))return'الابتدائية';return''}
+ function canonicalGrade(g){g=norm(g).replace(/^ال/,'');const map={'أول المتوسط':'أول متوسط','اول المتوسط':'أول متوسط','الأول المتوسط':'أول متوسط','الثاني المتوسط':'ثاني متوسط','الثالث المتوسط':'ثالث متوسط','الأول الثانوي':'أول ثانوي','الثاني الثانوي':'ثاني ثانوي','الثالث الثانوي':'ثالث ثانوي'};return map[g]||map['ال'+g]||g}
+ function canonicalSection(s){s=norm(s);const m={'1':'أ','١':'أ','2':'ب','٢':'ب','3':'ج','٣':'ج','4':'د','٤':'د','5':'هـ','٥':'هـ','6':'و','٦':'و','7':'ز','٧':'ز','8':'ح','٨':'ح','9':'ط','٩':'ط','10':'ي','١٠':'ي'};return m[s]||s}
+ function normalizeStore(){let a=read(),changed=false;a=a.map(x=>{let g=canonicalGrade(x.grade),sec=canonicalSection(x.section),st=x.stage||stageOf(g);if(g!==x.grade||sec!==x.section||st!==x.stage)changed=true;return {...x,grade:g,section:sec,stage:st}});if(changed)write(a)}
+ function structure(){let cfg={};try{cfg=JSON.parse(localStorage.getItem(CFG)||'{}')}catch(e){};for(const x of read()){let st=x.stage||stageOf(x.grade),g=canonicalGrade(x.grade),sec=canonicalSection(x.section);if(!st||!g)continue;cfg[st]??={};let idx=arabicSections.indexOf(sec);cfg[st][g]=Math.max(Number(cfg[st][g]||0),idx>=0?idx+1:(Number(sec)||1))}return cfg}
+ function stages(){let s=[...new Set(read().map(x=>x.stage||stageOf(x.grade)).filter(Boolean))];if(!s.length)s=['المتوسطة','الثانوية'];return s}
+ function opts(a,ph){return `<option value="">${ph}</option>`+a.map(x=>`<option value="${x}">${x}</option>`).join('')}
+ function sectionCount(st,g){let n=Number(structure()?.[st]?.[g]||0);return n||10}
+ function addStudentDialog(){
+  let sts=stages();showMiikDialog(`<h2>إضافة طالب</h2><p class="v39-help">أضف الطالب باختيارات موحّدة حتى يرتبط بالصف والفصل بصورة صحيحة في جميع أجزاء مِعِك.</p><form id="v42Add"><div class="v39-dialog-grid"><div class="full"><label>اسم الطالب</label><input id="v42Name" required placeholder="اسم الطالب"></div><div><label>المرحلة</label><select id="v42Stage" required>${opts(sts,'اختر المرحلة')}</select></div><div><label>الصف</label><select id="v42Grade" required disabled>${opts([],'اختر الصف')}</select></div><div><label>الفصل</label><select id="v42Section" required disabled>${opts([],'اختر الفصل')}</select></div><div><label>جوال ولي الأمر — اختياري</label><input id="v42Phone" dir="ltr" placeholder="05xxxxxxxx"></div></div><div class="v42-note">عدد الفصول يتكيّف مع هيكل المدرسة والبيانات المستوردة، ويمكن أن يصل إلى 10 فصول للصف.</div><div class="v39-dialog-actions"><button class="v39-primary" type="submit">حفظ الطالب</button><button class="v39-secondary" type="button" onclick="closeMiikDialog()">إلغاء</button></div></form>`);
+  $('#v42Stage').onchange=function(){let a=grades[this.value]||[];$('#v42Grade').innerHTML=opts(a,'اختر الصف');$('#v42Grade').disabled=!a.length;$('#v42Section').innerHTML=opts([],'اختر الفصل');$('#v42Section').disabled=true};
+  $('#v42Grade').onchange=function(){let st=$('#v42Stage').value,n=sectionCount(st,this.value),a=arabicSections.slice(0,Math.min(10,n));$('#v42Section').innerHTML=opts(a,'اختر الفصل');$('#v42Section').disabled=!this.value};
+  $('#v42Add').onsubmit=e=>{e.preventDefault();let x={name:norm($('#v42Name').value),stage:$('#v42Stage').value,grade:$('#v42Grade').value,section:$('#v42Section').value,phone:norm($('#v42Phone').value),last:'لا يوجد'};let a=read();a.push(x);write(a);closeMiikDialog();if(typeof openStudents==='function')openStudents();showMiikNotice('تمت الإضافة','تم حفظ الطالب وربطه بالمرحلة والصف والفصل.')}
+ }
+ function patchAddButton(){let b=document.querySelector('#studentsPage .student-actions button');if(!b||b.dataset.v42)return;b.dataset.v42='1';b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();addStudentDialog()},true)}
+ // Repair Noor imports made by v40/v41: same unified store + exact Noor metadata extraction.
+ async function rowsXlsx(file){const z=await JSZip.loadAsync(await file.arrayBuffer());let sh=[];let sf=z.file('xl/sharedStrings.xml');if(sf){let d=new DOMParser().parseFromString(await sf.async('text'),'application/xml');sh=[...d.getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join(''))}let sheet=z.file('xl/worksheets/sheet1.xml')||z.file(Object.keys(z.files).find(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n)));let d=new DOMParser().parseFromString(await sheet.async('text'),'application/xml');function ci(r){let L=(r.match(/[A-Z]+/)||['A'])[0],n=0;for(let c of L)n=n*26+c.charCodeAt(0)-64;return n-1}return [...d.getElementsByTagName('row')].map(row=>{let a=[];[...row.getElementsByTagName('c')].forEach(c=>{let t=c.getAttribute('t'),v='';if(t==='inlineStr')v=[...c.getElementsByTagName('t')].map(x=>x.textContent).join('');else{v=c.getElementsByTagName('v')[0]?.textContent||'';if(t==='s')v=sh[+v]??v}a[ci(c.getAttribute('r')||'A')]=v});return a})}
+ function rowMeta(rows,label){for(const r of rows){let i=r.findIndex(v=>norm(v)===label);if(i>=0){let vals=r.map(norm).filter((v,j)=>v&&j!==i&&v!==':'&&v!==label);if(vals.length)return vals[0]}}return''}
+ window.v39DoImport=async function(){let f=$('#v39File')?.files?.[0];if(!f){showMiikNotice('اختر ملفًا','اختر ملف Excel من نظام نور أولًا.');return}try{let rows=await rowsXlsx(f),hi=-1,nc=-1,sc=-1;for(let r=0;r<rows.length;r++){for(let c=0;c<rows[r].length;c++){let v=norm(rows[r][c]);if(v==='اسم الطالب'||v==='إسم الطالب'){hi=r;nc=c}if(hi===r&&(v==='الفصل'||v==='الشعبة'))sc=c}if(hi>=0)break}if(hi<0){showMiikNotice('لم يتم الاستيراد','لم يتم العثور على عمود اسم الطالب في كشف نور.');return}let g=canonicalGrade(rowMeta(rows,'الصف')),top=canonicalSection(rowMeta(rows,'الفصل')),st=stageOf(g),data=rows.slice(hi+1).map(r=>{let name=norm(r[nc]);if(!name)return null;return{name,stage:st,grade:g,section:canonicalSection(sc>=0?r[sc]:top)||top,phone:'',last:'لا يوجد'}}).filter(Boolean);let a=read(),keys=new Set(a.map(x=>[x.name,canonicalGrade(x.grade),canonicalSection(x.section)].join('|'))),added=0;for(const x of data){let k=[x.name,x.grade,x.section].join('|');if(!keys.has(k)){a.push(x);keys.add(k);added++}}write(a);closeMiikDialog();showMiikNotice('تم الاستيراد',`تم حفظ ${added} طالب. ${g||''}${top?' — الفصل '+top:''}`);setTimeout(()=>{if(typeof openStudents==='function')openStudents()},120)}catch(e){console.error(e);showMiikNotice('تعذر قراءة الملف','تعذر قراءة كشف نور بصيغة XLSX.')}};
+ const oldOpen=window.openStudents;if(typeof oldOpen==='function')window.openStudents=function(){normalizeStore();let r=oldOpen.apply(this,arguments);setTimeout(patchAddButton,20);return r};
+ document.addEventListener('DOMContentLoaded',()=>{normalizeStore();setTimeout(patchAddButton,80)},{once:true});setTimeout(()=>{normalizeStore();patchAddButton()},200);
+})();
+</script>
