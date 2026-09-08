@@ -1325,3 +1325,89 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  document.addEventListener('DOMContentLoaded',()=>setTimeout(clean,120),{once:true});setTimeout(clean,250);
 })();
 </script>
+
+<!-- MIIK v45: Noor multi-page / multi-sheet import fix -->
+<script id="v45-noor-import-js">
+(function(){
+ const $=s=>document.querySelector(s), STORE='miikStudentsV39';
+ const norm=s=>String(s??'').replace(/\s+/g,' ').trim();
+ const gradeMap={
+  'الأول المتوسط':'أول متوسط','الثاني المتوسط':'ثاني متوسط','الثالث المتوسط':'ثالث متوسط',
+  'الأول الثانوي':'أول ثانوي','الثاني الثانوي':'ثاني ثانوي','الثالث الثانوي':'ثالث ثانوي',
+  'الأول الابتدائي':'أول ابتدائي','الثاني الابتدائي':'ثاني ابتدائي','الثالث الابتدائي':'ثالث ابتدائي',
+  'الرابع الابتدائي':'رابع ابتدائي','الخامس الابتدائي':'خامس ابتدائي','السادس الابتدائي':'سادس ابتدائي'
+ };
+ const secMap={'1':'أ','١':'أ','2':'ب','٢':'ب','3':'ج','٣':'ج','4':'د','٤':'د','5':'هـ','٥':'هـ','6':'و','٦':'و','7':'ز','٧':'ز','8':'ح','٨':'ح','9':'ط','٩':'ط','10':'ي','١٠':'ي'};
+ function grade(g){g=norm(g);return gradeMap[g]||g.replace(/^الأول الثانوي$/,'أول ثانوي').replace(/^الثاني الثانوي$/,'ثاني ثانوي').replace(/^الثالث الثانوي$/,'ثالث ثانوي')}
+ function section(s){s=norm(s);return secMap[s]||s}
+ function stage(g){g=norm(g);if(g.includes('متوسط'))return'المتوسطة';if(g.includes('ثان'))return'الثانوية';if(g.includes('ابتد'))return'الابتدائية';return''}
+ function read(){try{let a=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
+ function write(a){localStorage.setItem(STORE,JSON.stringify(a))}
+ function colIndex(ref){let letters=(String(ref).match(/[A-Z]+/)||['A'])[0],n=0;for(const ch of letters)n=n*26+ch.charCodeAt(0)-64;return n-1}
+ async function workbookRows(file){
+   const zip=await JSZip.loadAsync(await file.arrayBuffer());
+   let shared=[];const sf=zip.file('xl/sharedStrings.xml');
+   if(sf){const sx=new DOMParser().parseFromString(await sf.async('text'),'application/xml');shared=[...sx.getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join(''))}
+   const names=Object.keys(zip.files).filter(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort((a,b)=>Number((a.match(/sheet(\d+)/)||[])[1])-Number((b.match(/sheet(\d+)/)||[])[1]));
+   if(!names.length)throw Error('NO_SHEETS');
+   const sheets=[];
+   for(const name of names){
+     const xml=new DOMParser().parseFromString(await zip.file(name).async('text'),'application/xml');
+     const rows=[...xml.getElementsByTagName('row')].map(row=>{const out=[];[...row.getElementsByTagName('c')].forEach(c=>{let v='',t=c.getAttribute('t');if(t==='inlineStr')v=[...c.getElementsByTagName('t')].map(x=>x.textContent).join('');else{v=c.getElementsByTagName('v')[0]?.textContent??'';if(t==='s')v=shared[Number(v)]??v}out[colIndex(c.getAttribute('r')||'A')]=v});return out});
+     sheets.push(rows);
+   }
+   return sheets;
+ }
+ function nearbyMeta(rows,label,at){
+   const from=Math.max(0,at-30), to=Math.min(rows.length-1,at+8);
+   for(let r=at;r>=from;r--){let i=rows[r].findIndex(v=>norm(v)===label);if(i>=0){let near=[rows[r][i-2],rows[r][i-1],rows[r][i+1],rows[r][i+2],rows[r][i+3]].map(norm).filter(v=>v&&v!==':'&&v!==label);if(near.length)return near[0]}}
+   for(let r=at+1;r<=to;r++){let i=rows[r].findIndex(v=>norm(v)===label);if(i>=0){let near=[rows[r][i-2],rows[r][i-1],rows[r][i+1],rows[r][i+2],rows[r][i+3]].map(norm).filter(v=>v&&v!==':'&&v!==label);if(near.length)return near[0]}}
+   return'';
+ }
+ function isHeaderRow(row){return row.some(v=>{v=norm(v);return v==='اسم الطالب'||v==='إسم الطالب'})}
+ function looksLikeStudentName(v){
+   v=norm(v);if(!v||v.length<5)return false;
+   const bad=['اسم الطالب','إسم الطالب','الطالب','الفصل','الصف','المرحلة','المجموع','عدد الطلاب','وزارة التعليم','نظام نور','التاريخ','المدرسة','توقيع','مدير المدرسة','المملكة العربية السعودية'];
+   if(bad.some(x=>v===x||v.includes(x)&&v.length<35))return false;
+   if(/^\d+$/.test(v))return false;
+   return /[\u0600-\u06FF]/.test(v);
+ }
+ function parseSheet(rows){
+   const out=[];let currentGrade='',currentSection='';
+   let r=0;
+   while(r<rows.length){
+     if(!isHeaderRow(rows[r])){r++;continue}
+     let nameCol=-1,sectionCol=-1;
+     rows[r].forEach((cell,c)=>{let v=norm(cell);if(v==='اسم الطالب'||v==='إسم الطالب')nameCol=c;if(v==='الفصل'||v==='الشعبة')sectionCol=c});
+     if(nameCol<0){r++;continue}
+     currentGrade=grade(nearbyMeta(rows,'الصف',r)||currentGrade);
+     currentSection=section(nearbyMeta(rows,'الفصل',r)||currentSection);
+     let j=r+1;
+     for(;j<rows.length;j++){
+       if(isHeaderRow(rows[j]))break; // repeated print-page header; next loop continues from it
+       let name=norm(rows[j][nameCol]);
+       if(!looksLikeStudentName(name))continue;
+       let sec=section(sectionCol>=0?rows[j][sectionCol]:'')||currentSection;
+       out.push({name,stage:stage(currentGrade),grade:currentGrade,section:sec,phone:'',last:'لا يوجد'});
+     }
+     r=j;
+   }
+   return out;
+ }
+ window.v39DoImport=async function(){
+   const f=$('#v39File')?.files?.[0];if(!f){showMiikNotice('اختر ملفًا','اختر ملف Excel من نظام نور أولًا.');return}
+   try{
+     const sheets=await workbookRows(f);let data=[];
+     for(const rows of sheets)data.push(...parseSheet(rows));
+     data=data.filter(x=>x.name&&x.grade&&x.section);
+     if(!data.length){showMiikNotice('لم يتم الاستيراد','لم يتم العثور على بيانات الطلاب في كشف نور.');return}
+     let saved=read(),keys=new Set(saved.map(x=>[norm(x.name),grade(x.grade),section(x.section)].join('|'))),added=0,seenFile=new Set();
+     for(const x of data){let k=[norm(x.name),grade(x.grade),section(x.section)].join('|');if(seenFile.has(k))continue;seenFile.add(k);if(!keys.has(k)){saved.push(x);keys.add(k);added++}}
+     write(saved);closeMiikDialog();
+     let total=seenFile.size;
+     showMiikNotice('تم الاستيراد',`تمت قراءة الكشف كاملًا وحفظ ${added} طالب جديد من أصل ${total} طالب تم العثور عليهم.`);
+     setTimeout(()=>{if(typeof openStudents==='function')openStudents()},120);
+   }catch(e){console.error(e);showMiikNotice('تعذر قراءة الملف','تعذر قراءة كشف نور. تأكد أن الملف بصيغة XLSX الأصلية.')}
+ };
+})();
+</script>
