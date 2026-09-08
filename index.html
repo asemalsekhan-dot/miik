@@ -1316,7 +1316,7 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
    let a=cohort();if(!a.length){showMiikNotice('الطباعة','لا يوجد طلاب في الفصل المحدد.');return}
    let w=window.open('','_blank','width=950,height=900');if(!w){showMiikNotice('الطباعة','اسمح بالنوافذ المنبثقة للطباعة.');return}
    let p=profile(),ministry=new URL('ministry-logo.png',location.href).href;
-   w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف طلاب ${E(q.grade)} - ${E(q.section)}</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:100%;margin:auto}.head{display:grid;grid-template-columns:1fr 125px 1fr;align-items:center;min-height:78px;border-bottom:2px solid #526f65;padding-bottom:8px}.gov{justify-self:end;text-align:center;min-width:225px;font-weight:700;line-height:1.75;font-size:10.5px}.logo{text-align:center}.logo img{max-width:112px;max-height:66px;object-fit:contain}.blank{min-width:225px}.title{text-align:center;color:#294b42;font-size:18px;margin:13px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:12px}.meta span{margin:0 8px}.count{font-weight:700}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #87978f;text-align:center;padding:6px 5px;height:31px}th{background:#e9efe9;color:#294b42;font-weight:900}.n{width:36px}.name{width:26%;text-align:right;padding-right:8px}.phone{width:13%}.follow{width:auto}tbody tr:nth-child(even){background:#fbfaf6}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div class="blank"></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span class="count">عدد الطلاب: ${a.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${a.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>`);w.document.close();
+   w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف طلاب ${E(q.grade)} - ${E(q.section)}</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:100%;margin:auto}.head{display:grid;grid-template-columns:1fr 125px 1fr;align-items:center;min-height:78px;border-bottom:2px solid #526f65;padding-bottom:8px}.gov{justify-self:end;text-align:center;min-width:225px;font-weight:700;line-height:1.75;font-size:10.5px}.logo{text-align:center}.logo img{max-width:112px;max-height:66px;object-fit:contain}.blank{min-width:225px}.title{text-align:center;color:#294b42;font-size:18px;margin:13px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:12px}.meta span{margin:0 8px;direction:rtl;unicode-bidi:isolate}.count{font-weight:700}table{width:92%;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #87978f;text-align:center;padding:6px 5px;height:31px}th{background:#e9efe9;color:#294b42;font-weight:900}.n{width:5%}.name{width:34%;text-align:right;padding-right:8px}.phone{width:16%}.follow{width:9%;white-space:nowrap}tbody tr:nth-child(even){background:#fbfaf6}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div class="blank"></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span class="count">عدد الطلاب: ${a.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${a.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>`);w.document.close();
  }
  function patchPrint(){let bs=document.querySelectorAll('#studentsPage .student-actions button');let b=bs[2];if(!b||b.dataset.v44)return;b.dataset.v44='1';b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();officialPrint()},true)}
  function clean(){purgeDemo();wireNumbering();patchPrint();setTimeout(renumberVisible,20)}
@@ -1382,6 +1382,7 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
 })();
 </script>
 
+<!-- MIIK v48: merge/correct imported Noor student placement + refined official print -->
 <!-- MIIK v47: keep Noor cohort metadata across printed-page continuations -->
 <script id="v47-noor-page-continuation-fix">
 (function(){
@@ -1445,12 +1446,37 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
      if(!data.length){showMiikNotice('لم يتم الاستيراد','لم يتم العثور على بيانات الطلاب في كشف نور.');return}
      const unique=[], seenFile=new Set();
      for(const x of data){const k=[norm(x.name),canonGrade(x.grade),x.section].join('|');if(!seenFile.has(k)){seenFile.add(k);unique.push(x)}}
-     const a=read(), keys=new Set(a.map(x=>[norm(x.name),canonGrade(x.grade),canonSec(x.section)||norm(x.section)].join('|'))); let added=0;
-     for(const x of unique){const k=[norm(x.name),canonGrade(x.grade),x.section].join('|');if(!keys.has(k)){a.push(x);keys.add(k);added++}}
-     write(a); closeMiikDialog();
+     const a=read(); let added=0, corrected=0;
+     // v48: كشف نور هو المرجع لموضع الطالب. إذا كان الطالب محفوظًا سابقًا
+     // بمرحلة/صف/فصل خاطئ بسبب استيراد قديم، نصحح السجل بدل تجاهله كمكرر.
+     for(const x of unique){
+       const nn=norm(x.name), gg=canonGrade(x.grade), ss=canonSec(x.section)||x.section;
+       let idx=a.findIndex(y=>norm(y.name)===nn && canonGrade(y.grade)===gg);
+       if(idx<0) idx=a.findIndex(y=>norm(y.name)===nn);
+       if(idx>=0){
+         const y=a[idx]||{};
+         const oldStage=norm(y.stage), oldGrade=canonGrade(y.grade), oldSec=canonSec(y.section)||norm(y.section);
+         if(oldStage!==x.stage || oldGrade!==gg || oldSec!==ss){
+           a[idx]={...y,name:x.name,stage:x.stage,grade:gg,section:ss,phone:y.phone||x.phone||'',last:y.last||x.last||'لا يوجد'};
+           corrected++;
+         }
+       }else{a.push({...x,grade:gg,section:ss});added++}
+     }
+     // إزالة التكرار الحقيقي لنفس الطالب/الصف/الفصل مع الإبقاء على السجل الأكثر اكتمالًا.
+     const merged=[], pos=new Map();
+     for(const y of a){
+       const k=[norm(y.name),canonGrade(y.grade),canonSec(y.section)||norm(y.section)].join('|');
+       if(!pos.has(k)){pos.set(k,merged.length);merged.push(y)}else{
+         const i=pos.get(k), keep=merged[i];
+         if(!keep.phone && y.phone) keep.phone=y.phone;
+         if((!keep.last||keep.last==='لا يوجد') && y.last) keep.last=y.last;
+         if(!keep.stage && y.stage) keep.stage=y.stage;
+       }
+     }
+     write(merged); closeMiikDialog();
      const groups={}; for(const x of unique){const k=[x.grade,x.section].join(' — ');groups[k]=(groups[k]||0)+1}
      const summary=Object.entries(groups).map(([k,n])=>`${k}: ${n}`).join('، ');
-     showMiikNotice('تم الاستيراد',`تم حفظ ${added} طالب من كشف نور. تمت قراءة جميع صفحات الكشف وربط طلاب الصفحات المتتابعة بالفصل نفسه. ${summary}`);
+     showMiikNotice('تم الاستيراد',`تمت معالجة كشف نور كاملًا. جديد: ${added}، تم تصحيح ربط: ${corrected}. ${summary}`);
      setTimeout(()=>{if(typeof openStudents==='function')openStudents()},120);
    }catch(e){console.error('MIIK v47 Noor import',e);showMiikNotice('تعذر قراءة الملف','تعذر قراءة كشف نور. تأكد أن الملف بصيغة XLSX الأصلية.')}
  };
