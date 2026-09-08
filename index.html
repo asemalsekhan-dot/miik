@@ -1227,6 +1227,11 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
    const old=window.showMiikDialog;if(!old||old.__v40)return;
    window.showMiikDialog=function(html){if(String(html).includes('استيراد بيانات الطلاب'))html=`<h2>استيراد بيانات الطلاب من نور</h2><p class="v39-help">اختر كشف الطلاب الأصلي بصيغة XLSX كما تم تصديره من نظام نور. سيأخذ مِعِك فقط اسم الطالب والصف والفصل، ويتجاهل بقية الأعمدة.</p><div class="v39-file"><input id="v39File" type="file" accept=".xlsx" style="width:100%"></div><div class="v39-dialog-actions"><button class="v39-primary" type="button" onclick="v39DoImport()">قراءة واستيراد</button><button class="v39-secondary" type="button" onclick="closeMiikDialog()">إلغاء</button></div>`;return old(html)};window.showMiikDialog.__v40=true;
  }
- const obs=new MutationObserver(()=>cleanPage());document.addEventListener('DOMContentLoaded',()=>{cleanPage();patchImportDialog();obs.observe(document.body,{childList:true,subtree:true})});setTimeout(()=>{cleanPage();patchImportDialog()},100);
+ // v41 stability fix: v40's MutationObserver re-wrote #v39Intro on every DOM mutation,
+ // which triggered itself again and could freeze the whole page. Run cleanup only at safe entry points.
+ const v40OpenStudents=window.openStudents;
+ if(typeof v40OpenStudents==='function'){window.openStudents=function(){const r=v40OpenStudents.apply(this,arguments);setTimeout(()=>{cleanPage();patchImportDialog()},0);return r}}
+ document.addEventListener('DOMContentLoaded',()=>{cleanPage();patchImportDialog()},{once:true});
+ setTimeout(()=>{cleanPage();patchImportDialog()},100);
 })();
 </script>
