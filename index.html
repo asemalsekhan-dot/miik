@@ -1168,3 +1168,65 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  document.addEventListener('DOMContentLoaded',()=>setTimeout(init,20));setTimeout(init,50);
 })();
 </script>
+
+<!-- MIIK v40: clean students page + Noor Excel importer -->
+<style id="v40-students-css">
+#studentsPage .students-title{display:none!important}
+#studentsPage #v39Intro{border:0!important;background:transparent!important;box-shadow:none!important;padding:2px 2px 12px!important;margin:0 0 10px!important}
+#studentsPage #v39Intro b{font-size:21px!important;font-weight:900!important;margin-bottom:7px!important}
+#studentsPage #v39Intro span{font-size:14px!important;font-weight:850!important;color:#40534d!important}
+#studentsPage .cohort-list{display:none!important}
+#studentsPage .student-list .cohort-card{display:none!important}
+</style>
+<script id="v40-students-js">
+(function(){
+ const $=s=>document.querySelector(s);
+ const E=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+ const norm=s=>String(s??'').replace(/\s+/g,' ').trim();
+ const gradeMap={'الأول المتوسط':'أول متوسط','الثاني المتوسط':'ثاني متوسط','الثالث المتوسط':'ثالث متوسط','الأول الثانوي':'أول ثانوي','الثاني الثانوي':'ثاني ثانوي','الثالث الثانوي':'ثالث ثانوي'};
+ const sectionMap={'1':'أ','١':'أ','2':'ب','٢':'ب','3':'ج','٣':'ج','4':'د','٤':'د','5':'هـ','٥':'هـ','6':'و','٦':'و'};
+ function stageFromGrade(g){g=norm(g);if(g.includes('متوسط'))return 'المتوسطة';if(g.includes('ثان'))return 'الثانوية';if(g.includes('ابتد'))return 'الابتدائية';return ''}
+ function cleanPage(){
+   document.querySelectorAll('#studentsPage .students-title,#studentsPage .cohort-list').forEach(x=>x.remove());
+   const intro=$('#v39Intro');if(intro){intro.className='v39-intro';intro.innerHTML='<b>بيانات الطلاب في مِعِك 🌿</b><span>ابحث باسم الطالب لفتح ملفه مباشرة، أو اختر المرحلة والصف والفصل لعرض طلاب الفصل.</span>';}
+ }
+ function colIndex(ref){let letters=(String(ref).match(/[A-Z]+/)||['A'])[0],n=0;for(const ch of letters)n=n*26+ch.charCodeAt(0)-64;return n-1}
+ async function xlsxRows(file){
+   const zip=await JSZip.loadAsync(await file.arrayBuffer());
+   let shared=[];const sf=zip.file('xl/sharedStrings.xml');
+   if(sf){const sx=new DOMParser().parseFromString(await sf.async('text'),'application/xml');shared=[...sx.getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join(''))}
+   let sheet=zip.file('xl/worksheets/sheet1.xml');if(!sheet){const names=Object.keys(zip.files).filter(n=>/^xl\/worksheets\/sheet\d+\.xml$/.test(n));sheet=zip.file(names[0])}if(!sheet)throw Error('NO_SHEET');
+   const xml=new DOMParser().parseFromString(await sheet.async('text'),'application/xml');
+   return [...xml.getElementsByTagName('row')].map(row=>{const out=[];[...row.getElementsByTagName('c')].forEach(c=>{let v='',t=c.getAttribute('t');if(t==='inlineStr')v=[...c.getElementsByTagName('t')].map(x=>x.textContent).join('');else{v=c.getElementsByTagName('v')[0]?.textContent??'';if(t==='s')v=shared[Number(v)]??v}out[colIndex(c.getAttribute('r')||'A')]=v});return out});
+ }
+ function findMeta(rows,label){for(const r of rows){for(let i=0;i<r.length;i++){if(norm(r[i])===label){const near=[r[i-2],r[i-1],r[i+1],r[i+2]].map(norm).filter(Boolean).filter(x=>x!==':');if(near.length)return near[0]}}}return ''}
+ function noorRows(rows){
+   let header=-1,nameCol=-1,sectionCol=-1;
+   for(let ri=0;ri<rows.length;ri++){for(let ci=0;ci<rows[ri].length;ci++){const v=norm(rows[ri][ci]);if(v==='اسم الطالب'||v==='إسم الطالب'){header=ri;nameCol=ci}if(header===ri&&(v==='الفصل'||v==='الشعبة'))sectionCol=ci}if(header>=0)break}
+   if(header<0||nameCol<0)return [];
+   let grade=gradeMap[findMeta(rows,'الصف')]||findMeta(rows,'الصف');
+   let topSection=findMeta(rows,'الفصل');
+   return rows.slice(header+1).map(r=>{let name=norm(r[nameCol]);if(!name)return null;let rawSec=norm(sectionCol>=0?r[sectionCol]:topSection)||topSection;let section=sectionMap[rawSec]||rawSec;return{name,stage:stageFromGrade(grade)||'المتوسطة',grade,section,phone:'',last:'لا يوجد'}}).filter(Boolean);
+ }
+ function readSaved(){try{return JSON.parse(localStorage.getItem('miikStudentsV39')||'[]')}catch(e){return[]}}
+ function saveSaved(a){localStorage.setItem('miikStudentsV39',JSON.stringify(a))}
+ function existingKeys(){let a=[];document.querySelectorAll('.student-card').forEach(c=>{const oc=c.getAttribute('onclick')||'',m=oc.match(/openStudent\('([^']*)','([^']*)','([^']*)'/);if(m)a.push([m[1],m[2],m[3]].join('|'))});return new Set(a)}
+ window.v39DoImport=async function(){
+   const file=$('#v39File')?.files?.[0];if(!file){showMiikNotice('اختر ملفًا','اختر ملف Excel من نظام نور أولًا.');return}
+   try{
+     let rows;if(file.name.toLowerCase().endsWith('.xlsx'))rows=await xlsxRows(file);else{const txt=await file.text();rows=txt.split(/\r?\n/).filter(Boolean).map(line=>line.split(',').map(norm))}
+     let data=noorRows(rows);
+     if(!data.length){showMiikNotice('لم يتم الاستيراد','لم يتم العثور على عمود «اسم الطالب» وبيانات الصف والفصل في كشف نور.');return}
+     let saved=readSaved(),keys=existingKeys();saved.forEach(x=>keys.add([x.name,x.grade,x.section].join('|')));let added=0;
+     data.forEach(x=>{let k=[x.name,x.grade,x.section].join('|');if(!keys.has(k)){saved.push(x);keys.add(k);added++}});saveSaved(saved);
+     closeMiikDialog();showMiikNotice('تم الاستيراد',`تم حفظ ${added} طالب من كشف نور. الصف: ${data[0].grade||'—'}، الفصل: ${data[0].section||'—'}.`);
+     setTimeout(()=>{if(typeof openStudents==='function')openStudents();cleanPage()},150);
+   }catch(e){console.error(e);showMiikNotice('تعذر قراءة الملف','تعذر قراءة كشف نور. تأكد أن الملف بصيغة XLSX الأصلية.')}
+ };
+ function patchImportDialog(){
+   const old=window.showMiikDialog;if(!old||old.__v40)return;
+   window.showMiikDialog=function(html){if(String(html).includes('استيراد بيانات الطلاب'))html=`<h2>استيراد بيانات الطلاب من نور</h2><p class="v39-help">اختر كشف الطلاب الأصلي بصيغة XLSX كما تم تصديره من نظام نور. سيأخذ مِعِك فقط اسم الطالب والصف والفصل، ويتجاهل بقية الأعمدة.</p><div class="v39-file"><input id="v39File" type="file" accept=".xlsx" style="width:100%"></div><div class="v39-dialog-actions"><button class="v39-primary" type="button" onclick="v39DoImport()">قراءة واستيراد</button><button class="v39-secondary" type="button" onclick="closeMiikDialog()">إلغاء</button></div>`;return old(html)};window.showMiikDialog.__v40=true;
+ }
+ const obs=new MutationObserver(()=>cleanPage());document.addEventListener('DOMContentLoaded',()=>{cleanPage();patchImportDialog();obs.observe(document.body,{childList:true,subtree:true})});setTimeout(()=>{cleanPage();patchImportDialog()},100);
+})();
+</script>
