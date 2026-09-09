@@ -2565,3 +2565,31 @@ window.v78RenderContentPlan=function(){
 const nav78=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='المحتوى والخطة'){v78RenderContentPlan();return}return nav78.apply(this,arguments)};
 })();
 </script>
+
+<!-- v79: MIIK content development center -->
+<style id="v79-style">
+.v79-hub{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-top:15px}.v79-tile{appearance:none;border:1px solid #dfe5da;background:#fffdf8;border-radius:19px;min-height:155px;padding:18px;text-align:right;cursor:pointer;box-shadow:0 8px 24px rgba(45,71,60,.045);transition:.18s ease;font:inherit;position:relative;overflow:hidden}.v79-tile:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:#718c78;opacity:.45}.v79-tile:hover{transform:translateY(-2px);border-color:#cbd7ca;box-shadow:0 12px 28px rgba(45,71,60,.08)}.v79-icon{width:39px;height:39px;border-radius:13px;background:#edf2e9;color:#4c675b;display:grid;place-items:center;font-size:18px;margin-bottom:14px}.v79-tile b{display:block;color:#355248;font-size:13px;font-weight:950;line-height:1.55}.v79-tile small{display:block;color:#87948e;font-size:9.4px;font-weight:780;line-height:1.75;margin-top:6px}.v79-brandline{margin-top:16px;border:1px solid #dce5d9;background:linear-gradient(135deg,#f1f5ed,#fbfaf4);border-radius:15px;padding:12px 15px;color:#5d7168;font-size:9.7px;font-weight:800;line-height:1.8}.v79-brandline b{color:#3f5e52}.v79-mini{position:absolute;left:14px;bottom:13px;color:#819087;font-size:8px;font-weight:900}.v79-tile.brand{background:linear-gradient(145deg,#f5f5ec,#fffdf8)}@media(max-width:980px){.v79-hub{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:720px){.v79-hub{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:460px){.v79-hub{grid-template-columns:1fr}}
+</style>
+<script id="v79-script">
+(function(){
+'use strict';
+function notice79(title){if(typeof showMiikNotice==='function')showMiikNotice(title,'هذا القسم جاهز ضمن مركز تطوير محتوى مِعِك، وستُفعّل أدوات التحرير والنشر الفعلية عند ربط قاعدة المحتوى والخادم.');}
+window.v78RenderContentPlan=function(){
+ if(typeof mark78==='function')mark78('المحتوى والخطة'); else {document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t==='المحتوى والخطة')});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+ const main=document.querySelector('.v68-owner-main');if(!main)return;
+ const tiles=[
+ ['▤','خطة التوجيه الطلابي','تطوير بنية الخطة السنوية والفصلية وعناصرها وطريقة عرضها.'],
+ ['✦','برامج التوجيه الطلابي','إدارة أنواع البرامج ونماذجها وحقولها والشواهد المرتبطة بها.'],
+ ['◷','الأيام والمناسبات العالمية والوطنية','إضافة المناسبات وتحديث المواد المرتبطة بها ووقت ظهورها.'],
+ ['▧','السلوك والمواظبة','تحديث القواعد والمحتوى وطريقة العرض عند صدور أي تحديث مستقبلي.'],
+ ['▥','التقارير','تطوير تقارير البرامج والتقارير الختامية وتصميمها وحقولها ومخرجاتها.'],
+ ['☷','السجلات والنماذج','إدارة نماذج الجلسات والاستدعاءات والتعهدات والشكر ودراسة الحالة وغيرها.'],
+ ['♙','ملف إنجاز الطالب','تطوير العناصر التي تظهر في ملف الطالب وترتيب السجل وطريقة عرضه.'],
+ ['◎','القدرات والتحصيلي','تطوير نماذج المتابعة والتحفيز والمحتوى والتقارير الخاصة بها.'],
+ ['❝','عبارات مِعِك والهوية اللغوية','إدارة العبارات الودية وروح مِعِك في الواجهة بعيدًا عن المخرجات الرسمية.','brand']
+ ];
+ main.innerHTML=`<div class="v72-users-head"><div><h1>المحتوى والخطة</h1><p>مركز تطوير مِعِك؛ ادخل مباشرة إلى الجزء الذي تريد تحديثه، والتعديل ينعكس على موضعه في المنصة.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div><section class="v79-hub">${tiles.map(x=>`<button class="v79-tile ${x[3]||''}" onclick="(${notice79.toString()})('${x[1].replace(/'/g,"\\'")}')"><span class="v79-icon">${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small><span class="v79-mini">إدارة وتطوير</span></button>`).join('')}</section><div class="v79-brandline"><b>هوية مِعِك ثابتة:</b> التطوير من هنا يحافظ على روح مِعِك وألوانه ولغته الودية في الواجهة، بينما تبقى التقارير والنماذج الرسمية بصياغتها وهوية المدرسة والوزارة.</div>`;
+ window.scrollTo({top:0,behavior:'smooth'});
+};
+})();
+</script>
