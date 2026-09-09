@@ -2385,3 +2385,27 @@ const oldNav73=window.v68OwnerNav;
 window.v68OwnerNav=function(btn,title){if(title==='المدارس'){v73RenderSchools();return}return oldNav73.apply(this,arguments)};
 })();
 </script>
+
+
+<!-- v74: owner subscriptions — next management section -->
+<style id="v74-style">
+.v74-sub-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:16px}.v74-sub-summary article{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;padding:16px;min-height:105px;box-shadow:0 7px 20px rgba(45,71,60,.035);cursor:pointer}.v74-sub-summary article.active{background:#e9efe6;border-color:#bdccbe}.v74-sub-summary b{display:block;color:#51675f;font-size:12px}.v74-sub-summary strong{display:block;color:#2f5047;font-size:25px;margin-top:10px}.v74-sub-summary small{display:block;color:#8a9791;font-size:9.5px;margin-top:3px}.v74-sub-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #e1e4dc;border-radius:13px;overflow:hidden}.v74-sub-table th{background:#f1f3ec;color:#52675f;font-size:10px;padding:11px;text-align:right;font-weight:800}.v74-sub-table td{padding:12px 11px;border-top:1px solid #eceee8;color:#52635d;font-size:10.5px;font-weight:700}.v74-empty{padding:42px 18px;text-align:center;color:#6f7f78}.v74-empty .ico{width:48px;height:48px;border-radius:16px;background:#eef2ea;display:grid;place-items:center;margin:0 auto 12px;font-size:21px}.v74-empty b{display:block;color:#3e5b52;font-size:13px;margin-bottom:6px}.v74-empty span{font-size:10px;line-height:1.8;color:#8a958f}@media(max-width:850px){.v74-sub-summary{grid-template-columns:1fr 1fr}}@media(max-width:520px){.v74-sub-summary{grid-template-columns:1fr}}
+</style>
+<script id="v74-script">
+(function(){
+'use strict';
+function mark74(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function subscriptions74(){return []} // future backend/API; no fabricated subscription records.
+function esc74(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+window.v74RenderSubscriptions=function(segment=''){
+ mark74('الاشتراكات'); const main=document.querySelector('.v68-owner-main'); if(!main)return;
+ const rows=subscriptions74(); const active=rows.filter(x=>x.status==='نشط').length, expiring=rows.filter(x=>x.status==='قريب من الانتهاء').length, expired=rows.filter(x=>x.status==='منتهي').length;
+ main.innerHTML=`<div class="v72-users-head"><div><h1>الاشتراكات</h1><p>متابعة حالة اشتراكات مِعِك وتجديداتها وأكواد التفعيل.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
+ <section class="v74-sub-summary"><article class="${!segment?'active':''}" onclick="v74RenderSubscriptions('')"><b>جميع الاشتراكات</b><strong>${rows.length?rows.length:'—'}</strong><small>إجمالي الاشتراكات المسجلة</small></article><article class="${segment==='نشط'?'active':''}" onclick="v74RenderSubscriptions('نشط')"><b>الاشتراكات النشطة</b><strong>${rows.length?active:'—'}</strong><small>اشتراكات سارية حاليًا</small></article><article class="${segment==='قريب من الانتهاء'?'active':''}" onclick="v74RenderSubscriptions('قريب من الانتهاء')"><b>قريبة من الانتهاء</b><strong>${rows.length?expiring:'—'}</strong><small>تحتاج متابعة قبل الانتهاء</small></article><article class="${segment==='منتهي'?'active':''}" onclick="v74RenderSubscriptions('منتهي')"><b>المنتهية</b><strong>${rows.length?expired:'—'}</strong><small>اشتراكات انتهت مدتها</small></article></section>
+ <section class="v72-users-panel"><div class="v72-users-tools"><input id="v74SubSearch" placeholder="ابحث باسم المستخدم أو المدرسة أو رقم الجوال"><select id="v74SubEdu"><option value="">كل إدارات التعليم</option>${(window.MIIK_EDU_DEPARTMENTS||[]).map(x=>`<option>${esc74(x)}</option>`).join('')}</select><select id="v74SubStatus"><option value="">كل الحالات</option><option>نشط</option><option>قريب من الانتهاء</option><option>منتهي</option></select></div>
+ <table class="v74-sub-table"><thead><tr><th>المستخدم</th><th>المدرسة</th><th>نوع الاشتراك</th><th>بداية الاشتراك</th><th>نهاية الاشتراك</th><th>الحالة</th></tr></thead><tbody><tr><td colspan="6"><div class="v74-empty"><div class="ico">▣</div><b>لا توجد بيانات اشتراكات متصلة حتى الآن</b><span>عند ربط بوابة المالك بقاعدة الحسابات ستظهر الاشتراكات الفعلية ومددها وحالاتها هنا تلقائيًا، دون أي بيانات تجريبية.</span></div></td></tr></tbody></table></section>`;
+ window.scrollTo({top:0,behavior:'smooth'});
+};
+const oldNav74=window.v68OwnerNav; window.v68OwnerNav=function(btn,title){if(title==='الاشتراكات'){v74RenderSubscriptions();return}return oldNav74.apply(this,arguments)};
+})();
+</script>
