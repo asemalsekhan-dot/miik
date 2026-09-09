@@ -2316,3 +2316,72 @@ body.v68-owner-mode .v71-owner-date{display:block!important;white-space:normal;l
   };
 })();
 </script>
+
+<!-- v73: unified official education departments + owner schools -->
+<style id="v73-style">
+.v58-field select{width:100%;box-sizing:border-box;padding:14px 16px;border:1px solid #d9ded4;border-radius:14px;background:#fff;font:inherit;color:#34444b;outline:none}.v58-field select:focus{border-color:#7d9a82;box-shadow:0 0 0 3px #7d9a8218}
+.v73-school-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:16px}.v73-school-summary article{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;padding:16px;min-height:105px;box-shadow:0 7px 20px rgba(45,71,60,.035)}.v73-school-summary b{display:block;color:#51675f;font-size:12px}.v73-school-summary strong{display:block;color:#2f5047;font-size:25px;margin-top:10px}.v73-school-summary small{display:block;color:#8a9791;font-size:9.5px;margin-top:3px}.v73-dept-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v73-dept-card{border:1px solid #dfe3d8;background:#fffdf8;border-radius:14px;padding:14px;text-align:right;cursor:pointer;color:#405b52;font:inherit;font-weight:800}.v73-dept-card:hover{background:#f1f4ec}.v73-dept-card span{display:block;color:#8a9690;font-size:9.5px;margin-top:5px}.v73-schools-empty{grid-column:1/-1;padding:32px;text-align:center;color:#7a8781;background:#fffdf8;border:1px dashed #d9ded6;border-radius:16px;font-weight:700}@media(max-width:700px){.v73-school-summary{grid-template-columns:1fr}.v73-dept-grid{grid-template-columns:1fr}}
+</style>
+<script id="v73-script">
+(function(){
+'use strict';
+const EDU73=[
+'الإدارة العامة للتعليم بمنطقة الرياض',
+'الإدارة العامة للتعليم بمحافظة جدة',
+'الإدارة العامة للتعليم بمنطقة المدينة المنورة',
+'إدارة التعليم بمحافظة الطائف',
+'الإدارة العامة للتعليم بمنطقة نجران',
+'الإدارة العامة للتعليم بمنطقة الجوف',
+'الإدارة العامة للتعليم بمنطقة حائل',
+'الإدارة العامة للتعليم بمنطقة الباحة',
+'الإدارة العامة للتعليم بمنطقة مكة المكرمة',
+'الإدارة العامة للتعليم بمنطقة القصيم',
+'الإدارة العامة للتعليم بمحافظة الأحساء',
+'الإدارة العامة للتعليم بالمنطقة الشرقية',
+'الإدارة العامة للتعليم بمنطقة تبوك',
+'الإدارة العامة للتعليم بمنطقة جازان',
+'الإدارة العامة للتعليم بمنطقة الحدود الشمالية',
+'الإدارة العامة للتعليم بمنطقة عسير'
+];
+window.MIIK_EDU_DEPARTMENTS=EDU73.slice();
+function esc73(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function eduOptions73(selected,allLabel){return (allLabel?`<option value="">${allLabel}</option>`:'')+EDU73.map(x=>`<option value="${esc73(x)}" ${x===selected?'selected':''}>${esc73(x)}</option>`).join('')}
+
+// بيانات الموجّه: same single official list used by owner analytics.
+const oldRenderMyData73=window.renderMyData58;
+window.renderMyData58=function(){
+  oldRenderMyData73.apply(this,arguments);
+  const input=document.getElementById('v58_education'); if(!input)return;
+  let current=input.value||'';
+  if(current==='إدارة تعليم القصيم') current='الإدارة العامة للتعليم بمنطقة القصيم';
+  const select=document.createElement('select'); select.id='v58_education'; select.innerHTML=eduOptions73(current,'اختر إدارة التعليم');
+  input.replaceWith(select);
+};
+const oldSave73=window.saveMyData58;
+window.saveMyData58=function(){return oldSave73.apply(this,arguments)};
+
+// Users: populate the same 16 departments in the live filter.
+const oldUsers73=window.v72RenderUsers;
+window.v72RenderUsers=function(){
+  oldUsers73.apply(this,arguments);
+  const sel=document.getElementById('v72EduFilter'); if(sel)sel.innerHTML=eduOptions73(sel.value,'كل إدارات التعليم');
+};
+
+function ownerMark73(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function schoolRows73(){return []} // future backend; never fabricate owner data.
+window.v73RenderSchools=function(department=''){
+  ownerMark73('المدارس');
+  const main=document.querySelector('.v68-owner-main'); if(!main)return;
+  const rows=schoolRows73();
+  const boys=rows.filter(x=>x.gender==='بنين').length,girls=rows.filter(x=>x.gender==='بنات').length;
+  const filtered=department?rows.filter(x=>x.educationDepartment===department):rows;
+  main.innerHTML=`<div class="v72-users-head"><div><h1>المدارس</h1><p>${department?esc73(department):'متابعة انتشار مِعِك حسب مدارس البنين والبنات وإدارات التعليم.'}</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
+  <section class="v73-school-summary"><article><b>جميع المدارس</b><strong>${rows.length?rows.length:'—'}</strong><small>المدارس المسجلة في مِعِك</small></article><article><b>مدارس البنين</b><strong>${rows.length?boys:'—'}</strong><small>المدارس المرتبطة بحسابات الموجّهين</small></article><article><b>مدارس البنات</b><strong>${rows.length?girls:'—'}</strong><small>المدارس المرتبطة بحسابات الموجّهات</small></article></section>
+  <section class="v72-users-panel"><div class="v72-users-tools"><input id="v73SchoolSearch" placeholder="ابحث باسم المدرسة أو إدارة التعليم"><select id="v73SchoolEdu" onchange="v73RenderSchools(this.value)">${eduOptions73(department,'كل إدارات التعليم')}</select><select><option>كل المدارس</option><option>بنين</option><option>بنات</option></select></div>
+  <div class="v73-dept-grid">${department?(filtered.length?filtered.map(x=>`<button class="v73-dept-card"><b>${esc73(x.school||'—')}</b><span>${esc73(x.usersCount||0)} مستخدم</span></button>`).join(''):`<div class="v73-schools-empty">لا توجد مدارس متصلة بهذه الإدارة حتى الآن. ستظهر تلقائيًا عند ربط حسابات مِعِك.</div>`):EDU73.map(d=>`<button class="v73-dept-card" onclick="v73RenderSchools('${d.replace(/'/g,"\\'")}')"><b>${esc73(d)}</b><span>المدارس والمستخدمون ستظهر من البيانات الفعلية</span></button>`).join('')}</div></section>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+const oldNav73=window.v68OwnerNav;
+window.v68OwnerNav=function(btn,title){if(title==='المدارس'){v73RenderSchools();return}return oldNav73.apply(this,arguments)};
+})();
+</script>
