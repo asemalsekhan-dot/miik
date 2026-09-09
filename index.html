@@ -1789,3 +1789,43 @@ const oldOpenModule57=window.openModule;window.openModule=function(title,desc){c
 document.addEventListener('DOMContentLoaded',wire57,{once:true});setTimeout(wire57,250);
 })();
 </script>
+<style id="v58-style">
+.v58-settings{grid-column:1/-1;background:linear-gradient(145deg,#fffdf7,#f2f5ea);border:1px solid #d8decd;border-radius:28px;padding:26px;box-shadow:0 12px 35px #53635312}.v58-settings h2{margin:0 0 6px;color:#435461}.v58-settings .lead{color:#7a817c;margin:0 0 22px}.v58-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}.v58-field{display:flex;flex-direction:column;gap:7px}.v58-field label,.v58-block>label{font-weight:800;color:#4b5b61}.v58-field input{width:100%;box-sizing:border-box;padding:14px 16px;border:1px solid #d9ded4;border-radius:14px;background:#fff;font:inherit;color:#34444b;outline:none}.v58-field input:focus{border-color:#7d9a82;box-shadow:0 0 0 3px #7d9a8218}.v58-block{margin-top:22px;padding-top:18px;border-top:1px solid #e1e4dc}.v58-choices{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px}.v58-chip{border:1px solid #cad3c7;background:#fff;color:#52615d;border-radius:999px;padding:9px 14px;font:inherit;cursor:pointer}.v58-chip.on{background:#667d6d;color:#fff;border-color:#667d6d}.v58-grade-add{display:flex;gap:8px;align-items:center;margin-top:10px}.v58-grade-add select{flex:1;padding:12px;border:1px solid #d7ddd2;border-radius:13px;background:#fff;font:inherit}.v58-plus{width:44px;height:44px;border:0;border-radius:50%;background:#667d6d;color:#fff;font-size:24px;cursor:pointer}.v58-selected{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.v58-tag{background:#edf2e9;border:1px solid #d3ddcf;border-radius:12px;padding:8px 11px}.v58-tag button{border:0;background:none;color:#8b5d5d;cursor:pointer;font-weight:bold}.v58-sections{display:grid;gap:10px;margin-top:12px}.v58-section-row{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff;border:1px solid #dce1d8;border-radius:14px;padding:11px 14px}.v58-section-row select{padding:8px 12px;border:1px solid #d6ddd3;border-radius:10px;font:inherit}.v58-save{margin-top:24px;border:0;border-radius:14px;background:#465b61;color:#fff;padding:13px 28px;font:inherit;font-weight:800;cursor:pointer}.v58-note{margin-top:10px;color:#66806d;font-weight:700}.v58-back{border:1px solid #d4d9d0;background:#fff;border-radius:12px;padding:9px 15px;font:inherit;cursor:pointer}@media(max-width:760px){.v58-fields{grid-template-columns:1fr}}
+</style>
+<script id="v58-script">
+(()=>{
+const K='miikProfileV58';
+const gradesByStage={
+ 'الابتدائية':['الأول الابتدائي','الثاني الابتدائي','الثالث الابتدائي','الرابع الابتدائي','الخامس الابتدائي','السادس الابتدائي'],
+ 'المتوسطة':['أول متوسط','ثاني متوسط','ثالث متوسط'],
+ 'الثانوية':['أول ثانوي','ثاني ثانوي','ثالث ثانوي']
+};
+function read58(){try{return JSON.parse(localStorage.getItem(K)||'{}')}catch(e){return {}}}
+function esc58(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+let draft58=null;
+window.renderMyData58=function(){
+ const old=read58();draft58={stages:[...(old.stages||[])],grades:[...(old.grades||[])],sections:{...(old.sections||{})}};
+ const defaults={name:old.name||'عاصم الصيخان',phone:old.phone||'',email:old.email||'',school:old.school||'متوسطة وثانوية بدائع الضبطان',principal:old.principal||'',education:old.education||'إدارة تعليم القصيم'};
+ moduleGrid.innerHTML=`<section class="v58-settings"><h2>بياناتي</h2><p class="lead">بيانات الموجّه والمدرسة وإعداد الصفوف والفصول.</p><div class="v58-fields">
+ ${[['name','اسم الموجّه الطلابي'],['phone','رقم الجوال'],['email','البريد الإلكتروني'],['school','اسم المدرسة'],['principal','اسم مدير المدرسة'],['education','الإدارة التعليمية']].map(x=>`<div class="v58-field"><label>${x[1]}</label><input id="v58_${x[0]}" value="${esc58(defaults[x[0]])}" placeholder="اكتب ${x[1]} هنا"></div>`).join('')}</div>
+ <div class="v58-block"><label>المراحل الدراسية</label><div class="v58-choices" id="v58Stages">${Object.keys(gradesByStage).map(s=>`<button class="v58-chip ${draft58.stages.includes(s)?'on':''}" onclick="toggleStage58('${s}',this)">${s}</button>`).join('')}</div></div>
+ <div class="v58-block"><label>الصفوف</label><div class="v58-grade-add"><select id="v58GradeSelect"></select><button class="v58-plus" onclick="addGrade58()" title="إضافة صف">+</button></div><div class="v58-selected" id="v58SelectedGrades"></div></div>
+ <div class="v58-block"><label>الفصول</label><div class="v58-sections" id="v58Sections"></div></div>
+ <button class="v58-save" onclick="saveMyData58()">حفظ البيانات</button><div id="v58Saved" class="v58-note"></div></section>`;
+ refresh58();
+};
+window.toggleStage58=function(s,b){const i=draft58.stages.indexOf(s);if(i>=0){draft58.stages.splice(i,1);draft58.grades=draft58.grades.filter(g=>!gradesByStage[s].includes(g));b.classList.remove('on')}else{draft58.stages.push(s);b.classList.add('on')}refresh58()};
+function available58(){return draft58.stages.flatMap(s=>gradesByStage[s]||[]).filter(g=>!draft58.grades.includes(g))}
+window.addGrade58=function(){const s=document.getElementById('v58GradeSelect');if(s?.value&&!draft58.grades.includes(s.value)){draft58.grades.push(s.value);draft58.sections[s.value]=draft58.sections[s.value]||1;refresh58()}};
+window.removeGrade58=function(g){draft58.grades=draft58.grades.filter(x=>x!==g);delete draft58.sections[g];refresh58()};
+window.setSections58=function(g,v){draft58.sections[g]=Math.max(1,parseInt(v)||1)};
+function refresh58(){const sel=document.getElementById('v58GradeSelect');if(sel){const a=available58();sel.innerHTML=a.length?a.map(g=>`<option>${g}</option>`).join(''):'<option value="">اختر مرحلة أولًا أو تمت إضافة جميع الصفوف</option>'}const sg=document.getElementById('v58SelectedGrades');if(sg)sg.innerHTML=draft58.grades.length?draft58.grades.map(g=>`<span class="v58-tag">${g} <button onclick="removeGrade58('${g}')">×</button></span>`).join(''):'<span class="muted">لم تتم إضافة صفوف بعد.</span>';const sec=document.getElementById('v58Sections');if(sec)sec.innerHTML=draft58.grades.length?draft58.grades.map(g=>`<div class="v58-section-row"><b>${g}</b><label>عدد الفصول <select onchange="setSections58('${g}',this.value)">${Array.from({length:10},(_,i)=>`<option value="${i+1}" ${(draft58.sections[g]||1)==i+1?'selected':''}>${i+1}</option>`).join('')}</select></label></div>`).join(''):'<span class="muted">أضف الصفوف أولًا لتحديد عدد الفصول لكل صف.</span>'}
+window.saveMyData58=function(){const data={name:v58_name.value.trim(),phone:v58_phone.value.trim(),email:v58_email.value.trim(),school:v58_school.value.trim(),principal:v58_principal.value.trim(),education:v58_education.value.trim(),stages:draft58.stages,grades:draft58.grades,sections:draft58.sections};localStorage.setItem(K,JSON.stringify(data));localStorage.setItem('miikSchoolStructure',JSON.stringify({stages:data.stages,grades:data.grades,sections:data.sections}));document.querySelector('.profile-wrap>b')&&(document.querySelector('.profile-wrap>b').textContent=data.name||'الموجّه الطلابي');document.querySelector('.school-name')&&(document.querySelector('.school-name').textContent=data.school||'المدرسة');v58Saved.textContent='تم حفظ بياناتك وإعداد الصفوف والفصول ✓'};
+const om=window.openModule;window.openModule=function(title,desc){const r=om.apply(this,arguments);if(title==='بياناتي')setTimeout(renderMyData58,0);return r};
+/* التقرير المختصر والشامل: ضمان عمل زر الطباعة مباشرة. */
+window.v58PrintFinal=function(kind){if(typeof window.v57PrintFinal==='function')window.v57PrintFinal(kind)};
+const vf=window.v57FinalReport;if(vf)window.v57FinalReport=function(kind='مختصر'){vf(kind);setTimeout(()=>{document.querySelectorAll('.v57-report-print').forEach(b=>b.onclick=()=>v58PrintFinal(kind))},0)};
+/* البرامج المنفذة صفحة فرعية: عودة بدل الرئيسية. */
+const pe=window.v57ProgramsExecuted;if(pe)window.v57ProgramsExecuted=function(){pe();const back=document.createElement('button');back.className='v58-back';back.textContent='← العودة';back.onclick=()=>v57FinalReport('مختصر');moduleGrid.prepend(back)};
+})();
+</script>
