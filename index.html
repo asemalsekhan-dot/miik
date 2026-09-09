@@ -2593,3 +2593,30 @@ window.v78RenderContentPlan=function(){
 };
 })();
 </script>
+
+<!-- v80: national & standardized tests + owner platform status/releases -->
+<style id="v80-style">
+.v80-status-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:15px}.v80-status-card{background:#fffdf8;border:1px solid #dfe5da;border-radius:18px;padding:17px;min-height:116px;box-shadow:0 8px 24px rgba(45,71,60,.04)}.v80-status-card b{display:block;color:#52685f;font-size:11px;font-weight:950}.v80-status-card strong{display:block;color:#355248;font-size:17px;font-weight:950;margin-top:12px}.v80-status-card small{display:block;color:#89958f;font-size:9.3px;font-weight:780;line-height:1.7;margin-top:5px}.v80-release-panel{margin-top:14px;background:#fffdf8;border:1px solid #dfe5da;border-radius:18px;padding:17px;box-shadow:0 8px 24px rgba(45,71,60,.04)}.v80-release-panel h3{margin:0;color:#355248;font-size:15px;font-weight:950}.v80-release-panel>p{margin:5px 0 14px;color:#87948e;font-size:9.7px;font-weight:780;line-height:1.8}.v80-release-row{display:grid;grid-template-columns:1.1fr .7fr .8fr .6fr;gap:10px;align-items:center;padding:12px 0;border-top:1px solid #edf0e9;color:#53675f;font-size:9.7px;font-weight:850}.v80-release-row.head{color:#7d8b85;font-size:8.8px;border-top:0;padding-top:4px}.v80-empty{padding:28px 10px;text-align:center;color:#87948e;font-size:10px;font-weight:800;border-top:1px solid #edf0e9}.v80-note{margin-top:14px;background:linear-gradient(135deg,#f1f5ed,#fbfaf4);border:1px solid #dce5d9;border-radius:15px;padding:12px 15px;color:#5d7168;font-size:9.7px;font-weight:800;line-height:1.8}.v80-note b{color:#3f5e52}@media(max-width:760px){.v80-status-grid{grid-template-columns:1fr}.v80-release-row{grid-template-columns:1fr 1fr}.v80-release-row.head{display:none}}
+</style>
+<script id="v80-script">
+(function(){
+'use strict';
+const prevContent80=window.v78RenderContentPlan;
+window.v78RenderContentPlan=function(){
+ prevContent80();
+ const main=document.querySelector('.v68-owner-main');if(!main)return;
+ main.querySelectorAll('.v79-tile b').forEach(b=>{if(b.textContent.trim()==='القدرات والتحصيلي')b.textContent='الاختبارات الوطنية والمعيارية'});
+ main.querySelectorAll('.v79-tile small').forEach(s=>{if(s.textContent.includes('نماذج المتابعة والتحفيز'))s.textContent='تطوير متابعة القدرات والتحصيلي ونافس، ونماذج التحفيز والمحتوى والتقارير المرتبطة بها.'});
+};
+function mark80(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+window.v80RenderPlatformStatus=function(){
+ mark80('حالة المنصة والإصدارات');const main=document.querySelector('.v68-owner-main');if(!main)return;
+ main.innerHTML=`<div class="v72-users-head"><div><h1>حالة المنصة والإصدارات</h1><p>متابعة جاهزية مِعِك وإصداراته من مكان واحد، بدون أرقام أو حالات تجريبية.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
+ <section class="v80-status-grid"><article class="v80-status-card"><b>حالة مِعِك</b><strong>—</strong><small>تظهر الحالة الفعلية بعد ربط خدمات المنصة والخادم.</small></article><article class="v80-status-card"><b>الإصدار المنشور</b><strong>—</strong><small>يظهر رقم الإصدار الفعلي عند تشغيل نظام النشر.</small></article><article class="v80-status-card"><b>آخر تحديث</b><strong>—</strong><small>يُسجل تلقائيًا عند نشر تحديث حقيقي للمستخدمين.</small></article></section>
+ <section class="v80-release-panel"><h3>سجل الإصدارات</h3><p>يوثق ما نُشر للمستخدمين: رقم الإصدار، تاريخ النشر، نوع التحديث وحالته.</p><div class="v80-release-row head"><span>الإصدار</span><span>تاريخ النشر</span><span>نوع التحديث</span><span>الحالة</span></div><div class="v80-empty">لا توجد إصدارات منشورة مرتبطة بالنظام حتى الآن.</div></section>
+ <div class="v80-note"><b>مبدأ مِعِك:</b> هذا القسم للمراقبة والإصدارات فقط، أما تطوير محتوى الخطة والبرامج والتقارير والنماذج فيبقى داخل «المحتوى والخطة».</div>`;
+ window.scrollTo({top:0,behavior:'smooth'});
+};
+const nav80=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='حالة المنصة والإصدارات'){v80RenderPlatformStatus();return}return nav80.apply(this,arguments)};
+})();
+</script>
