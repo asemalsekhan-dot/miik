@@ -2620,3 +2620,26 @@ window.v80RenderPlatformStatus=function(){
 const nav80=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='حالة المنصة والإصدارات'){v80RenderPlatformStatus();return}return nav80.apply(this,arguments)};
 })();
 </script>
+
+<!-- v81: owner platform settings -->
+<style id="v81-style">
+.v81-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:15px}.v81-card{background:#fffdf8;border:1px solid #dfe5da;border-radius:19px;padding:18px;box-shadow:0 8px 24px rgba(45,71,60,.04)}.v81-card h3{margin:0;color:#355248;font-size:14px;font-weight:950}.v81-card>p{margin:5px 0 13px;color:#87948e;font-size:9.6px;font-weight:780;line-height:1.8}.v81-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #edf0e9}.v81-row:first-of-type{border-top:0}.v81-row b{display:block;color:#4b6259;font-size:10.5px;font-weight:950}.v81-row small{display:block;color:#8a9691;font-size:9px;font-weight:760;margin-top:3px;line-height:1.55}.v81-state{background:#edf2ec;border:1px solid #dce4da;color:#52695f;border-radius:999px;padding:5px 9px;font-size:8.5px;font-weight:950;white-space:nowrap}.v81-brand{grid-column:1/-1;background:linear-gradient(135deg,#eef4ea,#fffdf8);border:1px solid #dce5d9;border-radius:17px;padding:15px 17px;display:flex;align-items:center;gap:13px}.v81-brand img{width:44px;height:44px;object-fit:contain}.v81-brand b{display:block;color:#3f5e52;font-size:12px;font-weight:950}.v81-brand small{display:block;color:#718078;font-size:9.4px;font-weight:780;line-height:1.7;margin-top:3px}.v81-note{grid-column:1/-1;color:#65776f;font-size:9.4px;font-weight:780;line-height:1.8;padding:2px 3px}.v81-note b{color:#405e53}@media(max-width:760px){.v81-grid{grid-template-columns:1fr}.v81-brand,.v81-note{grid-column:auto}}
+</style>
+<script id="v81-script">
+(function(){
+'use strict';
+function mark81(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+window.v81RenderSettings=function(){
+ mark81('إعدادات المنصة');const main=document.querySelector('.v68-owner-main');if(!main)return;
+ main.innerHTML=`<div class="v72-users-head"><div><h1>إعدادات المنصة</h1><p>الإعدادات العامة والحساسة لمِعِك؛ مكان واحد لما يخص الهوية والحسابات والتواصل والأمان والتكاملات.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
+ <section class="v81-grid"><div class="v81-brand"><img src="miik-logo.png" alt="مِعِك"><div><b>إعدادات مِعِك</b><small>نحافظ على هوية مِعِك هنا، بينما تبقى إعدادات الأمان والتكاملات منفصلة وواضحة ولا تُغيّر إلا بصلاحية المالك.</small></div></div>
+ <article class="v81-card"><h3>الهوية العامة</h3><p>الإعدادات الأساسية التي تعرّف المنصة للمستخدمين.</p><div class="v81-row"><div><b>اسم المنصة والهوية</b><small>مِعِك | الموجّه الذكي والشعار والعناصر العامة.</small></div><span class="v81-state">إدارة</span></div><div class="v81-row"><div><b>بيانات التواصل الرسمية</b><small>البريد الرسمي وقنوات الدعم التي تظهر للمستخدم.</small></div><span class="v81-state">إدارة</span></div></article>
+ <article class="v81-card"><h3>الحسابات والاستعادة</h3><p>قواعد الدخول واسترجاع الحساب عندما ينسى المستخدم كلمة المرور.</p><div class="v81-row"><div><b>استعادة كلمة المرور</b><small>تُربط بالبريد أو وسيلة تحقق معتمدة عند تشغيل الخادم.</small></div><span class="v81-state">تجهيز</span></div><div class="v81-row"><div><b>التحقق الثنائي</b><small>للحسابات الإدارية الحساسة وبوابة المالك والفريق.</small></div><span class="v81-state">تجهيز</span></div></article>
+ <article class="v81-card"><h3>الإشعارات والرسائل</h3><p>القنوات التي يستخدمها مِعِك للتواصل الآلي والإداري.</p><div class="v81-row"><div><b>البريد الإلكتروني</b><small>رسائل النظام والاستعادة والتنبيهات.</small></div><span class="v81-state">ربط لاحق</span></div><div class="v81-row"><div><b>واتساب الرسمي</b><small>قناة التواصل المعتمدة عند ربط الخدمة الرسمية.</small></div><span class="v81-state">ربط لاحق</span></div></article>
+ <article class="v81-card"><h3>التكاملات والأمان</h3><p>الخدمات الخارجية والمفاتيح والإعدادات التي لا تظهر إلا للمالك.</p><div class="v81-row"><div><b>التكاملات الخارجية</b><small>تهيئة الخدمات المستقبلية دون وضع مفاتيح حساسة داخل الواجهة.</small></div><span class="v81-state">للمالك</span></div><div class="v81-row"><div><b>سجل الأمان</b><small>تسجيل تغييرات الإعدادات والعمليات الإدارية الحساسة عند الربط الحقيقي.</small></div><span class="v81-state">للمالك</span></div></article>
+ <div class="v81-note"><b>قاعدة مِعِك:</b> الإعدادات الحساسة لا تعتمد على الذكاء الاصطناعي لاتخاذ قرارات التحقق أو استعادة الحساب، ولا تُحفظ مفاتيح الخدمات السرية داخل ملف الواجهة. هذه الوظائف تُدار من الخادم الآمن عند الانتقال للإنتاج.</div></section>`;
+ window.scrollTo({top:0,behavior:'smooth'});
+};
+const nav81=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='إعدادات المنصة'){v81RenderSettings();return}return nav81.apply(this,arguments)};
+})();
+</script>
