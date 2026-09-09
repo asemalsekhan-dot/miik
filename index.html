@@ -247,7 +247,36 @@ function addReminder(){dialogForm('إضافة تذكير','أضف ما تحتا�
 .day-work-list{display:grid;gap:10px;margin-top:18px}.day-work-row{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;text-align:right;color:var(--ink);cursor:pointer}.day-work-row:hover{background:#f5f1e8}.day-work-row small{display:block;color:var(--muted);margin-top:5px}.day-work-row strong{font-size:24px;color:var(--olive)}.day-view-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.day-full-calendar{border:1px solid #cbd8c7;background:#edf0e7;color:var(--deep);border-radius:11px;padding:9px 12px;font-weight:800}
 .hijri-abbr{display:inline-block;white-space:nowrap}
 </style>
-\n<script id="v16-calendar-fixes-js">\nfunction openHijriCalendarDay(day){\n  hideAllPages();\n  document.getElementById('calendarPage').classList.add('show');\n  const labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};\n  const lab=labels[day];\n  const rows=lab?`<button class="day-work-row" onclick="openModule('${lab.includes('التهيئة')?'برنامج التهيئة الإرشادية':lab}')"><span><b>${lab}</b><small>من أعمال هذا اليوم</small></span><strong>‹</strong></button>`:`<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>`;\n  document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="day-view-head"><div><div class="month-title">${day} ربيع الأول 1448 <span class="hijri-abbr" dir="rtl">هـ</span></div><div class="muted">أعمال هذا اليوم فقط</div></div><button class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="day-work-list">${rows}</div>`;\n  window.scrollTo({top:0,behavior:'smooth'});\n}\nfunction openCalendar(){\n  hideAllPages();document.getElementById('calendarPage').classList.add('show');\n  const box=document.querySelector('#calendarPage .monthbox');\n  const labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};\n  const todayHijri=24;\n  let cells='';\n  for(let i=1;i<=30;i++){\n    const weekdayIndex=(i-1)%7; // 0 الأحد ... 5 الجمعة، 6 السبت\n    const weekend=(weekdayIndex===5||weekdayIndex===6);\n    const lab=labels[i];\n    cells+=`<div class="num ${weekend?'holiday':(lab?'event-day':'')} ${i===todayHijri?'today-ring':''}" onclick="openHijriCalendarDay(${i})"><b>${i}</b>${lab?`<span class="cal-label">${lab}</span>`:''}</div>`;\n  }\n  box.innerHTML=`<div class="month-title">ربيع الأول 1448هـ</div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div>${cells}</div><div class="calendar-legend"><span><i class="holiday-key"></i>إجازة نهاية الأسبوع</span><span><i class="event"></i>يوم فيه أعمال</span><span><i class="plain-key"></i>يوم بلا أعمال</span></div><div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`;\n  window.scrollTo({top:0,behavior:'smooth'});\n}\nfunction addReminder(){\n  const hours=Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1}:00</option>`).join('');\n  dialogForm('إضافة تذكير','أضف ما تحتاج تتذكره فقط.',`<label>عنوان التذكير<input name="title" required></label><label>التاريخ الهجري<input name="date" readonly onclick="openHijriPicker(this)" required></label><label>الوقت — اختياري<div class="reminder-time-row"><select name="hour"><option value="">بدون وقت</option>${hours}</select><select name="period"><option value="AM">AM</option><option value="PM">PM</option></select></div></label><label>ملاحظة — اختياري<textarea name="note" rows="3"></textarea></label>`,fd=>{const obj=Object.fromEntries(fd);obj.time=obj.hour?`${obj.hour} ${obj.period}`:'';delete obj.hour;delete obj.period;const a=JSON.parse(localStorage.getItem('miik-reminders')||'[]');a.push(obj);localStorage.setItem('miik-reminders',JSON.stringify(a));renderToday();renderAlerts&&renderAlerts()});\n}\n</script>\n
+\n<script id="v16-calendar-fixes-js">
+function openHijriCalendarDay(day){
+  hideAllPages();
+  document.getElementById('calendarPage').classList.add('show');
+  const labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};
+  const lab=labels[day];
+  const rows=lab?`<button class="day-work-row" onclick="openModule('${lab.includes('التهيئة')?'برنامج التهيئة الإرشادية':lab}')"><span><b>${lab}</b><small>من أعمال هذا اليوم</small></span><strong>‹</strong></button>`:`<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>`;
+  document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="day-view-head"><div><div class="month-title">${day} ربيع الأول 1448 <span class="hijri-abbr" dir="rtl">هـ</span></div><div class="muted">أعمال هذا اليوم فقط</div></div><button class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="day-work-list">${rows}</div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function openCalendar(){
+  hideAllPages();document.getElementById('calendarPage').classList.add('show');
+  const box=document.querySelector('#calendarPage .monthbox');
+  const labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};
+  const todayHijri=24;
+  let cells='';
+  for(let i=1;i<=30;i++){
+    const weekdayIndex=(i-1)%7; // 0 الأحد ... 5 الجمعة، 6 السبت
+    const weekend=(weekdayIndex===5||weekdayIndex===6);
+    const lab=labels[i];
+    cells+=`<div class="num ${weekend?'holiday':(lab?'event-day':'')} ${i===todayHijri?'today-ring':''}" onclick="openHijriCalendarDay(${i})"><b>${i}</b>${lab?`<span class="cal-label">${lab}</span>`:''}</div>`;
+  }
+  box.innerHTML=`<div class="month-title">ربيع الأول 1448هـ</div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div>${cells}</div><div class="calendar-legend"><span><i class="holiday-key"></i>إجازة نهاية الأسبوع</span><span><i class="event"></i>يوم فيه أعمال</span><span><i class="plain-key"></i>يوم بلا أعمال</span></div><div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function addReminder(){
+  const hours=Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1}:00</option>`).join('');
+  dialogForm('إضافة تذكير','أضف ما تحتاج تتذكره فقط.',`<label>عنوان التذكير<input name="title" required></label><label>التاريخ الهجري<input name="date" readonly onclick="openHijriPicker(this)" required></label><label>الوقت — اختياري<div class="reminder-time-row"><select name="hour"><option value="">بدون وقت</option>${hours}</select><select name="period"><option value="AM">AM</option><option value="PM">PM</option></select></div></label><label>ملاحظة — اختياري<textarea name="note" rows="3"></textarea></label>`,fd=>{const obj=Object.fromEntries(fd);obj.time=obj.hour?`${obj.hour} ${obj.period}`:'';delete obj.hour;delete obj.period;const a=JSON.parse(localStorage.getItem('miik-reminders')||'[]');a.push(obj);localStorage.setItem('miik-reminders',JSON.stringify(a));renderToday();renderAlerts&&renderAlerts()});
+}
+</script>\n
 <style id="v17-calendar-final">
 .calendar-page .monthgrid .num.holiday{background:#dfe9dc!important}
 .calendar-page .monthgrid .num.event-day{background:#e7ddc8!important}
@@ -1830,116 +1859,61 @@ const pe=window.v57ProgramsExecuted;if(pe)window.v57ProgramsExecuted=function(){
 })();
 </script>
 
-<style id="v61-safe-fixes">
-/* v61 — تعديلات آمنة فوق نسخة 58 الأصلية فقط */
-.v58-settings{max-width:900px!important;margin:18px auto!important;padding:20px 22px!important;border-radius:24px!important}
-.v58-fields{gap:12px 14px!important}.v58-field input{padding:10px 12px!important;border-radius:12px!important}
-.v58-block{margin-top:16px!important;padding-top:14px!important}.v58-grade-add{max-width:650px!important}.v58-sections{max-width:720px!important}
-.v58-section-row{padding:9px 12px!important;border-radius:12px!important}.v58-save{margin-top:18px!important}
-@media(max-width:760px){.v58-settings{max-width:none!important;margin:10px!important;padding:16px!important}.v58-fields{grid-template-columns:1fr!important}.v58-grade-add,.v58-sections{max-width:none!important}}
+<!-- v64 stability patch: navigation + direct behavior reference + school gender -->
+<style id="v64-stability-style">
+.v64-behavior{grid-column:1/-1;display:grid;gap:18px}
+.v64-behavior-hero{background:linear-gradient(145deg,#fffdf7,#eef3e9);border:1px solid #d3ddcf;border-radius:28px;padding:24px;box-shadow:0 12px 34px #4f655c10}
+.v64-behavior-hero h2{margin:0 0 8px;color:#3e534d;font-size:28px}.v64-behavior-hero p{margin:0;color:#707c76;line-height:1.9}
+.v64-behavior-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}.v64-behavior-stat{background:#fff;border:1px solid #dbe2d8;border-radius:18px;padding:16px;text-align:center}.v64-behavior-stat b{display:block;font-size:24px;color:#526b5c}.v64-behavior-stat span{color:#6f7b75}
+.v64-pdf-shell{background:#fffdf8;border:1px solid #d6dfd3;border-radius:24px;padding:14px;overflow:hidden}.v64-pdf-shell iframe{display:block;width:100%;height:72vh;min-height:620px;border:0;border-radius:16px;background:#f6f4ed}
+.v64-gender{margin-top:18px;padding-top:18px;border-top:1px solid #e1e4dc}.v64-gender .v58-choices{margin-top:10px}
+@media(max-width:760px){.v64-behavior-stats{grid-template-columns:1fr}.v64-pdf-shell iframe{min-height:520px;height:68vh}}
 </style>
-<script id="v61-safe-fixes-script">
-(function(){
-  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}};
-  function profile(){try{const p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}');return p}catch(e){return {}}}
-  function counts(){
-    const actions=read('miik-demo-actions'); let programs=0; const programRows=[];
-    Object.keys(localStorage).filter(k=>k.startsWith('miikExec_')).forEach(k=>{const a=read(k);if(a.length){programs+=a.length;programRows.push([k.replace('miikExec_',''),a.length])}});
-    return {actions,programs,programRows};
-  }
-  window.v61PrintFinal=function(kind='مختصر'){
-    const c=counts(), p=profile(), logo=new URL('ministry-logo.png',location.href).href;
-    const details=kind==='شامل' ? `<h2>البرامج المنفذة</h2>${c.programRows.length?`<table><tr><th>م</th><th>البرنامج</th><th>مرات التنفيذ</th></tr>${c.programRows.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x[0])}</td><td>${x[1]}</td></tr>`).join('')}</table>`:'<p>لا توجد برامج منفذة مسجلة.</p>'}<h2>الأعمال الإرشادية</h2><p>إجمالي الأعمال الإرشادية المسجلة: <b>${c.actions.length}</b></p>` : `<div class="summary"><div><b>البرامج المنفذة</b><span>${c.programs}</span></div><div><b>الأعمال الإرشادية</b><span>${c.actions.length}</span></div></div><p>ملخص تنفيذي موجز لأبرز الأعمال والبرامج المسجلة خلال الفترة.</p>`;
-    const html=`<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>${kind==='شامل'?'التقرير الختامي الشامل':'التقرير المختصر'}</title><style>@page{size:A4;margin:17mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#273833;font-size:12.5px;margin:0;background:#fff}.sheet{width:84%;margin:auto}.head{display:grid;grid-template-columns:1fr 90px 1fr;align-items:center;border-bottom:1.5px solid #7b8b84;padding-bottom:9px}.gov{text-align:center;line-height:1.7;font-weight:700}.logo{text-align:center}.logo img{max-width:80px;max-height:70px}h1{text-align:center;font-size:20px;margin:18px 0}h2{font-size:15px;margin:18px 0 8px}table{width:100%;border-collapse:collapse;margin:8px 0 16px}th,td{border:1px solid #b5c0bb;padding:8px;text-align:right}th{background:#f0f3f0}.summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.summary div{border:1px solid #ccd5d0;border-radius:8px;padding:14px;text-align:center}.summary b{display:block;margin-bottom:7px}.summary span{font-size:24px;font-weight:800}.sign{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:34px;text-align:center;line-height:2}</style></head><body><div class="sheet"><div class="head"><div class="gov">المملكة العربية السعودية<br>وزارة التعليم<br>${p.education?esc(p.education)+'<br>':''}${esc(p.school||'اسم المدرسة')}</div><div class="logo"><img src="${logo}"></div><div></div></div><h1>${kind==='شامل'?'التقرير الختامي الشامل':'التقرير المختصر'}</h1>${details}<div class="sign"><div><b>الموجّه الطلابي</b><br>${esc(p.name||'الموجّه الطلابي')}<br>التوقيع: __________________</div><div><b>مدير المدرسة</b><br>${esc(p.principal||'مدير المدرسة')}<br>التوقيع: __________________</div></div></div>
-<style id="v63-safe-patch-style">
-.v63-gender{margin:16px 0 0;padding-top:14px;border-top:1px solid #e2e5de}
-.v63-gender>label{display:block;font-weight:850;color:var(--deep);margin-bottom:9px}
-.v63-gender-row{display:flex;gap:8px;flex-wrap:wrap}
-.v63-gender-btn{border:1px solid var(--line);background:var(--paper);color:var(--deep);border-radius:999px;padding:9px 18px;font:inherit;cursor:pointer}
-.v63-gender-btn.on{background:var(--olive);color:white;border-color:var(--olive)}
-.v63-behavior-one{grid-column:1/-1;display:flex;justify-content:center}
-.v63-behavior-card{width:min(620px,100%);border:1px solid #d4ddd0;background:linear-gradient(145deg,#f7f3e8,#e9efe5);border-radius:22px;padding:28px 24px;color:var(--deep);font:inherit;cursor:pointer;text-align:center}
-.v63-behavior-card b{display:block;font-size:22px;margin-bottom:8px}.v63-behavior-card span{color:var(--muted);line-height:1.8}
-.v63-rules{grid-column:1/-1;max-width:820px;margin:auto;background:#fffdf8;border:1px solid var(--line);border-radius:22px;padding:24px}
-.v63-rules h2{margin:0 0 12px}.v63-rules p{line-height:1.9;color:var(--muted)}
-</style>
-<script id="v63-safe-patch">
-(function(){
-  const btn=()=>document.querySelector('#modulePage .module-head .students-back');
-  function mainBack(){const b=btn();if(!b)return;b.textContent='← الرئيسية';b.onclick=()=>goHome()}
-  function parentBack(fn){const b=btn();if(!b)return;b.textContent='← العودة';b.onclick=fn}
+<script id="v64-stability-script">
+(()=>{'use strict';
+const TOP64=new Set(['بياناتي','الاشتراك','الدعم','سياسة الخصوصية','قواعد السلوك والمواظبة','التقارير','المتابعات','الجلسات الإرشادية','المواقف الطارئة','دراسات الحالة','التحصيل الدراسي','التواصل مع أولياء الأمور','مجلس أولياء الأمور','لجنة التوجيه الطلابي','المجلس الطلابي']);
+function headerBack64(label,fn){const b=document.querySelector('#modulePage .module-head .students-back');if(!b)return;b.textContent=label;b.onclick=fn}
+function home64(){headerBack64('← الرئيسية',()=>goHome())}
+function reports64(){headerBack64('← العودة',()=>window.v57FinalReport?.('مختصر'))}
+function closeDrawer64(){document.getElementById('drawer')?.classList.remove('show')}
 
-  const TOP=new Set(['التقارير','بياناتي','الاشتراك','الدعم','سياسة الخصوصية','الشروط والأحكام','قواعد السلوك والمواظبة','المتابعات الطلابية','الجلسات الإرشادية','المواقف الطارئة','التواصل مع أولياء الأمور','مجلس أولياء الأمور','الحالات الصحية','الفئات الخاصة','دراسة الحالة','التحصيل الدراسي']);
-  const oldOpen=window.openModule;
-  if(oldOpen) window.openModule=function(title,desc){const r=oldOpen.apply(this,arguments);if(TOP.has(String(title||'')))setTimeout(mainBack,0);return r};
+window.v64Behavior=function(){
+  hideAllPages();
+  modulePage.classList.add('show');
+  moduleTitle.textContent='قواعد السلوك والمواظبة';
+  moduleDesc.textContent='المرجع المعتمد لقواعد السلوك والمواظبة وإجراءاتها التنظيمية للطلاب.';
+  moduleGrid.innerHTML=`<section class="v64-behavior">
+    <div class="v64-behavior-hero">
+      <h2>قواعد السلوك والمواظبة</h2>
+      <p>المرحلتان المتوسطة والثانوية — الإصدار الخامس 1447هـ. يظهر المرجع مباشرة داخل مِعِك دون صفحة وسيطة.</p>
+      <div class="v64-behavior-stats">
+        <div class="v64-behavior-stat"><b>100</b><span>درجة السلوك</span></div>
+        <div class="v64-behavior-stat"><b>80 + 20</b><span>سلوك إيجابي + سلوك متميز</span></div>
+        <div class="v64-behavior-stat"><b>100</b><span>درجة المواظبة خلال العام</span></div>
+      </div>
+    </div>
+    <div class="v64-pdf-shell"><iframe title="قواعد السلوك والمواظبة 1447هـ" src="behavior-rules-1447.pdf#toolbar=1&navpanes=0&view=FitH"></iframe></div>
+  </section>`;
+  home64();closeDrawer64();window.scrollTo({top:0,behavior:'smooth'});
+};
+function wireBehavior64(){const b=[...document.querySelectorAll('#drawer button')].find(x=>x.textContent.trim()==='قواعد السلوك والمواظبة');if(b)b.onclick=()=>window.v64Behavior()}
 
-  document.addEventListener('click',function(e){if(e.target.closest('#drawer button')||e.target.closest('.profile-menu button'))setTimeout(mainBack,20)},true);
+/* Navigation rule: level-one pages go home; report children go back only to reports. */
+const open64=window.openModule;
+window.openModule=function(title,desc){const r=open64.apply(this,arguments);setTimeout(()=>{if(TOP64.has(String(title)))home64()},0);return r};
+const prog64=window.v57ProgramsExecuted;
+if(typeof prog64==='function')window.v57ProgramsExecuted=function(){prog64.apply(this,arguments);document.querySelectorAll('#moduleGrid .v58-back').forEach(x=>x.remove());reports64()};
+const work64=window.v57GuidanceWorks;
+if(typeof work64==='function')window.v57GuidanceWorks=function(){work64.apply(this,arguments);document.querySelectorAll('#moduleGrid .v58-back').forEach(x=>x.remove());reports64()};
+const final64=window.v57FinalReport;
+if(typeof final64==='function')window.v57FinalReport=function(kind='مختصر'){const r=final64.apply(this,arguments);setTimeout(home64,0);return r};
 
-  const oldFinal=window.v57FinalReport;
-  if(oldFinal) window.v57FinalReport=function(kind='مختصر'){const r=oldFinal.apply(this,arguments);setTimeout(mainBack,0);return r};
-  const oldPrograms=window.v57ProgramsExecuted;
-  if(oldPrograms) window.v57ProgramsExecuted=function(){const r=oldPrograms.apply(this,arguments);setTimeout(()=>parentBack(()=>window.v57FinalReport?.('مختصر')),0);return r};
-  const oldWorks=window.v57GuidanceWorks;
-  if(oldWorks) window.v57GuidanceWorks=function(){const r=oldWorks.apply(this,arguments);setTimeout(()=>parentBack(()=>window.v57FinalReport?.('مختصر')),0);return r};
+/* School gender inside My Data, saved without disturbing v58 school structure. */
+const render64=window.renderMyData58;
+if(typeof render64==='function')window.renderMyData58=function(){render64.apply(this,arguments);const host=document.querySelector('.v58-settings');const stages=[...document.querySelectorAll('.v58-block')].find(x=>x.querySelector(':scope>label')?.textContent.trim()==='المراحل الدراسية');if(!host||!stages||host.querySelector('.v64-gender'))return;let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){}const gender=p.gender||'بنين';const box=document.createElement('div');box.className='v64-gender';box.innerHTML=`<label style="font-weight:800;color:#4b5b61">جنس المدرسة</label><div class="v58-choices"><button type="button" class="v58-chip ${gender==='بنين'?'on':''}" data-g="بنين">بنين</button><button type="button" class="v58-chip ${gender==='بنات'?'on':''}" data-g="بنات">بنات</button></div>`;stages.before(box);box.querySelectorAll('[data-g]').forEach(btn=>btn.onclick=()=>{box.querySelectorAll('[data-g]').forEach(x=>x.classList.remove('on'));btn.classList.add('on');box.dataset.gender=btn.dataset.g});box.dataset.gender=gender};
+const save64=window.saveMyData58;
+if(typeof save64==='function')window.saveMyData58=function(){save64.apply(this,arguments);let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){}const box=document.querySelector('.v64-gender');p.gender=box?.dataset.gender||p.gender||'بنين';localStorage.setItem('miikProfileV58',JSON.stringify(p))};
 
-  window.v57Behavior=function(){
-    hideAllPages();modulePage.classList.add('show');moduleTitle.textContent='قواعد السلوك والمواظبة';moduleDesc.textContent='مرجع السلوك والمواظبة داخل مِعِك.';
-    moduleGrid.innerHTML='<div class="v63-behavior-one"><button class="v63-behavior-card" onclick="v63OpenBehaviorRules()"><b>قواعد السلوك والمواظبة</b><span>عرض القواعد والتنظيمات في صفحة واحدة منظمة.</span></button></div>';
-    mainBack();window.scrollTo({top:0,behavior:'smooth'});
-  };
-  window.v63OpenBehaviorRules=function(){
-    moduleTitle.textContent='قواعد السلوك والمواظبة';moduleDesc.textContent='القواعد والتنظيمات المعتمدة للسلوك والمواظبة.';
-    moduleGrid.innerHTML='<section class="v63-rules"><h2>قواعد السلوك والمواظبة</h2><p>تم دمج السلوك والمواظبة في مدخل واحد بدل فصلها إلى سجلين. سيُبنى العرض التفصيلي النهائي على النسخة المعتمدة من قواعد السلوك والمواظبة.</p></section>';
-    parentBack(()=>window.v57Behavior());window.scrollTo({top:0,behavior:'smooth'});
-  };
-  function wireBehavior(){const b=[...document.querySelectorAll('#drawer button')].find(x=>x.textContent.trim()==='قواعد السلوك والمواظبة');if(b)b.onclick=()=>{document.getElementById('drawer')?.classList.remove('show');window.v57Behavior()}}
-
-  let gender='بنين';
-  function prof(){try{return JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){return {}}}
-  function addGender(){
-    const root=document.querySelector('.v58-settings'); if(!root||root.querySelector('.v63-gender'))return;
-    gender=prof().gender||'بنين'; const anchor=root.querySelector('.v58-block'); if(!anchor)return;
-    const box=document.createElement('div');box.className='v63-gender';box.innerHTML='<label>جنس المدرسة</label><div class="v63-gender-row"><button type="button" data-g="بنين" class="v63-gender-btn '+(gender==='بنين'?'on':'')+'">بنين</button><button type="button" data-g="بنات" class="v63-gender-btn '+(gender==='بنات'?'on':'')+'">بنات</button></div>';
-    anchor.before(box);box.querySelectorAll('button').forEach(x=>x.onclick=()=>{gender=x.dataset.g;box.querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))});
-  }
-  const oldRender=window.renderMyData58;if(oldRender)window.renderMyData58=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>{addGender();mainBack()},0);return r};
-  const oldSave=window.saveMyData58;if(oldSave)window.saveMyData58=function(){const r=oldSave.apply(this,arguments);try{const p=prof();p.gender=gender||p.gender||'بنين';localStorage.setItem('miikProfileV58',JSON.stringify(p))}catch(e){}return r};
-
-  wireBehavior();
-})();
-</script>
-</body></html>`;
-    let f=document.getElementById('v61PrintFrame'); if(f)f.remove();
-    f=document.createElement('iframe'); f.id='v61PrintFrame'; f.style.position='fixed'; f.style.width='1px'; f.style.height='1px'; f.style.opacity='0'; f.style.pointerEvents='none'; f.style.right='0'; f.style.bottom='0'; document.body.appendChild(f);
-    f.onload=()=>{setTimeout(()=>{try{f.contentWindow.focus();f.contentWindow.print()}catch(e){console.error(e)}},250)};
-    f.srcdoc=html;
-  };
-  function wire(){document.querySelectorAll('.v57-report-print').forEach(btn=>{const txt=(document.querySelector('#moduleDesc')?.textContent||'');const kind=txt.includes('شامل')?'شامل':'مختصر';btn.onclick=function(e){e.preventDefault();window.v61PrintFinal(kind)}})}
-  const oldFinal=window.v57FinalReport;if(oldFinal){window.v57FinalReport=function(kind='مختصر'){const r=oldFinal.apply(this,arguments);setTimeout(wire,0);return r}}
-  document.addEventListener('click',e=>{const b=e.target.closest('.v57-report-print');if(b){e.preventDefault();e.stopPropagation();const txt=(document.querySelector('#moduleDesc')?.textContent||'');window.v61PrintFinal(txt.includes('شامل')?'شامل':'مختصر')}},true);
-})();
-</script>
-<style id="v63-eof-fix-style">
-.v63-gender{margin:16px 0 0;padding-top:14px;border-top:1px solid #e2e5de}.v63-gender>label{display:block;font-weight:850;color:var(--deep);margin-bottom:9px}.v63-gender-row{display:flex;gap:8px;flex-wrap:wrap}.v63-gender-btn{border:1px solid var(--line);background:var(--paper);color:var(--deep);border-radius:999px;padding:9px 18px;font:inherit;cursor:pointer}.v63-gender-btn.on{background:var(--olive);color:white;border-color:var(--olive)}.v63-behavior-one{grid-column:1/-1;display:flex;justify-content:center}.v63-behavior-card{width:min(620px,100%);border:1px solid #d4ddd0;background:linear-gradient(145deg,#f7f3e8,#e9efe5);border-radius:22px;padding:28px 24px;color:var(--deep);font:inherit;cursor:pointer;text-align:center}.v63-behavior-card b{display:block;font-size:22px;margin-bottom:8px}.v63-behavior-card span{color:var(--muted);line-height:1.8}.v63-rules{grid-column:1/-1;max-width:820px;margin:auto;background:#fffdf8;border:1px solid var(--line);border-radius:22px;padding:24px}.v63-rules h2{margin:0 0 12px}.v63-rules p{line-height:1.9;color:var(--muted)}
-</style>
-<script id="v63-eof-fix">
-(function(){
-const btn=()=>document.querySelector('#modulePage .module-head .students-back');
-function mainBack(){const b=btn();if(!b)return;b.textContent='← الرئيسية';b.onclick=()=>goHome()}
-function parentBack(fn){const b=btn();if(!b)return;b.textContent='← العودة';b.onclick=fn}
-const TOP=new Set(['التقارير','بياناتي','الاشتراك','الدعم','سياسة الخصوصية','الشروط والأحكام','قواعد السلوك والمواظبة','المتابعات الطلابية','الجلسات الإرشادية','المواقف الطارئة','التواصل مع أولياء الأمور','مجلس أولياء الأمور','الحالات الصحية','الفئات الخاصة','دراسة الحالة','التحصيل الدراسي']);
-const oo=window.openModule;if(oo)window.openModule=function(title,desc){const r=oo.apply(this,arguments);if(TOP.has(String(title||'')))setTimeout(mainBack,0);return r};
-const of=window.v57FinalReport;if(of)window.v57FinalReport=function(kind='مختصر'){const r=of.apply(this,arguments);setTimeout(mainBack,0);return r};
-const op=window.v57ProgramsExecuted;if(op)window.v57ProgramsExecuted=function(){const r=op.apply(this,arguments);document.querySelectorAll('#moduleGrid .v58-back').forEach(x=>x.remove());setTimeout(()=>parentBack(()=>window.v57FinalReport?.('مختصر')),0);return r};
-const ow=window.v57GuidanceWorks;if(ow)window.v57GuidanceWorks=function(){const r=ow.apply(this,arguments);document.querySelectorAll('#moduleGrid .v58-back').forEach(x=>x.remove());setTimeout(()=>parentBack(()=>window.v57FinalReport?.('مختصر')),0);return r};
-window.v57Behavior=function(){hideAllPages();modulePage.classList.add('show');moduleTitle.textContent='قواعد السلوك والمواظبة';moduleDesc.textContent='مرجع السلوك والمواظبة داخل مِعِك.';moduleGrid.innerHTML='<div class="v63-behavior-one"><button class="v63-behavior-card" onclick="v63OpenBehaviorRules()"><b>قواعد السلوك والمواظبة</b><span>عرض القواعد والتنظيمات في صفحة واحدة منظمة.</span></button></div>';mainBack();window.scrollTo({top:0,behavior:'smooth'})};
-window.v63OpenBehaviorRules=function(){moduleTitle.textContent='قواعد السلوك والمواظبة';moduleDesc.textContent='القواعد والتنظيمات المعتمدة للسلوك والمواظبة.';moduleGrid.innerHTML='<section class="v63-rules"><h2>قواعد السلوك والمواظبة</h2><p>تم دمج السلوك والمواظبة في مدخل واحد بدل فصلها إلى سجلين مستقلين.</p></section>';parentBack(()=>window.v57Behavior());window.scrollTo({top:0,behavior:'smooth'})};
-function wireBehavior(){const b=[...document.querySelectorAll('#drawer button')].find(x=>x.textContent.trim()==='قواعد السلوك والمواظبة');if(b)b.onclick=()=>{document.getElementById('drawer')?.classList.remove('show');window.v57Behavior()}}
-let gender='بنين';function prof(){try{return JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){return {}}}
-function addGender(){const root=document.querySelector('.v58-settings');if(!root||root.querySelector('.v63-gender'))return;gender=prof().gender||'بنين';const anchor=root.querySelector('.v58-block');if(!anchor)return;const box=document.createElement('div');box.className='v63-gender';box.innerHTML='<label>جنس المدرسة</label><div class="v63-gender-row"><button type="button" data-g="بنين" class="v63-gender-btn '+(gender==='بنين'?'on':'')+'">بنين</button><button type="button" data-g="بنات" class="v63-gender-btn '+(gender==='بنات'?'on':'')+'">بنات</button></div>';anchor.before(box);box.querySelectorAll('button').forEach(x=>x.onclick=()=>{gender=x.dataset.g;box.querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))})}
-const ord=window.renderMyData58;if(ord)window.renderMyData58=function(){const r=ord.apply(this,arguments);setTimeout(()=>{addGender();mainBack()},0);return r};
-const osd=window.saveMyData58;if(osd)window.saveMyData58=function(){const r=osd.apply(this,arguments);try{const p=prof();p.gender=gender||p.gender||'بنين';localStorage.setItem('miikProfileV58',JSON.stringify(p))}catch(e){}return r};
-document.addEventListener('click',e=>{if(e.target.closest('#drawer button')||e.target.closest('.profile-menu button'))setTimeout(mainBack,25)},true);wireBehavior();
+document.addEventListener('DOMContentLoaded',wireBehavior64,{once:true});setTimeout(wireBehavior64,250);
 })();
 </script>
