@@ -2458,3 +2458,66 @@ window.v75RenderOwnerSupport=function(){
 const oldNav75=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='الدعم'){v75RenderOwnerSupport();return}return oldNav75.apply(this,arguments)};
 })();
 </script>
+
+<!-- v76: robust student edit binding + owner communications -->
+<style id="v76-style">
+.v76-comm-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:16px}.v76-comm-summary article{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;padding:16px;min-height:102px;box-shadow:0 7px 20px rgba(45,71,60,.035)}.v76-comm-summary b{display:block;color:#51675f;font-size:12px}.v76-comm-summary strong{display:block;color:#2f5047;font-size:17px;margin-top:12px}.v76-comm-summary small{display:block;color:#8a9791;font-size:9.5px;margin-top:4px}.v76-compose{display:grid;grid-template-columns:1fr 1fr;gap:12px}.v76-compose .full{grid-column:1/-1}.v76-compose label{display:block;color:#4d625a;font-size:10px;font-weight:900;margin-bottom:5px}.v76-compose input,.v76-compose select,.v76-compose textarea{width:100%;box-sizing:border-box;border:1px solid #d9dfd7;background:#f9f8f3;border-radius:11px;padding:11px 12px;color:#3d564e;font:inherit;font-weight:750;outline:none}.v76-compose textarea{min-height:115px;resize:vertical}.v76-channel-row{display:flex;gap:9px;flex-wrap:wrap}.v76-channel{display:flex!important;align-items:center;gap:7px;border:1px solid #d9dfd7;background:#f6f6f0;border-radius:11px;padding:10px 12px!important;cursor:pointer;margin:0!important}.v76-channel input{width:auto;margin:0}.v76-comm-actions{display:flex;gap:9px;justify-content:flex-start;margin-top:14px}.v76-comm-actions button{border:0;border-radius:11px;padding:11px 17px;font:inherit;font-weight:900;cursor:pointer}.v76-primary{background:#405f54;color:white}.v76-secondary{background:#eceee7;color:#476057}.v76-info{margin-top:13px;background:#f3f5ef;border:1px solid #dfe5dc;border-radius:12px;padding:11px 13px;color:#718078;font-size:10px;line-height:1.9;font-weight:700}@media(max-width:700px){.v76-comm-summary,.v76-compose{grid-template-columns:1fr}.v76-compose .full{grid-column:auto}}
+</style>
+<script id="v76-script">
+(function(){
+'use strict';
+const STORE76='miikStudentsV39';
+let active76=null;
+const norm76=s=>String(s??'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim();
+const esc76=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function read76(){try{const a=JSON.parse(localStorage.getItem(STORE76)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
+function write76(a){localStorage.setItem(STORE76,JSON.stringify(a))}
+function stage76(g){g=norm76(g);return g.includes('متوسط')?'المتوسطة':g.includes('ثان')?'الثانوية':g.includes('ابتد')?'الابتدائية':''}
+function find76(){
+ const rows=read76();
+ if(active76){
+   let i=rows.findIndex(x=>norm76(x.name)===active76.name&&norm76(x.grade)===active76.grade&&norm76(x.section)===active76.section);
+   if(i<0)i=rows.findIndex(x=>norm76(x.name)===active76.name);
+   if(i>=0)return {rows,i,rec:rows[i]};
+ }
+ return null;
+}
+function opts76(vals,val){return vals.map(x=>`<option value="${esc76(x)}" ${norm76(x)===norm76(val)?'selected':''}>${esc76(x)}</option>`).join('')}
+function uniq76(a){return [...new Set(a.map(norm76).filter(Boolean))]}
+const baseOpen76=window.openStudent;
+window.openStudent=function(name,grade,section,phone){
+ active76={name:norm76(name),grade:norm76(grade),section:norm76(section),phone:norm76(phone)};
+ const r=baseOpen76.apply(this,arguments);
+ return r;
+};
+window.v75EditStudent=function(){
+ const hit=find76();
+ if(!hit){if(typeof showMiikNotice==='function')showMiikNotice('بيانات الطالب','تعذر العثور على سجل الطالب الحالي.');return}
+ const rec=hit.rec,all=hit.rows;
+ const stages=uniq76(all.map(x=>x.stage||stage76(x.grade))); if(rec.stage&&!stages.includes(rec.stage))stages.unshift(rec.stage);
+ const st=norm76(rec.stage||stage76(rec.grade));
+ const grades=uniq76(all.filter(x=>!st||norm76(x.stage||stage76(x.grade))===st).map(x=>x.grade)); if(rec.grade&&!grades.includes(rec.grade))grades.unshift(rec.grade);
+ showMiikDialog(`<h2>تعديل بيانات الطالب</h2><p>عدّل بيانات الطالب الأساسية، وسيبقى سجله الإرشادي مرتبطًا به.</p><div class="v39-dialog-grid"><div class="full"><label>اسم الطالب<input id="v75Name" value="${esc76(rec.name)}"></label></div><div><label>المرحلة<select id="v75Stage">${opts76(stages.length?stages:[st||'المتوسطة'],st)}</select></label></div><div><label>الصف<select id="v75Grade">${opts76(grades.length?grades:[rec.grade||''],rec.grade)}</select></label></div><div><label>الفصل<input id="v75Section" value="${esc76(rec.section||'')}" placeholder="الفصل"></label></div><div><label>جوال ولي الأمر<input id="v75Phone" dir="ltr" value="${esc76(rec.phone||'')}" placeholder="05xxxxxxxx"></label></div></div><div class="v75-student-edit-note">رقم ولي الأمر المحفوظ سيُستخدم تلقائيًا عند فتح واتساب من ملف الطالب. وتعديل الاسم أو الفصل يحدث نفس سجل الطالب ولا ينشئ طالبًا جديدًا.</div><div class="dialog-actions"><button class="dialog-primary" onclick="v75SaveStudentEdit()">حفظ التعديلات</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);
+};
+window.v75SaveStudentEdit=function(){
+ const hit=find76(); if(!hit)return;
+ const old=hit.rec,oldName=norm76(old.name);
+ const name=norm76(document.getElementById('v75Name')?.value),stage=norm76(document.getElementById('v75Stage')?.value),grade=norm76(document.getElementById('v75Grade')?.value),section=norm76(document.getElementById('v75Section')?.value),phone=norm76(document.getElementById('v75Phone')?.value);
+ if(!name||!grade||!section){if(typeof showMiikNotice==='function')showMiikNotice('بيانات الطالب','أكمل اسم الطالب والصف والفصل.');return}
+ hit.rows[hit.i]={...old,name,stage:stage||stage76(grade),grade,section,phone};write76(hit.rows);
+ if(name!==oldName){try{const acts=JSON.parse(localStorage.getItem('miik-demo-actions')||'[]');if(Array.isArray(acts)){let changed=false;acts.forEach(x=>{if(norm76(x.student)===oldName){x.student=name;changed=true}});if(changed)localStorage.setItem('miik-demo-actions',JSON.stringify(acts))}}catch(e){}}
+ active76={name,grade,section,phone};closeMiikDialog();
+ if(typeof window.openStudent==='function')window.openStudent(name,grade,section,phone);
+ if(typeof showMiikNotice==='function')showMiikNotice('تم الحفظ','تم تحديث بيانات الطالب بنجاح.');
+};
+function mark76(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+window.v76RenderCommunication=function(){
+ mark76('التواصل');const main=document.querySelector('.v68-owner-main');if(!main)return;
+ main.innerHTML=`<div class="v72-users-head"><div><h1>التواصل</h1><p>إرسال رسائل مِعِك للمستخدمين عبر القنوات المعتمدة، مع تحديد الفئة المستهدفة بدقة.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
+ <section class="v76-comm-summary"><article><b>إشعار داخل مِعِك</b><strong>القناة الأساسية</strong><small>تنبيه يظهر داخل حساب المستخدم</small></article><article><b>البريد الإلكتروني</b><strong>قناة مساندة</strong><small>تُفعّل عند ربط خدمة البريد</small></article><article><b>واتساب الرسمي</b><strong>قناة مساندة</strong><small>تُفعّل عند ربط المزود الرسمي</small></article></section>
+ <section class="v72-users-panel"><div class="v76-compose"><div><label>الفئة المستهدفة</label><select id="v76Audience"><option>جميع المستخدمين</option><option>الموجّهون</option><option>الموجّهات</option><option>المستخدمون النشطون</option><option>المستخدمون الخاملون</option><option>قريبة اشتراكاتهم من الانتهاء</option></select></div><div><label>إدارة التعليم</label><select id="v76Edu"><option value="">كل إدارات التعليم</option>${(window.MIIK_EDU_DEPARTMENTS||[]).map(x=>`<option>${esc76(x)}</option>`).join('')}</select></div><div class="full"><label>عنوان الرسالة</label><input id="v76Subject" placeholder="مثال: عندنا لك جديد في مِعِك 🌿"></div><div class="full"><label>نص الرسالة</label><textarea id="v76Message" placeholder="اكتب رسالتك هنا..."></textarea></div><div class="full"><label>قنوات الإرسال</label><div class="v76-channel-row"><label class="v76-channel"><input type="checkbox" checked> إشعار داخل مِعِك</label><label class="v76-channel"><input type="checkbox"> بريد إلكتروني</label><label class="v76-channel"><input type="checkbox"> واتساب رسمي</label></div></div></div><div class="v76-comm-actions"><button class="v76-primary" onclick="showMiikNotice('التواصل','الإرسال الفعلي سيعمل بعد ربط قاعدة المستخدمين ومزودي البريد وواتساب الرسمي.')">مراجعة الرسالة</button><button class="v76-secondary" onclick="document.getElementById('v76Subject').value='';document.getElementById('v76Message').value=''">تفريغ</button></div><div class="v76-info">هذه الصفحة جاهزة كواجهة إدارية، لكنها لا ترسل رسائل فعلية في النسخة المحلية. عند الربط بالخادم ستُحسب الفئة المستهدفة من الحسابات الحقيقية وتُرسل عبر القنوات المفعّلة فقط.</div></section>`;
+ window.scrollTo({top:0,behavior:'smooth'});
+};
+const nav76=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='التواصل'){v76RenderCommunication();return}return nav76.apply(this,arguments)};
+})();
+</script>
