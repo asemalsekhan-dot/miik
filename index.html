@@ -1957,3 +1957,87 @@ function renderPrivacy66(){const g=document.getElementById('moduleGrid');if(!g)r
 const open66=window.openModule;window.openModule=function(title,desc){const r=open66.apply(this,arguments);if(title==='الاشتراك')setTimeout(renderSub66,0);if(title==='سياسة الخصوصية')setTimeout(renderPrivacy66,0);return r};
 })();
 </script>
+
+<!-- v67: closing refinements before Owner dashboard -->
+<style id="v67-style">
+/* Quieter report hierarchy */
+#modulePage.v67-report-page .module-head{padding-bottom:11px;align-items:center}
+#modulePage.v67-report-page .module-head h1{font-size:25px!important;font-weight:780!important;letter-spacing:0!important;color:#44555b!important;margin:0 0 4px!important}
+#modulePage.v67-report-page .module-head p{font-size:13px!important;color:#87908b!important}
+#modulePage.v67-report-page .program-panel>b{font-size:18px!important;font-weight:780!important;color:#4b5c59!important}
+#modulePage.v67-report-page .report-preview>b{font-size:17px!important;color:#415651!important}
+#modulePage.v67-report-page .status-pill{font-size:12px!important;padding:5px 9px!important;font-weight:700!important;background:#eef1e9!important;color:#64746b!important}
+#modulePage.v67-report-page .v57-report-card{box-shadow:none!important;transform:none!important;background:#f8f7f1!important;border-color:#dfe3d9!important}
+#modulePage.v67-report-page .v57-report-card:hover{transform:none!important}
+#modulePage.v67-report-page .v57-report-print{font-size:14px!important;padding:9px 14px!important;border-radius:10px!important;background:#536d63!important}
+@media(max-width:720px){#modulePage.v67-report-page .module-head h1{font-size:21px!important}}
+
+/* Subscription dialogs */
+.v67-sub-dialog-mark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:#eef2e8;color:#637966;font-size:20px;margin-bottom:10px}
+.v67-code-row{display:flex;gap:8px;align-items:end}.v67-code-row label{flex:1}.v67-code-row input{text-transform:uppercase;letter-spacing:1.5px;text-align:center;direction:ltr}
+
+/* Support: MIIK identity, calm and useful */
+.v67-support{grid-column:1/-1;display:grid;gap:14px}
+.v67-support-hero{background:linear-gradient(145deg,#f7f4e9,#edf2e8);border:1px solid #d9dfd3;border-radius:24px;padding:22px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+.v67-support-title{display:flex;gap:13px;align-items:center}.v67-support-icon{width:48px;height:48px;border-radius:15px;background:#fff;border:1px solid #d9dfd5;display:grid;place-items:center;font-size:22px;color:#607568}.v67-support-title h2{margin:0 0 5px;font-size:24px;color:#425752}.v67-support-title p{margin:0;color:#7b867f;font-size:14px;line-height:1.7}.v67-support-brand{display:flex;align-items:center;gap:8px;color:#687c70;font-size:12px}.v67-support-brand img{width:38px;height:38px;border-radius:11px}.v67-support-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.v67-support-card{background:#fffdf8;border:1px solid #dde2d9;border-radius:20px;padding:18px}.v67-support-card h3{margin:0 0 5px;color:#445953;font-size:17px}.v67-support-card>p{margin:0 0 14px;color:#838b86;font-size:13px;line-height:1.65}.v67-support-cats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}.v67-support-cat{border:1px solid #dfe4dc;background:#faf9f4;border-radius:12px;padding:10px 11px;text-align:right;color:#566861;font:inherit;font-size:13px;cursor:pointer}.v67-support-cat:hover{background:#f1f4ed}.v67-support-new{width:100%;border:0;border-radius:13px;background:#536e64;color:#fff;padding:12px 16px;font:inherit;font-weight:800;cursor:pointer;margin-top:4px}.v67-ticket{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #eceee8;padding:11px 0}.v67-ticket:first-of-type{border-top:0}.v67-ticket b{display:block;font-size:13px;color:#495b56}.v67-ticket small{display:block;color:#8b928e;margin-top:3px;font-size:11px}.v67-ticket .status-pill{font-size:11px!important;padding:5px 8px!important}.v67-support-tip{background:#f5f1e8;border-radius:13px;padding:12px;color:#6e776f;font-size:12px;line-height:1.7}.v67-support-empty{color:#929894;font-size:13px;padding:8px 0}
+@media(max-width:760px){.v67-support-hero{grid-template-columns:1fr}.v67-support-brand{display:none}.v67-support-grid{grid-template-columns:1fr}.v67-support-cats{grid-template-columns:1fr}.v67-support-title h2{font-size:21px}}
+
+/* Hidden printing frame: avoids popup blocking and file:// browser alerts */
+#miikPrintFrame67{position:fixed!important;left:-99999px!important;top:0!important;width:1px!important;height:1px!important;border:0!important;opacity:0!important;pointer-events:none!important}
+</style>
+<script id="v67-script">
+(()=>{'use strict';
+const e67=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function reportMode67(on=true){document.getElementById('modulePage')?.classList.toggle('v67-report-page',!!on)}
+
+/* Printing in a same-page hidden iframe. This works locally without popup permission. */
+window.miikPrintHTML67=function(title,body,opts={}){
+  let old=document.getElementById('miikPrintFrame67'); if(old)old.remove();
+  const frame=document.createElement('iframe');frame.id='miikPrintFrame67';frame.setAttribute('aria-hidden','true');document.body.appendChild(frame);
+  const p=(typeof profile56==='function'?profile56():{}),logo=new URL('ministry-logo.png',location.href).href;
+  const orientation=opts.orientation==='landscape'?'landscape':'portrait';
+  const doc=frame.contentDocument||frame.contentWindow.document;
+  doc.open();doc.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>${e67(title)}</title><style>@page{size:A4 ${orientation};margin:16mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#263a34;font-size:12px;line-height:1.75;margin:0}.sheet{width:100%;margin:auto}.head{display:grid;grid-template-columns:1fr 90px 1fr;align-items:center;border-bottom:1.3px solid #7f8e87;padding-bottom:8px;margin-bottom:14px}.gov{line-height:1.65;font-weight:700;text-align:right}.logo{text-align:center}.logo img{max-width:72px;max-height:58px}.school{text-align:left;line-height:1.65;font-weight:700}h1{text-align:center;font-size:18px;margin:14px 0 18px;color:#263a34}h2,h3{color:#344a43}table{width:100%;border-collapse:collapse;margin:10px 0}th,td{border:1px solid #aeb8b3;padding:7px 8px;vertical-align:top}th{background:#f0f2ee;text-align:center}.box{border:1px solid #cfd6d2;border-radius:7px;padding:11px;margin:10px 0}.v57-parent-text{line-height:2;margin:8px 0 14px}.v57-signatures{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:28px;text-align:center;line-height:2}.print-note{text-align:center;font-size:10px;color:#7b847f;margin-top:14px;border-top:1px solid #e1e4e1;padding-top:7px}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body><div class="sheet"><div class="head"><div class="gov">المملكة العربية السعودية<br>وزارة التعليم${p.region?`<br>الإدارة العامة للتعليم بمنطقة ${e67(p.region)}`:''}</div><div class="logo"><img src="${logo}"></div><div class="school">${e67(p.school||'')}<br>التوجيه الطلابي</div></div><h1>${e67(title)}</h1>${body}</div></body></html>`);doc.close();
+  const run=()=>{try{frame.contentWindow.focus();frame.contentWindow.print()}catch(err){if(typeof showMiikNotice==='function')showMiikNotice('الطباعة','تعذر فتح نافذة الطباعة. جرّب مرة أخرى من المتصفح.')}setTimeout(()=>frame.remove(),1500)};
+  const img=doc.querySelector('img'); if(img&&!img.complete){img.onload=()=>setTimeout(run,80);img.onerror=()=>setTimeout(run,80)}else setTimeout(run,120);
+};
+window.printShell56=function(title,body){return window.miikPrintHTML67(title,body,{orientation:'portrait'})};
+
+/* Final-report page: calmer typography and guaranteed printing. */
+const oldFinal67=window.v57FinalReport;
+window.v57FinalReport=function(kind='مختصر'){
+  if(typeof oldFinal67==='function')oldFinal67(kind);
+  reportMode67(true);
+  const t=document.getElementById('moduleTitle'); if(t)t.textContent=kind==='شامل'?'التقرير الختامي الشامل':'التقرير الختامي المختصر';
+  const d=document.getElementById('moduleDesc'); if(d)d.textContent=kind==='شامل'?'عرض شامل لأعمال العام المسجلة.':'ملخص تنفيذي هادئ لأبرز أعمال العام.';
+};
+const oldShowProgram67=window.showProgramReport;
+window.showProgramReport=function(title){if(typeof oldShowProgram67==='function')oldShowProgram67(title);reportMode67(true)};
+const oldOpen67=window.openModule;
+window.openModule=function(title,desc){const r=oldOpen67.apply(this,arguments);if(title!=='التقارير'&&!String(desc||'').includes('التقرير'))reportMode67(false);return r};
+
+/* Subscription: replace browser alerts with MIIK dialogs. */
+window.v67RenewSubscription=function(){
+  showMiikDialog(`<div class="v67-sub-dialog-mark">↻</div><h2>تجديد اشتراك مِعِك</h2><p>مسار التجديد سيُربط بخدمة الاشتراكات عند تشغيلها. ما راح نعرض لك بيانات أو تواريخ غير حقيقية.</p><div class="dialog-actions"><button class="dialog-primary" onclick="closeMiikDialog()">تمام</button></div>`)
+};
+window.v67ActivationCode=function(){
+  showMiikDialog(`<div class="v67-sub-dialog-mark">⌁</div><h2>استخدام كود تفعيل</h2><p>أدخل كود التفعيل المرتبط بحسابك.</p><form id="v67CodeForm"><label>كود التفعيل<input id="v67Code" required autocomplete="off" placeholder="XXXX-XXXX" dir="ltr"></label><div class="dialog-actions"><button class="dialog-primary" type="submit">تحقق من الكود</button><button class="dialog-cancel" type="button" onclick="closeMiikDialog()">إلغاء</button></div></form>`);
+  document.getElementById('v67CodeForm').onsubmit=e=>{e.preventDefault();const c=document.getElementById('v67Code').value.trim();if(!c)return;document.getElementById('miikDialogBody').innerHTML=`<div class="v67-sub-dialog-mark">✓</div><h2>الكود جاهز للتحقق</h2><p>في النسخة المتصلة بالخادم سيتم التحقق من الكود وربطه بالحساب هنا.</p><div class="dialog-actions"><button class="dialog-primary" onclick="closeMiikDialog()">تم</button></div>`}
+};
+const oldRenderSub67=window.renderSub66;
+window.renderSub66=function(){if(typeof oldRenderSub67==='function')oldRenderSub67();const box=document.querySelector('.v66-sub-actions');if(box)box.innerHTML='<button class="v66-primary" onclick="v67RenewSubscription()">تجديد الاشتراك</button><button class="v66-secondary" onclick="v67ActivationCode()">استخدام كود تفعيل</button>'};
+
+/* Support page: MIIK identity + structured ticket form. */
+window.v67OpenSupport=function(cat='مشكلة تقنية'){
+  showMiikDialog(`<div class="v67-sub-dialog-mark">؟</div><h2>رفع بلاغ</h2><p>اكتب المشكلة باختصار، وبدون بيانات طلاب إلا إذا كانت ضرورية لمعالجة البلاغ وبالحد الأدنى.</p><form id="v67SupportForm"><label>نوع البلاغ<select name="category"><option ${cat==='مشكلة تقنية'?'selected':''}>مشكلة تقنية</option><option ${cat==='الحساب أو الاشتراك'?'selected':''}>الحساب أو الاشتراك</option><option ${cat==='اقتراح أو تطوير'?'selected':''}>اقتراح أو تطوير</option><option ${cat==='أخرى'?'selected':''}>أخرى</option></select></label><label>عنوان البلاغ<input name="subject" required maxlength="120" placeholder="مثال: تعذر طباعة التقرير"></label><label>وصف المشكلة<textarea name="details" rows="5" required placeholder="وش صار؟ ومتى ظهر؟"></textarea></label><label>صورة توضيحية — اختياري<input id="v67SupportFile" type="file" accept="image/*"></label><div class="dialog-actions"><button class="dialog-primary" type="submit">إرسال البلاغ</button><button class="dialog-cancel" type="button" onclick="closeMiikDialog()">إلغاء</button></div></form>`);
+  document.getElementById('v67SupportForm').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target),a=typeof supportRows==='function'?supportRows():[];const f=document.getElementById('v67SupportFile')?.files?.[0];a.unshift({category:fd.get('category'),subject:fd.get('subject'),details:fd.get('details'),attachment:f?f.name:'',date:(typeof hijriParts==='function'?hijriParts():new Date().toLocaleDateString('ar-SA')),status:'تم الاستلام',number:'M-'+String(Date.now()).slice(-5)});localStorage.setItem('miik-support',JSON.stringify(a));closeMiikDialog();renderSupport(document.getElementById('moduleGrid'))}
+};
+window.renderSupport=function(g){
+  reportMode67(false);const a=typeof supportRows==='function'?supportRows():[];
+  g.innerHTML=`<section class="v67-support"><div class="v67-support-hero"><div class="v67-support-title"><div class="v67-support-icon">؟</div><div><h2>حنا مِعِك</h2><p>واجهتك مشكلة أو عندك اقتراح؟ ارفعه هنا وبنرتبه لك في مسار واضح.</p></div></div><div class="v67-support-brand"><img src="miik-logo.png" alt="مِعِك"><span>الدعم في مِعِك</span></div></div><div class="v67-support-grid"><div class="v67-support-card"><h3>وش نقدر نخدمك فيه؟</h3><p>اختر الأقرب لموضوعك، وبعدها اكتب التفاصيل.</p><div class="v67-support-cats"><button class="v67-support-cat" onclick="v67OpenSupport('مشكلة تقنية')">مشكلة تقنية</button><button class="v67-support-cat" onclick="v67OpenSupport('الحساب أو الاشتراك')">الحساب أو الاشتراك</button><button class="v67-support-cat" onclick="v67OpenSupport('اقتراح أو تطوير')">اقتراح أو تطوير</button><button class="v67-support-cat" onclick="v67OpenSupport('أخرى')">موضوع آخر</button></div><button class="v67-support-new" onclick="v67OpenSupport()">رفع بلاغ جديد</button></div><div class="v67-support-card"><h3>بلاغاتك الأخيرة</h3><p>تقدر تتابع حالة البلاغ من نفس المكان.</p>${a.length?a.slice(0,4).map(x=>`<div class="v67-ticket"><div><b>${e67(x.subject||'بلاغ')}</b><small>${e67(x.number||'')} ${x.date?'· '+e67(x.date):''}</small></div><span class="status-pill">${e67(x.status||'جديد')}</span></div>`).join(''):'<div class="v67-support-empty">ما عندك بلاغات مفتوحة حاليًا.</div>'}<div class="v67-support-tip">مِعِك لا يحتاج تصفح ملفات الطلاب لمعالجة البلاغات العامة. أرسل فقط القدر اللازم من المعلومات.</div></div></div></section>`
+};
+
+/* Re-apply current page patches if v66 is already open. */
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{}); 
+})();
+</script>
