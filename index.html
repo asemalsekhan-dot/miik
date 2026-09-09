@@ -2229,3 +2229,90 @@ body.v68-owner-mode .v71-owner-date{display:block!important;white-space:normal;l
   };
 })();
 </script>
+
+<!-- v72: Owner users management — first functional management section -->
+<style id="v72-owner-users-css">
+.v72-users-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}
+.v72-users-head h1{margin:0;color:#29483f;font-size:25px;font-weight:800!important}.v72-users-head p{margin:6px 0 0;color:#718079;font-size:12px;font-weight:700!important}
+.v72-users-back{border:1px solid #d8ded5;background:#fffdf8;color:#456259;border-radius:11px;padding:9px 13px;font-weight:800!important;cursor:pointer}
+.v72-user-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:16px}
+.v72-user-summary article{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;padding:16px;min-height:105px;box-shadow:0 7px 20px rgba(45,71,60,.035);cursor:pointer;transition:.18s ease}
+.v72-user-summary article:hover{transform:translateY(-1px);border-color:#cbd5ca}.v72-user-summary article.active{background:#e9efe6;border-color:#bdccbe}
+.v72-user-summary b{display:block;color:#51675f;font-size:12px}.v72-user-summary strong{display:block;color:#2f5047;font-size:25px;margin-top:10px}.v72-user-summary small{display:block;color:#8a9791;font-size:9.5px;margin-top:3px}
+.v72-users-panel{background:#fffdf8;border:1px solid #dfe3d8;border-radius:17px;padding:17px;box-shadow:0 8px 22px rgba(44,68,58,.035)}
+.v72-users-tools{display:grid;grid-template-columns:minmax(240px,1.5fr) repeat(2,minmax(150px,.65fr));gap:9px;margin-bottom:14px}
+.v72-users-tools input,.v72-users-tools select{width:100%;border:1px solid #d9dfd7;background:#f9f8f3;border-radius:11px;padding:11px 12px;color:#3d564e;font:inherit;font-weight:700!important;outline:none}.v72-users-tools input:focus,.v72-users-tools select:focus{border-color:#9fb4a5;box-shadow:0 0 0 3px rgba(112,139,120,.08)}
+.v72-users-table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #e1e4dc;border-radius:13px}.v72-users-table th{background:#f1f3ec;color:#52675f;font-size:10px;padding:11px;text-align:right;font-weight:800!important}.v72-users-table td{padding:12px 11px;border-top:1px solid #eceee8;color:#52635d;font-size:10.5px;font-weight:700!important}.v72-users-table tr:hover td{background:#fafaf5}
+.v72-users-empty{padding:42px 18px;text-align:center;color:#6f7f78}.v72-users-empty .ico{width:48px;height:48px;border-radius:16px;background:#eef2ea;display:grid;place-items:center;margin:0 auto 12px;font-size:21px}.v72-users-empty b{display:block;color:#3e5b52;font-size:13px;margin-bottom:6px}.v72-users-empty span{font-size:10px;line-height:1.8;color:#8a958f}
+.v72-filter-note{margin-top:11px;padding:10px 12px;border-radius:11px;background:#f5f5ef;color:#7a8781;font-size:9.5px;line-height:1.8}
+@media(max-width:900px){.v72-users-tools{grid-template-columns:1fr 1fr}.v72-users-tools input{grid-column:1/-1}}
+@media(max-width:650px){.v72-user-summary{grid-template-columns:1fr 1fr}.v72-user-summary article:first-child{grid-column:1/-1}.v72-users-table thead{display:none}.v72-users-table,.v72-users-table tbody,.v72-users-table tr,.v72-users-table td{display:block;width:100%}.v72-users-table tr{border-top:1px solid #eceee8;padding:8px 0}.v72-users-table td{border:0;padding:5px 11px}.v72-users-tools{grid-template-columns:1fr}.v72-users-tools input{grid-column:auto}.v72-users-head{display:block}.v72-users-back{margin-top:10px}}
+</style>
+<script id="v72-owner-users-js">
+(function(){
+  const navLabels=['الرئيسية','المستخدمون','المدارس','الاشتراكات','الدعم','التواصل','الفريق والصلاحيات','المحتوى والخطة','حالة المنصة والإصدارات','إعدادات المنصة'];
+  function markOwnerNav(title){
+    document.querySelectorAll('.v68-owner-side button').forEach(btn=>{
+      const label=btn.querySelector('span')?.textContent?.trim();
+      btn.classList.toggle('active',label===title);
+    });
+    document.querySelector('.v68-owner-side')?.classList.remove('show');
+  }
+  function connectedUsers(){
+    // Reserved for the future backend/API. No fabricated owner data is injected locally.
+    return [];
+  }
+  function userCounts(rows){
+    const male=rows.filter(r=>r.gender==='بنين'||r.gender==='male'||r.gender==='موجه').length;
+    const female=rows.filter(r=>r.gender==='بنات'||r.gender==='female'||r.gender==='موجهة').length;
+    return {all:rows.length,male,female};
+  }
+  function drawRows(filterGender){
+    const rows=connectedUsers();
+    const body=document.getElementById('v72UsersBody');
+    if(!body)return;
+    const q=(document.getElementById('v72UserSearch')?.value||'').trim().toLowerCase();
+    const edu=document.getElementById('v72EduFilter')?.value||'';
+    const status=document.getElementById('v72StatusFilter')?.value||'';
+    let list=rows.filter(r=>{
+      const g=String(r.gender||'');
+      const genderOk=!filterGender||(filterGender==='male'?(g==='بنين'||g==='male'||g==='موجه'):(g==='بنات'||g==='female'||g==='موجهة'));
+      const hay=[r.name,r.school,r.educationDepartment,r.phone,r.email].filter(Boolean).join(' ').toLowerCase();
+      return genderOk&&(!q||hay.includes(q))&&(!edu||r.educationDepartment===edu)&&(!status||r.status===status);
+    });
+    if(!list.length){
+      body.innerHTML=`<tr><td colspan="6"><div class="v72-users-empty"><div class="ico">♙</div><b>لا توجد بيانات مستخدمين متصلة حتى الآن</b><span>عند ربط بوابة المالك بقاعدة الحسابات ستظهر هنا حسابات الموجّهين والموجّهات وبيانات المدرسة والاشتراك تلقائيًا.</span></div></td></tr>`;
+      return;
+    }
+    body.innerHTML=list.map(r=>`<tr><td>${r.name||'—'}</td><td>${r.role||'—'}</td><td>${r.educationDepartment||'—'}</td><td>${r.school||'—'}</td><td>${r.subscription||'—'}</td><td>${r.lastActive||'—'}</td></tr>`).join('');
+  }
+  window.v72UserSegment=function(kind,el){
+    document.querySelectorAll('.v72-user-summary article').forEach(x=>x.classList.remove('active'));el?.classList.add('active');
+    window.__v72Gender=kind||'';drawRows(window.__v72Gender);
+  };
+  window.v72FilterUsers=function(){drawRows(window.__v72Gender||'')};
+  window.v72RenderUsers=function(){
+    markOwnerNav('المستخدمون');
+    const main=document.querySelector('.v68-owner-main'); if(!main)return;
+    const rows=connectedUsers(),counts=userCounts(rows);
+    main.innerHTML=`<div class="v72-users-head"><div><h1>المستخدمون</h1><p>إدارة حسابات الموجّهين والموجّهات ومتابعة انتشار مِعِك واستخدامه.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
+    <section class="v72-user-summary"><article class="active" onclick="v72UserSegment('',this)"><b>جميع المستخدمين</b><strong>${rows.length?counts.all:'—'}</strong><small>إجمالي حسابات مِعِك</small></article><article onclick="v72UserSegment('male',this)"><b>الموجّهون</b><strong>${rows.length?counts.male:'—'}</strong><small>حسابات مدارس البنين</small></article><article onclick="v72UserSegment('female',this)"><b>الموجّهات</b><strong>${rows.length?counts.female:'—'}</strong><small>حسابات مدارس البنات</small></article></section>
+    <section class="v72-users-panel"><div class="v72-users-tools"><input id="v72UserSearch" oninput="v72FilterUsers()" placeholder="ابحث بالاسم أو المدرسة أو إدارة التعليم"><select id="v72EduFilter" onchange="v72FilterUsers()"><option value="">كل إدارات التعليم</option></select><select id="v72StatusFilter" onchange="v72FilterUsers()"><option value="">كل الحالات</option><option>نشط</option><option>خامل</option><option>منتهي</option></select></div>
+    <table class="v72-users-table"><thead><tr><th>الاسم</th><th>الصفة</th><th>إدارة التعليم</th><th>المدرسة</th><th>الاشتراك</th><th>آخر نشاط</th></tr></thead><tbody id="v72UsersBody"></tbody></table>
+    <div class="v72-filter-note">التقسيم إلى «الموجّهون» و«الموجّهات» سيكون مبنيًا على جنس المدرسة المسجل في الحساب، وتأتي إدارات التعليم من القائمة الرسمية الموحدة عند اعتمادها.</div></section>`;
+    window.__v72Gender=''; drawRows(''); window.scrollTo({top:0,behavior:'smooth'});
+  };
+  const previousNav=window.v68OwnerNav;
+  window.v68OwnerNav=function(btn,title){
+    if(title==='الرئيسية'){openOwner();return;}
+    if(title==='المستخدمون'){v72RenderUsers();return;}
+    if(typeof previousNav==='function')previousNav.call(this,btn,title);
+  };
+  const previousAction=window.v69OwnerAction;
+  window.v69OwnerAction=function(name){
+    document.getElementById('addMenu')?.classList.remove('show');
+    if(name==='البحث عن مستخدم'){v72RenderUsers();setTimeout(()=>document.getElementById('v72UserSearch')?.focus(),80);return;}
+    if(typeof previousAction==='function')return previousAction.apply(this,arguments);
+  };
+})();
+</script>
