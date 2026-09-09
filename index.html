@@ -2192,3 +2192,40 @@ body.v68-owner-mode .add-menu button+button{
   };
 })();
 </script>
+
+<!-- v71: Final owner-home activity + unified Hijri/Gregorian date -->
+<style id="v71-owner-css">
+body.v68-owner-mode .v71-owner-date{display:block!important;white-space:normal;line-height:1.7;font-weight:800!important;color:#52665d!important}
+</style>
+<script id="v71-owner-js">
+(function(){
+  const previousOpenOwner71=window.openOwner;
+  window.openOwner=function(){
+    previousOpenOwner71.apply(this,arguments);
+    const grid=document.getElementById('moduleGrid');
+    if(!grid)return;
+
+    // Activity: acquisition, engagement, inactivity, retention.
+    const activityItems=grid.querySelectorAll('.v69-activity .v69-activity-item');
+    const activityLabels=['مستخدمون جدد','مستخدمون نشطون','مستخدمون خاملون','تجديدات'];
+    activityItems.forEach((item,index)=>{
+      const label=item.querySelector('b');
+      if(label && activityLabels[index]) label.textContent=activityLabels[index];
+    });
+
+    // One weekday only: weekday + Hijri date + Gregorian date.
+    const now=new Date();
+    const weekday=new Intl.DateTimeFormat('ar-SA-u-nu-latn',{weekday:'long'}).format(now);
+    const hijriParts=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'long',year:'numeric'}).formatToParts(now);
+    const gregParts=new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn',{day:'numeric',month:'long',year:'numeric'}).formatToParts(now);
+    const part=(parts,type)=>parts.find(p=>p.type===type)?.value||'';
+    const hijri=part(hijriParts,'day')+' '+part(hijriParts,'month')+' '+part(hijriParts,'year')+'هـ';
+    const greg=part(gregParts,'day')+' '+part(gregParts,'month')+' '+part(gregParts,'year')+'م';
+    const dateEl=grid.querySelector('.v68-owner-date');
+    if(dateEl){
+      dateEl.className='v68-owner-date v71-owner-date';
+      dateEl.textContent=weekday+'، '+hijri+' • '+greg;
+    }
+  };
+})();
+</script>
