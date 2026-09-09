@@ -2130,3 +2130,65 @@ window.toggleAdd=function(e){
 window.v69OwnerAction=function(name){document.getElementById('addMenu')?.classList.remove('show');if(typeof devNotice==='function')devNotice(name);else if(typeof showMiikDialog==='function')showMiikDialog(`<h2>${name}</h2><p>سيُفعّل هذا الإجراء عند بناء قسمه في بوابة المالك.</p><div class="dialog-actions"><button class="dialog-primary" onclick="closeMiikDialog()">تمام</button></div>`)};
 })();
 </script>
+
+<!-- v70: Owner dashboard visual refinement -->
+<style id="v70-owner-css">
+/* All owner dashboard text uses a stronger weight, while keeping hierarchy readable */
+body.v68-owner-mode .v68-owner,
+body.v68-owner-mode .v68-owner button,
+body.v68-owner-mode .v68-owner span,
+body.v68-owner-mode .v68-owner small,
+body.v68-owner-mode .v68-owner p,
+body.v68-owner-mode .v68-owner strong,
+body.v68-owner-mode .v68-owner b,
+body.v68-owner-mode .v68-owner h1,
+body.v68-owner-mode .v68-owner h2,
+body.v68-owner-mode .v68-owner h3{font-weight:700!important}
+body.v68-owner-mode .v68-owner h1,
+body.v68-owner-mode .v68-owner h2,
+body.v68-owner-mode .v68-owner h3,
+body.v68-owner-mode .v68-owner strong{font-weight:800!important}
+/* Owner + menu gets the same olive identity as the floating button */
+body.v68-owner-mode .add-menu{
+  background:var(--olive)!important;
+  border-color:var(--olive)!important;
+  box-shadow:0 18px 45px rgba(71,101,77,.28)!important;
+  padding:8px!important
+}
+body.v68-owner-mode .add-menu button{
+  color:#fff!important;
+  background:transparent!important;
+  font-weight:800!important;
+  border-radius:11px!important
+}
+body.v68-owner-mode .add-menu button:hover{
+  background:rgba(255,255,255,.13)!important
+}
+body.v68-owner-mode .add-menu button+button{
+  border-top:1px solid rgba(255,255,255,.18)
+}
+.v70-owner-date{display:flex;flex-direction:column;gap:3px;align-items:flex-start;line-height:1.55}
+.v70-owner-date .greg{font-weight:800!important;color:#52665d}
+.v70-owner-date .hijri{font-weight:800!important;color:#75877f}
+</style>
+<script id="v70-owner-js">
+(function(){
+  const oldOpenOwner70=window.openOwner;
+  window.openOwner=function(){
+    oldOpenOwner70.apply(this,arguments);
+    const grid=document.getElementById('moduleGrid');
+    if(!grid)return;
+    // Replace duplicated activity metric with monthly active users.
+    grid.innerHTML=grid.innerHTML.replace('اشتراكات جديدة','مستخدمون نشطون');
+    // Replace the single date with explicit Gregorian + Hijri dates from the device date.
+    const now=new Date();
+    const greg=new Intl.DateTimeFormat('ar-SA-u-ca-gregory',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
+    const hijri=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
+    const dateEl=grid.querySelector('.v68-owner-date');
+    if(dateEl){
+      dateEl.classList.add('v70-owner-date');
+      dateEl.innerHTML='<span class="greg">'+greg+'م</span><span class="hijri">'+hijri+'هـ</span>';
+    }
+  };
+})();
+</script>
