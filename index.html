@@ -2409,3 +2409,52 @@ window.v74RenderSubscriptions=function(segment=''){
 const oldNav74=window.v68OwnerNav; window.v68OwnerNav=function(btn,title){if(title==='الاشتراكات'){v74RenderSubscriptions();return}return oldNav74.apply(this,arguments)};
 })();
 </script>
+
+<!-- v75: editable student profile + owner support management -->
+<style id="v75-style">
+#studentFile .v75-edit-student{background:#eef1e8!important;border-color:#c7d3c4!important;color:#294b42!important;font-weight:900!important}
+.v75-student-edit-note{font-size:11px;color:#718078;line-height:1.8;background:#f3f5ef;border:1px solid #dfe5dc;border-radius:12px;padding:10px 12px;margin-top:4px}
+.v75-owner-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:16px}.v75-owner-summary article{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;padding:16px;min-height:105px;box-shadow:0 7px 20px rgba(45,71,60,.035)}.v75-owner-summary b{display:block;color:#51675f;font-size:12px}.v75-owner-summary strong{display:block;color:#2f5047;font-size:25px;margin-top:10px}.v75-owner-summary small{display:block;color:#8a9791;font-size:9.5px;margin-top:3px}.v75-support-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #e1e4dc;border-radius:13px;overflow:hidden}.v75-support-table th{background:#f1f3ec;color:#52675f;font-size:10px;padding:11px;text-align:right;font-weight:900}.v75-support-table td{padding:12px 11px;border-top:1px solid #eceee8;color:#52635d;font-size:10.5px;font-weight:750}.v75-empty{padding:42px 18px;text-align:center;color:#6f7f78}.v75-empty .ico{width:48px;height:48px;border-radius:16px;background:#eef2ea;display:grid;place-items:center;margin:0 auto 12px;font-size:21px}.v75-empty b{display:block;color:#3e5b52;font-size:13px;margin-bottom:6px}.v75-empty span{font-size:10px;line-height:1.8;color:#8a958f}@media(max-width:850px){.v75-owner-summary{grid-template-columns:1fr 1fr}}@media(max-width:520px){.v75-owner-summary{grid-template-columns:1fr}}
+</style>
+<script id="v75-script">
+(function(){
+'use strict';
+const STUDENTS75='miikStudentsV39';
+function r75(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
+function w75(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function e75(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function norm75(s){return String(s??'').trim()}
+function currentRecord75(){const a=r75(STUDENTS75);return a.find(x=>norm75(x.name)===norm75(window.currentStudent))||null}
+function selectOpts75(items,val){return items.map(x=>`<option value="${e75(x)}" ${x===val?'selected':''}>${e75(x)}</option>`).join('')}
+function unique75(a){return [...new Set(a.filter(Boolean))]}
+window.v75EditStudent=function(){
+ const rec=currentRecord75(); if(!rec){if(typeof showMiikNotice==='function')showMiikNotice('بيانات الطالب','تعذر العثور على سجل الطالب الحالي.');return}
+ const all=r75(STUDENTS75), stages=unique75(all.map(x=>x.stage)); if(rec.stage&&!stages.includes(rec.stage))stages.unshift(rec.stage);
+ const grades=unique75(all.filter(x=>!rec.stage||x.stage===rec.stage).map(x=>x.grade)); if(rec.grade&&!grades.includes(rec.grade))grades.unshift(rec.grade);
+ const sections=unique75(all.filter(x=>(!rec.stage||x.stage===rec.stage)&&(!rec.grade||x.grade===rec.grade)).map(x=>x.section)); if(rec.section&&!sections.includes(rec.section))sections.unshift(rec.section);
+ showMiikDialog(`<h2>تعديل بيانات الطالب</h2><p>عدّل بيانات الطالب الأساسية، وسيبقى سجله الإرشادي مرتبطًا به.</p><div class="v39-dialog-grid"><div class="full"><label>اسم الطالب<input id="v75Name" value="${e75(rec.name)}"></label></div><div><label>المرحلة<select id="v75Stage">${selectOpts75(stages.length?stages:[rec.stage||'المتوسطة'],rec.stage)}</select></label></div><div><label>الصف<select id="v75Grade">${selectOpts75(grades.length?grades:[rec.grade||''],rec.grade)}</select></label></div><div><label>الفصل<input id="v75Section" value="${e75(rec.section||'')}" placeholder="الفصل"></label></div><div><label>جوال ولي الأمر<input id="v75Phone" dir="ltr" value="${e75(rec.phone||'')}" placeholder="05xxxxxxxx"></label></div></div><div class="v75-student-edit-note">رقم ولي الأمر المحفوظ سيُستخدم تلقائيًا عند فتح واتساب من ملف الطالب. وإذا تغير اسم الطالب فسيتم تحديث ارتباط إجراءاته السابقة بالاسم الجديد بدل إنشاء ملف جديد.</div><div class="dialog-actions"><button class="dialog-primary" onclick="v75SaveStudentEdit()">حفظ التعديلات</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);
+};
+window.v75SaveStudentEdit=function(){
+ const oldName=norm75(window.currentStudent), name=norm75(document.getElementById('v75Name')?.value), stage=norm75(document.getElementById('v75Stage')?.value), grade=norm75(document.getElementById('v75Grade')?.value), section=norm75(document.getElementById('v75Section')?.value), phone=norm75(document.getElementById('v75Phone')?.value);
+ if(!name||!grade||!section){if(typeof showMiikNotice==='function')showMiikNotice('بيانات الطالب','أكمل اسم الطالب والصف والفصل.');return}
+ const a=r75(STUDENTS75); const i=a.findIndex(x=>norm75(x.name)===oldName); if(i<0)return;
+ a[i]={...a[i],name,stage,grade,section,phone}; w75(STUDENTS75,a);
+ if(name!==oldName){const acts=r75('miik-demo-actions');let changed=false;acts.forEach(x=>{if(norm75(x.student)===oldName){x.student=name;changed=true}});if(changed)w75('miik-demo-actions',acts)}
+ window.currentStudent=name; closeMiikDialog();
+ if(typeof window.openStudent==='function')window.openStudent(name,grade,section,phone);
+ if(typeof showMiikNotice==='function')showMiikNotice('تم الحفظ','تم تحديث بيانات الطالب وحفظ رقم ولي الأمر في ملفه.');
+};
+function injectEdit75(){const box=document.querySelector('#studentFile .student-file-actions');if(!box||box.querySelector('.v75-edit-student'))return;const b=document.createElement('button');b.className='v75-edit-student';b.textContent='تعديل بيانات الطالب';b.onclick=window.v75EditStudent;box.insertBefore(b,box.firstChild)}
+const oldStudent75=window.openStudent;window.openStudent=function(){const r=oldStudent75.apply(this,arguments);setTimeout(injectEdit75,0);return r};
+
+function ownerMark75(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function ownerTickets75(){try{return typeof supportRows==='function'?supportRows():[]}catch(e){return[]}}
+window.v75RenderOwnerSupport=function(){
+ ownerMark75('الدعم');const main=document.querySelector('.v68-owner-main');if(!main)return;const rows=ownerTickets75();
+ const opened=rows.filter(x=>!['تم الحل','مغلق'].includes(x.status)).length,done=rows.filter(x=>x.status==='تم الحل'||x.status==='مغلق').length;
+ main.innerHTML=`<div class="v72-users-head"><div><h1>الدعم</h1><p>متابعة بلاغات مستخدمي مِعِك وتنظيم معالجتها من مكان واحد.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div><section class="v75-owner-summary"><article><b>جميع البلاغات</b><strong>${rows.length?rows.length:'—'}</strong><small>كل البلاغات المسجلة</small></article><article><b>تحتاج متابعة</b><strong>${rows.length?opened:'—'}</strong><small>بلاغات لم تُغلق بعد</small></article><article><b>تم حلها</b><strong>${rows.length?done:'—'}</strong><small>بلاغات أُنجزت معالجتها</small></article><article><b>متوسط زمن المعالجة</b><strong>—</strong><small>يُحسب بعد ربط نظام الدعم</small></article></section><section class="v72-users-panel"><div class="v72-users-tools"><input placeholder="ابحث برقم البلاغ أو اسم المستخدم أو الموضوع"><select><option>كل الحالات</option><option>جديد</option><option>تحت المعالجة</option><option>تم الحل</option></select><select><option>كل التصنيفات</option><option>مشكلة تقنية</option><option>الحساب أو الاشتراك</option><option>اقتراح أو تطوير</option><option>أخرى</option></select></div><table class="v75-support-table"><thead><tr><th>رقم البلاغ</th><th>المستخدم</th><th>الموضوع</th><th>التصنيف</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td>${e75(x.number||'—')}</td><td>—</td><td>${e75(x.subject||'بلاغ')}</td><td>—</td><td>${e75(x.date||'—')}</td><td>${e75(x.status||'جديد')}</td></tr>`).join(''):`<tr><td colspan="6"><div class="v75-empty"><div class="ico">؟</div><b>لا توجد بلاغات دعم متصلة حاليًا</b><span>عند ربط بوابة المالك بنظام الحسابات والدعم ستظهر البلاغات الفعلية هنا مع حالتها ومسار معالجتها، دون بيانات تجريبية.</span></div></td></tr>`}</tbody></table></section>`;
+ window.scrollTo({top:0,behavior:'smooth'});
+};
+const oldNav75=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='الدعم'){v75RenderOwnerSupport();return}return oldNav75.apply(this,arguments)};
+})();
+</script>
