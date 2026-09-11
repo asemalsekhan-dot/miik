@@ -2877,274 +2877,38 @@ const oldProg86=prog86; prog86=function(){const a=oldProg86(),names=['اختبا
 })();
 </script>
 
-<!-- v89 report recovery bridge: restore report navigation without deleting legacy dependencies -->
-<script id="v89-report-recovery">
-(()=>{
-  const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const baseOpen = window.openModule;
 
-  // Final reports: bypass the accumulated wrapper chain and call the latest final-report screen directly.
-  window.openModule = function(title, desc){
-    if(title === 'التقارير' && typeof window.v57FinalReport === 'function'){
-      const kind = String(desc || '').includes('شامل') ? 'شامل' : 'مختصر';
-      return window.v57FinalReport(kind);
-    }
-    return typeof baseOpen === 'function' ? baseOpen.apply(this, arguments) : undefined;
-  };
 
-  // Program reports: one explicit entry point, preserving the latest showProgramReport implementation.
-  window.v89OpenProgramReport = function(programTitle){
-    try{
-      if(typeof window.showProgramReport === 'function') return window.showProgramReport(programTitle);
-      if(typeof window.renderProgram === 'function'){
-        const g = document.getElementById('moduleGrid');
-        window.renderProgram(programTitle, g);
-        setTimeout(()=>{
-          const btn=[...document.querySelectorAll('#moduleGrid button')].find(b=>b.textContent.trim()==='التقرير');
-          if(btn) btn.click();
-        },0);
-      }
-    }catch(e){ console.error('MIIK v89 program report recovery', e); }
-  };
-
-  function wireReports(){
-    document.querySelectorAll('button').forEach(btn=>{
-      const t = btn.textContent.trim();
-      if(t === 'التقرير الختامي المختصر'){
-        btn.onclick = e => { e.preventDefault(); window.v57FinalReport?.('مختصر'); };
-      } else if(t === 'التقرير الختامي الشامل'){
-        btn.onclick = e => { e.preventDefault(); window.v57FinalReport?.('شامل'); };
-      }
-    });
-
-    // Sidebar program-report buttons were historically static in some versions.
-    const map = {
-      'تقرير التهيئة الإرشادية':'برنامج التهيئة الإرشادية',
-      'تقرير خفض العنف بالمدارس (رِفق)':'خفض العنف بالمدارس (رِفق)',
-      'تقرير تعزيز السلوك الإيجابي':'تعزيز السلوك الإيجابي',
-      'تقرير التوجيه المهني':'التوجيه المهني',
-      'تقرير الاستخدام الآمن للإنترنت':'الاستخدام الآمن للإنترنت',
-      'تقرير تنمية الدافعية لرفع مستوى التحصيل':'تنمية الدافعية لرفع مستوى التحصيل',
-      'تقرير اختبارات القدرات':'اختبارات القدرات',
-      'تقرير الاختبار التحصيلي':'الاختبار التحصيلي',
-      'تقرير اختبارات نافس':'اختبارات نافس',
-      'تقرير التوجيه وقت الأزمات':'التوجيه وقت الأزمات',
-      'تقرير الاحتفاء بطلبة الصف الثالث الثانوي الخريجين':'الاحتفاء بطلبة الصف الثالث الثانوي الخريجين',
-      'تقرير الأيام والمناسبات الوطنية والعالمية':'الأيام والمناسبات الوطنية والعالمية'
-    };
-    document.querySelectorAll('button').forEach(btn=>{
-      const p = map[btn.textContent.trim()];
-      if(p) btn.onclick = e => { e.preventDefault(); window.v89OpenProgramReport(p); };
-    });
-  }
-
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireReports, {once:true});
-  else wireReports();
-  setTimeout(wireReports, 300);
-})();
-</script>
-
-<!-- MIIK v90: direct report router, bypass legacy wrapper chain -->
-<style id="v90-report-router-style">
-.v90-report-panel{grid-column:1/-1;background:#fff;border:1px solid #e2e6e2;border-radius:18px;padding:18px;box-shadow:0 8px 24px #23402f0a}.v90-report-panel h3{margin:0 0 6px;color:#31594b}.v90-report-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.v90-report-actions button{border:0;border-radius:12px;padding:11px 17px;font-family:inherit;font-weight:850;cursor:pointer}.v90-primary{background:#456b5a;color:#fff}.v90-secondary{background:#eee9df;color:#365549}.v90-picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.v90-picker label{font-weight:800;color:#405c52}.v90-picker select{display:block;width:100%;margin-top:7px;padding:11px;border:1px solid #d8dfda;border-radius:11px;background:#fff;font:inherit}.v90-note{margin-top:12px;padding:11px 13px;border-radius:11px;background:#f7f4ec;color:#687970;line-height:1.8}@media(max-width:680px){.v90-picker{grid-template-columns:1fr}}
+<!-- MIIK v93: isolated reports engine; no dependency on print86/v86/v87 wrappers -->
+<style id="v93-reports-style">
+.v93-report-panel{grid-column:1/-1;background:#fff;border:1px solid #dfe5df;border-radius:20px;padding:20px;box-shadow:0 10px 30px rgba(35,64,47,.07)}
+.v93-report-panel h3{margin:0 0 8px;color:#31594b;font-size:22px}.v93-report-panel p{color:#6f7d76;line-height:1.8}
+.v93-picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.v93-picker label{font-weight:800;color:#405c52}.v93-picker select{display:block;width:100%;margin-top:7px;padding:11px;border:1px solid #d8dfda;border-radius:11px;background:#fff;font:inherit}
+.v93-actions{display:flex;gap:10px;flex-wrap:wrap}.v93-actions button{border:0;border-radius:12px;padding:11px 17px;font-family:inherit;font-weight:850;cursor:pointer}.v93-primary{background:#456b5a;color:#fff}.v93-secondary{background:#eee9df;color:#365549}
+@media(max-width:680px){.v93-picker{grid-template-columns:1fr}}
 </style>
-<script id="v90-report-router">
+<script id="v93-isolated-reports">
 (()=>{
-  const $=id=>document.getElementById(id);
-  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  function showPage(title,desc,html){
-    try{ if(typeof window.hideAllPages==='function') window.hideAllPages(); }catch(e){}
-    $('homeContent')?.classList.add('hide');
-    $('calendarPage')?.classList.remove('show');
-    $('studentsPage')?.classList.remove('show');
-    $('studentFile')?.classList.remove('show');
-    $('modulePage')?.classList.add('show');
-    if($('moduleTitle')) $('moduleTitle').textContent=title;
-    if($('moduleDesc')) $('moduleDesc').textContent=desc||'';
-    if($('moduleGrid')) $('moduleGrid').innerHTML=html;
-    $('drawer')?.classList.remove('show');
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-
-  window.miik90OpenFinal=function(kind='مختصر'){
-    const comprehensive=kind==='شامل';
-    showPage(comprehensive?'التقرير الختامي الشامل':'التقرير الختامي المختصر',comprehensive?'ملف إنجاز الموجّه الطلابي.':'تقرير موجز لأعمال التوجيه الطلابي.',`
-      <div class="v90-report-panel">
-        <h3>${comprehensive?'ملف إنجاز الموجّه الطلابي':'التقرير الختامي المختصر'}</h3>
-        <div class="v90-picker">
-          <label>العام الدراسي<select id="v86Year"><option>1448هـ</option><option>1447هـ</option></select></label>
-          <label>الفترة<select id="v86Term"><option>الفصل الدراسي الأول</option><option>الفصل الدراسي الثاني</option><option>العام الدراسي كاملًا</option></select></label>
-        </div>
-        <div class="v90-note">يُبنى التقرير من الأعمال المسجلة للفترة المختارة، دون إظهار أسماء الطلاب.</div>
-        <div class="v90-report-actions">
-          <button class="v90-secondary" type="button" onclick="if(typeof v87OpenEvidence==='function')v87OpenEvidence('${comprehensive?'شامل':'مختصر'}')">اختيار الشواهد</button>
-          <button class="v90-primary" type="button" onclick="miik90PrintFinal('${comprehensive?'شامل':'مختصر'}')">طباعة التقرير</button>
-        </div>
-      </div>`);
-  };
-
-  window.miik90PrintFinal=function(kind){
-    try{
-      if(typeof window.v86PrintFinal==='function') return window.v86PrintFinal(kind);
-      throw new Error('دالة طباعة التقرير غير متاحة');
-    }catch(e){
-      console.error('MIIK v90 final print',e);
-      alert('تعذر فتح التقرير. أعد تحميل الصفحة وحاول مرة أخرى.');
-    }
-  };
-
-  window.miik90OpenProgramReport=function(programTitle){
-    showPage('تقرير '+programTitle,'تقرير البرنامج من التنفيذات والشواهد المسجلة.',`
-      <div class="v90-report-panel">
-        <h3>تقرير ${esc(programTitle)}</h3>
-        <div class="v90-note">يُجمع التقرير من جميع التنفيذات المسجلة لهذا البرنامج، ويستخدم المنفذ والمستفيدين والشواهد المحفوظة فعليًا.</div>
-        <div class="v90-report-actions">
-          <button class="v90-primary" type="button" onclick='miik90PrintProgram(${JSON.stringify(programTitle)})'>طباعة التقرير</button>
-        </div>
-      </div>`);
-  };
-
-  window.miik90PrintProgram=function(programTitle){
-    try{
-      if(typeof window.v86PrintProgram==='function') return window.v86PrintProgram(programTitle);
-      throw new Error('دالة طباعة تقرير البرنامج غير متاحة');
-    }catch(e){
-      console.error('MIIK v90 program print',e);
-      alert('تعذر فتح تقرير البرنامج. أعد تحميل الصفحة وحاول مرة أخرى.');
-    }
-  };
-
-  const reportMap={
-    'تقرير برنامج التهيئة الإرشادية':'برنامج التهيئة الإرشادية',
-    'تقرير التهيئة الإرشادية':'برنامج التهيئة الإرشادية',
-    'تقرير خفض العنف بالمدارس (رِفق)':'خفض العنف بالمدارس (رِفق)',
-    'تقرير تعزيز السلوك الإيجابي':'تعزيز السلوك الإيجابي',
-    'تقرير التوجيه المهني':'التوجيه المهني',
-    'تقرير الاستخدام الآمن للإنترنت':'الاستخدام الآمن للإنترنت',
-    'تقرير تنمية الدافعية لرفع مستوى التحصيل':'تنمية الدافعية لرفع مستوى التحصيل',
-    'تقرير اختبارات القدرات':'اختبارات القدرات',
-    'تقرير الاختبار التحصيلي':'الاختبار التحصيلي',
-    'تقرير اختبارات نافس':'اختبارات نافس',
-    'تقرير التوجيه وقت الأزمات':'التوجيه وقت الأزمات',
-    'تقرير الاحتفاء بطلبة الصف الثالث الثانوي الخريجين':'الاحتفاء بطلبة الصف الثالث الثانوي الخريجين',
-    'تقرير الأيام والمناسبات الوطنية والعالمية':'الأيام والمناسبات الوطنية والعالمية'
-  };
-  function wire(){
-    document.querySelectorAll('#drawer button').forEach(btn=>{
-      const t=btn.textContent.trim();
-      if(t==='التقرير الختامي المختصر') btn.onclick=e=>{e.preventDefault();e.stopPropagation();window.miik90OpenFinal('مختصر')};
-      else if(t==='التقرير الختامي الشامل') btn.onclick=e=>{e.preventDefault();e.stopPropagation();window.miik90OpenFinal('شامل')};
-      else if(reportMap[t]) btn.onclick=e=>{e.preventDefault();e.stopPropagation();window.miik90OpenProgramReport(reportMap[t])};
-    });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire,{once:true}); else wire();
-  setTimeout(wire,100); setTimeout(wire,700);
-})();
-</script>
-
-<!-- MIIK v91: hard report recovery - capture-phase router, independent of legacy onclick chains -->
-<style id="v91-report-recovery-style">
-.v91-report-panel{grid-column:1/-1;background:#fff;border:1px solid #dfe5df;border-radius:20px;padding:20px;box-shadow:0 10px 30px rgba(35,64,47,.07)}
-.v91-report-panel h3{margin:0 0 7px;color:#31594b;font-size:22px}.v91-report-panel p{color:#6f7d76;line-height:1.8}
-.v91-picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.v91-picker label{font-weight:800;color:#405c52}.v91-picker select{display:block;width:100%;margin-top:7px;padding:11px;border:1px solid #d8dfda;border-radius:11px;background:#fff;font:inherit}
-.v91-actions{display:flex;gap:10px;flex-wrap:wrap}.v91-actions button{border:0;border-radius:12px;padding:11px 17px;font-family:inherit;font-weight:850;cursor:pointer}.v91-primary{background:#456b5a;color:#fff}.v91-secondary{background:#eee9df;color:#365549}
-@media(max-width:680px){.v91-picker{grid-template-columns:1fr}}
-</style>
-<script id="v91-report-recovery">
-(()=>{
-  const $=id=>document.getElementById(id);
-  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const read=(k,d=[])=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch(e){return d}};
-  const ministry=()=>new URL('ministry-logo.png',location.href).href;
-  const profile=()=>{try{return typeof profile83==='function'?profile83():{}}catch(e){return{}}};
-
-  function show(title,desc,html){
-    try{document.getElementById('homeContent')?.classList.add('hide')}catch(e){}
-    ['calendarPage','studentsPage','studentFile'].forEach(id=>$(id)?.classList.remove('show'));
-    $('modulePage')?.classList.add('show');
-    if($('moduleTitle')) $('moduleTitle').textContent=title;
-    if($('moduleDesc')) $('moduleDesc').textContent=desc||'';
-    if($('moduleGrid')) $('moduleGrid').innerHTML=html;
-    $('drawer')?.classList.remove('show');
-    document.body.classList.remove('drawer-open');
-    window.scrollTo({top:0,behavior:'auto'});
-  }
-
-  function openFinal(kind){
-    const full=kind==='شامل';
-    show(full?'التقرير الختامي الشامل':'التقرير الختامي المختصر',full?'ملف إنجاز الموجّه الطلابي.':'تقرير موجز لأعمال التوجيه الطلابي.',`
-      <div class="v91-report-panel">
-        <h3>${full?'ملف إنجاز الموجّه الطلابي':'التقرير الختامي المختصر'}</h3>
-        <div class="v91-picker">
-          <label>العام الدراسي<select id="v91Year"><option>1448هـ</option><option>1447هـ</option></select></label>
-          <label>الفترة<select id="v91Term"><option>الفصل الدراسي الأول</option><option>الفصل الدراسي الثاني</option><option>العام الدراسي كاملًا</option></select></label>
-        </div>
-        <div class="v91-actions">
-          <button class="v91-secondary" data-v91-action="evidence" data-kind="${full?'شامل':'مختصر'}">اختيار الشواهد</button>
-          <button class="v91-primary" data-v91-action="print-final" data-kind="${full?'شامل':'مختصر'}">طباعة التقرير</button>
-        </div>
-      </div>`);
-  }
-
-  function openProgram(title){
-    show('تقرير '+title,'تقرير البرنامج من التنفيذات والشواهد المسجلة.',`
-      <div class="v91-report-panel"><h3>تقرير ${esc(title)}</h3><p>يُجمع التقرير من جميع التنفيذات المسجلة لهذا البرنامج، ويستخدم المنفذ والمستفيدين والشواهد المحفوظة فعليًا.</p><div class="v91-actions"><button class="v91-primary" data-v91-action="print-program" data-program="${esc(title)}">طباعة التقرير</button></div></div>`);
-  }
-
-  function syncLegacySelectors(){
-    let y=$('v86Year'),t=$('v86Term');
-    if(!y){y=document.createElement('select');y.id='v86Year';y.style.display='none';document.body.appendChild(y)}
-    if(!t){t=document.createElement('select');t.id='v86Term';t.style.display='none';document.body.appendChild(t)}
-    y.innerHTML=`<option>${esc($('v91Year')?.value||'1448هـ')}</option>`; t.innerHTML=`<option>${esc($('v91Term')?.value||'الفصل الدراسي الأول')}</option>`;
-  }
-
-  function printFinal(kind){
-    syncLegacySelectors();
-    if(typeof window.v86PrintFinal==='function') return window.v86PrintFinal(kind);
-    alert('تعذر تشغيل مولّد التقرير الختامي.');
-  }
-  function printProgram(title){
-    if(typeof window.v86PrintProgram==='function') return window.v86PrintProgram(title);
-    alert('تعذر تشغيل مولّد تقرير البرنامج.');
-  }
-
-  const reportMap={
-    'تقرير برنامج التهيئة الإرشادية':'برنامج التهيئة الإرشادية','تقرير التهيئة الإرشادية':'برنامج التهيئة الإرشادية',
-    'تقرير خفض العنف بالمدارس (رِفق)':'خفض العنف بالمدارس (رِفق)','تقرير تعزيز السلوك الإيجابي':'تعزيز السلوك الإيجابي',
-    'تقرير التوجيه المهني':'التوجيه المهني','تقرير الاستخدام الآمن للإنترنت':'الاستخدام الآمن للإنترنت',
-    'تقرير تنمية الدافعية لرفع مستوى التحصيل':'تنمية الدافعية لرفع مستوى التحصيل','تقرير اختبارات القدرات':'اختبارات القدرات',
-    'تقرير الاختبار التحصيلي':'الاختبار التحصيلي','تقرير اختبارات نافس':'اختبارات نافس','تقرير التوجيه وقت الأزمات':'التوجيه وقت الأزمات',
-    'تقرير الاحتفاء بطلبة الصف الثالث الثانوي الخريجين':'الاحتفاء بطلبة الصف الثالث الثانوي الخريجين','تقرير الأيام والمناسبات الوطنية والعالمية':'الأيام والمناسبات الوطنية والعالمية'
-  };
-
-  // CAPTURE PHASE: this runs before any old onclick/property handler and prevents legacy wrappers from intercepting report clicks.
-  document.addEventListener('click',e=>{
-    const b=e.target.closest('button'); if(!b) return;
-    const action=b.dataset.v91Action;
-    if(action){
-      e.preventDefault();e.stopImmediatePropagation();
-      if(action==='print-final') return printFinal(b.dataset.kind||'مختصر');
-      if(action==='print-program') return printProgram(b.dataset.program||'');
-      if(action==='evidence'){
-        syncLegacySelectors();
-        if(typeof window.v87OpenEvidence==='function') return window.v87OpenEvidence(b.dataset.kind||'مختصر');
-        return alert('شاشة اختيار الشواهد غير متاحة.');
-      }
-    }
-    if(!b.closest('#drawer')) return;
-    const t=b.textContent.trim();
-    if(t==='التقرير الختامي المختصر'){
-      e.preventDefault();e.stopImmediatePropagation();return openFinal('مختصر');
-    }
-    if(t==='التقرير الختامي الشامل'){
-      e.preventDefault();e.stopImmediatePropagation();return openFinal('شامل');
-    }
-    if(reportMap[t]){
-      e.preventDefault();e.stopImmediatePropagation();return openProgram(reportMap[t]);
-    }
-  },true);
-
-  window.miik91OpenFinal=openFinal;
-  window.miik91OpenProgramReport=openProgram;
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const read=(k,d=[])=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch(e){return d}};
+function profile(){let p={name:'',school:'',principal:'',education:''};for(const k of ['miikProfileV58','miikProfile','miikUser','miikSettings','miikSchoolData','schoolData']){try{const o=JSON.parse(localStorage.getItem(k)||'null');if(!o)continue;p.name=p.name||o.name||o.fullName||o.counselorName||o.guideName||'';p.school=p.school||o.school||o.schoolName||'';p.principal=p.principal||o.principal||o.principalName||o.manager||o.managerName||o.schoolPrincipal||'';p.education=p.education||o.education||o.region||o.educationRegion||o.administration||''}catch(e){}}return{name:p.name||'الموجّه الطلابي',school:p.school||document.querySelector('.school-name')?.textContent?.trim()||'اسم المدرسة',principal:p.principal||'مدير المدرسة',education:p.education||'إدارة التعليم'}}
+const ministry=()=>new URL('ministry-logo.png',location.href).href;
+function baseCSS(){return `@page{size:A4 portrait;margin:0}*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;color:#263d35;background:#fff;direction:rtl}.page{width:210mm;min-height:297mm;padding:13mm 15mm 14mm;page-break-after:always;position:relative}.page:last-child{page-break-after:auto}.head{display:grid;grid-template-columns:1fr 105px 1fr;align-items:start;border-bottom:1px solid #ccd8d0;padding-bottom:8px;margin-bottom:16px}.gov,.school{font-size:12px;line-height:1.7}.school{text-align:left}.logo{text-align:center}.logo img{width:92px;max-height:70px;object-fit:contain}.title{text-align:center;color:#31594b;margin:15px 0 5px;font-size:24px}.sub{text-align:center;color:#738179;margin-bottom:18px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.card{border:1px solid #dce4df;border-radius:12px;padding:10px;text-align:center;background:#fafbf9}.card b{display:block;font-size:24px;color:#31594b}.card span{font-size:11px}.sec{font-weight:900;color:#31594b;margin:15px 0 7px;font-size:16px}.box{border:1px solid #dfe5e1;border-radius:12px;padding:12px;line-height:1.9;background:#fff}.box ul{margin:0;padding-right:20px}.sign{display:grid;grid-template-columns:1fr 1fr;gap:35px;margin-top:30px;text-align:center;line-height:2}.foot{position:absolute;right:15mm;left:15mm;bottom:8mm;border-top:1px solid #e2e7e3;padding-top:4px;text-align:center;color:#87928c;font-size:9px}.evidence{display:grid;grid-template-columns:1fr 1fr;gap:10px}.evidence img{width:100%;height:78mm;object-fit:contain;border:1px solid #ddd;border-radius:10px}.divider{min-height:245mm;display:flex;align-items:center;justify-content:center}.divider h1{font-size:38px;color:#31594b}.art-title{font-family:"Arabic Typesetting","Traditional Arabic",serif;font-size:48px;text-align:center;color:#31594b;margin:65mm 0 30mm}.art-basmala{font-family:"Arabic Typesetting","Traditional Arabic",serif;font-size:58px;min-height:255mm;display:flex;align-items:center;justify-content:center;color:#31594b}.cover-names{display:grid;grid-template-columns:1fr 1fr;gap:60px;text-align:center;line-height:2}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}`}
+function head(p){return `<div class="head"><div class="gov">المملكة العربية السعودية<br>وزارة التعليم<br>${esc(p.education)}</div><div class="logo"><img src="${ministry()}"></div><div class="school">${esc(p.school)}<br>التوجيه الطلابي</div></div>`}
+function printHTML(html){let f=$('miikPrint93');if(f)f.remove();f=document.createElement('iframe');f.id='miikPrint93';f.style.cssText='position:fixed;width:1px;height:1px;right:-9999px;bottom:0;border:0';document.body.appendChild(f);const d=f.contentDocument||f.contentWindow.document;d.open();d.write(html);d.close();const go=()=>{try{f.contentWindow.focus();f.contentWindow.print()}catch(e){console.error('MIIK v93 print',e);alert('تعذر فتح نافذة الطباعة.')}setTimeout(()=>f.remove(),2200)};setTimeout(go,450)}
+function show(title,desc,html){try{if(typeof window.hideAllPages==='function')window.hideAllPages()}catch(e){};['calendarPage','studentsPage','studentFile'].forEach(id=>$(id)?.classList.remove('show'));$('homeContent')?.classList.add('hide');$('modulePage')?.classList.add('show');if($('moduleTitle'))$('moduleTitle').textContent=title;if($('moduleDesc'))$('moduleDesc').textContent=desc||'';if($('moduleGrid'))$('moduleGrid').innerHTML=html;$('drawer')?.classList.remove('show');document.body.classList.remove('drawer-open');window.scrollTo({top:0,behavior:'auto'})}
+function programData(){const a=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith('miikExec_'))continue;const items=read(k,[]);if(Array.isArray(items)&&items.length)a.push({name:k.slice(9),items,count:items.length,benef:items.reduce((n,x)=>n+(+x.count||0),0)})}const std=['اختبارات القدرات','الاختبار التحصيلي','اختبارات نافس'],parts=a.filter(x=>std.includes(x.name)),rest=a.filter(x=>!std.includes(x.name));if(parts.length)rest.push({name:'الاختبارات الوطنية والمعيارية',items:parts.flatMap(x=>x.items),count:parts.reduce((n,x)=>n+x.count,0),benef:parts.reduce((n,x)=>n+x.benef,0)});return rest}
+function stats(){const a=read('miik-demo-actions',[]).filter(Boolean),n=(...t)=>a.filter(x=>t.includes(x.type)).length;return{individual:n('session','individualSession','individual'),group:n('groupSession','group'),follow:n('followup'),cases:n('case'),emergency:n('emergency'),guardian:n('guardian'),guidance:n('followup','session','individualSession','individual','groupSession','group','case','emergency')}}
+function evidence(kind){const key=kind==='شامل'?'full':'short';const a=window.v87Evidence?.[key]||[];return a.length?`<div class="evidence">${a.slice(0,4).map(x=>`<img src="${x}">`).join('')}</div>`:'<div class="box">لم يتم اختيار شواهد لهذا التقرير.</div>'}
+function openFinal(kind='مختصر'){const full=kind==='شامل';show(full?'التقرير الختامي الشامل':'التقرير الختامي المختصر',full?'ملف إنجاز الموجّه الطلابي.':'تقرير موجز لأعمال التوجيه الطلابي.',`<div class="v93-report-panel"><h3>${full?'ملف إنجاز الموجّه الطلابي':'التقرير الختامي المختصر'}</h3><div class="v93-picker"><label>العام الدراسي<select id="v93Year"><option>1448هـ</option><option>1447هـ</option></select></label><label>الفترة<select id="v93Term"><option>الفصل الدراسي الأول</option><option>الفصل الدراسي الثاني</option><option>العام الدراسي كاملًا</option></select></label></div><p>يُبنى التقرير من الأعمال المسجلة، دون إظهار أسماء الطلاب.</p><div class="v93-actions"><button class="v93-secondary" type="button" data-v93="evidence" data-kind="${full?'شامل':'مختصر'}">اختيار الشواهد</button><button class="v93-primary" type="button" data-v93="print-final" data-kind="${full?'شامل':'مختصر'}">طباعة التقرير</button></div></div>`)}
+function printFinal(kind='مختصر'){const p=profile(),ps=programData(),s=stats(),total=ps.reduce((n,x)=>n+x.count,0),benef=ps.reduce((n,x)=>n+x.benef,0),year=$('v93Year')?.value||'1448هـ',period=$('v93Term')?.value||'الفصل الدراسي الأول',list=ps.map(x=>`<li>${esc(x.name)} — ${x.count} تنفيذ، ${x.benef} مستفيد</li>`).join('')||'<li>لا توجد برامج منفذة مسجلة.</li>',intro=`يتناول هذا التقرير أعمال التوجيه الطلابي خلال ${esc(period)} من العام الدراسي ${esc(year)}، ويعرض البرامج المنفذة والخدمات الإرشادية وزيارات أولياء الأمور وفق البيانات المسجلة في مِعِك.`;if(kind!=='شامل'){printHTML(`<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>التقرير الختامي المختصر</title><style>${baseCSS()}</style></head><body><section class="page">${head(p)}<h1 class="title">التقرير الختامي المختصر</h1><div class="sub">${esc(period)} — ${esc(year)}</div><div class="cards"><div class="card"><b>${total}</b><span>برامج التوجيه الطلابي</span></div><div class="card"><b>${benef}</b><span>إجمالي المستفيدين</span></div><div class="card"><b>${s.guidance}</b><span>الخدمات الإرشادية</span></div><div class="card"><b>${s.guardian}</b><span>زيارات أولياء الأمور</span></div></div><div class="sec">مقدمة</div><div class="box">${intro}</div><div class="sec">البرامج المنفذة</div><div class="box"><ul>${list}</ul></div><div class="sec">الخدمات الإرشادية</div><div class="box"><ul><li>الجلسات الإرشادية الفردية: ${s.individual}</li><li>الجلسات الإرشادية الجماعية: ${s.group}</li><li>المتابعات الطلابية: ${s.follow}</li><li>دراسات الحالة: ${s.cases}</li><li>المواقف الطارئة: ${s.emergency}</li></ul></div><div class="sec">الأثر</div><div class="box">أسهمت البرامج والخدمات الإرشادية المنفذة في دعم الطلاب تربويًا ودراسيًا وتعزيز السلوك الإيجابي والتواصل مع الأسرة.</div><div class="foot">مِعِك | الموجّه الذكي</div></section><section class="page">${head(p)}<div class="sec">الشواهد</div>${evidence(kind)}<div class="sign"><div><b>أعد التقرير / الموجّه الطلابي</b><br>${esc(p.name)}<br>التوقيع: __________</div><div><b>مدير المدرسة</b><br>${esc(p.principal)}<br>التوقيع: __________</div></div><div class="foot">مِعِك | الموجّه الذكي</div></section></body></html>`);return}
+const pages=ps.map(x=>`<section class="page">${head(p)}<h1 class="title">${esc(x.name)}</h1><div class="box">تم تنفيذ البرنامج ${x.count} مرة، وبلغ إجمالي المستفيدين ${x.benef} مستفيدًا.</div><div class="sec">التنفيذات المسجلة</div><div class="box"><ul>${x.items.map(z=>`<li>${esc(z.date||z.hijriDate||'')} ${z.executor?`— المنفذ: ${esc(z.executor)}`:''}</li>`).join('')}</ul></div><div class="foot">مِعِك | الموجّه الذكي</div></section>`).join('');printHTML(`<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>ملف إنجاز الموجّه الطلابي</title><style>${baseCSS()}</style></head><body><section class="page">${head(p)}<div class="art-title">ملف إنجاز الموجّه الطلابي</div><div class="cover-names"><div><b>الموجّه الطلابي</b><br>${esc(p.name)}</div><div><b>مدير المدرسة</b><br>${esc(p.principal)}</div></div><div class="foot">مِعِك | الموجّه الذكي</div></section><section class="page"><div class="art-basmala">بسم الله الرحمن الرحيم</div><div class="foot">مِعِك | الموجّه الذكي</div></section><section class="page">${head(p)}<h1 class="title">الرؤية والأهداف</h1><div class="sec">مقدمة</div><div class="box">${intro}</div><div class="foot">مِعِك | الموجّه الذكي</div></section><section class="page"><div class="divider"><h1>برامج التوجيه الطلابي</h1></div></section>${pages}<section class="page"><div class="divider"><h1>الخدمات الإرشادية</h1></div></section><section class="page">${head(p)}<h1 class="title">الخدمات الإرشادية</h1><div class="box"><ul><li>الجلسات الإرشادية الفردية: ${s.individual}</li><li>الجلسات الإرشادية الجماعية: ${s.group}</li><li>المتابعات الطلابية: ${s.follow}</li><li>دراسات الحالة: ${s.cases}</li><li>المواقف الطارئة: ${s.emergency}</li><li>زيارات أولياء الأمور: ${s.guardian}</li></ul></div></section><section class="page">${head(p)}<h1 class="title">الشواهد</h1>${evidence(kind)}</section><section class="page">${head(p)}<h1 class="title">الخاتمة والتوصيات</h1><div class="box">يوثق هذا الملف أعمال التوجيه الطلابي المنفذة خلال الفترة المختارة.</div><div class="sign"><div><b>أعد التقرير / الموجّه الطلابي</b><br>${esc(p.name)}<br>التوقيع: __________</div><div><b>مدير المدرسة</b><br>${esc(p.principal)}<br>التوقيع: __________</div></div></section></body></html>`)}
+function openProgram(title){show('تقرير '+title,'تقرير البرنامج من التنفيذات والشواهد المسجلة.',`<div class="v93-report-panel"><h3>تقرير ${esc(title)}</h3><p>يُجمع التقرير من جميع التنفيذات المسجلة لهذا البرنامج.</p><div class="v93-actions"><button class="v93-primary" type="button" data-v93="print-program" data-program="${esc(title)}">طباعة التقرير</button></div></div>`)}
+function printProgram(title){const arr=read('miikExec_'+title,[]),p=profile(),total=arr.reduce((n,x)=>n+(+x.count||0),0),exec=[...new Set(arr.map(x=>x.executor).filter(Boolean))],pics=arr.flatMap(x=>(x.documentation?.images||[])).filter(x=>x?.data).slice(0,2),desc=arr.map(x=>x.description||x.desc||'').find(Boolean)||'تم تنفيذ البرنامج وفق الخطة المعتمدة وتوثيق التنفيذ في مِعِك.';printHTML(`<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>تقرير ${esc(title)}</title><style>${baseCSS()}</style></head><body><section class="page">${head(p)}<h1 class="title">تقرير ${esc(title)}</h1><div class="sec">بيانات البرنامج</div><div class="box">عدد مرات التنفيذ: ${arr.length} &nbsp; • &nbsp; إجمالي المستفيدين: ${total}${exec.length?` &nbsp; • &nbsp; المنفذ/المنفذون: ${exec.map(esc).join('، ')}`:''}</div><div class="sec">وصف البرنامج</div><div class="box">${esc(desc)}</div><div class="sec">التنفيذات المسجلة</div><div class="box"><ul>${arr.length?arr.map(x=>`<li>${esc(x.date||x.hijriDate||'تاريخ غير مسجل')} — ${+x.count||0} مستفيد</li>`).join(''):'<li>لا توجد تنفيذات مسجلة لهذا البرنامج.</li>'}</ul></div><div class="foot">مِعِك | الموجّه الذكي</div></section><section class="page">${head(p)}<h1 class="title">شواهد وتوصيات البرنامج</h1><div class="sec">التوصيات</div><div class="box"><ul><li>استمرار المتابعة وتوثيق الأثر.</li><li>تطوير التنفيذ بناءً على النتائج والملاحظات.</li></ul></div><div class="sec">الشواهد</div>${pics.length?`<div class="evidence">${pics.map(x=>`<img src="${x.data}">`).join('')}</div>`:'<div class="box">لم تُرفق صور توثيق للبرنامج.</div>'}<div class="sign"><div><b>أعد التقرير / الموجّه الطلابي</b><br>${esc(p.name)}</div><div><b>مدير المدرسة</b><br>${esc(p.principal)}</div></div></section></body></html>`)}
+const reportMap={'تقرير برنامج التهيئة الإرشادية':'برنامج التهيئة الإرشادية','تقرير التهيئة الإرشادية':'برنامج التهيئة الإرشادية','تقرير خفض العنف بالمدارس (رِفق)':'خفض العنف بالمدارس (رِفق)','تقرير تعزيز السلوك الإيجابي':'تعزيز السلوك الإيجابي','تقرير التوجيه المهني':'التوجيه المهني','تقرير الاستخدام الآمن للإنترنت':'الاستخدام الآمن للإنترنت','تقرير تنمية الدافعية لرفع مستوى التحصيل':'تنمية الدافعية لرفع مستوى التحصيل','تقرير اختبارات القدرات':'اختبارات القدرات','تقرير الاختبار التحصيلي':'الاختبار التحصيلي','تقرير اختبارات نافس':'اختبارات نافس','تقرير التوجيه وقت الأزمات':'التوجيه وقت الأزمات','تقرير الاحتفاء بطلبة الصف الثالث الثانوي الخريجين':'الاحتفاء بطلبة الصف الثالث الثانوي الخريجين','تقرير الأيام والمناسبات الوطنية والعالمية':'الأيام والمناسبات الوطنية والعالمية'};
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.v93;if(a){e.preventDefault();e.stopImmediatePropagation();if(a==='print-final')return printFinal(b.dataset.kind||'مختصر');if(a==='print-program')return printProgram(b.dataset.program||'');if(a==='evidence'){if(typeof window.v87OpenEvidence==='function')return window.v87OpenEvidence(b.dataset.kind||'مختصر');return alert('شاشة اختيار الشواهد غير متاحة.')}}if(!b.closest('#drawer'))return;const t=b.textContent.trim();if(t==='التقرير الختامي المختصر'){e.preventDefault();e.stopImmediatePropagation();return openFinal('مختصر')}if(t==='التقرير الختامي الشامل'){e.preventDefault();e.stopImmediatePropagation();return openFinal('شامل')}if(reportMap[t]){e.preventDefault();e.stopImmediatePropagation();return openProgram(reportMap[t])}},true);
+window.miik93OpenFinal=openFinal;window.miik93OpenProgramReport=openProgram;window.miik93PrintFinal=printFinal;window.miik93PrintProgram=printProgram;window.miik93PrintHTML=printHTML;
 })();
 </script>
