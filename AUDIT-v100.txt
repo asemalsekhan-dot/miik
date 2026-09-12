@@ -1,0 +1,6 @@
+V100 audit
+Inline scripts: 63
+JavaScript syntax errors: 0
+Duplicate static DOM ids: 36
+cover-template-v100.png: 708643 bytes
+basmala-template-v100.png: 509617 bytes
