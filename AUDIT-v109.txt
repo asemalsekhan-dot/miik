@@ -1,8 +1,0 @@
-Mِعِك v109
-- Baseline: v108.
-- Rebuilt behavior-rules-1447.pdf from the supplied editable Word source.
-- Removed fixed school/person names from the behavior-rules reference.
-- Applied light Mِعِك olive/cream identity while preserving official content, tables, red severity bands, and one-page landscape layout.
-- Added Mِعِك identity block to the in-app behavior-rules page.
-- Included behavior-rules-1447-source.docx as the editable generic source.
-- DOCX and resulting PDF were rendered and visually verified as one clean page before integration.
