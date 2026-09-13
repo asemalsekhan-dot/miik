@@ -1,0 +1,6 @@
+MIIK v108
+- Rebuilt Privacy Policy as full-width page.
+- Added MIIK logo/identity and compact horizontal policy rows.
+- Expanded policy topics based on Saudi PDPL/SDAIA privacy-policy guidance while avoiding unsupported technical promises.
+- Subscription browser alerts remain replaced by in-app MIIK dialogs from v67.
+- Based on working v107.
