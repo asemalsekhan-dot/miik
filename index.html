@@ -63,6 +63,17 @@ button, a, [role="button"], [onclick], summary, select, input[type="button"], in
 <style id="v104-pointer-rule">
 button,a,[onclick],[role="button"],summary,select,input[type="button"],input[type="submit"],.clickable{cursor:pointer!important}
 </style>
+
+<style id="v106-final-print">
+@media print{
+  @page{size:A4 portrait;margin:12mm}
+  html,body{width:210mm!important}
+  .landscape,.print-landscape{width:auto!important;transform:none!important}
+  table{width:100%!important;table-layout:fixed}
+  th,td{word-break:break-word;overflow-wrap:anywhere}
+}
+</style>
+
 </head><body><div class="app"><header class="masthead"><div class="identity"><div class="school"><span class="school-name">متوسطة وثانوية بدائع الضبطان</span></div><div class="brand" onclick="goHome()" title="الرئيسية"><img src="miik-logo.png" alt="شعار مِعِك"><b>مِعِك</b><span>الموجّه الذكي</span></div><div class="profile profile-wrap" onclick="toggleProfileMenu(event)"><div class="avatar">👤</div><b>عاصم صالح الصيخان</b><div class="profile-menu" id="profileMenu" onclick="event.stopPropagation()"><button onclick="openModule('بياناتي','بيانات الموجّه والمدرسة.')">بياناتي</button><button onclick="openModule('الاشتراك','حالة الاشتراك والتجديد.')">الاشتراك</button><button onclick="openModule('الدعم','الدعم والبلاغات.')">الدعم</button></div></div></div></header>
 <main><div class="home-content" id="homeContent"><section class="hero"><div class="datebar" id="datebar">الأحد · 17 ربيع الأول 1448هـ · 30 أغسطس 2026م</div><h1 class="greeting" id="greeting">صبّحت بالخير ☀️، أ. عاصم 🤗</h1><div class="toolrow"><button class="menu" aria-label="القائمة" onclick="toggleDrawer()">☰</button><div class="quick-search"><input id="search" placeholder="وش تبي أبحث لك؟ أنا مِعِك"><button class="searchgo" aria-label="بحث" onclick="demoSearch()">⌕</button></div></div></section>
 <section class="workspace"><article class="card"><h2>مِعِك اليوم</h2><div id="todayList"></div><button id="todayMore" class="mini-link" style="display:none" onclick="alert('عرض بقية أعمال اليوم في النسخة الكاملة')"></button></article>
@@ -590,6 +601,138 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
 </script>
 
 
+
+
+<script id="v106-final-modal-backdrop">
+document.addEventListener('click',function(e){
+  const overlay=e.target.closest('.modal-overlay,.modal-backdrop,.dialog-overlay,.overlay');
+  if(!overlay) return;
+  if(e.target===overlay){
+    const close=overlay.querySelector('[data-close],.modal-close,.close-modal,.dialog-close,.close,[aria-label="إغلاق"]');
+    if(close){ close.click(); return; }
+    overlay.style.display='none';
+    overlay.classList.remove('show','open','active');
+  }
+},true);
+</script>
+
+
+<script id="v106-final-header-normalizer">
+(()=>{
+ const cleanRegion=v=>{
+   let x=String(v||'القصيم').trim();
+   x=x.replace(/^الإدارة\s+العامة\s+للتعليم\s+بمنطقة\s*/,'')
+      .replace(/^إدارة\s+التعليم\s+بمنطقة\s*/,'')
+      .replace(/^التعليم\s+بمنطقة\s*/,'')
+      .replace(/^منطقة\s*/,'').trim();
+   return x||'القصيم';
+ };
+ window.miikOfficialHeader=function(){
+   let p={};
+   try{p=JSON.parse(localStorage.getItem('miikProfile')||localStorage.getItem('profile')||'{}')}catch(e){}
+   const region=cleanRegion(p.region||p.educationRegion||'القصيم');
+   const school=p.school||p.schoolName||localStorage.getItem('miikSchoolName')||'';
+   return {region,school,
+     html:`المملكة العربية السعودية<br>وزارة التعليم<br>الإدارة العامة للتعليم بمنطقة ${region}${school?`<br>${school}`:''}`};
+ };
+ const fix=()=>{
+   const h=window.miikOfficialHeader();
+   document.querySelectorAll('.gov,.official-header,.print-gov,.report-gov').forEach(el=>{
+     if(/المملكة العربية السعودية|وزارة التعليم|إدارة التعليم|الإدارة العامة للتعليم/.test(el.textContent||'')) el.innerHTML=h.html;
+   });
+ };
+ new MutationObserver(fix).observe(document.documentElement,{subtree:true,childList:true});
+ document.addEventListener('DOMContentLoaded',fix);
+})();
+</script>
+
+
+<script id="v106-final-program-execution">
+document.addEventListener('click',function(e){
+ const b=e.target.closest('button,.program-action,[role="button"]');
+ if(!b || (b.textContent||'').trim()!=='التنفيذ') return;
+ const surface=b.closest('.program-surface,.program-page,.program-view,.program-detail,[data-program]');
+ if(!surface) return;
+ const title=surface.dataset.program || surface.getAttribute('data-title') ||
+   document.querySelector('.program-title,h1,h2')?.textContent?.trim();
+ if(title && typeof window.recordProgram==='function'){
+   e.preventDefault(); e.stopImmediatePropagation(); window.recordProgram(title);
+ }
+},true);
+</script>
+
+
+<script id="v106-final-remove-followup-achievement">
+(()=>{
+ const run=()=>{
+   document.querySelectorAll('a,button,li,.menu-item,.nav-item').forEach(el=>{
+     if((el.textContent||'').trim()==='التحصيل الدراسي'){
+       const menu=el.closest('.dropdown-menu,.submenu,.menu,.nav-menu');
+       const context=(menu?.textContent||'');
+       if(/المواقف الطارئة|دراسة الحالة|الحالات الصحية|الفئات الخاصة/.test(context)) el.remove();
+     }
+   });
+ };
+ new MutationObserver(run).observe(document.documentElement,{subtree:true,childList:true});
+ document.addEventListener('DOMContentLoaded',run);
+})();
+</script>
+
+
+<script id="v106-final-case-student">
+(()=>{
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const students=()=>{
+   for(const k of ['miikStudents','students','studentData']){
+     try{const a=JSON.parse(localStorage.getItem(k)||'[]'); if(Array.isArray(a)&&a.length)return a}catch(e){}
+   } return [];
+ };
+ const enhance=()=>{
+   document.querySelectorAll('.modal,.dialog,.modal-content,.dialog-content').forEach(m=>{
+     if(!/دراسة حالة/.test(m.textContent||'') || m.querySelector('.v106-case-student')) return;
+     const dateLabel=[...m.querySelectorAll('label,.field-label')].find(x=>/التاريخ الهجري/.test(x.textContent||''));
+     const host=dateLabel?.parentElement || m.querySelector('form') || m;
+     const box=document.createElement('div'); box.className='v106-case-student'; box.style.margin='12px 0';
+     box.innerHTML=`<label style="display:block;font-weight:800;margin-bottom:6px">اسم الطالب</label>
+       <input type="search" class="v106-case-search" placeholder="ابحث باسم الطالب..." autocomplete="off" style="width:100%">
+       <div class="v106-case-results"></div><input type="hidden" name="studentName" class="v106-case-name">`;
+     host.insertAdjacentElement('afterend',box);
+     const inp=box.querySelector('.v106-case-search'),res=box.querySelector('.v106-case-results'),hidden=box.querySelector('.v106-case-name');
+     inp.addEventListener('input',()=>{
+       const q=inp.value.trim(); if(!q){res.innerHTML='';return}
+       const hits=students().filter(x=>String(x.name||x.studentName||'').includes(q)).slice(0,8);
+       res.innerHTML=hits.map((x,i)=>`<button type="button" data-i="${i}" style="display:block;width:100%;text-align:right;padding:8px;margin-top:4px;cursor:pointer">${esc(x.name||x.studentName)} — ${esc(x.grade||x.className||'')} ${esc(x.section||'')}</button>`).join('');
+       [...res.querySelectorAll('button')].forEach((b,i)=>b.onclick=()=>{const x=hits[i];inp.value=x.name||x.studentName||'';hidden.value=inp.value;res.innerHTML='';});
+     });
+   });
+ };
+ new MutationObserver(enhance).observe(document.documentElement,{subtree:true,childList:true});
+ document.addEventListener('DOMContentLoaded',enhance);
+})();
+</script>
+
+
+<script id="v106-final-special-categories">
+(()=>{
+ const opts=['يتيم الأب','يتيم الأم','يتيم الأبوين','انفصال الوالدين','أحد الوالدين موقوف/مسجون','أبناء شهداء الواجب','ذوو الإعاقة','أخرى'];
+ const enhance=()=>{
+  document.querySelectorAll('.modal,.dialog,.modal-content,.dialog-content').forEach(m=>{
+   if(!/إضافة فئة خاصة/.test(m.textContent||'') || m.querySelector('.v106-special-select')) return;
+   const labels=[...m.querySelectorAll('label,.field-label')];
+   const lab=labels.find(x=>(x.textContent||'').trim()==='الفئة الخاصة'); if(!lab)return;
+   const old=lab.parentElement?.querySelector('input,textarea,select'); if(!old)return;
+   const sel=document.createElement('select'); sel.className=(old.className||'')+' v106-special-select'; sel.name=old.name||'specialCategory';
+   sel.innerHTML='<option value="">اختر الفئة الخاصة</option>'+opts.map(x=>`<option>${x}</option>`).join('');
+   const other=document.createElement('input'); other.type='text'; other.placeholder='اكتب الفئة الأخرى'; other.style.display='none'; other.style.marginTop='8px'; other.className=old.className||'';
+   old.replaceWith(sel); sel.insertAdjacentElement('afterend',other);
+   const sync=()=>{other.style.display=sel.value==='أخرى'?'block':'none'; sel.dataset.finalValue=sel.value==='أخرى'?other.value:sel.value};
+   sel.addEventListener('change',sync); other.addEventListener('input',sync);
+  });
+ };
+ new MutationObserver(enhance).observe(document.documentElement,{subtree:true,childList:true});
+ document.addEventListener('DOMContentLoaded',enhance);
+})();
+</script>
 
 </body></html><style id="v14-home-final">
 /* v14 — الصفحة الرئيسية فقط */
@@ -1352,7 +1495,7 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
    let a=cohort();if(!a.length){showMiikNotice('الطباعة','لا يوجد طلاب في الفصل المحدد.');return}
    let w=window.open('','_blank','width=950,height=900');if(!w){showMiikNotice('الطباعة','اسمح بالنوافذ المنبثقة للطباعة.');return}
    let p=profile(),ministry=new URL('ministry-logo.png',location.href).href;
-   w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف طلاب ${E(q.grade)} - ${E(q.section)}</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:100%;margin:auto}.head{display:grid;grid-template-columns:1fr 125px 1fr;align-items:center;min-height:78px;border-bottom:2px solid #526f65;padding-bottom:8px}.gov{justify-self:end;text-align:center;min-width:225px;font-weight:700;line-height:1.75;font-size:10.5px}.logo{text-align:center}.logo img{max-width:112px;max-height:66px;object-fit:contain}.blank{min-width:225px}.title{text-align:center;color:#294b42;font-size:18px;margin:13px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:12px}.meta span{margin:0 8px;direction:rtl;unicode-bidi:isolate}.count{font-weight:700}table{width:92%;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #87978f;text-align:center;padding:6px 5px;height:31px}th{background:#e9efe9;color:#294b42;font-weight:900}.n{width:5%}.name{width:34%;text-align:right;padding-right:8px}.phone{width:16%}.follow{width:9%;white-space:nowrap}tbody tr:nth-child(even){background:#fbfaf6}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div class="blank"></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span class="count">عدد الطلاب: ${a.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${a.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>`);w.document.close();
+   w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف طلاب ${E(q.grade)} - ${E(q.section)}</title><style>@page{size:A4 portrait;margin:12mm}*{box-sizing:border-box}body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:100%;margin:auto}.head{display:grid;grid-template-columns:1fr 125px 1fr;align-items:center;min-height:78px;border-bottom:2px solid #526f65;padding-bottom:8px}.gov{justify-self:end;text-align:center;min-width:225px;font-weight:700;line-height:1.75;font-size:10.5px}.logo{text-align:center}.logo img{max-width:112px;max-height:66px;object-fit:contain}.blank{min-width:225px}.title{text-align:center;color:#294b42;font-size:18px;margin:13px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:12px}.meta span{margin:0 8px;direction:rtl;unicode-bidi:isolate}.count{font-weight:700}table{width:92%;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #87978f;text-align:center;padding:6px 5px;height:31px}th{background:#e9efe9;color:#294b42;font-weight:900}.n{width:5%}.name{width:34%;text-align:right;padding-right:8px}.phone{width:16%}.follow{width:9%;white-space:nowrap}tbody tr:nth-child(even){background:#fbfaf6}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div class="blank"></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span class="count">عدد الطلاب: ${a.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${a.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>`);w.document.close();
  }
  function patchPrint(){let bs=document.querySelectorAll('#studentsPage .student-actions button');let b=bs[2];if(!b||b.dataset.v44)return;b.dataset.v44='1';b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();officialPrint()},true)}
  function clean(){purgeDemo();wireNumbering();patchPrint();setTimeout(renumberVisible,20)}
@@ -1479,7 +1622,7 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  function printOfficial(){
   const q=selected();if(!q.stage||!q.grade||!q.section){showMiikNotice('الطباعة','اختر المرحلة والصف والفصل أولًا.');return}const arr=records().filter(x=>x.stage===q.stage&&x.grade===q.grade&&x.section===q.section);if(!arr.length){showMiikNotice('الطباعة','لا يوجد طلاب في الفصل المحدد.');return}
   const w=window.open('','_blank','width=980,height=900');if(!w){showMiikNotice('الطباعة','اسمح بالنوافذ المنبثقة للطباعة.');return}const p=profile(),ministry=new URL('ministry-logo.png',location.href).href;
-  w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف بيانات الطلاب</title><style>@page{size:A4 landscape;margin:13mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:88%;margin:0 auto}.head{display:grid;grid-template-columns:1fr 110px 1fr;align-items:center;border-bottom:2px solid #526f65;padding-bottom:7px}.gov{text-align:center;line-height:1.65;font-weight:700}.logo{text-align:center}.logo img{max-width:95px;max-height:58px}.title{text-align:center;color:#294b42;font-size:18px;margin:10px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:10px}.meta span{margin:0 7px;white-space:nowrap}table{width:auto;min-width:78%;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #8b9993;text-align:center;height:30px;padding:5px 4px}th{background:#e9efe9;color:#294b42}.n{width:34px}.name{width:255px;text-align:right;padding-right:8px}.phone{width:125px}.follow{width:58px;white-space:nowrap}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span>عدد الطلاب: ${arr.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${arr.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>`);w.document.close();
+  w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف بيانات الطلاب</title><style>@page{size:A4 portrait;margin:13mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:88%;margin:0 auto}.head{display:grid;grid-template-columns:1fr 110px 1fr;align-items:center;border-bottom:2px solid #526f65;padding-bottom:7px}.gov{text-align:center;line-height:1.65;font-weight:700}.logo{text-align:center}.logo img{max-width:95px;max-height:58px}.title{text-align:center;color:#294b42;font-size:18px;margin:10px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:10px}.meta span{margin:0 7px;white-space:nowrap}table{width:auto;min-width:78%;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #8b9993;text-align:center;height:30px;padding:5px 4px}th{background:#e9efe9;color:#294b42}.n{width:34px}.name{width:255px;text-align:right;padding-right:8px}.phone{width:125px}.follow{width:58px;white-space:nowrap}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة ${E(p.region)}</div><div>${E(p.school)}</div></div><div class="logo"><img src="${ministry}"></div><div></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: ${E(q.stage)}</span><span>الصف: ${E(q.grade)}</span><span>الفصل: ${E(q.section)}</span><span>عدد الطلاب: ${arr.length}</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>${arr.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${E(x.name)}</td><td>${E(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('')}</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>`);w.document.close();
  }
  window.v39PrintNow=printOfficial;
  function wirePrint(){const acts=document.querySelectorAll('#studentsPage .student-actions button');const old=acts[2];if(!old||old.dataset.v51)return;const b=old.cloneNode(true);b.dataset.v51='1';b.onclick=e=>{e.preventDefault();printOfficial()};old.replaceWith(b)}
@@ -1579,7 +1722,7 @@ function printOfficialV53(){
  const st=document.getElementById('v39Stage')?.value||'',gr=document.getElementById('v39Grade')?.value||'',sec=document.getElementById('v39Section')?.value||'';if(!st||!gr||!sec){showMiikNotice('الطباعة','اختر المرحلة والصف والفصل أولًا.');return}
  const arr=(typeof records==='function'?records():[]).filter(x=>x.stage===st&&x.grade===gr&&x.section===sec);if(!arr.length){showMiikNotice('الطباعة','لا يوجد طلاب في الفصل المحدد.');return}
  const w=window.open('','_blank','width=980,height=900');if(!w){showMiikNotice('الطباعة','اسمح بالنوافذ المنبثقة للطباعة.');return}const p=(typeof profile==='function'?profile():{region:'القصيم',school:'اسم المدرسة'}),esc=(typeof E==='function'?E:(x=>String(x||''))),ministry=new URL('ministry-logo.png',location.href).href;
- w.document.write('<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف بيانات الطلاب</title><style>@page{size:A4 landscape;margin:13mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:82%;margin:0 auto}.head{display:grid;grid-template-columns:1fr 105px 1fr;align-items:center;border-bottom:2px solid #526f65;padding-bottom:6px}.gov{text-align:center;line-height:1.6;font-weight:700}.logo{text-align:center}.logo img{max-width:92px;max-height:56px}.title{text-align:center;color:#294b42;font-size:18px;margin:9px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:9px}.meta span{margin:0 6px;white-space:nowrap}table{width:auto;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #8b9993;text-align:center;height:25px;padding:3px 4px}th{background:#e9efe9;color:#294b42}.n{width:31px}.name{width:235px;text-align:right;padding-right:7px;white-space:nowrap}.phone{width:118px}.follow{width:54px;white-space:nowrap}.student-name-print{font-size:13px;font-weight:900;line-height:1.15}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة '+esc(p.region)+'</div><div>'+esc(p.school)+'</div></div><div class="logo"><img src="'+ministry+'"></div><div></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: '+esc(st)+'</span><span>الصف: '+esc(gr)+'</span><span>الفصل: '+esc(sec)+'</span><span>عدد الطلاب: '+arr.length+'</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>'+arr.map((x,i)=>'<tr><td>'+(i+1)+'</td><td class="name student-name-print">'+esc(x.name)+'</td><td>'+esc(x.phone||'')+'</td><td></td><td></td><td></td><td></td><td></td></tr>').join('')+'</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>');w.document.close();
+ w.document.write('<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف بيانات الطلاب</title><style>@page{size:A4 portrait;margin:13mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#263a34;margin:0;font-size:11px}.sheet{width:82%;margin:0 auto}.head{display:grid;grid-template-columns:1fr 105px 1fr;align-items:center;border-bottom:2px solid #526f65;padding-bottom:6px}.gov{text-align:center;line-height:1.6;font-weight:700}.logo{text-align:center}.logo img{max-width:92px;max-height:56px}.title{text-align:center;color:#294b42;font-size:18px;margin:9px 0 3px}.meta{text-align:center;font-weight:800;color:#52675f;margin-bottom:9px}.meta span{margin:0 6px;white-space:nowrap}table{width:auto;margin:0 auto;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #8b9993;text-align:center;height:25px;padding:3px 4px}th{background:#e9efe9;color:#294b42}.n{width:31px}.name{width:235px;text-align:right;padding-right:7px;white-space:nowrap}.phone{width:118px}.follow{width:54px;white-space:nowrap}.student-name-print{font-size:13px;font-weight:900;line-height:1.15}.print{display:block;margin:12px auto;padding:7px 20px;border:0;border-radius:9px;background:#526f65;color:white;font-weight:800}@media print{.print{display:none}}</style></head><body><div class="sheet"><div class="head"><div class="gov"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>الإدارة العامة للتعليم بمنطقة '+esc(p.region)+'</div><div>'+esc(p.school)+'</div></div><div class="logo"><img src="'+ministry+'"></div><div></div></div><h1 class="title">كشف بيانات الطلاب</h1><div class="meta"><span>المرحلة: '+esc(st)+'</span><span>الصف: '+esc(gr)+'</span><span>الفصل: '+esc(sec)+'</span><span>عدد الطلاب: '+arr.length+'</span></div><table><thead><tr><th class="n">م</th><th class="name">اسم الطالب</th><th class="phone">جوال ولي الأمر</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th><th class="follow">متابعة</th></tr></thead><tbody>'+arr.map((x,i)=>'<tr><td>'+(i+1)+'</td><td class="name student-name-print">'+esc(x.name)+'</td><td>'+esc(x.phone||'')+'</td><td></td><td></td><td></td><td></td><td></td></tr>').join('')+'</tbody></table></div><button class="print" onclick="print()">طباعة</button></body></html>');w.document.close();
 }
 window.v39PrintNow=printOfficialV53;
 
@@ -2766,7 +2909,7 @@ if(typeof reportHtml83==='function')reportHtml83=function(title,x,index){const k
 /* Student print: preserve the exact cohort counted in the confirmation dialog. */
 let cohort84=[];
 const oldPrintDialog84=window.v39PrintDialog||window.printDialog;
-window.v39PrintNow=function(){const st=document.getElementById('v39Stage')?.value||'',gr=document.getElementById('v39Grade')?.value||'',sec=document.getElementById('v39Section')?.value||'',all=R84('miikStudentsV39',[]);let arr=all.filter(x=>norm84(x.stage)===norm84(st)&&norm84(x.grade)===norm84(gr)&&norm84(x.section)===norm84(sec));if(!arr.length){arr=[...document.querySelectorAll('#studentList .student-card')].filter(c=>getComputedStyle(c).display!=='none').map(c=>{const name=c.querySelector('.student-info b,.student-name')?.textContent?.trim();return all.find(x=>norm84(x.name)===norm84(name))}).filter(Boolean)}if(!arr.length){showMiikNotice('الطباعة','لا يوجد طلاب ظاهرون في الفصل المحدد.');return}const p=p84(),ministry=new URL('ministry-logo.png',location.href).href,rows=arr.map((x,i)=>`<tr><td>${i+1}</td><td>${E84(x.name)}</td><td>${E84(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('');printDoc84(`<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>كشف بيانات الطلاب</title><style>@page{size:A4 landscape;margin:0}body{font-family:Tahoma,Arial;margin:0;color:#263a34}.sheet{padding:12mm 16mm}.head{display:grid;grid-template-columns:1fr 100px 1fr;align-items:center;border-bottom:2px solid #526f65;padding-bottom:7px}.gov{font-size:11px;line-height:1.7;font-weight:bold}.logo{text-align:center}.logo img{max-width:90px}.school{text-align:left;font-weight:bold}.title{text-align:center;font-size:19px}table{width:90%;margin:auto;border-collapse:collapse}th,td{border:1px solid #899890;padding:6px;text-align:center;font-size:11px}th{background:#e9efe9}.name{text-align:right}</style></head><body><div class="sheet"><div class="head"><div class="gov">المملكة العربية السعودية<br>وزارة التعليم<br>${E84(p.education)}</div><div class="logo"><img src="${ministry}"></div><div class="school">${E84(p.school)}<br>التوجيه الطلابي</div></div><h1 class="title">كشف بيانات الطلاب</h1><p style="text-align:center;font-weight:bold">المرحلة: ${E84(st)} &nbsp; • &nbsp; الصف: ${E84(gr)} &nbsp; • &nbsp; الفصل: ${E84(sec)} &nbsp; • &nbsp; عدد الطلاب: ${arr.length}</p><table><tr><th>م</th><th>اسم الطالب</th><th>جوال ولي الأمر</th><th>متابعة</th><th>متابعة</th><th>متابعة</th><th>متابعة</th><th>متابعة</th></tr>${rows}</table></div></body></html>`)};
+window.v39PrintNow=function(){const st=document.getElementById('v39Stage')?.value||'',gr=document.getElementById('v39Grade')?.value||'',sec=document.getElementById('v39Section')?.value||'',all=R84('miikStudentsV39',[]);let arr=all.filter(x=>norm84(x.stage)===norm84(st)&&norm84(x.grade)===norm84(gr)&&norm84(x.section)===norm84(sec));if(!arr.length){arr=[...document.querySelectorAll('#studentList .student-card')].filter(c=>getComputedStyle(c).display!=='none').map(c=>{const name=c.querySelector('.student-info b,.student-name')?.textContent?.trim();return all.find(x=>norm84(x.name)===norm84(name))}).filter(Boolean)}if(!arr.length){showMiikNotice('الطباعة','لا يوجد طلاب ظاهرون في الفصل المحدد.');return}const p=p84(),ministry=new URL('ministry-logo.png',location.href).href,rows=arr.map((x,i)=>`<tr><td>${i+1}</td><td>${E84(x.name)}</td><td>${E84(x.phone||'')}</td><td></td><td></td><td></td><td></td><td></td></tr>`).join('');printDoc84(`<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>كشف بيانات الطلاب</title><style>@page{size:A4 portrait;margin:0}body{font-family:Tahoma,Arial;margin:0;color:#263a34}.sheet{padding:12mm 16mm}.head{display:grid;grid-template-columns:1fr 100px 1fr;align-items:center;border-bottom:2px solid #526f65;padding-bottom:7px}.gov{font-size:11px;line-height:1.7;font-weight:bold}.logo{text-align:center}.logo img{max-width:90px}.school{text-align:left;font-weight:bold}.title{text-align:center;font-size:19px}table{width:90%;margin:auto;border-collapse:collapse}th,td{border:1px solid #899890;padding:6px;text-align:center;font-size:11px}th{background:#e9efe9}.name{text-align:right}</style></head><body><div class="sheet"><div class="head"><div class="gov">المملكة العربية السعودية<br>وزارة التعليم<br>${E84(p.education)}</div><div class="logo"><img src="${ministry}"></div><div class="school">${E84(p.school)}<br>التوجيه الطلابي</div></div><h1 class="title">كشف بيانات الطلاب</h1><p style="text-align:center;font-weight:bold">المرحلة: ${E84(st)} &nbsp; • &nbsp; الصف: ${E84(gr)} &nbsp; • &nbsp; الفصل: ${E84(sec)} &nbsp; • &nbsp; عدد الطلاب: ${arr.length}</p><table><tr><th>م</th><th>اسم الطالب</th><th>جوال ولي الأمر</th><th>متابعة</th><th>متابعة</th><th>متابعة</th><th>متابعة</th><th>متابعة</th></tr>${rows}</table></div></body></html>`)};
 })();
 </script>
 
@@ -3090,4 +3233,4 @@ const html=`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"
 })();
 </script>
 
-<!-- MIIK integrated v105: final achievement report refinements -->
+<!-- MIIK integrated v106-final: final achievement report refinements -->
