@@ -1,6 +1,37 @@
-V100 audit
-Inline scripts: 63
-JavaScript syntax errors: 0
-Duplicate static DOM ids: 36
-cover-template-v100.png: 708643 bytes
-basmala-template-v100.png: 509617 bytes
+MIIK v100 audit
+- Built from v99.
+- Comprehensive-report cover and Basmala page replaced with the approved artwork
+  (school building photo cover + gold-framed geometric Basmala page), supplied
+  as two new assets: cover-artwork.jpg (static photo/decor band, no baked-in
+  text) and basmala-bg.jpg (full decorative background, fully static).
+- All previously-dynamic fields remain fully dynamic and editable via the
+  platform's stored profile data (unchanged profile()/head() logic):
+    - Region              -> ${p.region}   (defaults to "القصيم")
+    - School name          -> ${p.school}
+    - Counselor name        -> ${p.name}
+    - Principal name        -> ${p.principal}
+    - Term (الفصل الدراسي)  -> #v86Term dropdown
+    - Year (هـ)             -> #v86Year dropdown
+  These are rendered as live, crisp HTML text positioned over the static
+  artwork -- nothing school-specific is baked into an image, so registering
+  a different name/school/region on the platform automatically updates the
+  cover and every other report page with no code changes.
+- Removed the old CSS-drawn cover shapes (.photo-frame/.cover-green/
+  .cover-beige/.leafmark/.cover-foot) and CSS-drawn Basmala ornaments
+  (.g1/.g2/:before/:after), replaced by two lightweight image assets.
+- Removed now-unused school-cover-photo.png (had names baked into the
+  image itself, which blocked future editability).
+- Added .cover-signers row (الموجّه الطلابي / مدير المدرسة) placed cleanly
+  above the artwork band so it never collides with the artwork's own static
+  caption text.
+- Fixed a full-bleed background sizing bug on the Basmala page (height:100%
+  on the image did not resolve against a min-height-only parent; page now
+  has an explicit height so the artwork fills edge-to-edge).
+- Verified end-to-end by executing the real production
+  window.v86PrintFinal('شامل') function (extracted and run under Node with
+  stubbed localStorage/DOM) and rendering the actual generated HTML output,
+  not a mockup -- confirms the live code path produces the approved design
+  with real dynamic data substitution.
+- Inline JavaScript syntax audit: 63 scripts, 0 syntax errors (unchanged
+  script count from v99; only markup/CSS/two variables touched).
+- All other report pages/content/logic unchanged.
