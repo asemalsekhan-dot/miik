@@ -25,7 +25,7 @@
 .plan-board{display:grid;gap:12px;margin-top:18px}.plan-item{background:#fff;border:1px solid #e8e1d4;border-radius:16px;padding:15px;display:flex;justify-content:space-between;gap:12px;align-items:center}.plan-item small{display:block;color:#777;margin-top:5px}.status-pill{padding:6px 10px;border-radius:999px;background:#f6f2e8;font-size:12px}.exec-btn{border:0;border-radius:11px;padding:9px 13px;background:#0F3D34;color:white;cursor:pointer}.program-panel{margin-top:18px;background:#fff;border:1px solid #e8e1d4;border-radius:18px;padding:18px}.program-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.program-tabs button{border:1px solid #d8d0c2;background:#f8f5ee;border-radius:10px;padding:8px 12px;cursor:pointer}.program-tabs button.active{background:#0F3D34;color:#fff}.execution-card{border-top:1px solid #eee;padding:12px 0}.muted{color:#777;font-size:13px}.report-preview{background:#F6F2E8;border-radius:14px;padding:16px;margin-top:12px}
 .empty-warm{padding:20px 8px;text-align:center;color:var(--muted);font-size:11px}.mini-link{border:0;background:transparent;color:var(--olive);font-size:10px;margin-top:7px}.done-work{margin-right:auto;border:1px solid var(--line);background:var(--paper);border-radius:8px;font-size:8px;padding:4px 7px;color:var(--olive)}
 
-/* v102 — كل عنصر تفاعلي يظهر بمؤشر اليد */
+/* v103 — كل عنصر تفاعلي يظهر بمؤشر اليد */
 button, a, [role="button"], [onclick], summary, select, input[type="button"], input[type="submit"], input[type="checkbox"], input[type="radio"], .clickable {cursor:pointer!important;}
 </style>
 <style id="v10-overrides">
@@ -56,6 +56,60 @@ button, a, [role="button"], [onclick], summary, select, input[type="button"], in
 .calendar-actions .exec-btn{background:var(--olive)!important;color:#fff!important;border:1px solid var(--olive)!important;font-weight:850!important}
 .reminder-time-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
+
+<style id="v103-final-polish">
+/* v103: تفتيح ملف الإنجاز وإبراز هوية مِعِك */
+@media print {
+  .portfolio-page,.achievement-page,.report-page { background:#fbf8f0 !important; }
+}
+.portfolio-page,.achievement-page,.report-page { background:#fbf8f0 !important; }
+.program-card,.program-item,.service-card,.report-card,.portfolio-card {
+  background:#f5f0e5 !important;
+}
+.program-card h3,.program-card h4,.program-item h3,.program-item h4,
+.section-title,.report-section-title {
+  color:#66745c !important;
+}
+button,[role="button"],a,.clickable,.card-clickable,[onclick],
+input[type="button"],input[type="submit"],summary,select,label[for] { cursor:pointer !important; }
+</style>
+<script id="v103-program-copy">
+(function(){
+ const library = [
+  {keys:["التهيئة الإرشادية","التهيئة الارشادية"], desc:"برنامج يهدف إلى تهيئة الطلاب نفسيًا وتربويًا للبيئة المدرسية، وتعريفهم بالأنظمة والخدمات الإرشادية بما يعزز شعورهم بالأمان والانتماء والاستعداد الإيجابي للتعلم.", impact:"يسهم في رفع مستوى التكيف المدرسي، وتقليل القلق في بداية المرحلة أو العام الدراسي، وتعزيز معرفة الطلاب بالخدمات والأنظمة المدرسية.", rec:"الاستمرار في تنفيذ البرنامج في بدايات الفترات الدراسية، وتطوير أنشطته وفق احتياجات الطلاب وملاحظات الميدان."},
+  {keys:["خفض العنف","رفق"], desc:"برنامج وقائي وتوعوي يهدف إلى الحد من مظاهر العنف وتعزيز الرفق والاحترام والحوار، وتنمية أساليب التعامل الإيجابي مع الخلافات داخل البيئة المدرسية.", impact:"يعزز السلوك الآمن والعلاقات الإيجابية بين الطلاب، ويرفع الوعي ببدائل العنف وأساليب حل المشكلات بصورة تربوية.", rec:"استمرار التوعية بمبادئ الرفق، ومتابعة المؤشرات السلوكية، وتكثيف الأنشطة الوقائية عند الحاجة."},
+  {keys:["التوجيه المهني"], desc:"برنامج يساعد الطلاب على التعرف إلى ميولهم وقدراتهم والفرص التعليمية والمهنية، وربط اختياراتهم المستقبلية بقدراتهم واهتماماتهم ومتطلبات سوق العمل.", impact:"يرفع وعي الطلاب بالمسارات التعليمية والمهنية، ويدعم قدرتهم على اتخاذ قرارات مستقبلية أكثر وضوحًا وواقعية.", rec:"تنويع مصادر التوعية المهنية وربطها بالمسارات والتخصصات والفرص الحديثة، مع إتاحة أنشطة تساعد الطالب على استكشاف ميوله."},
+  {keys:["القدرات"], desc:"برنامج يهدف إلى رفع وعي الطلاب باختبار القدرات، وتعريفهم بطبيعته ومهاراته وأساليب الاستعداد له، وتحفيزهم على التدريب المنظم وتحسين الأداء.", impact:"يعزز جاهزية الطلاب للاختبار، ويرفع وعيهم باستراتيجيات الحل والتدريب، ويدعم التحسن التدريجي في مستوى الأداء.", rec:"استمرار التدريب المبكر، وتحليل النتائج، وتوجيه البرامج اللاحقة نحو المهارات التي تظهر فيها الحاجة إلى تحسين."},
+  {keys:["التحصيلي"], desc:"برنامج يهدف إلى تهيئة الطلاب للاختبار التحصيلي، وتعزيز مراجعة المعارف والمهارات الأساسية، وتنظيم الاستعداد بما يدعم تحقيق نتائج أفضل.", impact:"يسهم في رفع جاهزية الطلاب للاختبار، وتعزيز المراجعة المنظمة، وتوجيه الجهد نحو الجوانب الأكثر احتياجًا.", rec:"ربط التدريب بنتائج الطلاب ومواطن الاحتياج، والاستمرار في المراجعة المنظمة والمتابعة حتى موعد الاختبار."},
+  {keys:["التحصيل الدراسي","تنمية الدافعية"], desc:"برنامج يهدف إلى دعم التحصيل الدراسي وتنمية دافعية الطلاب للتعلم، ومساعدتهم على تبني عادات دراسية فعالة وتحمل المسؤولية عن تقدمهم الأكاديمي.", impact:"يعزز الدافعية والانتظام في التعلم، ويساعد على تحسين العادات الدراسية ومتابعة الأداء والتحسن الأكاديمي.", rec:"متابعة الطلاب وفق مؤشرات التحصيل، وتقديم تدخلات مناسبة للحالات المحتاجة، وتعزيز التقدم والتحسن بصورة مستمرة."},
+  {keys:["تعزيز السلوك الإيجابي","السلوك الإيجابي"], desc:"برنامج يهدف إلى تنمية السلوكيات الإيجابية والقيم المدرسية لدى الطلاب من خلال التعزيز والتوعية والممارسات التي تشجع الانضباط والمسؤولية والاحترام.", impact:"يسهم في ترسيخ السلوك الإيجابي، ورفع مستوى الانضباط والمسؤولية، وتحسين المناخ المدرسي والعلاقات بين أفراد المجتمع المدرسي.", rec:"الاستمرار في تعزيز السلوكيات الإيجابية وإبراز النماذج المتميزة، وربط التعزيز بالممارسات اليومية داخل المدرسة."}
+ ];
+ function norm(x){return (x||"").replace(/\s+/g," ").trim();}
+ function findEntry(title){ title=norm(title); return library.find(x=>x.keys.some(k=>title.includes(k))); }
+ function apply(){
+   document.querySelectorAll(".program-card,.program-item").forEach(card=>{
+     const title = norm((card.querySelector("h3,h4,.program-title")||{}).textContent);
+     const e=findEntry(title); if(!e) return;
+     const textEls=[...card.querySelectorAll("p,div,span")];
+     let descEl=textEls.find(x=>/^الوصف\s*:/.test(norm(x.textContent)));
+     let impactEl=textEls.find(x=>/^الأثر\s*:/.test(norm(x.textContent)));
+     let recEl=textEls.find(x=>/^التوصية\s*:/.test(norm(x.textContent)));
+     // Preserve real execution counts already generated by the app.
+     if(descEl){
+       const old=norm(descEl.textContent);
+       const execution=(old.match(/(?:وقد |و)?نُ?فذ البرنامج.*$/)||old.match(/(?:وقد |و)?نفذ البرنامج.*$/)||[])[0];
+       descEl.innerHTML="<strong>الوصف:</strong> "+e.desc+(execution?" "+execution.replace("ضمن خطة التوجيه الطلابي ",""):"");
+     }
+     if(impactEl) impactEl.innerHTML="<strong>الأثر:</strong> "+e.impact;
+     if(recEl) recEl.innerHTML="<strong>التوصية:</strong> "+e.rec;
+   });
+ }
+ document.addEventListener("DOMContentLoaded",()=>{apply(); setTimeout(apply,400);});
+ const mo=new MutationObserver(()=>apply());
+ document.addEventListener("DOMContentLoaded",()=>mo.observe(document.body,{childList:true,subtree:true}));
+})();
+</script>
+
 </head><body><div class="app"><header class="masthead"><div class="identity"><div class="school"><span class="school-name">متوسطة وثانوية بدائع الضبطان</span></div><div class="brand" onclick="goHome()" title="الرئيسية"><img src="miik-logo.png" alt="شعار مِعِك"><b>مِعِك</b><span>الموجّه الذكي</span></div><div class="profile profile-wrap" onclick="toggleProfileMenu(event)"><div class="avatar">👤</div><b>عاصم صالح الصيخان</b><div class="profile-menu" id="profileMenu" onclick="event.stopPropagation()"><button onclick="openModule('بياناتي','بيانات الموجّه والمدرسة.')">بياناتي</button><button onclick="openModule('الاشتراك','حالة الاشتراك والتجديد.')">الاشتراك</button><button onclick="openModule('الدعم','الدعم والبلاغات.')">الدعم</button></div></div></div></header>
 <main><div class="home-content" id="homeContent"><section class="hero"><div class="datebar" id="datebar">الأحد · 17 ربيع الأول 1448هـ · 30 أغسطس 2026م</div><h1 class="greeting" id="greeting">صبّحت بالخير ☀️، أ. عاصم 🤗</h1><div class="toolrow"><button class="menu" aria-label="القائمة" onclick="toggleDrawer()">☰</button><div class="quick-search"><input id="search" placeholder="وش تبي أبحث لك؟ أنا مِعِك"><button class="searchgo" aria-label="بحث" onclick="demoSearch()">⌕</button></div></div></section>
 <section class="workspace"><article class="card"><h2>مِعِك اليوم</h2><div id="todayList"></div><button id="todayMore" class="mini-link" style="display:none" onclick="alert('عرض بقية أعمال اليوم في النسخة الكاملة')"></button></article>
@@ -3051,4 +3105,4 @@ const html=`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"
 })();
 </script>
 
-<!-- MIIK integrated v102: final achievement report refinements -->
+<!-- MIIK integrated v103: final achievement report refinements -->
