@@ -3856,3 +3856,56 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 </script>
 
 </body></html>
+
+<!-- MIIK Beta 1.7.8: calendar semester week stays inside calendar -->
+<script id="miik-beta-178-calendar-semester-week-nav">
+(()=>{
+  const esc178=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const ctx178=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
+  const term178=()=>ctx178().term==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول';
+  const rows178=()=>typeof window.miikPlanRows12==='function'?window.miikPlanRows12(ctx178().term):[];
+
+  // Calendar-only navigation: a semester week must never open the plan module.
+  window.miikCalendarOpenSemesterWeek178=function(index){
+    const ws=rows178(), w=ws[Number(index)];
+    const box=document.querySelector('#calendarPage .monthbox');
+    if(!box||!w)return;
+    document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));
+    const days=(w.days||[]).map(x=>`<span class="miik178-chip">${esc178(x)}</span>`).join('');
+    box.innerHTML=`
+      <div class="miik178-week-head">
+        <button type="button" class="back miik178-back" onclick="renderCalendarView('semester')">→ العودة للتقويم الفصلي</button>
+        <div>
+          <div class="month-title">${esc178(w.w)} · ${term178()}</div>
+          <div class="miik178-week-date">${esc178(w.date)}</div>
+        </div>
+      </div>
+      <div class="miik178-week-summary">
+        <div><b>البرنامج</b><span>${esc178(w.program)}</span></div>
+        ${w.value?`<div><b>القيمة</b><span>${esc178(w.value)}</span></div>`:''}
+        ${days?`<div><b>الأيام والمناسبات</b><span class="miik178-chips">${days}</span></div>`:''}
+      </div>
+      <div class="miik178-note">تفاصيل هذا الأسبوع داخل التقويم. لا يتم الانتقال إلى صفحة الخطة.</div>`;
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  const previous=window.renderCalendarView;
+  if(typeof previous==='function'){
+    window.renderCalendarView=function(mode='month'){
+      if(mode==='semester'){
+        document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));
+        const box=document.querySelector('#calendarPage .monthbox');
+        if(box){
+          const ws=rows178(), c=ctx178();
+          box.innerHTML=`<div class="month-title">${term178()} · العام الدراسي ${esc178(c.year)}هـ</div><div class="semester-calendar-grid">${ws.map((w,i)=>`<button type="button" class="semester-week-card" onclick="miikCalendarOpenSemesterWeek178(${i})"><b>${esc178(w.w)}</b><div>${esc178(w.date)}</div><small>${esc178(w.program)}</small></button>`).join('')}</div>`;
+          return;
+        }
+      }
+      return previous.apply(this,arguments);
+    };
+  }
+})();
+</script>
+<style id="miik-beta-178-calendar-semester-week-style">
+.miik178-week-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}.miik178-week-head>div{text-align:right}.miik178-week-date{color:var(--muted);font-weight:700;margin-top:5px}.miik178-back{white-space:nowrap}.miik178-week-summary{display:grid;gap:12px}.miik178-week-summary>div{border:1px solid var(--line);background:var(--paper);border-radius:16px;padding:15px;display:grid;gap:6px}.miik178-week-summary b{color:var(--deep)}.miik178-week-summary span{color:var(--muted)}.miik178-chips{display:flex;flex-wrap:wrap;gap:7px}.miik178-chip{background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--deep)!important}.miik178-note{margin-top:14px;color:var(--muted);text-align:center;font-size:14px}@media(max-width:700px){.miik178-week-head{align-items:stretch;flex-direction:column-reverse}.miik178-back{width:max-content;max-width:100%}}
+</style>
