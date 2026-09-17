@@ -4155,4 +4155,69 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 .miik1723-week-host{grid-column:1/-1;width:100%}
 #modulePage .miik1723-week-host .miik179-week-head{margin-top:2px}
 </style>
-<!-- Release package: MIIK Beta 1.7.23 -->
+
+<!-- MIIK Beta 1.7.24: mobile presentation-only fixes. Data and unified week routes are unchanged. -->
+<style id="miik-beta-1724-mobile-fixes">
+@media(max-width:720px){
+  /* Values: never suppress the plan/calendar value on phone layouts. */
+  .miik-plan12-value,
+  .miik179-sem-card em,
+  .miik1711-link.value,
+  .miik1711-mini.value,
+  .miik179-daytags .value,
+  .miik179-week-foot .value{
+    display:inline-flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+  }
+  .miik1711-link.value{display:flex!important;min-width:0!important}
+  .miik1711-mini.value{display:block!important;width:100%!important}
+  .miik179-sem-card em{font-weight:800!important;line-height:1.4!important;margin-top:2px!important}
+
+  /* Program pages: lighter typography and a compact back action on phones only. */
+  #modulePage.miik1724-program-page .module-head h1{font-size:20px!important;line-height:1.35!important}
+  #modulePage.miik1724-program-page .module-head p{font-size:11px!important;line-height:1.6!important}
+  #modulePage.miik1724-program-page .students-back{font-size:11px!important;padding:7px 10px!important;white-space:nowrap!important}
+
+  /* Selected week: compact back button; desktop wording/layout remains untouched. */
+  #modulePage .miik1723-week-host .miik179-back,
+  #calendarPage .miik179-back{font-size:10px!important;padding:7px 10px!important}
+}
+</style>
+<script id="miik-beta-1724-mobile-behavior">
+(()=>{
+ const isPhone=()=>window.matchMedia&&window.matchMedia('(max-width:720px)').matches;
+ const programTitles=new Set(['خفض العنف بالمدارس (رِفق)','تعزيز السلوك الإيجابي','التوجيه المهني','الاستخدام الآمن للإنترنت','تنمية الدافعية لرفع مستوى التحصيل','التوجيه وقت الأزمات','الاحتفاء بطلبة الصف الثالث الثانوي الخريجين','الأيام والمناسبات الوطنية والعالمية','برنامج تعزيز المهارات النفسية والاجتماعية','برنامج التهيئة الإرشادية','اختبارات القدرات','الاختبار التحصيلي','اختبارات نافس']);
+ const oldOpen=window.openModule;
+ window.openModule=function(title,desc){
+   const r=oldOpen.apply(this,arguments);
+   const page=document.getElementById('modulePage');
+   if(page)page.classList.toggle('miik1724-program-page',programTitles.has(String(title||''))||String(title||'').startsWith('برنامج '));
+   setTimeout(()=>{
+     if(!isPhone()||!page?.classList.contains('miik1724-program-page'))return;
+     const b=page.querySelector('.module-head .students-back');
+     if(b)b.textContent='→ العودة';
+   },0);
+   return r;
+ };
+ const oldWeek=window.miikOpenWeek12;
+ window.miikOpenWeek12=function(){
+   const r=oldWeek?.apply(this,arguments);
+   if(isPhone())setTimeout(()=>{
+     const b=document.querySelector('#modulePage .miik1723-week-host .miik179-back');
+     if(b)b.textContent='العودة ←';
+     const hb=document.querySelector('#modulePage .module-head .students-back');
+     if(hb)hb.textContent='→ العودة';
+   },0);
+   return r;
+ };
+ const oldCalWeek=window.miikCalendarOpenSemesterWeek178;
+ window.miikCalendarOpenSemesterWeek178=function(){
+   const r=oldCalWeek?.apply(this,arguments);
+   if(isPhone())setTimeout(()=>{const b=document.querySelector('#calendarPage .miik179-back');if(b)b.textContent='العودة ←'},0);
+   return r;
+ };
+})();
+</script>
+<!-- Release package: MIIK Beta 1.7.24 -->
+
