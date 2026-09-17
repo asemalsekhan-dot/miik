@@ -4096,3 +4096,61 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 </style>
 <!-- Release package: MIIK Beta 1.7.16 -->
 
+
+
+<!-- MIIK Beta 1.7.19 — dynamic custom programs: edit/delete + calendar source integration -->
+<style id="miik-beta-1719-custom-program-style">
+#miikCustomProgramButtons{display:grid;gap:4px}
+.miik1719-custom-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px;align-items:center}
+.miik1719-custom-row>button{margin:0!important}
+.miik1719-custom-edit,.miik1719-custom-delete{width:34px!important;min-width:34px!important;padding:7px 5px!important;text-align:center!important}
+.miik1719-custom-delete{color:#8a4d46!important}
+#calendarPage .miik1719-custom-calendar-label{display:block!important;background:#e8efe5!important;color:var(--deep)!important;border:1px solid #d2dfce!important;border-radius:7px!important;padding:4px 5px!important;font-weight:800!important;cursor:pointer!important;line-height:1.35!important}
+</style>
+<script id="miik-beta-1719-custom-programs-calendar">
+(()=>{'use strict';
+ const STORE='miikCustomPrograms';
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
+ const load=()=>{try{const a=JSON.parse(localStorage.getItem(STORE)||'[]');return Array.isArray(a)?a:[]}catch(_){return[]}};
+ const save=a=>localStorage.setItem(STORE,JSON.stringify(a));
+ function parseHijriDate(v){
+   const n=(String(v||'').match(/\d+/g)||[]).map(Number); if(n.length<3)return null;
+   let y,m,d;
+   if(n[0]>=1400){y=n[0];m=n[1];d=n[2]}
+   else if(n[n.length-1]>=1400){d=n[0];m=n[1];y=n[n.length-1]}
+   else {d=n[0];m=n[1];y=Number((()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'{}').year}catch(_){return 1448}})())||1448}
+   return y&&m>=1&&m<=12&&d>=1&&d<=30?{y,m,d}:null;
+ }
+ function openProgram(name){if(typeof window.openModule==='function')window.openModule(name,'التنفيذ والتوثيق والتقرير من مصدر واحد.')}
+ function refreshCalendar(){
+   if(!document.getElementById('calendarPage')?.classList.contains('show'))return;
+   const mode=document.querySelector('#calendarPage .view-switch button.active')?.dataset.view;
+   if(mode==='month'&&typeof window.renderCalendarView==='function')window.renderCalendarView('month');
+ }
+ window.miikCustomPrograms=load;
+ window.miikSyncCustomPrograms=function(){
+   const host=document.getElementById('miikCustomProgramButtons');if(!host)return;
+   host.innerHTML=load().map(x=>`<div class="miik1719-custom-row"><button type="button" onclick="miik1719Open('${Q(x.id)}')">${E(x.name)}</button><button type="button" class="miik1719-custom-edit" title="تعديل البرنامج" onclick="miikEditCustomProgram('${Q(x.id)}')">✎</button><button type="button" class="miik1719-custom-delete" title="حذف البرنامج" onclick="miikDeleteCustomProgram('${Q(x.id)}')">×</button></div>`).join('');
+ };
+ window.miik1719Open=id=>{const x=load().find(z=>String(z.id)===String(id));if(x)openProgram(x.name)};
+ function programForm(title,x,onSave){
+   if(typeof window.dialogForm!=='function')return;
+   window.dialogForm(title,'الاسم والتاريخ هما المصدر نفسه لقائمة البرامج والتقويم.',`<label>اسم البرنامج<input name="name" required placeholder="اسم البرنامج" value="${E(x?.name||'')}"></label><label>تاريخ البرنامج في الخطة والتقويم<input name="date" readonly required placeholder="اختر التاريخ الهجري" value="${E(x?.date||'')}" onclick="openHijriPicker(this)"></label>`,onSave);
+ }
+ window.miikAddCustomProgram=function(){programForm('إضافة برنامج',{},fd=>{const o=Object.fromEntries(fd),name=String(o.name||'').trim(),date=String(o.date||'').trim();if(!name||!parseHijriDate(date)){showMiikNotice?.('إضافة برنامج','اختر اسم البرنامج وتاريخه الهجري.');return}const a=load();if(a.some(x=>String(x.name).trim()===name)){showMiikNotice?.('إضافة برنامج','هذا البرنامج مضاف مسبقًا.');return}a.push({id:'cp_'+Date.now(),name,date});save(a);window.miikSyncCustomPrograms();refreshCalendar();openProgram(name)});};
+ window.miikEditCustomProgram=function(id){const a=load(),i=a.findIndex(x=>String(x.id)===String(id));if(i<0)return;programForm('تعديل البرنامج',a[i],fd=>{const o=Object.fromEntries(fd),name=String(o.name||'').trim(),date=String(o.date||'').trim();if(!name||!parseHijriDate(date)){showMiikNotice?.('تعديل البرنامج','اختر اسم البرنامج وتاريخه الهجري.');return}if(a.some((x,j)=>j!==i&&String(x.name).trim()===name)){showMiikNotice?.('تعديل البرنامج','يوجد برنامج آخر بالاسم نفسه.');return}a[i]={...a[i],name,date};save(a);window.miikSyncCustomPrograms();refreshCalendar();if(typeof window.closeMiikDialog==='function')window.closeMiikDialog();showMiikNotice?.('تم التعديل','تم تحديث البرنامج وتاريخه، وسينعكس في التقويم تلقائيًا.')});};
+ window.miikDeleteCustomProgram=function(id){const x=load().find(z=>String(z.id)===String(id));if(!x)return;const go=()=>{const a=load().filter(z=>String(z.id)!==String(id));save(a);window.miikSyncCustomPrograms();refreshCalendar();window.closeMiikDialog?.();showMiikNotice?.('تم الحذف','حُذف البرنامج من القائمة والتقويم.')};if(typeof window.showMiikDialog==='function'){window.showMiikDialog(`<h2>حذف البرنامج</h2><p>هل تريد حذف «${E(x.name)}»؟ سيختفي أيضًا من التقويم.</p><div class="dialog-actions"><button type="button" class="dialog-primary" id="miik1719ConfirmDelete">حذف</button><button type="button" class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);setTimeout(()=>{const b=document.getElementById('miik1719ConfirmDelete');if(b)b.onclick=go},0)}else go();};
+ function injectCustomMonth(){
+   const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
+   load().forEach(x=>{const h=parseHijriDate(x.date);if(!h)return;const btn=box.querySelector(`button[onclick*="v57OpenHijriDay(${h.y},${h.m},${h.d})"]`);if(!btn)return;if([...btn.querySelectorAll('.miik1719-custom-calendar-label')].some(z=>z.dataset.id===String(x.id)))return;const tag=document.createElement('span');tag.className='cal-label miik1719-custom-calendar-label';tag.dataset.id=x.id;tag.textContent=x.name;tag.title=x.name;tag.onclick=e=>{e.stopPropagation();openProgram(x.name)};btn.appendChild(tag)});
+ }
+ const oldRender=window.renderCalendarView;
+ if(typeof oldRender==='function')window.renderCalendarView=function(mode='month'){const r=oldRender.apply(this,arguments);if(mode==='month')setTimeout(injectCustomMonth,0);return r};
+ const oldDay=window.v57OpenHijriDay;
+ if(typeof oldDay==='function')window.v57OpenHijriDay=function(y,m,d){const r=oldDay.apply(this,arguments);setTimeout(()=>{const list=document.querySelector('#calendarPage .miik1713-day-list')||document.querySelector('#calendarPage .day-work-list');if(!list)return;load().filter(x=>{const h=parseHijriDate(x.date);return h&&+h.y===+y&&+h.m===+m&&+h.d===+d}).forEach(x=>{if(list.querySelector(`[data-custom-program-id="${CSS.escape(String(x.id))}"]`))return;const b=document.createElement('button');b.type='button';b.className='miik1713-day-item program';b.dataset.customProgramId=x.id;b.innerHTML=`<span><small>البرنامج</small><b>${E(x.name)}</b></span><i>‹</i>`;b.onclick=()=>openProgram(x.name);list.appendChild(b)})},0);return r};
+ window.miikSyncCustomPrograms();
+ setTimeout(()=>{if(document.querySelector('#calendarPage .view-switch button.active')?.dataset.view==='month')injectCustomMonth()},0);
+})();
+</script>
+<!-- Release package: MIIK Beta 1.7.19 -->
