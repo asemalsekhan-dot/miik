@@ -4177,7 +4177,7 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 
 
 
-<!-- MIIK Beta 1.7.14 — single-source plan/calendar cleanup -->
+<!-- MIIK Beta 1.7.15 — corrected shared plan date sequence -->
 <script id="miik-beta-1714-single-source-calendar">
 (()=>{'use strict';
  const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -4190,7 +4190,20 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
    let a=inherited(String(term)).map(x=>({...x,days:[...(x.days||[])],extras:[...(x.extras||[])]}));
    // 1.7.12 inserted a synthetic bridge week. Remove it: the real fourth week itself is 02–06/04.
    a=a.filter(x=>!x._miik1712bridge);
-   if(String(term)==='1'&&a[3]) a[3]={...a[3],date:'02 – 06 / 04 هـ'};
+   // Correct the term-1 date sequence once at the shared plan source.
+   // Weeks 1–3 were already correct. The approved live calendar shows week 4 as 02–06/04;
+   // the old Word draft had the following rows one school-week late, so keep each program
+   // in its same week number and correct only its date range. Planned breaks remain as gaps.
+   if(String(term)==='1'){
+     const dates=[
+       '10 – 14 / 03 هـ','17 – 21 / 03 هـ','24 – 28 / 03 هـ','02 – 06 / 04 هـ',
+       '09 – 13 / 04 هـ','16 – 20 / 04 هـ','23 – 27 / 04 هـ','30/04 – 04/05 هـ',
+       '07 – 11 / 05 هـ','14 – 18 / 05 هـ','21 – 25 / 05 هـ','28/05 – 02/06 هـ',
+       '12 – 16 / 06 هـ','19 – 24 / 06 هـ','27/06 – 01/07 هـ','04 – 08 / 07 هـ',
+       '11 – 15 / 07 هـ','18 – 22 / 07 هـ'
+     ];
+     a=a.slice(0,18).map((x,i)=>({...x,date:dates[i]||x.date}));
+   }
    a.forEach((x,i)=>x.w=weekNames[i]||x.w);
    return a;
  }
