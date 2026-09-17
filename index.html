@@ -4055,3 +4055,60 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 .miik1711-summary{display:grid;grid-template-columns:minmax(0,2fr) minmax(180px,1fr);gap:10px;margin-bottom:12px}.miik1711-link{width:100%;border:1px solid var(--line);border-radius:16px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:right;cursor:pointer;font:inherit;transition:.15s ease}.miik1711-link.program{background:#e8efe5;color:var(--deep)}.miik1711-link.value{background:#f2eddf;color:#5d6f5b}.miik1711-link span{display:grid;gap:4px}.miik1711-link small,.miik1711-events>small{font-size:11px;color:var(--muted);font-weight:700}.miik1711-link b{font-size:15px}.miik1711-link i,.miik1711-event i{font-style:normal;font-size:20px;color:var(--olive)}.miik1711-link:hover,.miik1711-event:hover,.miik1711-mini:hover{transform:translateY(-1px);border-color:var(--olive)}.miik1711-events{grid-column:1/-1;border:1px solid var(--line);background:#f8f5ed;border-radius:16px;padding:13px 15px}.miik1711-events>div{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}.miik1711-event{border:1px solid #dfe5d9;background:#fffdf8;color:var(--deep);border-radius:999px;padding:7px 11px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;font:inherit;font-size:12px;font-weight:700}.miik1711-daylinks{display:grid;gap:5px}.miik1711-mini{width:100%;border:1px solid transparent;border-radius:8px;padding:5px 6px;text-align:right;cursor:pointer;font:inherit;font-size:10px}.miik1711-mini.program{background:#e8efe5;color:var(--deep)}.miik1711-mini.value{background:#f2eddf;color:#5d6f5b}
 @media(max-width:720px){.miik1711-summary{grid-template-columns:1fr 1fr;gap:6px}.miik1711-link{padding:9px;border-radius:11px}.miik1711-link small,.miik1711-events>small{font-size:8px}.miik1711-link b{font-size:10px}.miik1711-link i,.miik1711-event i{font-size:14px}.miik1711-events{padding:9px;border-radius:11px}.miik1711-event{font-size:9px;padding:6px 8px}}
 </style>
+
+<!-- MIIK Beta 1.7.12 — targeted week-4/calendar repair -->
+<script id="miik-beta-1712-targeted-calendar-repair">
+(()=>{'use strict';
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
+ const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+ const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
+ const baseRows=window.miikPlanRows12;
+ if(typeof baseRows!=='function')return;
+ const names=['الأسبوع الأول','الأسبوع الثاني','الأسبوع الثالث','الأسبوع الرابع','الأسبوع الخامس','الأسبوع السادس','الأسبوع السابع','الأسبوع الثامن','الأسبوع التاسع','الأسبوع العاشر','الأسبوع الحادي عشر','الأسبوع الثاني عشر','الأسبوع الثالث عشر','الأسبوع الرابع عشر','الأسبوع الخامس عشر','الأسبوع السادس عشر','الأسبوع السابع عشر','الأسبوع الثامن عشر','الأسبوع التاسع عشر'];
+ // The approved Word plan skipped the live school week 02–06/04. Insert it without altering
+ // the already-approved content/date pairing of the following weeks.
+ function fixedRows(term){
+   const src=baseRows(String(term)).map(x=>({...x,days:[...(x.days||[])],extras:[...(x.extras||[])]}));
+   if(String(term)!=='1'||src.length<4)return src;
+   if(src.some(x=>x._miik1712bridge))return src;
+   const seed=src[3];
+   const bridge={...seed,_miik1712bridge:true,w:'الأسبوع الرابع',date:'02 – 06 / 04 هـ',days:[],extras:[],initiatives:'متابعة الأعمال الإرشادية المدرجة في الخطة خلال الأسبوع.'};
+   // Keep the first three weeks, insert the missing week, then renumber the approved rows.
+   const out=[...src.slice(0,3),bridge,...src.slice(3)];
+   out.forEach((x,i)=>x.w=names[i]||x.w);
+   return out;
+ }
+ window.miikPlanRows12=fixedRows;
+ window.planWeeks=()=>fixedRows(String(ctx().term));
+ function hijriToday(){return typeof window.miikHijriToday1710==='function'?window.miikHijriToday1710():null}
+ function nums(s){return (String(s||'').match(/\d+/g)||[]).map(Number)}
+ function parsed(w){const n=nums(w?.date),year=n.find(x=>x>=1400)||Number(ctx().year)||1448;let sd,sm,ed,em;if(n.length>=4&&n[1]<=12&&n[3]<=12){sd=n[0];sm=n[1];ed=n[2];em=n[3]}else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}else return null;return{sd,sm,ed,em,year}}
+ function next(x){let {d,m,y}=x;d++;if(d>30){d=1;m++;if(m>12){m=1;y++}}return{d,m,y}}
+ function daysOf(w){const r=parsed(w);if(!r)return[];let x={d:r.sd,m:r.sm,y:r.year},out=[];for(let i=0;i<7;i++){out.push({...x});if(x.d===r.ed&&x.m===r.em)break;x=next(x)}return out}
+ function same(a,b){return a&&b&&+a.d===+b.d&&+a.m===+b.m&&+a.y===+b.y}
+ function label(w){const r=parsed(w);if(!r)return String(w?.date||'');return r.sm===r.em?`${r.sd}–${r.ed} / ${r.sm} / ${r.year}هـ`:`${r.sd} / ${r.sm} / ${r.year}هـ – ${r.ed} / ${r.em} / ${r.year}هـ`}
+ window.miikPlanDateLabel1710=label;window.miikPlanDays1710=daysOf;
+ function currentIndex(){const q=hijriToday();if(!q)return-1;return fixedRows(ctx().term).findIndex(w=>daysOf(w).some(x=>same(x,q)))}
+ function programBtn(w){return `<button type="button" class="miik1711-mini program" onclick="miikOpenPlanProgram12('${Q(w.program)}')">${E(w.program)}</button>`}
+ function valueBtn(w){return w.value?`<button type="button" class="miik1711-mini value" onclick="miikOpenPlanValue12('${Q(w.value)}')">القيمة: ${E(w.value)}</button>`:''}
+ function currentDays(w){const ds=daysOf(w),today=hijriToday(),namesD=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];return `<div class="miik179-days">${ds.slice(0,5).map((x,i)=>`<button type="button" class="miik179-day miik1712-daybtn ${same(x,today)?'is-today':''}" onclick="v57OpenHijriDay(${x.y},${x.m},${x.d})"><div class="miik179-daytop"><b>${namesD[i]}</b><span>${x.d} ${MONTHS[x.m-1]}</span>${same(x,today)?'<em>اليوم</em>':''}</div><div class="miik1711-daylinks" onclick="event.stopPropagation()">${programBtn(w)}${valueBtn(w)}</div></button>`).join('')}</div>`}
+ const priorRender=window.renderCalendarView;
+ window.renderCalendarView=function(mode='month'){
+   if(mode==='week'){
+     const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
+     document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));
+     const ix=currentIndex(),w=ix>=0?fixedRows(ctx().term)[ix]:null;
+     if(w){box.innerHTML=`<div class="miik179-current-head"><b>الأسبوع الحالي</b><span>${E(label(w))}</span></div>${currentDays(w)}<div class="miik179-week-foot"><button class="miik1711-mini program" onclick="miikOpenPlanProgram12('${Q(w.program)}')">${E(w.program)}</button>${w.value?`<button class="miik1711-mini value" onclick="miikOpenPlanValue12('${Q(w.value)}')">القيمة: ${E(w.value)}</button>`:''}</div>`;return;}
+   }
+   return priorRender.apply(this,arguments);
+ };
+ // Re-prime the shared ranges so the month calendar reads the repaired plan source.
+ try{window.MIIK_PLAN_TERM_RANGES=fixedRows(ctx().term).map(w=>({label:w.date,days:daysOf(w).map(x=>['',`${x.d} ${MONTHS[x.m-1]} ${x.y}`])}))}catch(_){}
+})();
+</script>
+<style id="miik-beta-1712-targeted-calendar-style">
+#calendarPage .miik1712-daybtn{font:inherit;color:inherit;text-align:right;cursor:pointer;width:100%}
+#calendarPage .miik1712-daybtn:hover{border-color:var(--olive);background:#f5f7f1}
+#calendarPage .miik179-week-foot button{width:auto;display:inline-block}
+</style>
