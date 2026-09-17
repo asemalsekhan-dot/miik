@@ -3830,6 +3830,53 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
   .v54-hijri-pop .hijri-grid button.selected{background:var(--deep)!important;color:#fff!important;border-color:var(--olive)!important}
 }
 </style>
+
+
+<!-- MIIK Beta 1.7.21 — custom programs become part of the canonical counselor plan -->
+<style id="miik-beta-1721-plan-custom-style">
+.miik1721-programs{display:grid;gap:6px;margin:10px 0 6px}.miik1721-programs .miik-plan12-program{margin:0}.miik1721-programs .custom{background:#edf3ea;border:1px solid #d9e4d6;border-radius:10px;padding:7px 9px}.miik1713-program-label{font-weight:800!important}
+</style>
+<script id="miik-beta-1721-plan-custom-source">
+(()=>{'use strict';
+ const STORE='miikPlanCustomPrograms',LEGACY='miikCustomPrograms';
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
+ function read(k){try{const a=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(a)?a:[]}catch(_){return[]}}
+ function save(a){localStorage.setItem(STORE,JSON.stringify(a));localStorage.setItem(LEGACY,JSON.stringify(a))}
+ // One-time migration: old menu data becomes plan-owned data.
+ if(!localStorage.getItem(STORE)){const a=read(LEGACY);save(a)}
+ window.miikCustomPrograms=()=>read(STORE);
+ function parseDate(s){const n=(String(s||'').match(/\d+/g)||[]).map(Number);if(n.length<3)return null;if(n[0]>=1400)return{y:n[0],m:n[1],d:n[2]};if(n[2]>=1400)return{d:n[0],m:n[1],y:n[2]};return null}
+ function same(a,b){return a&&b&&+a.d===+b.d&&+a.m===+b.m&&+a.y===+b.y}
+ const baseRows=window.miikPlanRows12;
+ function mergedRows(term){
+   const ws=(baseRows?baseRows(String(term)):[]).map(w=>({...w,programs:[{name:w.program,custom:false}]}));
+   const custom=read(STORE);
+   for(const cp of custom){const h=parseDate(cp.date);if(!h)continue;const wi=ws.findIndex(w=>(window.miikPlanDays1710?.(w)||[]).some(d=>same(d,h)));if(wi>=0)ws[wi].programs.push({name:cp.name,custom:true,id:cp.id,date:cp.date});}
+   return ws;
+ }
+ window.miikPlanRows12=mergedRows; window.planWeeks=()=>mergedRows((()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'{}').term||'1'}catch(_){return'1'}})());
+ function refreshOpenPlan(){const t=document.getElementById('moduleTitle')?.textContent||'';if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(t))setTimeout(()=>window.miikRefreshPlan12?.(t),0)}
+ // Save/edit/delete write to the plan-owned store, then all views read that same plan source.
+ function form(title,x,done){showMiikDialog(`<h2>${title}</h2><p>يحفظ البرنامج داخل خطة الموجّه الطلابي، ومنها ينعكس تلقائيًا على التقويم.</p><form id="miik1721Form"><label>اسم البرنامج<input name="name" required value="${E(x?.name||'')}" placeholder="اسم البرنامج"></label><label>تاريخ البرنامج في الخطة<input name="date" readonly required value="${E(x?.date||'')}" placeholder="اختر التاريخ الهجري" onclick="openHijriPicker(this)"></label><div class="dialog-actions"><button class="dialog-primary" type="submit">حفظ</button><button class="dialog-cancel" type="button" onclick="closeMiikDialog()">إلغاء</button></div></form>`);document.getElementById('miik1721Form').onsubmit=e=>{e.preventDefault();done(Object.fromEntries(new FormData(e.target)))}}
+ window.miikAddCustomProgram=function(){form('إضافة برنامج',{},o=>{const name=String(o.name||'').trim(),date=String(o.date||'').trim(),h=parseDate(date);if(!name||!h)return showMiikNotice('إضافة برنامج','اكتب اسم البرنامج واختر التاريخ الهجري.');const ws=mergedRows((()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'{}').term||'1'}catch(_){return'1'}})());if(!ws.some(w=>(window.miikPlanDays1710?.(w)||[]).some(d=>same(d,h))))return showMiikNotice('التاريخ خارج الخطة','اختر تاريخًا يقع داخل أحد أسابيع الفصل الدراسي النشط.');const a=read(STORE);if(a.some(x=>String(x.name).trim()===name))return showMiikNotice('إضافة برنامج','هذا البرنامج مضاف مسبقًا.');a.push({id:'cp_'+Date.now(),name,date});save(a);window.miikSyncCustomPrograms?.();closeMiikDialog();refreshOpenPlan();setTimeout(()=>showMiikNotice('تم إضافة البرنامج','تمت إضافة البرنامج إلى خطة الموجّه الطلابي، وسيظهر في التقويم من نفس الخطة.'),50)})};
+ window.miikEditCustomProgram=function(id){const a=read(STORE),i=a.findIndex(x=>String(x.id)===String(id));if(i<0)return;form('تعديل البرنامج',a[i],o=>{const name=String(o.name||'').trim(),date=String(o.date||'').trim(),h=parseDate(date);if(!name||!h)return showMiikNotice('تعديل البرنامج','اكتب اسم البرنامج واختر التاريخ الهجري.');const term=(()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'{}').term||'1'}catch(_){return'1'}})(),base=(baseRows?baseRows(term):[]);if(!base.some(w=>(window.miikPlanDays1710?.(w)||[]).some(d=>same(d,h))))return showMiikNotice('التاريخ خارج الخطة','اختر تاريخًا يقع داخل أحد أسابيع الفصل الدراسي النشط.');if(a.some((x,j)=>j!==i&&String(x.name).trim()===name))return showMiikNotice('تعديل البرنامج','يوجد برنامج آخر بالاسم نفسه.');a[i]={...a[i],name,date};save(a);window.miikSyncCustomPrograms?.();closeMiikDialog();refreshOpenPlan();setTimeout(()=>showMiikNotice('تم التعديل','تم تحديث البرنامج داخل الخطة، وسيتبع التقويم الخطة تلقائيًا.'),50)})};
+ window.miikDeleteCustomProgram=function(id){const a=read(STORE),x=a.find(z=>String(z.id)===String(id));if(!x)return;showMiikDialog(`<h2>حذف البرنامج</h2><p>سيُحذف «${E(x.name)}» من خطة الموجّه الطلابي، وبالتالي يختفي من التقويم.</p><div class="dialog-actions"><button id="miik1721Delete" class="dialog-primary" type="button">حذف</button><button class="dialog-cancel" type="button" onclick="closeMiikDialog()">إلغاء</button></div>`);document.getElementById('miik1721Delete').onclick=()=>{save(a.filter(z=>String(z.id)!==String(id)));window.miikSyncCustomPrograms?.();closeMiikDialog();refreshOpenPlan();setTimeout(()=>showMiikNotice('تم الحذف','حُذف البرنامج من الخطة.'),50)}};
+ // Rebuild the three plan views from the merged canonical rows, including multiple programs in one week.
+ function ctx(){try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}}
+ function termLabel(){return String(ctx().term)==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول'}
+ function programsHtml(w){return `<div class="miik1721-programs">${(w.programs||[{name:w.program}]).map(p=>`<button class="miik-plan12-program ${p.custom?'custom':''}" onclick="event.stopPropagation();miikOpenPlanProgram12('${Q(p.name)}')">${E(p.name)}</button>`).join('')}</div>`}
+ function card(w,i){const ds=(w.days||[]).map(d=>`<button class="miik-plan12-day" onclick="event.stopPropagation();miikOpenGlobalDay12('${Q(d)}')">${E(d)}</button>`).join(''),val=w.value?`<button class="miik-plan12-value" onclick="event.stopPropagation();miikOpenPlanValue12('${Q(w.value)}')">القيمة: ${E(w.value)}</button>`:'';return `<article class="miik-plan12-card" onclick="miikOpenWeek12(${i})"><div class="miik-plan12-head"><b>${E(w.w)}</b><span class="miik-plan12-date">${E(w.date)}</span></div>${programsHtml(w)}${val}<div class="miik-plan12-initiatives">${E(w.initiatives)}</div>${ds?`<div class="miik-plan12-days">${ds}</div>`:''}</article>`}
+ window.miikRefreshPlan12=function(title){const box=document.getElementById('miikPlanContent');if(!box)return;const ws=mergedRows(ctx().term);if(title==='الخطة الأسبوعية'){let sel=Number(sessionStorage.getItem('miikWeeklyIndex')||0);if(sel<0||sel>=ws.length)sel=0;const w=ws[sel];box.innerHTML=`<div class="miik-week12-title"><div><h3>${E(w.w)} · ${termLabel()}</h3><span>${E(w.date)}</span></div><button class="miik-plan12-print" onclick="miikPrintPlan12()">طباعة</button></div><div class="miik-plan12-grid">${ws.map((x,i)=>card(x,i)).join('')}</div>`;return}box.innerHTML=`<div class="cal-top"><div><b style="font-size:23px">${E(title)}</b><div class="muted">${termLabel()} · مصدر موحّد للخطة والتقويم</div></div><button class="miik-plan12-print" onclick="miikPrintPlan12()">طباعة الخطة</button></div><div class="miik-plan12-grid">${ws.map((w,i)=>card(w,i)).join('')}</div>`};
+ // Calendar consumers read programs[] from the same plan row; no separate custom-program calendar feed.
+ const oldOpenDay=window.v57OpenHijriDay;
+ window.v57OpenHijriDay=function(y,m,d){const ws=mergedRows(ctx().term),w=ws.find(z=>(window.miikPlanDays1710?.(z)||[]).some(x=>same(x,{y,m,d})));if(!w)return oldOpenDay?.apply(this,arguments);hideAllPages();document.getElementById('calendarPage').classList.add('show');const items=[];(w.programs||[{name:w.program}]).forEach(p=>items.push(`<button type="button" class="miik1713-day-item program" onclick="miikOpenPlanProgram12('${Q(p.name)}')"><span><small>البرنامج</small><b>${E(p.name)}</b></span><i>‹</i></button>`));if(w.value)items.push(`<button type="button" class="miik1713-day-item value" onclick="miikOpenPlanValue12('${Q(w.value)}')"><span><small>القيمة</small><b>${E(w.value)}</b></span><i>‹</i></button>`);const box=document.querySelector('#calendarPage .monthbox');if(box)box.innerHTML=`<div class="day-view-head"><div><div class="month-title">${d} / ${m} / ${y}هـ</div><div class="muted">أعمال هذا اليوم من خطة الموجّه الطلابي</div></div><button type="button" class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="miik1713-day-list">${items.join('')}</div>`;window.scrollTo({top:0,behavior:'smooth'})};
+ // Month: after the existing renderer, add every plan program scheduled in that week (including custom ones) on its exact date.
+ const oldRender=window.renderCalendarView;
+ window.renderCalendarView=function(mode='month'){const r=oldRender?.apply(this,arguments);if(mode==='month')setTimeout(()=>{const box=document.querySelector('#calendarPage .monthbox');if(!box)return;mergedRows(ctx().term).forEach(w=>(w.programs||[]).filter(p=>p.custom).forEach(p=>{const h=parseDate(p.date);if(!h)return;const btn=box.querySelector(`button[onclick*="v57OpenHijriDay(${h.y},${h.m},${h.d})"]`);if(!btn)return;if([...btn.querySelectorAll('.cal-label')].some(x=>x.textContent.trim()===p.name))return;const tag=document.createElement('span');tag.className='cal-label miik1713-program-label';tag.textContent=p.name;tag.onclick=e=>{e.stopPropagation();window.miikOpenPlanProgram12?.(p.name)};btn.appendChild(tag)}))},0);return r};
+ window.miikSyncCustomPrograms?.();
+})();
+</script>
 </body></html>
 
 <!-- MIIK Beta 1.7.8: calendar semester week stays inside calendar -->
