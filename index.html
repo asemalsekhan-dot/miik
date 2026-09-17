@@ -4027,3 +4027,31 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 })();
 </script>
 <style id="miik-beta-1710-date-style">.miik1710-gap-note{margin-top:12px;padding:11px 14px;border:1px solid var(--line);border-radius:13px;background:#f8f5ed;color:var(--muted);text-align:center;font-size:12px}</style>
+
+<!-- MIIK Beta 1.7.11 — calendar detail interactions only -->
+<script id="miik-beta-1711-calendar-detail-links">
+(()=>{'use strict';
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
+ const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
+ const rows=()=>typeof window.miikPlanRows12==='function'?window.miikPlanRows12(ctx().term):[];
+ const term=()=>ctx().term==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول';
+ const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+ function nums(s){return (String(s||'').match(/\d+/g)||[]).map(Number)}
+ function parsed(w){const n=nums(w?.date),year=n.find(x=>x>=1400)||Number(ctx().year)||1448;let sd,sm,ed,em;if(n.length>=4&&n[1]<=12&&n[3]<=12){sd=n[0];sm=n[1];ed=n[2];em=n[3]}else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}else return null;return{sd,sm,ed,em,year}}
+ function dateLabel(w){if(typeof window.miikPlanDateLabel1710==='function')return window.miikPlanDateLabel1710(w);const r=parsed(w);return r?`${r.sd}–${r.ed} / ${r.sm} / ${r.year}هـ`:String(w?.date||'')}
+ function dayList(w){if(typeof window.miikPlanDays1710==='function')return window.miikPlanDays1710(w)||[];return[]}
+ function hijriToday(){return typeof window.miikHijriToday1710==='function'?window.miikHijriToday1710():null}
+ function same(a,b){return a&&b&&Number(a.d)===Number(b.d)&&Number(a.m)===Number(b.m)&&Number(a.y)===Number(b.y)}
+ function programButton(w,cls=''){return `<button type="button" class="miik1711-link program ${cls}" onclick="miikOpenPlanProgram12('${Q(w.program)}')"><span><small>البرنامج</small><b>${E(w.program)}</b></span><i>‹</i></button>`}
+ function valueButton(w,cls=''){return w.value?`<button type="button" class="miik1711-link value ${cls}" onclick="miikOpenPlanValue12('${Q(w.value)}')"><span><small>القيمة</small><b>${E(w.value)}</b></span><i>‹</i></button>`:''}
+ function eventButtons(w){return (w.days||[]).filter(Boolean).map(x=>`<button type="button" class="miik1711-event" onclick="miikOpenGlobalDay12('${Q(x)}')">${E(x)} <i>‹</i></button>`).join('')}
+ function dayCards(w){const ds=dayList(w),names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],today=hijriToday();if(!ds.length)return'';return `<div class="miik179-days">${ds.map((x,i)=>`<div class="miik179-day ${same(x,today)?'is-today':''}"><div class="miik179-daytop"><b>${names[i]||'اليوم'}</b><span>${x.d} ${MONTHS[x.m-1]}</span>${same(x,today)?'<em>اليوم</em>':''}</div><div class="miik1711-daylinks"><button type="button" class="miik1711-mini program" onclick="miikOpenPlanProgram12('${Q(w.program)}')">${E(w.program)}</button>${w.value?`<button type="button" class="miik1711-mini value" onclick="miikOpenPlanValue12('${Q(w.value)}')">القيمة: ${E(w.value)}</button>`:''}</div></div>`).join('')}</div>`}
+ function detail(w){return `<div class="miik179-week-head"><div class="miik179-week-title"><b>${E(w.w)} · ${term()}</b><span>${E(dateLabel(w))}</span></div><button type="button" class="back miik179-back" onclick="renderCalendarView('semester')">العودة للتقويم الفصلي ←</button></div><div class="miik1711-summary">${programButton(w)}${valueButton(w)}${(w.days||[]).length?`<section class="miik1711-events"><small>الأيام والمناسبات</small><div>${eventButtons(w)}</div></section>`:''}</div>${dayCards(w)}`}
+ window.miikCalendarOpenSemesterWeek178=function(index){const w=rows()[Number(index)],box=document.querySelector('#calendarPage .monthbox');if(!w||!box)return;document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));box.innerHTML=detail(w);window.scrollTo({top:0,behavior:'smooth'})};
+})();
+</script>
+<style id="miik-beta-1711-calendar-detail-style">
+.miik1711-summary{display:grid;grid-template-columns:minmax(0,2fr) minmax(180px,1fr);gap:10px;margin-bottom:12px}.miik1711-link{width:100%;border:1px solid var(--line);border-radius:16px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:right;cursor:pointer;font:inherit;transition:.15s ease}.miik1711-link.program{background:#e8efe5;color:var(--deep)}.miik1711-link.value{background:#f2eddf;color:#5d6f5b}.miik1711-link span{display:grid;gap:4px}.miik1711-link small,.miik1711-events>small{font-size:11px;color:var(--muted);font-weight:700}.miik1711-link b{font-size:15px}.miik1711-link i,.miik1711-event i{font-style:normal;font-size:20px;color:var(--olive)}.miik1711-link:hover,.miik1711-event:hover,.miik1711-mini:hover{transform:translateY(-1px);border-color:var(--olive)}.miik1711-events{grid-column:1/-1;border:1px solid var(--line);background:#f8f5ed;border-radius:16px;padding:13px 15px}.miik1711-events>div{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}.miik1711-event{border:1px solid #dfe5d9;background:#fffdf8;color:var(--deep);border-radius:999px;padding:7px 11px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;font:inherit;font-size:12px;font-weight:700}.miik1711-daylinks{display:grid;gap:5px}.miik1711-mini{width:100%;border:1px solid transparent;border-radius:8px;padding:5px 6px;text-align:right;cursor:pointer;font:inherit;font-size:10px}.miik1711-mini.program{background:#e8efe5;color:var(--deep)}.miik1711-mini.value{background:#f2eddf;color:#5d6f5b}
+@media(max-width:720px){.miik1711-summary{grid-template-columns:1fr 1fr;gap:6px}.miik1711-link{padding:9px;border-radius:11px}.miik1711-link small,.miik1711-events>small{font-size:8px}.miik1711-link b{font-size:10px}.miik1711-link i,.miik1711-event i{font-size:14px}.miik1711-events{padding:9px;border-radius:11px}.miik1711-event{font-size:9px;padding:6px 8px}}
+</style>
