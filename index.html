@@ -4175,4 +4175,67 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 @media(max-width:720px){.miik1713-day-item{padding:9px 10px;border-radius:11px}.miik1713-day-item small{font-size:8px}.miik1713-day-item b{font-size:10px}.miik1713-day-item i{font-size:15px}}
 </style>
 
-<!-- Release package: MIIK Beta 1.7.13 -->
+
+
+<!-- MIIK Beta 1.7.14 — single-source plan/calendar cleanup -->
+<script id="miik-beta-1714-single-source-calendar">
+(()=>{'use strict';
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
+ const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
+ const inherited=window.miikPlanRows12;
+ if(typeof inherited!=='function')return;
+ const weekNames=['الأسبوع الأول','الأسبوع الثاني','الأسبوع الثالث','الأسبوع الرابع','الأسبوع الخامس','الأسبوع السادس','الأسبوع السابع','الأسبوع الثامن','الأسبوع التاسع','الأسبوع العاشر','الأسبوع الحادي عشر','الأسبوع الثاني عشر','الأسبوع الثالث عشر','الأسبوع الرابع عشر','الأسبوع الخامس عشر','الأسبوع السادس عشر','الأسبوع السابع عشر','الأسبوع الثامن عشر','الأسبوع التاسع عشر'];
+ function cleanRows(term){
+   let a=inherited(String(term)).map(x=>({...x,days:[...(x.days||[])],extras:[...(x.extras||[])]}));
+   // 1.7.12 inserted a synthetic bridge week. Remove it: the real fourth week itself is 02–06/04.
+   a=a.filter(x=>!x._miik1712bridge);
+   if(String(term)==='1'&&a[3]) a[3]={...a[3],date:'02 – 06 / 04 هـ'};
+   a.forEach((x,i)=>x.w=weekNames[i]||x.w);
+   return a;
+ }
+ window.miikPlanRows12=cleanRows;
+ window.planWeeks=()=>cleanRows(String(ctx().term));
+ // Refresh shared date ranges from the same rows used by the plan and semester calendar.
+ function refreshRanges(){try{const f=window.miikPlanDays1710;window.MIIK_PLAN_TERM_RANGES=cleanRows(ctx().term).map(w=>({label:w.date,days:typeof f==='function'?(f(w)||[]).map(x=>['',`${x.d} ${x.m} ${x.y}`]):[]}))}catch(_){}}
+ refreshRanges();
+ // Route real plan concepts to existing real modules; never create a generic/fake program page.
+ const oldProgram=window.miikOpenPlanProgram12;
+ window.miikOpenPlanProgram12=function(name){const s=String(name||'');if(/توثيق العلاقة بين الأسرة والمدرسة|الأسرة ودورها في العملية التعليمية/.test(s)){if(typeof window.v55Guardian==='function')return window.v55Guardian();return openModule('التواصل مع أولياء الأمور','توثيق علاقة الأسرة مع المدرسة والتواصل المرتبط بالطالب.')}if(/الفئات الخاصة/.test(s)&&typeof window.v56Special==='function')return window.v56Special();return oldProgram?.apply(this,arguments)};
+ function daysOf(w){return typeof window.miikPlanDays1710==='function'?(window.miikPlanDays1710(w)||[]):[]}
+ function same(x,y,m,d){return x&&+x.y===+y&&+x.m===+m&&+x.d===+d}
+ function weekFor(y,m,d){return cleanRows(ctx().term).find(w=>daysOf(w).some(x=>same(x,y,m,d)))||null}
+ // Day view: only data from the approved plan source. No generated extras.
+ window.v57OpenHijriDay=function(y,m,d){
+   hideAllPages();document.getElementById('calendarPage').classList.add('show');
+   const w=weekFor(y,m,d),items=[];
+   if(w?.program)items.push({k:'program',sub:'البرنامج',t:w.program,a:`miikOpenPlanProgram12('${Q(w.program)}')`});
+   if(w?.value)items.push({k:'value',sub:'القيمة',t:w.value,a:`miikOpenPlanValue12('${Q(w.value)}')`});
+   const months=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+   const html=items.length?items.map(x=>`<button type="button" class="miik1713-day-item ${x.k}" onclick="${x.a}"><span><small>${E(x.sub)}</small><b>${E(x.t)}</b></span><i>‹</i></button>`).join(''):'<div class="empty-warm">ما فيه أعمال مسجلة في الخطة لهذا اليوم.</div>';
+   const box=document.querySelector('#calendarPage .monthbox');if(box)box.innerHTML=`<div class="day-view-head"><div><div class="month-title">${d} ${months[m-1]} ${y}هـ</div><div class="muted">أعمال هذا اليوم فقط</div></div><button type="button" class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="miik1713-day-list">${html}</div>`;
+   window.scrollTo({top:0,behavior:'smooth'});
+ };
+ function hijriArgs(btn){const s=btn.getAttribute('onclick')||'',m=s.match(/v57OpenHijriDay\((\d+),(\d+),(\d+)\)/);return m?m.slice(1).map(Number):null}
+ function cleanMonth(){
+   const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
+   const buttons=[...box.querySelectorAll('.monthgrid button.calendar-day-button')];
+   buttons.forEach(b=>{b.querySelectorAll('.cal-label').forEach(x=>x.remove());b.classList.remove('event-day');if(!b.classList.contains('holiday'))b.classList.add('plain-day')});
+   // One concise program label per week, on its first school day. This is sourced only from planWeeks().
+   cleanRows(ctx().term).forEach(w=>{const ds=daysOf(w);if(!ds.length)return;const x=ds[0];const b=buttons.find(z=>{const a=hijriArgs(z);return a&&a[0]===x.y&&a[1]===x.m&&a[2]===x.d});if(!b)return;const tag=document.createElement('span');tag.className='cal-label miik1714-program-label';tag.textContent=w.program;tag.title=w.program;tag.onclick=e=>{e.stopPropagation();window.miikOpenPlanProgram12(w.program)};b.appendChild(tag);b.classList.remove('plain-day');b.classList.add('event-day')});
+ }
+ const prevRender=window.renderCalendarView;
+ window.renderCalendarView=function(mode='month'){refreshRanges();const r=prevRender?.apply(this,arguments);if(mode==='month')setTimeout(cleanMonth,0);return r};
+ // If month is already visible, clean it immediately.
+ setTimeout(()=>{if(document.querySelector('#calendarPage .view-switch button.active')?.dataset.view==='month')cleanMonth()},0);
+})();
+</script>
+<style id="miik-beta-1714-single-source-style">
+/* Semester cards borrow the approved week-detail palette without changing layout. */
+#calendarPage .miik179-sem-card strong{background:#e8efe5;border-radius:8px;padding:6px 8px;margin:0 0 6px;line-height:1.45}
+#calendarPage .miik179-sem-card em{background:#f2eddf!important;color:#5d6f5b!important;border-radius:8px!important;padding:5px 8px!important}
+#calendarPage .miik179-sem-card small{background:#dfe8d8;color:#536b52;border-radius:8px;padding:5px 7px;margin-top:4px}
+#calendarPage .miik1714-program-label{display:block!important;background:#e8efe5!important;color:var(--deep)!important;border:1px solid #d2dfce!important;border-radius:7px!important;padding:4px 5px!important;font-weight:800!important;cursor:pointer!important;line-height:1.35!important}
+</style>
+<!-- Release package: MIIK Beta 1.7.14 -->
+
