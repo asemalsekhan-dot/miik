@@ -220,7 +220,7 @@ function addSupport(){dialogForm('رفع بلاغ','صف المشكلة باخت
 function renderSupport(g){const a=supportRows();g.innerHTML=`<div class="program-panel"><b>الدعم</b><p class="muted">ارفع بلاغًا وتابع حالته من نفس المكان.</p><button class="exec-btn" onclick="addSupport()">رفع بلاغ</button><div class="plan-board">${a.length?a.map(x=>`<div class="plan-item"><div><b>${x.number||'بلاغ'} · ${x.subject}</b><small>${x.date} · ${x.details||''}</small></div><span class="status-pill">${x.status}</span></div>`).join(''):'<div class="empty-warm">ما عندك بلاغات للحين.</div>'}</div></div>`}
 function recordProgram(title){dialogForm('تسجيل تنفيذ','سجّل التنفيذ بأقل قدر من البيانات.',`<label>التاريخ الهجري<input name="date" placeholder="مثال: 22 ربيع الأول 1448هـ" required></label><label>طريقة التنفيذ<input name="method" value="لقاء توجيهي" required></label><label>عدد المستفيدين<input name="count" type="number" min="0" value="20" required></label>`,fd=>{const key='miikExec_'+title,arr=JSON.parse(localStorage.getItem(key)||'[]');arr.push(Object.fromEntries(fd));localStorage.setItem(key,JSON.stringify(arr));renderProgram(title,document.getElementById('moduleGrid'))})}
 function renderWeeklyPlan(g){const tasks=[['الأحد','برنامج التهيئة الإرشادية','برنامج التهيئة الإرشادية'],['الاثنين','تعزيز السلوك الإيجابي','تعزيز السلوك الإيجابي'],['الثلاثاء','اليوم العالمي للصحة النفسية','الأيام والمناسبات الوطنية والعالمية'],['الأربعاء','الاستخدام الآمن للإنترنت','الاستخدام الآمن للإنترنت'],['الخميس','التوجيه المهني','التوجيه المهني']];g.innerHTML=`<div style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:22px">هذا الأسبوع</b><div class="muted">${hijriParts()}</div></div><button class="exec-btn" onclick="window.print()">طباعة الأسبوع</button></div><div class="weekly-grid">${tasks.map((t,i)=>`<div class="week-day"><h3>${t[0]}</h3><div class="week-task" onclick="openModule('${t[2]}','التنفيذ والتوثيق والتقرير من مصدر واحد.')"><b>${t[1]}</b><small>من الخطة التشغيلية</small><div class="status-actions" onclick="event.stopPropagation()"><button onclick="this.parentElement.innerHTML='<span class=status-pill>تم التنفيذ ✓</span>'">نُفّذ</button><button onclick="this.parentElement.innerHTML='<span class=status-pill>لم يُنفّذ</span>'">لم يُنفّذ</button></div></div></div>`).join('')}</div></div>`}
-function renderPlan(title,g){if(title==='الخطة الأسبوعية')return renderWeeklyPlan(g);const weeks=[['الأسبوع الأول','التهيئة الإرشادية','17–21 ربيع الأول'],['الأسبوع الثاني','تعزيز السلوك الإيجابي','24–28 ربيع الأول'],['الأسبوع الثالث','الاستخدام الآمن للإنترنت','1–5 ربيع الآخر'],['الأسبوع الرابع','التوجيه المهني','8–12 ربيع الآخر'],['الأسبوع الخامس','مناسبة وطنية / عالمية','15–19 ربيع الآخر'],['الأسبوع السادس','تنمية الدافعية للتحصيل','22–26 ربيع الآخر']];g.innerHTML=`<div style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:22px">${title}</b><div class="muted">عرض فصلي موزع على الأسابيع</div></div><button class="exec-btn" onclick="window.print()">طباعة الخطة</button></div><div class="plan-board">${weeks.map((w,i)=>`<div class="plan-item" ${title==='خطة الموجّه الطلابي'?`onclick="openModule('${w[1].includes('مناسبة')?'الأيام والمناسبات الوطنية والعالمية':w[1]}','صفحة البرنامج')" style="cursor:pointer"`:''}><div><b>${w[0]}</b><small>${w[2]}</small><div style="margin-top:9px;font-weight:750">${w[1]}</div></div><span class="status-pill">${i?'مجدول':'قادم'}</span></div>`).join('')}</div></div>`}
+function renderPlan(title,g){if(title==='الخطة الأسبوعية')return renderWeeklyPlan(g);const weeks=[['الأسبوع الأول','التهيئة الإرشادية','17–21 ربيع الأول'],['الأسبوع الثاني','تعزيز السلوك الإيجابي','24–28 ربيع الأول'],['الأسبوع الثالث','الاستخدام الآمن للإنترنت','1–5 ربيع الآخر'],['الأسبوع الرابع','02 – 06 / 04','8–12 ربيع الآخر'],['الأسبوع الخامس','09 – 11 / 04','15–19 ربيع الآخر'],['الأسبوع السادس','16 – 20 / 04','22–26 ربيع الآخر']];g.innerHTML=`<div style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:22px">${title}</b><div class="muted">عرض فصلي موزع على الأسابيع</div></div><button class="exec-btn" onclick="window.print()">طباعة الخطة</button></div><div class="plan-board">${weeks.map((w,i)=>`<div class="plan-item" ${title==='خطة الموجّه الطلابي'?`onclick="openModule('${w[1].includes('مناسبة')?'الأيام والمناسبات الوطنية والعالمية':w[1]}','صفحة البرنامج')" style="cursor:pointer"`:''}><div><b>${w[0]}</b><small>${w[2]}</small><div style="margin-top:9px;font-weight:750">${w[1]}</div></div><span class="status-pill">${i?'مجدول':'قادم'}</span></div>`).join('')}</div></div>`}
 const oldOpenModule=openModule;openModule=function(title,desc){hideAllPages();const p=document.getElementById('modulePage');p.classList.add('show');document.getElementById('moduleTitle').textContent=title;document.getElementById('moduleDesc').textContent=desc||'';const g=document.getElementById('moduleGrid');if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(title))renderPlan(title,g);else if(title==='الخصوصية')renderSettings('الخصوصية',g);else oldOpenModule(title,desc);document.getElementById('drawer').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})}
 function renderSettings(title,g){if(title==='المعلومات الشخصية'||title==='بيانات المدرسة'){g.innerHTML=`<div class="program-panel" style="grid-column:1/-1"><b>بيانات الموجّه والمدرسة</b><div class="plan-board"><div class="plan-item"><div><b>بيانات الموجّه الطلابي</b><small>الاسم: عاصم الصيخان<br>رقم الجوال: 05xxxxxxxx<br>البريد الإلكتروني: example@miik.sa</small></div><span class="status-pill">تعديل</span></div><div class="plan-item"><div><b>بيانات المدرسة</b><small>متوسطة وثانوية بدائع الضبطان<br>بنين · متوسط وثانوي</small></div><span class="status-pill">تعديل</span></div></div></div>`}else if(title==='الاشتراك'){g.innerHTML=`<div class="program-panel"><b>الاشتراك</b><div class="plan-board"><div class="plan-item"><div><b>الحالة</b><small>العام الدراسي الحالي</small></div><span class="status-pill">نشط</span></div><div class="plan-item"><div><b>تجديد الاشتراك</b><small>التجديد أو استخدام كود تفعيل.</small></div><span class="status-pill">إدارة</span></div><div class="plan-item"><div><b>حذف الحساب</b><small>إجراء مستقل وحساس ويتطلب تأكيدًا.</small></div><span class="status-pill">حساس</span></div></div></div>`}else{g.innerHTML=`<div class="program-panel"><b>الخصوصية</b><p>نستخدم أقل قدر لازم من البيانات لتشغيل مِعِك، ولا يملك المالك أو الدعم صلاحية تصفح ملفات الطلاب.</p><div class="plan-board"><div class="plan-item"><div><b>سياسة الخصوصية</b><small>كيف تُجمع البيانات وتُستخدم وتُحمى.</small></div><span class="status-pill">السياسة</span></div><div class="plan-item"><div><b>الاحتفاظ بالبيانات</b><small>السنة الحالية والسابقة، مع التصدير قبل الإزالة وفق السياسة.</small></div><span class="status-pill">البيانات</span></div></div></div>`}}
 function openCalendar(){hideAllPages();document.getElementById('calendarPage').classList.add('show');const box=document.querySelector('#calendarPage .monthbox');const labels={3:'برنامج التهيئة',8:'متابعة برنامج',15:'اليوم الوطني',22:'التوجيه المهني'};let cells='';for(let i=1;i<=30;i++){const weekend=(i%7===6||i%7===0),lab=labels[i];cells+=`<div class="num ${weekend?'holiday':''} ${lab?'event-day':''}"><b>${i}</b>${lab?`<span class="cal-label">${lab}</span>`:''}</div>`}box.innerHTML=`<div class="month-title">ربيع الأول 1448هـ</div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div>${cells}</div><div class="calendar-legend"><span><i class="holiday-key"></i>نهاية الأسبوع</span><span><i class="event"></i>فيه برنامج أو مناسبة</span></div><div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">＋ إضافة تذكير</button></div>`;window.scrollTo({top:0,behavior:'smooth'})}
@@ -251,7 +251,6 @@ function recordProgram(title){dialogForm('تسجيل تنفيذ','سجّل ال�
 function renderProgram(title,g){const arr=JSON.parse(localStorage.getItem('miikExec_'+title)||'[]');g.innerHTML=`<div style="grid-column:1/-1"><div class="program-actions"><button class="program-action" onclick="recordProgram('${title.replace(/'/g,"\'")}')">التنفيذ</button><button class="program-action" onclick="showMiikNotice('التوثيق','التوثيق مرتبط بكل تنفيذ، والصور اختيارية بحد أقصى صورتين.')">التوثيق</button><button class="program-action" onclick="showProgramReport('${title.replace(/'/g,"\'")}')">التقرير</button></div><section class="execution-log"><h3>سجل التنفيذ</h3>${arr.length?arr.map((x,i)=>`<div class="execution-row"><div><b>${x.execTitle||'تنفيذ '+(arr.length-i)}</b><small>${x.date||''}</small></div><span class="status-pill">فتح</span></div>`).join(''):'<div class="empty-warm">ما سُجّل تنفيذ لهذا البرنامج حتى الآن.</div>'}</section></div>`}
 function printCurrentPlan(title){document.body.dataset.printTitle=title;window.print()}
 function renderWeeklyPlan(g){const tasks=[['الأحد','برنامج التهيئة الإرشادية','الانتماء'],['الاثنين','تعزيز السلوك الإيجابي','المسؤولية'],['الثلاثاء','اليوم العالمي للصحة النفسية','السلام'],['الأربعاء','الاستخدام الآمن للإنترنت','الوعي'],['الخميس','التوجيه المهني','الطموح']];g.innerHTML=`<div class="weekly-plan screen-only" style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:23px">الأسبوع الحالي</b><div class="muted">من 17 إلى 21 ربيع الأول 1448هـ</div></div><button class="print-icon" title="طباعة أو حفظ PDF" onclick="printCurrentPlan('الخطة الأسبوعية')">▣</button></div><div class="weekly-grid-v12">${tasks.map(t=>`<div class="week-day-v12"><h3>${t[0]}</h3><div class="week-entry"><b>${t[1]}</b><small>القيمة: ${t[2]}</small><div class="status-actions"><button>نُفّذ</button><button>لم يُنفّذ</button></div></div></div>`).join('')}</div></div><div class="print-document">${printPlanDocument('الخطة الأسبوعية',true)}</div>`}
-function planWeeks(){const names=['التهيئة الإرشادية','تعزيز السلوك الإيجابي','الاستخدام الآمن للإنترنت','التوجيه المهني','الأيام والمناسبات الوطنية والعالمية','تنمية الدافعية للتحصيل'];const vals=['الانتماء','المسؤولية','الوعي','الطموح','الوطنية','المثابرة'];return Array.from({length:19},(_,i)=>({w:`الأسبوع ${['الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر','الحادي عشر','الثاني عشر','الثالث عشر','الرابع عشر','الخامس عشر','السادس عشر','السابع عشر','الثامن عشر','التاسع عشر'][i]}`,date:`${17+i*7} ربيع الأول 1448هـ`,program:names[i%names.length],value:vals[i%vals.length]}))}
 function printPlanDocument(title,weekly=false){return `<div class="print-cover"><div>بسم الله الرحمن الرحيم</div><h1>${title}</h1><p>متوسطة وثانوية بدائع الضبطان</p><p>الموجّه الطلابي: عاصم الصيخان</p><p>العام الدراسي 1448هـ</p></div><section class="print-section"><h2>${weekly?'الخطة الأسبوعية':'توزيع الخطة على أسابيع الفصل'}</h2>${weekly?'<p>الأسبوع الحالي · 17–21 ربيع الأول 1448هـ</p>':`<div class="semester-grid">${planWeeks().map(x=>`<div class="semester-week"><b>${x.w}</b><div>${x.program}</div><small>القيمة: ${x.value}</small></div>`).join('')}</div>`}</section>`}
 function renderPlan(title,g){if(title==='الخطة الأسبوعية')return renderWeeklyPlan(g);const weeks=planWeeks();const ref=title==='الخطة المعتمدة في مِعِك';g.innerHTML=`<div class="screen-only" style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:23px">${title}</b><div class="muted">الخطة موزعة على كامل أسابيع الفصل</div></div><button class="print-icon" title="طباعة أو حفظ PDF" onclick="printCurrentPlan('${title}')">▣</button></div><div class="semester-grid">${weeks.map(x=>`<div class="semester-week"><div class="week-head"><b>${x.w}</b><span class="week-date">${x.date}</span></div><div class="program-name">${x.program}</div><div class="week-value">القيمة: ${x.value}</div></div>`).join('')}</div>${ref?`<div class="adopt-actions"><button class="adopt-primary" onclick="showMiikNotice(&quot;تم الاعتماد&quot;,&quot;اعتمدت الخطة كما هي كخطة للموجّه.&quot;)">اعتماد الخطة كما هي</button><button class="adopt-edit" onclick="showMiikNotice(&quot;نسخة قابلة للتعديل&quot;,&quot;تفتح نسخة الموجّه للتعديل، ثم تعتمدها بعد الانتهاء.&quot;)">تعديل الخطة ثم اعتمادها</button></div>`:''}</div><div class="print-document">${printPlanDocument(title,false)}</div>`}
 function renderFamily(g){const acts=JSON.parse(localStorage.getItem('miik-demo-actions')||'[]').filter(x=>x.type==='guardian');const students=[...new Set(acts.map(x=>x.student).filter(Boolean))];g.innerHTML=`<div class="family-sheet"><div class="family-head"><div><h2>التواصل مع أولياء الأمور</h2><p class="muted">سجل موحّد للتواصل الموثق.</p></div><button class="exec-btn" onclick="openAction('guardian')">تواصل جديد</button></div><div class="family-stat"><b>${students.length}</b> الطلاب المستفيدون</div><div class="contact-log"><h3>سجل التواصل</h3>${acts.length?acts.map(x=>`<div class="contact-row"><b>${x.student||'طالب'}</b><div class="muted">${x.date} · ${x.summary||'تواصل موثق'}</div></div>`).join(''):'<div class="empty-warm">ما فيه تواصل موثق حتى الآن.</div>'}</div></div>`}
@@ -315,7 +314,7 @@ function addReminder(){
 </style>
 <script id="v17-calendar-final-js">
 const MIIK_TERM1_1448=[
-['الأسبوع الأول','10–14 ربيع الأول','23–27 أغسطس 2026'],['الأسبوع الثاني','17–21 ربيع الأول','30 أغسطس–3 سبتمبر 2026'],['الأسبوع الثالث','24–28 ربيع الأول','6–10 سبتمبر 2026'],['الأسبوع الرابع','2–6 ربيع الثاني','13–17 سبتمبر 2026'],['الأسبوع الخامس','9–13 ربيع الثاني','20–24 سبتمبر 2026'],['الأسبوع السادس','16–20 ربيع الثاني','27 سبتمبر–1 أكتوبر 2026'],['الأسبوع السابع','23–27 ربيع الثاني','4–8 أكتوبر 2026'],['الأسبوع الثامن','30 ربيع الثاني–4 جمادى الأولى','11–15 أكتوبر 2026'],['الأسبوع التاسع','7–11 جمادى الأولى','18–22 أكتوبر 2026'],['الأسبوع العاشر','14–18 جمادى الأولى','25–29 أكتوبر 2026'],['الأسبوع الحادي عشر','21–25 جمادى الأولى','1–5 نوفمبر 2026'],['الأسبوع الثاني عشر','28 جمادى الأولى–3 جمادى الثانية','8–12 نوفمبر 2026'],['الأسبوع الثالث عشر','5–9 جمادى الثانية','15–19 نوفمبر 2026'],['الأسبوع الرابع عشر','19–23 جمادى الثانية','29 نوفمبر–3 ديسمبر 2026'],['الأسبوع الخامس عشر','26 جمادى الثانية–1 رجب','6–10 ديسمبر 2026'],['الأسبوع السادس عشر','4–8 رجب','13–17 ديسمبر 2026'],['الأسبوع السابع عشر','11–15 رجب','20–24 ديسمبر 2026'],['الأسبوع الثامن عشر','18–22 رجب','27–31 ديسمبر 2026'],['الأسبوع التاسع عشر','25–29 رجب','3–7 يناير 2027']];
+['الأسبوع الأول','10–14 ربيع الأول','23–27 أغسطس 2026'],['الأسبوع الثاني','17–21 ربيع الأول','30 أغسطس–3 سبتمبر 2026'],['الأسبوع الثالث','24–28 ربيع الأول','6–10 سبتمبر 2026'],['الأسبوع الرابع','2–6 ربيع الثاني','13–17 سبتمبر 2026'],['الأسبوع الخامس','9–13 ربيع الثاني','20–24 سبتمبر 2026'],['الأسبوع السادس','16–20 ربيع الثاني','27 سبتمبر–1 أكتوبر 2026'],['الأسبوع السابع','23 – 27 / 04','4–8 أكتوبر 2026'],['الأسبوع الثامن','30/04 – 04/05','11–15 أكتوبر 2026'],['الأسبوع التاسع','07 – 11 / 05','18–22 أكتوبر 2026'],['الأسبوع العاشر','14 – 18 / 05','25–29 أكتوبر 2026'],['الأسبوع الحادي عشر','21 – 25 / 05','1–5 نوفمبر 2026'],['الأسبوع الثاني عشر','28/05 – 02/06','8–12 نوفمبر 2026'],['الأسبوع الثالث عشر','12 – 16 / 06','15–19 نوفمبر 2026'],['الأسبوع الرابع عشر','19 – 23 / 06','29 نوفمبر–3 ديسمبر 2026'],['الأسبوع الخامس عشر','26/06 – 01/07','6–10 ديسمبر 2026'],['الأسبوع السادس عشر','04 – 08 / 07','13–17 ديسمبر 2026'],['الأسبوع السابع عشر','11 – 15 / 07','20–24 ديسمبر 2026'],['الأسبوع الثامن عشر','18 – 22 / 07','27–31 ديسمبر 2026'],['الأسبوع التاسع عشر','25–29 رجب','3–7 يناير 2027']];
 function calendarLegend(){return `<div class="calendar-legend"><span><i class="holiday-key"></i>إجازة نهاية الأسبوع</span><span><i class="event"></i>يوم فيه أعمال</span><span><i class="plain-key"></i>يوم بلا أعمال</span><span><i class="extra-key"></i>إجازة إضافية</span></div>`}
 function renderCalendarView(mode){
  document.querySelectorAll('.view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));
@@ -3563,25 +3562,27 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
 </style>
 <script id="miik-beta-12-plan-js">
 (()=>{
+ // CANONICAL PLAN SOURCE: T1/T2 -> miikPlanRows12 -> all three plan views + calendar.
+ // Invariant: no week-specific date patch and no calendar-owned week-date table.
  const T1=[
  ['الأسبوع الأول','10 – 14 / 03','التهيئة الإرشادية والأسبوع التمهيدي','عقد مجلس أولياء الأمور؛ تحليل نتائج الطلبة وتصنيفهم تمهيدًا لتقديم الدعم؛ تعريف الطلبة بفن إدارة الوقت',''],
  ['الأسبوع الثاني','17 – 21 / 03','خفض العنف (رفق)','تكريم الطلبة المتفوقين؛ التبصير بقواعد السلوك والمواظبة؛ تطبيق قائمة رصد المشكلات للمرحلتين المتوسطة والثانوية',''],
  ['الأسبوع الثالث','24 – 28 / 03','تعزيز السلوك الإيجابي','التبصير بخصائص نمو الطلبة ونظام المسارات؛ المحافظة على الكتب الدراسية؛ طرق الاستذكار الجيد؛ تكريم المتميزين سلوكيًا؛ رعاية المتأخرين والمتغيبين','اليوم الدولي للعمل الخيري|اليوم العالمي لمحو الأمية'],
- ['الأسبوع الرابع','09 – 11 / 04','رعاية الطلبة من الفئات الخاصة','دور المملكة في دعم مسيرة التعليم؛ عقد مجلس أولياء الأمور؛ رعاية الطلبة المتأخرين والمنقطعين','اليوم العالمي للسلام|اليوم الوطني|اليوم الدولي للغات الإشارة'],
- ['الأسبوع الخامس','16 – 20 / 04','توثيق العلاقة بين الأسرة والمدرسة','تنمية مهارات التواصل لدى الطلبة؛ القيادة تحت سن الثامنة عشرة؛ رعاية المتأخرين والمتغيبين','اليوم الدولي للتوعية من هدر الغذاء|اليوم العالمي لكبار السن|يوم الطفل العربي'],
- ['الأسبوع السادس','23 – 27 / 04','تنمية الدافعية لرفع المستوى التحصيلي','السلوك التوكيدي لدى الطلبة؛ عقد مجالس الطلبة؛ رعاية المتأخرين والمتغيبين','الأسبوع العالمي للفضاء|اليوم العالمي للمعلم|اليوم العالمي للبصر'],
- ['الأسبوع السابع','30/04 – 04/05','استكمال برنامج تنمية الدافعية','أساليب حل المشكلات؛ التوعية بخطورة العزلة والانطواء؛ أثر السهر على المستوى الدراسي','اليوم العالمي للصحة النفسية|اليوم العربي للبيئة|اليوم العالمي للعصا البيضاء'],
- ['الأسبوع الثامن','07 – 11 / 05','المهارات النفسية والاجتماعية','سلامة الأمن الفكري للطلبة؛ عقد مجلس أولياء الأمور؛ رعاية المتأخرين والمتغيبين','يوم الغذاء العالمي|اليوم العالمي لهشاشة العظام|اليوم العالمي للتأتأة'],
- ['الأسبوع التاسع','14 – 18 / 05','التوجيه المهني','استشراف مستقبل الطالب المهني؛ عقد مجالس الطلبة؛ رعاية المتأخرين والمتغيبين','اليوم العالمي للتوعية بشلل الأطفال|أسبوع أمراض الدم الوراثية'],
- ['الأسبوع العاشر','21 – 25 / 05','المجلس الطلابي وتقدير الذات','تكريم المنضبطين في الحضور؛ التوعية بالتشوه البصري الناتج عن الكتابة على الجدران','أسبوع صحة الأسنان|اليوم العالمي لمكافحة العنف والتنمر'],
- ['الأسبوع الحادي عشر','28/05 – 02/06','الوقاية النفسية في البيئة التعليمية','أثر السلوكيات السلبية داخل الفصل؛ إدارة الضغوط لدى الطلبة؛ رعاية المتأخرين والمتغيبين','اليوم العالمي للغذاء العضوي'],
- ['الأسبوع الثاني عشر','05 – 09 / 06','الاستخدام الآمن للإنترنت والألعاب الإلكترونية','التوعية بمخاطر التنمر الإلكتروني؛ عقد مجالس أولياء الأمور','اليوم العالمي للسكري|اليوم العالمي للتسامح|اليوم العالمي للفن الإسلامي'],
- ['الأسبوع الثالث عشر','19 – 23 / 06','استكمال التوعية الرقمية','التوعية بالجرائم المعلوماتية؛ عقد مجالس الطلبة؛ رعاية المتأخرين والمنقطعين','يوم الإيدز العالمي|اليوم العالمي للأشخاص ذوي الإعاقة'],
- ['الأسبوع الرابع عشر','26/06 – 01/07','رعاية الطلبة المتأخرين دراسيًا','زيارات ميدانية للمؤسسات التعليمية والمهنية؛ سبل الوقاية في فصل الشتاء','اليوم العالمي للمتطوعين|اليوم العالمي لمكافحة الفساد|اليوم العالمي لحقوق الإنسان'],
- ['الأسبوع الخامس عشر','04 – 08 / 07','التوجيه في أوقات الأزمات','احترام الرأي الآخر؛ التوعية بمخاطر السيول والأمطار؛ رعاية المتأخرين والمنقطعين','اليوم العالمي لحقوق الإنسان'],
- ['الأسبوع السادس عشر','11 – 15 / 07','توثيق العلاقة بين الأسرة والمدرسة','التوعية بمخاطر التعصب الرياضي والاجتماعي؛ عقد مجالس أولياء الأمور','اليوم العالمي للغة العربية'],
- ['الأسبوع السابع عشر','18 – 22 / 07','التهيئة النفسية لنهاية الفصل','التعامل مع قلق الاختبارات؛ عقد مجالس الطلبة؛ رعاية المتأخرين والمنقطعين',''],
- ['الأسبوع الثامن عشر','25 – 29 / 07','ختام الفصل الدراسي الأول','المحافظة على الممتلكات العامة؛ حصر الطلبة المتفوقين؛ استكمال توثيق الشواهد في نظام نور','اليوم العالمي للغة برايل|اليوم العربي لمحو الأمية']
+ ['الأسبوع الرابع','02 – 06 / 04','رعاية الطلبة من الفئات الخاصة','دور المملكة في دعم مسيرة التعليم؛ عقد مجلس أولياء الأمور؛ رعاية الطلبة المتأخرين والمنقطعين','اليوم العالمي للسلام|اليوم الوطني|اليوم الدولي للغات الإشارة'],
+ ['الأسبوع الخامس','09 – 13 / 04','توثيق العلاقة بين الأسرة والمدرسة','تنمية مهارات التواصل لدى الطلبة؛ القيادة تحت سن الثامنة عشرة؛ رعاية المتأخرين والمتغيبين','اليوم الدولي للتوعية من هدر الغذاء|اليوم العالمي لكبار السن|يوم الطفل العربي'],
+ ['الأسبوع السادس','16 – 20 / 04','تنمية الدافعية لرفع المستوى التحصيلي','السلوك التوكيدي لدى الطلبة؛ عقد مجالس الطلبة؛ رعاية المتأخرين والمتغيبين','الأسبوع العالمي للفضاء|اليوم العالمي للمعلم|اليوم العالمي للبصر'],
+ ['الأسبوع السابع','23 – 27 / 04','استكمال برنامج تنمية الدافعية','أساليب حل المشكلات؛ التوعية بخطورة العزلة والانطواء؛ أثر السهر على المستوى الدراسي','اليوم العالمي للصحة النفسية|اليوم العربي للبيئة|اليوم العالمي للعصا البيضاء'],
+ ['الأسبوع الثامن','30/04 – 04/05','المهارات النفسية والاجتماعية','سلامة الأمن الفكري للطلبة؛ عقد مجلس أولياء الأمور؛ رعاية المتأخرين والمتغيبين','يوم الغذاء العالمي|اليوم العالمي لهشاشة العظام|اليوم العالمي للتأتأة'],
+ ['الأسبوع التاسع','07 – 11 / 05','التوجيه المهني','استشراف مستقبل الطالب المهني؛ عقد مجالس الطلبة؛ رعاية المتأخرين والمتغيبين','اليوم العالمي للتوعية بشلل الأطفال|أسبوع أمراض الدم الوراثية'],
+ ['الأسبوع العاشر','14 – 18 / 05','المجلس الطلابي وتقدير الذات','تكريم المنضبطين في الحضور؛ التوعية بالتشوه البصري الناتج عن الكتابة على الجدران','أسبوع صحة الأسنان|اليوم العالمي لمكافحة العنف والتنمر'],
+ ['الأسبوع الحادي عشر','21 – 25 / 05','الوقاية النفسية في البيئة التعليمية','أثر السلوكيات السلبية داخل الفصل؛ إدارة الضغوط لدى الطلبة؛ رعاية المتأخرين والمتغيبين','اليوم العالمي للغذاء العضوي'],
+ ['الأسبوع الثاني عشر','28/05 – 02/06','الاستخدام الآمن للإنترنت والألعاب الإلكترونية','التوعية بمخاطر التنمر الإلكتروني؛ عقد مجالس أولياء الأمور','اليوم العالمي للسكري|اليوم العالمي للتسامح|اليوم العالمي للفن الإسلامي'],
+ ['الأسبوع الثالث عشر','12 – 16 / 06','استكمال التوعية الرقمية','التوعية بالجرائم المعلوماتية؛ عقد مجالس الطلبة؛ رعاية المتأخرين والمنقطعين','يوم الإيدز العالمي|اليوم العالمي للأشخاص ذوي الإعاقة'],
+ ['الأسبوع الرابع عشر','19 – 23 / 06','رعاية الطلبة المتأخرين دراسيًا','زيارات ميدانية للمؤسسات التعليمية والمهنية؛ سبل الوقاية في فصل الشتاء','اليوم العالمي للمتطوعين|اليوم العالمي لمكافحة الفساد|اليوم العالمي لحقوق الإنسان'],
+ ['الأسبوع الخامس عشر','26/06 – 01/07','التوجيه في أوقات الأزمات','احترام الرأي الآخر؛ التوعية بمخاطر السيول والأمطار؛ رعاية المتأخرين والمنقطعين','اليوم العالمي لحقوق الإنسان'],
+ ['الأسبوع السادس عشر','04 – 08 / 07','توثيق العلاقة بين الأسرة والمدرسة','التوعية بمخاطر التعصب الرياضي والاجتماعي؛ عقد مجالس أولياء الأمور','اليوم العالمي للغة العربية'],
+ ['الأسبوع السابع عشر','11 – 15 / 07','التهيئة النفسية لنهاية الفصل','التعامل مع قلق الاختبارات؛ عقد مجالس الطلبة؛ رعاية المتأخرين والمنقطعين',''],
+ ['الأسبوع الثامن عشر','18 – 22 / 07','ختام الفصل الدراسي الأول','المحافظة على الممتلكات العامة؛ حصر الطلبة المتفوقين؛ استكمال توثيق الشواهد في نظام نور','اليوم العالمي للغة برايل|اليوم العربي لمحو الأمية']
  ];
  const T2=[
  ['الأسبوع الأول','09 – 13 / 08','التهيئة الإرشادية لبداية الفصل الثاني','استقبال الطلبة وتعريفهم بخطة الفصل؛ عقد اجتماع لجنة التوجيه والإرشاد؛ مراجعة ملفات الحالات المفتوحة','','الإيجابية'],
@@ -3607,11 +3608,11 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
  function context(){try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}}
  function oldValues(){try{const a=JSON.parse(localStorage.getItem('miikCounselorPlan')||'null');return Array.isArray(a)?a:[]}catch(_){return[]}}
- function rows(term){const src=String(term)==='2'?T2:T1, old=oldValues();return src.map((x,i)=>({w:x[0],date:x[1]+' هـ',program:x[2],initiatives:x[3],days:x[4]?x[4].split('|'):[],value:String(term)==='2'?(x[5]||''):(old[i]?.value||x[5]||'')}))}
+ function rows(term){const src=String(term)==='2'?T2:T1, old=oldValues();const out=src.map((x,i)=>{const days=x[4]?x[4].split('|').filter(Boolean):[];return{w:x[0],date:x[1]+' هـ',program:x[2],initiatives:x[3],days,extras:days.map(text=>({text,type:'global'})),value:String(term)==='2'?(x[5]||''):(old[i]?.value||x[5]||'')}});return out}
  window.miikPlanRows12=rows;
  window.planWeeks=function(){return rows(context().term)};
  function routeProgram(name){const s=String(name);if(/تهيئة إرشادية|الأسبوع التمهيدي/.test(s))return 'برنامج التهيئة الإرشادية';if(/العنف|رفق/.test(s))return 'خفض العنف بالمدارس (رِفق)';if(/السلوك الإيجابي|الانضباط والمواظبة/.test(s))return 'تعزيز السلوك الإيجابي';if(/التوجيه المهني|مسارات المستقبل/.test(s))return 'التوجيه المهني';if(/الإنترنت|رقمية|السيبراني/.test(s))return 'الاستخدام الآمن للإنترنت';if(/الدافعية|التحصيل|نتائج|متعثر|متأخرين/.test(s))return 'تنمية الدافعية لرفع مستوى التحصيل';if(/نافس/.test(s))return 'اختبارات نافس';if(/القدرات/.test(s))return 'اختبارات القدرات';if(/التحصيلي/.test(s))return 'الاختبار التحصيلي';if(/الأزمات/.test(s))return 'التوجيه وقت الأزمات';if(/المهارات النفسية|الصحة النفسية|الدعم النفسي/.test(s))return 'برنامج تعزيز المهارات النفسية والاجتماعية';return s}
- window.miikOpenPlanProgram12=function(name){openModule(routeProgram(name),'من خطة الموجّه الطلابي للفصل النشط.')}
+ window.miikOpenPlanProgram12=function(name){const s=String(name||'');if(/توثيق العلاقة بين الأسرة والمدرسة|الأسرة ودورها في العملية التعليمية/.test(s)){if(typeof window.v55Guardian==='function')return window.v55Guardian();return openModule('التواصل مع أولياء الأمور','توثيق علاقة الأسرة مع المدرسة والتواصل المرتبط بالطالب.')}openModule(routeProgram(name),'من خطة الموجّه الطلابي للفصل النشط.')}
  window.miikOpenPlanValue12=function(v){openModule('تعزيز السلوك الإيجابي','القيمة المرتبطة بالأسبوع: '+v)}
  window.miikOpenGlobalDay12=function(day){openModule('الأيام والمناسبات الوطنية والعالمية','المناسبة المرتبطة بالخطة: '+day)}
  window.miikOpenWeek12=function(i){sessionStorage.setItem('miikWeeklyIndex',String(i));openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.')}
@@ -3815,47 +3816,6 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
   .v54-hijri-pop .hijri-grid button.selected{background:var(--deep)!important;color:#fff!important;border-color:var(--olive)!important}
 }
 </style>
-<script id="miik-beta177-calendar-safe-data">
-(()=>{'use strict';
- const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
- const originalRows=window.miikPlanRows12;
- if(typeof originalRows!=='function') return;
- function ctx(){try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}}
- function nums(s){return (String(s||'').match(/\d+/g)||[]).map(Number)}
- function rangeFor(row,term){
-   const n=nums(row.date), baseYear=String(term)==='2'&&/1449/.test(String(row.date))?1449:1448;
-   let sd,sm,ed,em,year=baseYear;
-   if(n.length>=4 && n[1]<=12 && n[3]<=12){sd=n[0];sm=n[1];ed=n[2];em=n[3]}
-   else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}
-   else return null;
-   // Strings such as 30/08 – 04/09 and 01 – 05/01/1449 are both supported.
-   if(n.length>=5 && n[n.length-1]>=1400) year=n[n.length-1];
-   const days=[];let d=sd,m=sm,y=year;
-   for(let i=0;i<5;i++){
-     days.push(['',`${d} ${MONTHS[m-1]} ${y}`]);
-     if(d===ed && m===em) break;
-     d++; if(d>30){d=1;m++;if(m>12){m=1;y++}}
-   }
-   return {label:row.date,days};
- }
- function enriched(term){
-   const rows=originalRows(String(term));
-   const ranges=[];
-   const out=rows.map(r=>{
-     const rr=rangeFor(r,term); ranges.push(rr||{label:r.date,days:[]});
-     const extras=(r.days||[]).filter(Boolean).map(text=>({text,type:'global'}));
-     return {...r,extras};
-   });
-   window.MIIK_PLAN_TERM_RANGES=ranges;
-   return out;
- }
- window.miikPlanRows12=function(term){return enriched(String(term))};
- window.planWeeks=function(){return enriched(String(ctx().term))};
- // Prime the range table once; subsequent calendar renders refresh it through planWeeks().
- enriched(String(ctx().term));
-})();
-</script>
-
 </body></html>
 
 <!-- MIIK Beta 1.7.8: calendar semester week stays inside calendar -->
@@ -4057,62 +4017,6 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 @media(max-width:720px){.miik1711-summary{grid-template-columns:1fr 1fr;gap:6px}.miik1711-link{padding:9px;border-radius:11px}.miik1711-link small,.miik1711-events>small{font-size:8px}.miik1711-link b{font-size:10px}.miik1711-link i,.miik1711-event i{font-size:14px}.miik1711-events{padding:9px;border-radius:11px}.miik1711-event{font-size:9px;padding:6px 8px}}
 </style>
 
-<!-- MIIK Beta 1.7.12 — targeted week-4/calendar repair -->
-<script id="miik-beta-1712-targeted-calendar-repair">
-(()=>{'use strict';
- const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
- const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
- const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
- const baseRows=window.miikPlanRows12;
- if(typeof baseRows!=='function')return;
- const names=['الأسبوع الأول','الأسبوع الثاني','الأسبوع الثالث','الأسبوع الرابع','الأسبوع الخامس','الأسبوع السادس','الأسبوع السابع','الأسبوع الثامن','الأسبوع التاسع','الأسبوع العاشر','الأسبوع الحادي عشر','الأسبوع الثاني عشر','الأسبوع الثالث عشر','الأسبوع الرابع عشر','الأسبوع الخامس عشر','الأسبوع السادس عشر','الأسبوع السابع عشر','الأسبوع الثامن عشر','الأسبوع التاسع عشر'];
- // The approved Word plan skipped the live school week 02–06/04. Insert it without altering
- // the already-approved content/date pairing of the following weeks.
- function fixedRows(term){
-   const src=baseRows(String(term)).map(x=>({...x,days:[...(x.days||[])],extras:[...(x.extras||[])]}));
-   if(String(term)!=='1'||src.length<4)return src;
-   if(src.some(x=>x._miik1712bridge))return src;
-   const seed=src[3];
-   const bridge={...seed,_miik1712bridge:true,w:'الأسبوع الرابع',date:'02 – 06 / 04 هـ',days:[],extras:[],initiatives:'متابعة الأعمال الإرشادية المدرجة في الخطة خلال الأسبوع.'};
-   // Keep the first three weeks, insert the missing week, then renumber the approved rows.
-   const out=[...src.slice(0,3),bridge,...src.slice(3)];
-   out.forEach((x,i)=>x.w=names[i]||x.w);
-   return out;
- }
- window.miikPlanRows12=fixedRows;
- window.planWeeks=()=>fixedRows(String(ctx().term));
- function hijriToday(){return typeof window.miikHijriToday1710==='function'?window.miikHijriToday1710():null}
- function nums(s){return (String(s||'').match(/\d+/g)||[]).map(Number)}
- function parsed(w){const n=nums(w?.date),year=n.find(x=>x>=1400)||Number(ctx().year)||1448;let sd,sm,ed,em;if(n.length>=4&&n[1]<=12&&n[3]<=12){sd=n[0];sm=n[1];ed=n[2];em=n[3]}else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}else return null;return{sd,sm,ed,em,year}}
- function next(x){let {d,m,y}=x;d++;if(d>30){d=1;m++;if(m>12){m=1;y++}}return{d,m,y}}
- function daysOf(w){const r=parsed(w);if(!r)return[];let x={d:r.sd,m:r.sm,y:r.year},out=[];for(let i=0;i<7;i++){out.push({...x});if(x.d===r.ed&&x.m===r.em)break;x=next(x)}return out}
- function same(a,b){return a&&b&&+a.d===+b.d&&+a.m===+b.m&&+a.y===+b.y}
- function label(w){const r=parsed(w);if(!r)return String(w?.date||'');return r.sm===r.em?`${r.sd}–${r.ed} / ${r.sm} / ${r.year}هـ`:`${r.sd} / ${r.sm} / ${r.year}هـ – ${r.ed} / ${r.em} / ${r.year}هـ`}
- window.miikPlanDateLabel1710=label;window.miikPlanDays1710=daysOf;
- function currentIndex(){const q=hijriToday();if(!q)return-1;return fixedRows(ctx().term).findIndex(w=>daysOf(w).some(x=>same(x,q)))}
- function programBtn(w){return `<button type="button" class="miik1711-mini program" onclick="miikOpenPlanProgram12('${Q(w.program)}')">${E(w.program)}</button>`}
- function valueBtn(w){return w.value?`<button type="button" class="miik1711-mini value" onclick="miikOpenPlanValue12('${Q(w.value)}')">القيمة: ${E(w.value)}</button>`:''}
- function currentDays(w){const ds=daysOf(w),today=hijriToday(),namesD=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];return `<div class="miik179-days">${ds.slice(0,5).map((x,i)=>`<button type="button" class="miik179-day miik1712-daybtn ${same(x,today)?'is-today':''}" onclick="v57OpenHijriDay(${x.y},${x.m},${x.d})"><div class="miik179-daytop"><b>${namesD[i]}</b><span>${x.d} ${MONTHS[x.m-1]}</span>${same(x,today)?'<em>اليوم</em>':''}</div><div class="miik1711-daylinks" onclick="event.stopPropagation()">${programBtn(w)}${valueBtn(w)}</div></button>`).join('')}</div>`}
- const priorRender=window.renderCalendarView;
- window.renderCalendarView=function(mode='month'){
-   if(mode==='week'){
-     const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
-     document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));
-     const ix=currentIndex(),w=ix>=0?fixedRows(ctx().term)[ix]:null;
-     if(w){box.innerHTML=`<div class="miik179-current-head"><b>الأسبوع الحالي</b><span>${E(label(w))}</span></div>${currentDays(w)}<div class="miik179-week-foot"><button class="miik1711-mini program" onclick="miikOpenPlanProgram12('${Q(w.program)}')">${E(w.program)}</button>${w.value?`<button class="miik1711-mini value" onclick="miikOpenPlanValue12('${Q(w.value)}')">القيمة: ${E(w.value)}</button>`:''}</div>`;return;}
-   }
-   return priorRender.apply(this,arguments);
- };
- // Re-prime the shared ranges so the month calendar reads the repaired plan source.
- try{window.MIIK_PLAN_TERM_RANGES=fixedRows(ctx().term).map(w=>({label:w.date,days:daysOf(w).map(x=>['',`${x.d} ${MONTHS[x.m-1]} ${x.y}`])}))}catch(_){}
-})();
-</script>
-<style id="miik-beta-1712-targeted-calendar-style">
-#calendarPage .miik1712-daybtn{font:inherit;color:inherit;text-align:right;cursor:pointer;width:100%}
-#calendarPage .miik1712-daybtn:hover{border-color:var(--olive);background:#f5f7f1}
-#calendarPage .miik179-week-foot button{width:auto;display:inline-block}
-</style>
 
 
 <!-- MIIK Beta 1.7.13 — unified calendar views + month programs + complete day details -->
@@ -4177,72 +4081,7 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 
 
 
-<!-- MIIK Beta 1.7.15 — corrected shared plan date sequence -->
-<script id="miik-beta-1714-single-source-calendar">
-(()=>{'use strict';
- const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
- const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
- const inherited=window.miikPlanRows12;
- if(typeof inherited!=='function')return;
- const weekNames=['الأسبوع الأول','الأسبوع الثاني','الأسبوع الثالث','الأسبوع الرابع','الأسبوع الخامس','الأسبوع السادس','الأسبوع السابع','الأسبوع الثامن','الأسبوع التاسع','الأسبوع العاشر','الأسبوع الحادي عشر','الأسبوع الثاني عشر','الأسبوع الثالث عشر','الأسبوع الرابع عشر','الأسبوع الخامس عشر','الأسبوع السادس عشر','الأسبوع السابع عشر','الأسبوع الثامن عشر','الأسبوع التاسع عشر'];
- function cleanRows(term){
-   let a=inherited(String(term)).map(x=>({...x,days:[...(x.days||[])],extras:[...(x.extras||[])]}));
-   // 1.7.12 inserted a synthetic bridge week. Remove it: the real fourth week itself is 02–06/04.
-   a=a.filter(x=>!x._miik1712bridge);
-   // Correct the term-1 date sequence once at the shared plan source.
-   // Weeks 1–3 were already correct. The approved live calendar shows week 4 as 02–06/04;
-   // the old Word draft had the following rows one school-week late, so keep each program
-   // in its same week number and correct only its date range. Planned breaks remain as gaps.
-   if(String(term)==='1'){
-     const dates=[
-       '10 – 14 / 03 هـ','17 – 21 / 03 هـ','24 – 28 / 03 هـ','02 – 06 / 04 هـ',
-       '09 – 13 / 04 هـ','16 – 20 / 04 هـ','23 – 27 / 04 هـ','30/04 – 04/05 هـ',
-       '07 – 11 / 05 هـ','14 – 18 / 05 هـ','21 – 25 / 05 هـ','28/05 – 02/06 هـ',
-       '12 – 16 / 06 هـ','19 – 24 / 06 هـ','27/06 – 01/07 هـ','04 – 08 / 07 هـ',
-       '11 – 15 / 07 هـ','18 – 22 / 07 هـ'
-     ];
-     a=a.slice(0,18).map((x,i)=>({...x,date:dates[i]||x.date}));
-   }
-   a.forEach((x,i)=>x.w=weekNames[i]||x.w);
-   return a;
- }
- window.miikPlanRows12=cleanRows;
- window.planWeeks=()=>cleanRows(String(ctx().term));
- // Refresh shared date ranges from the same rows used by the plan and semester calendar.
- function refreshRanges(){try{const f=window.miikPlanDays1710;window.MIIK_PLAN_TERM_RANGES=cleanRows(ctx().term).map(w=>({label:w.date,days:typeof f==='function'?(f(w)||[]).map(x=>['',`${x.d} ${x.m} ${x.y}`]):[]}))}catch(_){}}
- refreshRanges();
- // Route real plan concepts to existing real modules; never create a generic/fake program page.
- const oldProgram=window.miikOpenPlanProgram12;
- window.miikOpenPlanProgram12=function(name){const s=String(name||'');if(/توثيق العلاقة بين الأسرة والمدرسة|الأسرة ودورها في العملية التعليمية/.test(s)){if(typeof window.v55Guardian==='function')return window.v55Guardian();return openModule('التواصل مع أولياء الأمور','توثيق علاقة الأسرة مع المدرسة والتواصل المرتبط بالطالب.')}if(/الفئات الخاصة/.test(s)&&typeof window.v56Special==='function')return window.v56Special();return oldProgram?.apply(this,arguments)};
- function daysOf(w){return typeof window.miikPlanDays1710==='function'?(window.miikPlanDays1710(w)||[]):[]}
- function same(x,y,m,d){return x&&+x.y===+y&&+x.m===+m&&+x.d===+d}
- function weekFor(y,m,d){return cleanRows(ctx().term).find(w=>daysOf(w).some(x=>same(x,y,m,d)))||null}
- // Day view: only data from the approved plan source. No generated extras.
- window.v57OpenHijriDay=function(y,m,d){
-   hideAllPages();document.getElementById('calendarPage').classList.add('show');
-   const w=weekFor(y,m,d),items=[];
-   if(w?.program)items.push({k:'program',sub:'البرنامج',t:w.program,a:`miikOpenPlanProgram12('${Q(w.program)}')`});
-   if(w?.value)items.push({k:'value',sub:'القيمة',t:w.value,a:`miikOpenPlanValue12('${Q(w.value)}')`});
-   const months=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
-   const html=items.length?items.map(x=>`<button type="button" class="miik1713-day-item ${x.k}" onclick="${x.a}"><span><small>${E(x.sub)}</small><b>${E(x.t)}</b></span><i>‹</i></button>`).join(''):'<div class="empty-warm">ما فيه أعمال مسجلة في الخطة لهذا اليوم.</div>';
-   const box=document.querySelector('#calendarPage .monthbox');if(box)box.innerHTML=`<div class="day-view-head"><div><div class="month-title">${d} ${months[m-1]} ${y}هـ</div><div class="muted">أعمال هذا اليوم فقط</div></div><button type="button" class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="miik1713-day-list">${html}</div>`;
-   window.scrollTo({top:0,behavior:'smooth'});
- };
- function hijriArgs(btn){const s=btn.getAttribute('onclick')||'',m=s.match(/v57OpenHijriDay\((\d+),(\d+),(\d+)\)/);return m?m.slice(1).map(Number):null}
- function cleanMonth(){
-   const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
-   const buttons=[...box.querySelectorAll('.monthgrid button.calendar-day-button')];
-   buttons.forEach(b=>{b.querySelectorAll('.cal-label').forEach(x=>x.remove());b.classList.remove('event-day');if(!b.classList.contains('holiday'))b.classList.add('plain-day')});
-   // One concise program label per week, on its first school day. This is sourced only from planWeeks().
-   cleanRows(ctx().term).forEach(w=>{const ds=daysOf(w);if(!ds.length)return;const x=ds[0];const b=buttons.find(z=>{const a=hijriArgs(z);return a&&a[0]===x.y&&a[1]===x.m&&a[2]===x.d});if(!b)return;const tag=document.createElement('span');tag.className='cal-label miik1714-program-label';tag.textContent=w.program;tag.title=w.program;tag.onclick=e=>{e.stopPropagation();window.miikOpenPlanProgram12(w.program)};b.appendChild(tag);b.classList.remove('plain-day');b.classList.add('event-day')});
- }
- const prevRender=window.renderCalendarView;
- window.renderCalendarView=function(mode='month'){refreshRanges();const r=prevRender?.apply(this,arguments);if(mode==='month')setTimeout(cleanMonth,0);return r};
- // If month is already visible, clean it immediately.
- setTimeout(()=>{if(document.querySelector('#calendarPage .view-switch button.active')?.dataset.view==='month')cleanMonth()},0);
-})();
-</script>
+<!-- MIIK Beta 1.7.16 — date source cleaned: visual styles only below -->
 <style id="miik-beta-1714-single-source-style">
 /* Semester cards borrow the approved week-detail palette without changing layout. */
 #calendarPage .miik179-sem-card strong{background:#e8efe5;border-radius:8px;padding:6px 8px;margin:0 0 6px;line-height:1.45}
@@ -4250,5 +4089,5 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 #calendarPage .miik179-sem-card small{background:#dfe8d8;color:#536b52;border-radius:8px;padding:5px 7px;margin-top:4px}
 #calendarPage .miik1714-program-label{display:block!important;background:#e8efe5!important;color:var(--deep)!important;border:1px solid #d2dfce!important;border-radius:7px!important;padding:4px 5px!important;font-weight:800!important;cursor:pointer!important;line-height:1.35!important}
 </style>
-<!-- Release package: MIIK Beta 1.7.14 -->
+<!-- Release package: MIIK Beta 1.7.16 -->
 
