@@ -270,7 +270,7 @@ function addReminder(){dialogForm('إضافة تذكير','أضف ما تحتا�
 .day-work-list{display:grid;gap:10px;margin-top:18px}.day-work-row{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;text-align:right;color:var(--ink);cursor:pointer}.day-work-row:hover{background:#f5f1e8}.day-work-row small{display:block;color:var(--muted);margin-top:5px}.day-work-row strong{font-size:24px;color:var(--olive)}.day-view-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.day-full-calendar{border:1px solid #cbd8c7;background:#edf0e7;color:var(--deep);border-radius:11px;padding:9px 12px;font-weight:800}
 .hijri-abbr{display:inline-block;white-space:nowrap}
 </style>
-\n<script id="v16-calendar-fixes-js">
+<script id="v16-calendar-fixes-js">
 function openHijriCalendarDay(day){
   hideAllPages();
   document.getElementById('calendarPage').classList.add('show');
@@ -299,7 +299,8 @@ function addReminder(){
   const hours=Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1}:00</option>`).join('');
   dialogForm('إضافة تذكير','أضف ما تحتاج تتذكره فقط.',`<label>عنوان التذكير<input name="title" required></label><label>التاريخ الهجري<input name="date" readonly onclick="openHijriPicker(this)" required></label><label>الوقت — اختياري<div class="reminder-time-row"><select name="hour"><option value="">بدون وقت</option>${hours}</select><select name="period"><option value="AM">AM</option><option value="PM">PM</option></select></div></label><label>ملاحظة — اختياري<textarea name="note" rows="3"></textarea></label>`,fd=>{const obj=Object.fromEntries(fd);obj.time=obj.hour?`${obj.hour} ${obj.period}`:'';delete obj.hour;delete obj.period;const a=JSON.parse(localStorage.getItem('miik-reminders')||'[]');a.push(obj);localStorage.setItem('miik-reminders',JSON.stringify(a));renderToday();renderAlerts&&renderAlerts()});
 }
-</script>\n
+</script>
+
 <style id="v17-calendar-final">
 .calendar-page .monthgrid .num.holiday{background:#dfe9dc!important}
 .calendar-page .monthgrid .num.event-day{background:#e7ddc8!important}
@@ -651,7 +652,7 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
 .v110-pdf-shell{padding:8px!important;border-radius:18px!important}.v110-pdf-shell iframe{height:78vh!important;min-height:680px!important;border-radius:12px!important}
 @media(max-width:760px){.v110-behavior-head{align-items:flex-start;flex-direction:column}.v110-behavior-badge{align-self:flex-start}.v110-pdf-shell iframe{height:72vh!important;min-height:520px!important}}
 </style>
-\n<!-- MIIK Beta 1.3: enriched term-2 values/observances + formal landscape plan print -->
+<!-- MIIK Beta 1.3: enriched term-2 values/observances + formal landscape plan print -->
 <script id="miik-beta-13-print-js">
 (()=>{
  const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -4112,3 +4113,66 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 #calendarPage .miik1712-daybtn:hover{border-color:var(--olive);background:#f5f7f1}
 #calendarPage .miik179-week-foot button{width:auto;display:inline-block}
 </style>
+
+
+<!-- MIIK Beta 1.7.13 — unified calendar views + month programs + complete day details -->
+<script id="miik-beta-1713-calendar-unification">
+(()=>{'use strict';
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
+ const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+ const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
+ const rows=()=>typeof window.miikPlanRows12==='function'?window.miikPlanRows12(String(ctx().term)):[];
+ const daysOf=w=>typeof window.miikPlanDays1710==='function'?(window.miikPlanDays1710(w)||[]):[];
+ const same=(a,y,m,d)=>a&&+a.y===+y&&+a.m===+m&&+a.d===+d;
+ const today=()=>typeof window.miikHijriToday1710==='function'?window.miikHijriToday1710():null;
+ function weekFor(y,m,d){return rows().find(w=>daysOf(w).some(x=>same(x,y,m,d)))||null}
+ function weekIndexFor(y,m,d){return rows().findIndex(w=>daysOf(w).some(x=>same(x,y,m,d)))}
+ function exactExtras(w,y,m,d){
+   if(!w)return[];const ds=daysOf(w), out=[];
+   (w.extras||[]).filter(x=>x&&x.text).forEach((x,n)=>{let target=ds[Math.min(4,n+1)];if(!target)return;if(target.y===1448&&target.m===4&&(target.d===12||target.d===13))target=ds[2]||target;if(same(target,y,m,d))out.push(x.text)});
+   return out;
+ }
+ // Special program route: this plan item belongs to the existing Special Categories module.
+ const oldProgram=window.miikOpenPlanProgram12;
+ window.miikOpenPlanProgram12=function(name){if(/الفئات الخاصة/.test(String(name||''))&&typeof window.v56Special==='function')return window.v56Special();return oldProgram?.apply(this,arguments)};
+ // One weekly design only: direct Week uses the exact same approved detail component as Semester -> Week.
+ const priorRender=window.renderCalendarView;
+ window.renderCalendarView=function(mode='month'){
+   if(mode==='week'){
+     const q=today();let ix=q?weekIndexFor(q.y,q.m,q.d):-1;if(ix<0)ix=Math.max(0,Number(sessionStorage.getItem('miikWeeklyIndex')||0));
+     if(ix>=0&&typeof window.miikCalendarOpenSemesterWeek178==='function'){sessionStorage.setItem('miikWeeklyIndex',String(ix));window.miikCalendarOpenSemesterWeek178(ix);return}
+   }
+   const r=priorRender?.apply(this,arguments);
+   if(mode==='month')setTimeout(injectMonthPrograms,0);
+   return r;
+ };
+ function injectMonthPrograms(){
+   const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
+   rows().forEach(w=>{const first=daysOf(w)[0];if(!first)return;const btn=box.querySelector(`button[onclick*="v57OpenHijriDay(${first.y},${first.m},${first.d})"]`);if(!btn)return;const name=String(w.program||'').trim();if(!name)return;const exists=[...btn.querySelectorAll('.cal-label')].some(x=>x.textContent.trim()===name);if(exists)return;const tag=document.createElement('span');tag.className='cal-label miik1713-program-label';tag.textContent=name;tag.title=name;tag.onclick=e=>{e.stopPropagation();window.miikOpenPlanProgram12?.(name)};btn.appendChild(tag)});
+ }
+ function actionProgram(w){return `miikOpenPlanProgram12('${Q(w.program)}')`}
+ function actionValue(w){return `miikOpenPlanValue12('${Q(w.value)}')`}
+ function actionGlobal(x){return `miikOpenGlobalDay12('${Q(x)}')`}
+ window.v57OpenHijriDay=function(y,m,d){
+   hideAllPages();document.getElementById('calendarPage').classList.add('show');
+   const w=weekFor(y,m,d), extras=exactExtras(w,y,m,d), items=[];
+   if(w?.program)items.push({kind:'program',label:w.program,sub:'البرنامج',action:actionProgram(w)});
+   if(w?.value)items.push({kind:'value',label:w.value,sub:'القيمة',action:actionValue(w)});
+   extras.forEach(x=>items.push({kind:'global',label:x,sub:'يوم أو مناسبة عالمية',action:actionGlobal(x)}));
+   if(y===1448&&m===4&&(d===12||d===13))items.push({kind:'holiday',label:'إجازة اليوم الوطني',sub:'إجازة رسمية',action:''});
+   const html=items.length?items.map(x=>x.action?`<button type="button" class="miik1713-day-item ${x.kind}" onclick="${x.action}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span><i>‹</i></button>`:`<div class="miik1713-day-item ${x.kind}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span></div>`).join(''):'<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>';
+   const box=document.querySelector('#calendarPage .monthbox');if(box)box.innerHTML=`<div class="day-view-head"><div><div class="month-title">${d} ${MONTHS[m-1]} ${y}هـ</div><div class="muted">أعمال هذا اليوم فقط</div></div><button type="button" class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="miik1713-day-list">${html}</div>`;
+   window.scrollTo({top:0,behavior:'smooth'});
+ };
+ // Initial month render may already be on screen when this patch loads.
+ setTimeout(()=>{if(document.querySelector('#calendarPage .view-switch button.active')?.dataset.view==='month')injectMonthPrograms()},0);
+})();
+</script>
+<style id="miik-beta-1713-calendar-style">
+#calendarPage .miik1713-program-label{background:#e5eee2!important;color:var(--deep)!important;border:1px solid #d2dfce!important;font-weight:800!important;cursor:pointer}
+.miik1713-day-list{display:grid;gap:9px;margin-top:12px}.miik1713-day-item{width:100%;border:1px solid var(--line);border-radius:15px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:right;font:inherit;color:var(--deep);cursor:pointer}.miik1713-day-item span{display:grid;gap:4px}.miik1713-day-item small{font-size:10px;color:var(--muted);font-weight:700}.miik1713-day-item b{font-size:14px}.miik1713-day-item i{font-style:normal;font-size:20px;color:var(--olive)}.miik1713-day-item.program{background:#e8efe5}.miik1713-day-item.value{background:#f2eddf}.miik1713-day-item.global{background:#e4eadc;border-color:#cfd9c7}.miik1713-day-item.holiday{background:#f7f2e9;cursor:default}
+@media(max-width:720px){.miik1713-day-item{padding:9px 10px;border-radius:11px}.miik1713-day-item small{font-size:8px}.miik1713-day-item b{font-size:10px}.miik1713-day-item i{font-size:15px}}
+</style>
+
+<!-- Release package: MIIK Beta 1.7.13 -->
