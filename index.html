@@ -4069,97 +4069,67 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 
 
 
-<!-- MIK Beta 0.0.1 — unified calendar data source for main and home calendars -->
-<script id="miik-beta-1713-calendar-unification">
+<!-- MIK Beta 0.0.2 — one canonical day resolver shared by home and main calendar -->
+<script id="miik-beta-002-calendar-source">
 (()=>{'use strict';
+ const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
  const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
- const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
  const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
- const rows=()=>typeof window.miikPlanRows12==='function'?window.miikPlanRows12(String(ctx().term)):[];
- const daysOf=w=>typeof window.miikPlanDays1710==='function'?(window.miikPlanDays1710(w)||[]):[];
- const same=(a,y,m,d)=>a&&+a.y===+y&&+a.m===+m&&+a.d===+d;
- const today=()=>typeof window.miikHijriToday1710==='function'?window.miikHijriToday1710():null;
- function parseCustomDate1713(s){const raw=String(s||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));const nums=(raw.match(/\d+/g)||[]).map(Number),mi=MONTHS.findIndex(x=>raw.includes(x));if(mi>=0){const y=nums.find(n=>n>=1400),d=nums.find(n=>n<100);return y&&d?{y,m:mi+1,d}:null}if(nums.length>=3)return nums[0]>=1400?{y:nums[0],m:nums[1],d:nums[2]}:{d:nums[0],m:nums[1],y:nums[2]};return null}
- function weekFor(y,m,d){return rows().find(w=>daysOf(w).some(x=>same(x,y,m,d))||(w.extras||[]).some(x=>same(x?.date,y,m,d)))||null}
- function weekIndexFor(y,m,d){return rows().findIndex(w=>daysOf(w).some(x=>same(x,y,m,d)))}
- function daySerial(x){return x?Number(x.y)*360+(Number(x.m)-1)*30+Number(x.d):NaN}
- function currentWeekIndex1713(){
-   const q=today(),ws=rows();if(!q||!ws.length)return -1;
-   const exact=weekIndexFor(q.y,q.m,q.d);if(exact>=0)return exact;
-   const wd=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Riyadh',weekday:'short'}).format(new Date());
-   if(wd!=='Fri'&&wd!=='Sat')return -1;
-   const qs=daySerial(q);let best=-1,bestDiff=99;
-   ws.forEach((w,i)=>{const first=daysOf(w)[0],diff=daySerial(first)-qs;if(diff>=1&&diff<=2&&diff<bestDiff){best=i;bestDiff=diff}});
-   return best;
+ const rows=()=>typeof window.miikPlanRows12==='function'?(window.miikPlanRows12(String(ctx().term))||[]):[];
+ const norm=s=>String(s||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
+ const same=(a,b)=>a&&b&&+a.y===+b.y&&+a.m===+b.m&&+a.d===+b.d;
+ function parsePlanRange(w){
+   const n=(norm(w?.date).match(/\d+/g)||[]).map(Number), fallback=parseInt(norm(ctx().year),10)||1448;
+   let year=n.find(x=>x>=1400)||fallback,sd,sm,ed,em,ey=year;
+   if(n.length>=5&&n[0]<32&&n[1]<13&&n[2]<32&&n[3]<13&&n[4]>=1400){sd=n[0];sm=n[1];ed=n[2];em=n[3];year=ey=n[4]}
+   else if(n.length>=4&&n[0]<32&&n[1]<13&&n[2]<32&&n[3]<13){sd=n[0];sm=n[1];ed=n[2];em=n[3]}
+   else if(n.length>=4&&n[0]<32&&n[1]<32&&n[2]<13&&n[3]>=1400){sd=n[0];ed=n[1];sm=em=n[2];year=ey=n[3]}
+   else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}
+   else return null;
+   if(em<sm)ey=year+1;
+   return{start:{y:year,m:sm,d:sd},end:{y:ey,m:em,d:ed}};
  }
- window.miikCurrentWeekIndex1713=currentWeekIndex1713;
- function exactExtras(w,y,m,d){
-   if(!w)return[];const ds=daysOf(w), out=[];
-   (w.extras||[]).filter(x=>x&&x.text&&x.date).forEach(x=>{if(same(x.date,y,m,d))out.push(x.text)});
-   return out;
+ function key(x){return +x.y*10000 + +x.m*100 + +x.d}
+ function inRange(h,r){return r&&key(h)>=key(r.start)&&key(h)<=key(r.end)}
+ function parseCustomDate(s){
+   const raw=norm(s),nums=(raw.match(/\d+/g)||[]).map(Number),mi=MONTHS.findIndex(x=>raw.includes(x));
+   if(mi>=0){const y=nums.find(n=>n>=1400),d=nums.find(n=>n>0&&n<32);return y&&d?{y,m:mi+1,d}:null}
+   if(nums.length>=3)return nums[0]>=1400?{y:nums[0],m:nums[1],d:nums[2]}:{d:nums[0],m:nums[1],y:nums[2]};
+   return null;
  }
- // Special program route: this plan item belongs to the existing Special Categories module.
- const oldProgram=window.miikOpenPlanProgram12;
- window.miikOpenPlanProgram12=function(name){if(/الفئات الخاصة/.test(String(name||''))&&typeof window.v56Special==='function')return window.v56Special();return oldProgram?.apply(this,arguments)};
- // One weekly design only: direct Week uses the exact same approved detail component as Semester -> Week.
- const priorRender=window.renderCalendarView;
- window.renderCalendarView=function(mode='month'){
-   if(mode==='week'){
-     const ix=currentWeekIndex1713();
-     if(ix>=0&&typeof window.miikCalendarOpenSemesterWeek178==='function'){window.miikCalendarOpenSemesterWeek178(ix);return}
-   }
-   const r=priorRender?.apply(this,arguments);
-   if(mode==='month')setTimeout(injectMonthPrograms,0);
-   return r;
- };
- function injectMonthPrograms(){
-   const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
-   function addTag(target,text,cls,click){
-     if(!target||!text)return;const btn=box.querySelector(`button[onclick*="v57OpenHijriDay(${target.y},${target.m},${target.d})"]`);if(!btn)return;
-     if([...btn.querySelectorAll('.cal-label')].some(x=>x.textContent.trim()===String(text).trim()))return;
-     const tag=document.createElement('span');tag.className='cal-label '+cls;tag.textContent=text;tag.title=text;
-     if(click)tag.onclick=e=>{e.stopPropagation();click()};btn.appendChild(tag);btn.classList.add('event-day');
-   }
-   rows().forEach(w=>{
-     const ds=daysOf(w),ps=(w.programs&&w.programs.length?w.programs:[{name:w.program,custom:false}]);
-     ps.forEach(p=>{const target=p.custom?parseCustomDate1713(p.date):ds[0];addTag(target,p.name,'miik1713-program-label',()=>window.miikOpenPlanProgram12?.(p.name))});
-     if(w.value&&ds[0])addTag(ds[0],'القيمة: '+w.value,'miik1713-value-label',()=>window.miikOpenPlanValue12?.(w.value));
-     (w.extras||[]).filter(x=>x&&x.text&&x.date).forEach(x=>addTag(x.date,x.text,'miik1713-global-label',()=>window.miikOpenGlobalDay12?.(x.text)));
-   });
- }
- function actionProgram(w){return `miikOpenPlanProgram12('${Q(w.program)}')`}
- function actionValue(w){return `miikOpenPlanValue12('${Q(w.value)}')`}
- function actionGlobal(x){return `miikOpenGlobalDay12('${Q(x)}')`}
  function hijriFromGregorian(gd){
-   const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(gd),get=t=>Number(p.find(z=>z.type===t)?.value||0);return{d:get('day'),m:get('month'),y:get('year')};
+   const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(gd),get=t=>Number(p.find(z=>z.type===t)?.value||0);
+   return{d:get('day'),m:get('month'),y:get('year')};
  }
- function daySnapshot(y,m,d,gregorian){
-   const w=weekFor(y,m,d),extras=exactExtras(w,y,m,d),items=[];
-   if(w){const ps=(w.programs&&w.programs.length?w.programs:[{name:w.program,custom:false}]);ps.forEach(p=>{if(!p.custom||same(parseCustomDate1713(p.date),y,m,d))items.push({kind:'program',label:p.name,sub:p.custom?'برنامج مضاف':'البرنامج',action:`miikOpenPlanProgram12('${Q(p.name)}')`})})}
-   if(w?.value)items.push({kind:'value',label:w.value,sub:'القيمة',action:actionValue(w)});
-   extras.forEach(x=>items.push({kind:'global',label:x,sub:'يوم أو مناسبة عالمية',action:actionGlobal(x)}));
-   const nationalHoliday=(+y===1448&&+m===4&&(+d===12||+d===13));
-   if(nationalHoliday)items.push({kind:'holiday',label:'إجازة اليوم الوطني',sub:'إجازة رسمية',action:''});
-   const weekend=gregorian instanceof Date?(gregorian.getDay()===5||gregorian.getDay()===6):false;
-   return{hijri:{y:+y,m:+m,d:+d},week:w,items,holiday:nationalHoliday,weekend,hasAny:items.length>0};
+ function weekFor(h){return rows().find(w=>inRange(h,parsePlanRange(w))||(w.extras||[]).some(x=>same(x?.date,h)))||null}
+ function resolveDay(input,m,d){
+   const gd=input instanceof Date?input:null,h=gd?hijriFromGregorian(gd):{y:+input,m:+m,d:+d},w=weekFor(h),items=[];
+   if(w){
+     const ps=(w.programs&&w.programs.length?w.programs:[{name:w.program,custom:false}]);
+     ps.forEach(p=>{const ph=p.custom?parseCustomDate(p.date):null;if(!p.custom||same(ph,h))items.push({kind:'program',label:p.name,sub:p.custom?'برنامج مضاف':'البرنامج',action:`miikOpenPlanProgram12('${Q(p.name)}')`})});
+     if(w.value)items.push({kind:'value',label:w.value,sub:'القيمة',action:`miikOpenPlanValue12('${Q(w.value)}')`});
+     (w.extras||[]).filter(x=>x?.text&&same(x.date,h)).forEach(x=>items.push({kind:'global',label:x.text,sub:'يوم أو مناسبة عالمية',action:`miikOpenGlobalDay12('${Q(x.text)}')`}));
+   }
+   const holiday=(h.y===1448&&h.m===4&&(h.d===12||h.d===13));
+   if(holiday&&!items.some(x=>x.kind==='holiday'))items.push({kind:'holiday',label:'إجازة اليوم الوطني',sub:'إجازة رسمية',action:''});
+   const weekend=gd?(gd.getDay()===5||gd.getDay()===6):false;
+   return{hijri:h,week:w,items,holiday,weekend,hasAny:items.length>0};
  }
- window.miikCalendarDaySnapshot1713=function(input,m,d){
-   if(input instanceof Date){const h=hijriFromGregorian(input);return daySnapshot(h.y,h.m,h.d,input)}
-   return daySnapshot(Number(input),Number(m),Number(d),null);
- };
+ // This is the only day-data API used by both the home mini calendar and day details.
+ window.miikCalendarDaySnapshot1713=resolveDay;
+ window.miikCalendarDayData002=resolveDay;
  window.v57OpenHijriDay=function(y,m,d){
    hideAllPages();document.getElementById('calendarPage').classList.add('show');
-   const snap=daySnapshot(y,m,d,null),items=snap.items;
-   const html=items.length?items.map(x=>x.action?`<button type="button" class="miik1713-day-item ${x.kind}" onclick="${x.action}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span><i>‹</i></button>`:`<div class="miik1713-day-item ${x.kind}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span></div>`).join(''):'<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>';
+   const snap=resolveDay(y,m,d),html=snap.items.length?snap.items.map(x=>x.action?`<button type="button" class="miik1713-day-item ${x.kind}" onclick="${x.action}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span><i>‹</i></button>`:`<div class="miik1713-day-item ${x.kind}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span></div>`).join(''):'<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>';
    const box=document.querySelector('#calendarPage .monthbox');if(box)box.innerHTML=`<div class="day-view-head"><div><div class="month-title">${d} ${MONTHS[m-1]} ${y}هـ</div><div class="muted">أعمال هذا اليوم فقط</div></div><button type="button" class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="miik1713-day-list">${html}</div>`;
    window.scrollTo({top:0,behavior:'smooth'});
  };
- // Initial month render may already be on screen when this patch loads.
- setTimeout(()=>{if(document.querySelector('#calendarPage .view-switch button.active')?.dataset.view==='month')injectMonthPrograms()},0);
+ // Repaint home only after the canonical source exists.
+ setTimeout(()=>{if(typeof window.rollingDays==='function')window.rollingDays()},0);
 })();
 </script>
-<style id="miik-beta-1713-calendar-style">
+<style id="miik-beta-002-calendar-style">
 #calendarPage .miik1713-program-label{background:#e5eee2!important;color:var(--deep)!important;border:1px solid #d2dfce!important;font-weight:800!important;cursor:pointer}
 #calendarPage .miik1713-value-label{background:#f2eddf!important;color:#5d6f5b!important;border:1px solid #e2dac7!important;font-weight:800!important;cursor:pointer}
 #calendarPage .miik1713-global-label{background:#dfe8d8!important;color:#536b52!important;border:1px solid #cfd9c7!important;font-weight:800!important;cursor:pointer}
