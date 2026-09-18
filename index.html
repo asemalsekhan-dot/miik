@@ -320,7 +320,7 @@ function addReminder(){
 const MIIK_TERM1_1448=[
 ['الأسبوع الأول','10–14 ربيع الأول','23–27 أغسطس 2026'],['الأسبوع الثاني','17–21 ربيع الأول','30 أغسطس–3 سبتمبر 2026'],['الأسبوع الثالث','24–28 ربيع الأول','6–10 سبتمبر 2026'],['الأسبوع الرابع','2–6 ربيع الثاني','13–17 سبتمبر 2026'],['الأسبوع الخامس','9–13 ربيع الثاني','20–24 سبتمبر 2026'],['الأسبوع السادس','16–20 ربيع الثاني','27 سبتمبر–1 أكتوبر 2026'],['الأسبوع السابع','23 – 27 / 04','4–8 أكتوبر 2026'],['الأسبوع الثامن','30/04 – 04/05','11–15 أكتوبر 2026'],['الأسبوع التاسع','07 – 11 / 05','18–22 أكتوبر 2026'],['الأسبوع العاشر','14 – 18 / 05','25–29 أكتوبر 2026'],['الأسبوع الحادي عشر','21 – 25 / 05','1–5 نوفمبر 2026'],['الأسبوع الثاني عشر','28/05 – 02/06','8–12 نوفمبر 2026'],['الأسبوع الثالث عشر','12 – 16 / 06','15–19 نوفمبر 2026'],['الأسبوع الرابع عشر','19 – 23 / 06','29 نوفمبر–3 ديسمبر 2026'],['الأسبوع الخامس عشر','26/06 – 01/07','6–10 ديسمبر 2026'],['الأسبوع السادس عشر','04 – 08 / 07','13–17 ديسمبر 2026'],['الأسبوع السابع عشر','11 – 15 / 07','20–24 ديسمبر 2026'],['الأسبوع الثامن عشر','18 – 22 / 07','27–31 ديسمبر 2026'],['الأسبوع التاسع عشر','25–29 رجب','3–7 يناير 2027']];
 function calendarLegend(){return `<div class="calendar-legend"><span><i class="holiday-key"></i>إجازة نهاية الأسبوع</span><span><i class="event"></i>يوم فيه أعمال</span><span><i class="plain-key"></i>يوم بلا أعمال</span><span><i class="extra-key"></i>إجازة إضافية</span></div>`}
-function renderCalendarView(mode){
+function __miikObsoleteCalendarBase(mode){
  document.querySelectorAll('.view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));
  const box=document.querySelector('#calendarPage .monthbox');
  const labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'}; const todayHijri=24;
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
    window.scrollTo({top:0,behavior:'smooth'});
  };
  window.openHijriCalendarDay=window.miikOpenCalendarDay;
- window.renderCalendarView=function(mode){
+ window.__miikObsoleteCalendarRender1=function(mode){
    document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));
    const box=document.querySelector('#calendarPage .monthbox'); if(!box)return;
    if(mode==='week'){
@@ -708,7 +708,7 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
     if(typeof originalOpenDay==='function') originalOpenDay(day);
     else if(typeof window.openHijriCalendarDay==='function') window.openHijriCalendarDay(day);
   };
-  window.renderCalendarView=function(mode){
+  window.__miikObsoleteCalendarRender2=function(mode){
     document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));
     const box=document.querySelector('#calendarPage .monthbox');
     if(!box)return;
@@ -1960,7 +1960,7 @@ const DN57=['الأحد','الاثنين','الثلاثاء','الأربعاء',
 function hp57(d){const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric'}).formatToParts(d),v=t=>+(p.find(x=>x.type===t)?.value||1);return{d:v('day'),m:v('month'),y:v('year')}}
 function findG57(y,m,d){const now=new Date(),base=new Date(now.getFullYear()-2,0,1);for(let i=0;i<1600;i++){const x=new Date(base);x.setDate(base.getDate()+i);const h=hp57(x);if(h.y===y&&h.m===m&&h.d===d)return x}return null}
 function mi57(y,m){const s=findG57(y,m,1);if(!s)return{len:30,weekday:0};const x=new Date(s);x.setDate(s.getDate()+29);const h=hp57(x);return{len:h.y===y&&h.m===m&&h.d===30?30:29,weekday:s.getDay()}}
-window.renderCalendarView=function(mode){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(!box)return;const now=new Date(),ht=hp57(now),labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};if(mode==='week'){const sun=new Date(now);sun.setDate(now.getDate()-now.getDay());let cells='';for(let i=0;i<7;i++){const gd=new Date(sun);gd.setDate(sun.getDate()+i);const h=hp57(gd),lab=h.m===ht.m?labels[h.d]:'';cells+=`<button type="button" class="num calendar-day-button ${(i===5||i===6)?'holiday':lab?'event-day':'plain-day'} ${gd.toDateString()===now.toDateString()?'today-ring':''}" onclick="v57OpenDay('${gd.toISOString()}')"><span class="week-day-name">${DN57[i]}</span><span class="week-day-number">${h.d}</span>${h.m!==ht.m?`<small>${HN57[h.m-1]}</small>`:''}${lab?`<span class="cal-label">${lab}</span>`:''}</button>`}box.innerHTML=`<div class="month-title">أسبوع ${ht.d} ${HN57[ht.m-1]} ${ht.y}هـ</div><div class="weekly-calendar-grid">${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;return}
+window.__miikObsoleteCalendarRender3=function(mode){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(!box)return;const now=new Date(),ht=hp57(now),labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};if(mode==='week'){const sun=new Date(now);sun.setDate(now.getDate()-now.getDay());let cells='';for(let i=0;i<7;i++){const gd=new Date(sun);gd.setDate(sun.getDate()+i);const h=hp57(gd),lab=h.m===ht.m?labels[h.d]:'';cells+=`<button type="button" class="num calendar-day-button ${(i===5||i===6)?'holiday':lab?'event-day':'plain-day'} ${gd.toDateString()===now.toDateString()?'today-ring':''}" onclick="v57OpenDay('${gd.toISOString()}')"><span class="week-day-name">${DN57[i]}</span><span class="week-day-number">${h.d}</span>${h.m!==ht.m?`<small>${HN57[h.m-1]}</small>`:''}${lab?`<span class="cal-label">${lab}</span>`:''}</button>`}box.innerHTML=`<div class="month-title">أسبوع ${ht.d} ${HN57[ht.m-1]} ${ht.y}هـ</div><div class="weekly-calendar-grid">${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;return}
  if(mode==='semester'){if(typeof MIIK_TERM1_1448!=='undefined')box.innerHTML=`<div class="month-title">الفصل الدراسي الأول ${ht.y}هـ</div><div class="semester-calendar-grid">${MIIK_TERM1_1448.map(w=>`<button type="button" class="semester-week-card" onclick="renderCalendarView('week')"><b>${w[0]}</b><div>${w[1]}</div><small>${w[2]}</small></button>`).join('')}</div>`;return}
  const q=mi57(ht.y,ht.m);let cells='';for(let i=0;i<q.weekday;i++)cells+='<div class="num blank-day" aria-hidden="true"></div>';for(let d=1;d<=q.len;d++){const wd=(q.weekday+d-1)%7,lab=labels[d];cells+=`<button type="button" class="num calendar-day-button ${(wd===5||wd===6)?'holiday':lab?'event-day':'plain-day'} ${d===ht.d?'today-ring':''}" onclick="v57OpenHijriDay(${ht.y},${ht.m},${d})"><b>${d}</b>${lab?`<span class="cal-label">${lab}</span>`:''}</button>`}box.innerHTML=`<div class="month-title">${HN57[ht.m-1]} ${ht.y}هـ</div><div class="monthgrid">${DN57.map(x=>`<div class="head">${x}</div>`).join('')}${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}<div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`};
 window.v57OpenHijriDay=(y,m,d)=>{const g=findG57(y,m,d);if(g)v57OpenDay(g.toISOString())};window.v57OpenDay=iso=>{const gd=new Date(iso),h=hp57(gd);hideAllPages();calendarPage.classList.add('show');document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="day-view-head"><div><div class="month-title">${DN57[gd.getDay()]}، ${h.d} ${HN57[h.m-1]} ${h.y}هـ</div><div class="muted">أعمال هذا اليوم فقط</div></div><button class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>`};
@@ -3024,7 +3024,7 @@ window.recordProgram=function(title){
 function h86(d){const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric'}).formatToParts(d),v=t=>+(p.find(x=>x.type===t)?.value||1);return{d:v('day'),m:v('month'),y:v('year')}}
 function month86(y,m){let first=null;const base=new Date(2026,0,1);for(let i=0;i<900;i++){const x=new Date(base);x.setDate(base.getDate()+i);const h=h86(x);if(h.y===y&&h.m===m&&h.d===1){first=x;break}}if(!first)return null;let len=29,x=new Date(first);x.setDate(first.getDate()+29);const q=h86(x);if(q.y===y&&q.m===m&&q.d===30)len=30;return{first,len}}
 function events86(y,m,d,wd){const out=[];if(y===1448&&m===3){if(d===8)out.push({t:'قيمة المسؤولية'});if(d===22)out.push({t:'التوجيه المهني'})}if(y===1448&&m===4){if(d===12||d===13)out.push({t:'إجازة اليوم الوطني',holiday:true});if(d===11)out.push({t:'اليوم الوطني'})}return out.filter(x=>x.holiday||(wd!==5&&wd!==6))}
-window.renderCalendarView=function(mode='month'){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(!box)return;const now=new Date(),ht=h86(now),names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],months=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];if(mode==='week'){const sun=new Date(now);sun.setDate(now.getDate()-now.getDay());let cells='';for(let i=0;i<7;i++){const gd=new Date(sun);gd.setDate(sun.getDate()+i);const h=h86(gd),ev=events86(h.y,h.m,h.d,i);cells+=`<button type="button" class="num calendar-day-button ${(i===5||i===6||ev.some(e=>e.holiday))?'holiday':ev.length?'event-day':'plain-day'}" onclick="v57OpenDay('${gd.toISOString()}')"><span class="week-day-name">${names[i]}</span><span class="week-day-number">${h.d}</span>${ev.map(e=>`<span class="cal-label">${e.t}</span>`).join('')}</button>`}box.innerHTML=`<div class="month-title">الأسبوع الحالي</div><div class="weekly-calendar-grid">${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;return}if(mode==='semester'){if(typeof MIIK_TERM1_1448!=='undefined')box.innerHTML=`<div class="month-title">الفصل الدراسي الأول ${ht.y}هـ</div><div class="semester-calendar-grid">${MIIK_TERM1_1448.map(w=>`<button type="button" class="semester-week-card" onclick="renderCalendarView('week')"><b>${w[0]}</b><div>${w[1]}</div><small>${w[2]}</small></button>`).join('')}</div>`;return}const mi=month86(ht.y,ht.m);if(!mi)return;let cells='';for(let i=0;i<mi.first.getDay();i++)cells+='<div class="num blank-day"></div>';for(let d=1;d<=mi.len;d++){const wd=(mi.first.getDay()+d-1)%7,ev=events86(ht.y,ht.m,d,wd),hol=wd===5||wd===6||ev.some(e=>e.holiday);cells+=`<button type="button" class="num calendar-day-button ${hol?'holiday':ev.length?'event-day':'plain-day'} ${d===ht.d?'today-ring':''}" onclick="v57OpenHijriDay(${ht.y},${ht.m},${d})"><b>${d}</b>${ev.map(e=>`<span class="cal-label">${e.t}</span>`).join('')}</button>`}box.innerHTML=`<div class="month-title">${months[ht.m-1]} ${ht.y}هـ</div><div class="monthgrid">${names.map(x=>`<div class="head">${x}</div>`).join('')}${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}<div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`};
+window.__miikObsoleteCalendarRender4=function(mode='month'){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(!box)return;const now=new Date(),ht=h86(now),names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],months=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];if(mode==='week'){const sun=new Date(now);sun.setDate(now.getDate()-now.getDay());let cells='';for(let i=0;i<7;i++){const gd=new Date(sun);gd.setDate(sun.getDate()+i);const h=h86(gd),ev=events86(h.y,h.m,h.d,i);cells+=`<button type="button" class="num calendar-day-button ${(i===5||i===6||ev.some(e=>e.holiday))?'holiday':ev.length?'event-day':'plain-day'}" onclick="v57OpenDay('${gd.toISOString()}')"><span class="week-day-name">${names[i]}</span><span class="week-day-number">${h.d}</span>${ev.map(e=>`<span class="cal-label">${e.t}</span>`).join('')}</button>`}box.innerHTML=`<div class="month-title">الأسبوع الحالي</div><div class="weekly-calendar-grid">${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;return}if(mode==='semester'){if(typeof MIIK_TERM1_1448!=='undefined')box.innerHTML=`<div class="month-title">الفصل الدراسي الأول ${ht.y}هـ</div><div class="semester-calendar-grid">${MIIK_TERM1_1448.map(w=>`<button type="button" class="semester-week-card" onclick="renderCalendarView('week')"><b>${w[0]}</b><div>${w[1]}</div><small>${w[2]}</small></button>`).join('')}</div>`;return}const mi=month86(ht.y,ht.m);if(!mi)return;let cells='';for(let i=0;i<mi.first.getDay();i++)cells+='<div class="num blank-day"></div>';for(let d=1;d<=mi.len;d++){const wd=(mi.first.getDay()+d-1)%7,ev=events86(ht.y,ht.m,d,wd),hol=wd===5||wd===6||ev.some(e=>e.holiday);cells+=`<button type="button" class="num calendar-day-button ${hol?'holiday':ev.length?'event-day':'plain-day'} ${d===ht.d?'today-ring':''}" onclick="v57OpenHijriDay(${ht.y},${ht.m},${d})"><b>${d}</b>${ev.map(e=>`<span class="cal-label">${e.t}</span>`).join('')}</button>`}box.innerHTML=`<div class="month-title">${months[ht.m-1]} ${ht.y}هـ</div><div class="monthgrid">${names.map(x=>`<div class="head">${x}</div>`).join('')}${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}<div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`};
 
 function prog86(){const a=[];Object.keys(localStorage).filter(k=>k.startsWith('miikExec_')).forEach(k=>{const items=R86(k,[]);if(items.length)a.push({name:k.slice(9),items,count:items.length,benef:items.reduce((n,x)=>n+(+x.count||0),0)})});return a}
 function stats86(){const a=R86('miik-demo-actions',[]).filter(Boolean),n=(...ts)=>a.filter(x=>ts.includes(x.type)).length;return{all:a.length,follow:n('followup'),individual:n('session','individualSession','individual'),group:n('groupSession','group'),cases:n('case'),emergency:n('emergency'),guardian:n('guardian'),guidance:n('followup','session','individualSession','individual','groupSession','group','case','emergency')}}
@@ -3091,7 +3091,7 @@ const oldProg86=prog86; prog86=function(){const a=oldProg86(),names=['اختبا
  function events(y,m,d,wd){const a=planEvents().filter(x=>x.y===y&&x.m===m&&x.d===d).map(x=>({t:x.t,plan:true}));if(y===1448&&m===4&&(d===12||d===13))a.unshift({t:'إجازة اليوم الوطني',holiday:true});return a.filter(x=>x.holiday||(wd!==5&&wd!==6))}
  function h(d){const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric'}).formatToParts(d),v=t=>+(p.find(x=>x.type===t)?.value||1);return{d:v('day'),m:v('month'),y:v('year')}}
  function mi(y,m){let first=null,base=new Date(2026,0,1);for(let i=0;i<900;i++){let x=new Date(base);x.setDate(base.getDate()+i);let q=h(x);if(q.y===y&&q.m===m&&q.d===1){first=x;break}}if(!first)return null;let x=new Date(first);x.setDate(first.getDate()+29);let q=h(x);return{first,len:q.y===y&&q.m===m&&q.d===30?30:29}}
- window.renderCalendarView=function(mode='month'){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(!box)return;const now=new Date(),ht=h(now),names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];if(mode==='semester'){const weeks=typeof planWeeks==='function'?planWeeks():[];box.innerHTML=`<div class="month-title">الفصل الدراسي الأول ${ht.y}هـ</div><div class="semester-calendar-grid">${weeks.map((w,i)=>`<button type="button" class="semester-week-card" onclick="window.miikSelectedPlanWeek=${i};openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.')"><b>${E(w.w)}</b><div>${E(w.date)}</div><small>${E(w.program)}</small></button>`).join('')}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;return}if(mode==='week'){const sun=new Date(now);sun.setDate(now.getDate()-now.getDay());let cells='';for(let i=0;i<7;i++){const gd=new Date(sun);gd.setDate(sun.getDate()+i);const q=h(gd),ev=events(q.y,q.m,q.d,i),hol=i===5||i===6||ev.some(e=>e.holiday);cells+=`<button type="button" class="num calendar-day-button ${hol?'holiday':ev.length?'event-day':'plain-day'}" onclick="v57OpenDay('${gd.toISOString()}')"><span class="week-day-name">${names[i]}</span><span class="week-day-number">${q.d}</span>${ev.map(e=>`<span class="cal-label">${E(e.t)}</span>`).join('')}</button>`}box.innerHTML=`<div class="month-title">الأسبوع الحالي</div><div class="weekly-calendar-grid">${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;return}const info=mi(ht.y,ht.m);if(!info)return;let cells='';for(let i=0;i<info.first.getDay();i++)cells+='<div class="num blank-day"></div>';for(let d=1;d<=info.len;d++){const wd=(info.first.getDay()+d-1)%7,ev=events(ht.y,ht.m,d,wd),hol=wd===5||wd===6||ev.some(e=>e.holiday);cells+=`<button type="button" class="num calendar-day-button ${hol?'holiday':ev.length?'event-day':'plain-day'} ${d===ht.d?'today-ring':''}" onclick="v57OpenHijriDay(${ht.y},${ht.m},${d})"><b>${d}</b>${ev.map(e=>`<span class="cal-label">${E(e.t)}</span>`).join('')}</button>`}box.innerHTML=`<div class="month-title">${MONTHS[ht.m-1]} ${ht.y}هـ</div><div class="monthgrid">${names.map(x=>`<div class="head">${x}</div>`).join('')}${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}<div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`};
+ window.__miikObsoleteCalendarRender5=function(mode='month'){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(!box)return;const now=new Date(),ht=h(now),names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];if(mode==='semester'){const weeks=typeof planWeeks==='function'?planWeeks():[];box.innerHTML=`<div class="month-title">الفصل الدراسي الأول ${ht.y}هـ</div><div class="semester-calendar-grid">${weeks.map((w,i)=>`<button type="button" class="semester-week-card" onclick="window.miikSelectedPlanWeek=${i};openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.')"><b>${E(w.w)}</b><div>${E(w.date)}</div><small>${E(w.program)}</small></button>`).join('')}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;return}if(mode==='week'){const sun=new Date(now);sun.setDate(now.getDate()-now.getDay());let cells='';for(let i=0;i<7;i++){const gd=new Date(sun);gd.setDate(sun.getDate()+i);const q=h(gd),ev=events(q.y,q.m,q.d,i),hol=i===5||i===6||ev.some(e=>e.holiday);cells+=`<button type="button" class="num calendar-day-button ${hol?'holiday':ev.length?'event-day':'plain-day'}" onclick="v57OpenDay('${gd.toISOString()}')"><span class="week-day-name">${names[i]}</span><span class="week-day-number">${q.d}</span>${ev.map(e=>`<span class="cal-label">${E(e.t)}</span>`).join('')}</button>`}box.innerHTML=`<div class="month-title">الأسبوع الحالي</div><div class="weekly-calendar-grid">${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}`;return}const info=mi(ht.y,ht.m);if(!info)return;let cells='';for(let i=0;i<info.first.getDay();i++)cells+='<div class="num blank-day"></div>';for(let d=1;d<=info.len;d++){const wd=(info.first.getDay()+d-1)%7,ev=events(ht.y,ht.m,d,wd),hol=wd===5||wd===6||ev.some(e=>e.holiday);cells+=`<button type="button" class="num calendar-day-button ${hol?'holiday':ev.length?'event-day':'plain-day'} ${d===ht.d?'today-ring':''}" onclick="v57OpenHijriDay(${ht.y},${ht.m},${d})"><b>${d}</b>${ev.map(e=>`<span class="cal-label">${E(e.t)}</span>`).join('')}</button>`}box.innerHTML=`<div class="month-title">${MONTHS[ht.m-1]} ${ht.y}هـ</div><div class="monthgrid">${names.map(x=>`<div class="head">${x}</div>`).join('')}${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}<div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`};
  // Day view now reads the same plan source.
  window.v57OpenHijriDay=function(y,m,d){hideAllPages();document.getElementById('calendarPage').classList.add('show');const info=mi(y,m),wd=info?(info.first.getDay()+d-1)%7:0,ev=events(y,m,d,wd);const rows=ev.length?ev.map(x=>`<div class="day-work-row"><span><b>${E(x.t)}</b><small>${x.holiday?'إجازة رسمية':'من خطة الموجّه الطلابي'}</small></span></div>`).join(''):'<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>';document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="day-view-head"><div><div class="month-title">${d} ${MONTHS[m-1]} ${y}هـ</div><div class="muted">أعمال هذا اليوم فقط</div></div><button class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="day-work-list">${rows}</div>`};
 
@@ -3513,7 +3513,7 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
  window.openModule=function(title,desc){const r=openPrev.apply(this,arguments);if(planTitles.includes(title))setTimeout(()=>renderPlanShell11(title),0);return r}
  // Calendar follows active term context. Term 2 stays empty until its plan is supplied.
  const calPrev=window.renderCalendarView;
- if(typeof calPrev==='function')window.renderCalendarView=function(mode='month'){const c=ctx();if(c.term==='2'&&mode==='semester'){const box=document.querySelector('#calendarPage .monthbox');if(box){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));box.innerHTML=`${header11()}<div class="empty-warm">تقويم الفصل الدراسي الثاني سيُبنى تلقائيًا بعد اعتماد خطة الفصل الثاني.</div>`;return}}return calPrev.apply(this,arguments)};
+ if(typeof calPrev==='function')window.__miikObsoleteCalendarRender6=function(mode='month'){const c=ctx();if(c.term==='2'&&mode==='semester'){const box=document.querySelector('#calendarPage .monthbox');if(box){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));box.innerHTML=`${header11()}<div class="empty-warm">تقويم الفصل الدراسي الثاني سيُبنى تلقائيًا بعد اعتماد خطة الفصل الثاني.</div>`;return}}return calPrev.apply(this,arguments)};
  // Archive: previous academic year is read-only and remains empty until a year is actually closed.
  window.openMiikArchive=function(){hideAllPages();document.getElementById('modulePage').classList.add('show');document.getElementById('moduleTitle').textContent='الأرشيف';document.getElementById('moduleDesc').textContent='أعمال العام السابق للعرض والطباعة فقط.';const g=document.getElementById('moduleGrid');const archived=localStorage.getItem('miikArchivedYear');g.innerHTML=`<div style="grid-column:1/-1">${header11()}<div class="cal-top"><div><b style="font-size:24px">الأرشيف</b><div class="muted">العام الدراسي السابق · للعرض والطباعة فقط</div></div><span class="miik-readonly">قراءة فقط</span></div>${archived?`<div class="miik-archive-grid"><button class="miik-archive-card"><b>خطط الموجّه الطلابي</b><span>الفصل الدراسي الأول والفصل الدراسي الثاني.</span></button><button class="miik-archive-card"><b>التقارير الختامية</b><span>التقرير الختامي المختصر والتقرير الختامي الشامل.</span></button></div>`:`<div class="miik-archive-grid"><div class="miik-archive-empty"><b>لا يوجد عام دراسي مؤرشف حتى الآن.</b><br>سيظهر هنا أرشيف العام السابق بعد إقفال العام الدراسي الحالي.</div></div>`}</div>`;window.scrollTo({top:0,behavior:'smooth'})}
  // Tag new guidance services with the current academic year. Services remain continuous across both terms.
@@ -3591,7 +3591,10 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
  'اليوم العالمي لحرية الصحافة':[1448,11,26],'اليوم العالمي للامتناع عن تعاطي التبغ':[1448,12,25],
  'اليوم العالمي للمتبرعين بالدم':[1449,1,9]
  };
- function rows(term){const src=String(term)==='2'?T2:T1, old=oldValues();const out=src.map((x,i)=>{const days=x[4]?x[4].split('|').filter(Boolean):[];return{w:x[0],date:x[1]+' هـ',program:x[2],initiatives:x[3],days,extras:days.map(text=>{const a=OFFICIAL_DATES[text];return{text,type:'global',date:a?{y:a[0],m:a[1],d:a[2]}:null}}),value:String(term)==='2'?(x[5]||''):(old[i]?.value||x[5]||'')}});return out}
+ function referenceRows(term){const src=String(term)==='2'?T2:T1, t1vals=['الانتماء','المسؤولية','الوعي','الطموح','الوطنية','المثابرة'];return src.map((x,i)=>{const days=x[4]?x[4].split('|').filter(Boolean):[];return{w:x[0],date:x[1]+' هـ',program:x[2],initiatives:x[3],days,extras:days.map(text=>{const a=OFFICIAL_DATES[text];return{text,type:'global',date:a?{y:a[0],m:a[1],d:a[2]}:null}}),value:String(term)==='2'?(x[5]||''):t1vals[i%t1vals.length]}})}
+ function operationalKey(term){return 'miikCounselorPlanT'+String(term)}
+ function rows(term){const ref=referenceRows(term),key=operationalKey(term),adoptKey='miikPlanAdoptedT'+String(term);try{const saved=JSON.parse(localStorage.getItem(key)||'null');if(Array.isArray(saved)&&saved.length===ref.length)return saved.map((w,i)=>({...ref[i],...w,days:ref[i].days,extras:ref[i].extras}))}catch(_){}if(localStorage.getItem(adoptKey)==='1'||localStorage.getItem('miikPlanAdopted')==='1'){localStorage.setItem(key,JSON.stringify(ref));localStorage.setItem(adoptKey,'1');return ref}return ref.map(w=>({...w,program:'',value:''}))}
+ window.miikReferenceRows003=referenceRows;window.miikOperationalPlanKey003=operationalKey;
  window.miikPlanRows12=rows;
  window.planWeeks=function(){return rows(context().term)};
  function routeProgram(name){const s=String(name||'').trim();const custom=miikCustomPrograms();if(custom.some(x=>x.name===s))return s;if(/ختام الفصل الدراسي الأول|ختام العام|اختبارات نهاية الفصل الثاني/.test(s))return '__FINAL_REPORT__';if(/المجلس الطلابي|تقدير الذات/.test(s))return '__STUDENT_COUNCIL__';if(/توثيق العلاقة بين الأسرة والمدرسة|الأسرة ودورها في العملية التعليمية/.test(s))return '__FAMILY_CONTACT__';if(/تهيئة نفسية لنهاية الفصل|استكمال التهيئة النهائية|الجاهزية النهائية|تهيئة إرشادية|التهيئة الإرشادية|الأسبوع التمهيدي|بداية الفصل/.test(s))return 'برنامج التهيئة الإرشادية';if(/العنف|رفق/.test(s))return 'خفض العنف بالمدارس (رِفق)';if(/السلوك الإيجابي|الانضباط والمواظبة|تعزيز الانضباط|الأمن الفكري/.test(s))return 'تعزيز السلوك الإيجابي';if(/التوجيه المهني|مسارات المستقبل/.test(s))return 'التوجيه المهني';if(/الاستخدام الآمن|الإنترنت|رقمية|السيبراني/.test(s))return 'الاستخدام الآمن للإنترنت';if(/نافس/.test(s))return 'اختبارات نافس';if(/القدرات/.test(s))return 'اختبارات القدرات';if(/التحصيلي/.test(s))return 'الاختبار التحصيلي';if(/تحليل نتائج|الدافعية|التحصيل|متعثر|متأخرين|تكريم المتميزين/.test(s))return 'تنمية الدافعية لرفع مستوى التحصيل';if(/الأزمات/.test(s))return 'التوجيه وقت الأزمات';if(/المهارات النفسية|الصحة النفسية|الدعم النفسي|المهارات الحياتية|الموهبة|الإبداع/.test(s))return 'برنامج تعزيز المهارات النفسية والاجتماعية';if(/يوم التأسيس|الهوية|المخدرات|المؤثرات العقلية/.test(s))return 'الأيام والمناسبات الوطنية والعالمية';return s}
@@ -3612,7 +3615,7 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
  window.miikPrintPlan12=function(){const c=context(),ws=rows(c.term);let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(_){}const title=`خطة برامج وخدمات التوجيه الطلابي – ${termLabel()}`;const logo=new URL('ministry-logo.png',location.href).href;const trs=ws.map((w,i)=>`<tr><td>${i+1}</td><td>${esc(w.w)}</td><td>${esc(w.date)}</td><td>${esc(w.program)}</td><td>${esc(w.initiatives)}</td><td>${esc((w.days||[]).join('، ')||'—')}</td></tr>`).join('');const html=`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>${title}</title><style>@page{size:A4 portrait;margin:10mm}body{font-family:Tahoma,Arial;color:#263f37;margin:0}.head{display:grid;grid-template-columns:1fr 110px 1fr;align-items:center;border-bottom:2px solid #6d8277;padding-bottom:10px}.head div{text-align:center;line-height:1.7;font-size:11px}.head img{max-width:100px;max-height:65px;margin:auto;display:block}h1{text-align:center;font-size:19px;margin:14px 0 5px}h2{text-align:center;font-size:13px;margin:0 0 12px;color:#63746d}table{width:100%;border-collapse:collapse;font-size:8.5px}th,td{border:1px solid #9aa79f;padding:5px;vertical-align:top}th{background:#e6ebdf;color:#294b42}td:nth-child(1),td:nth-child(2),td:nth-child(3){white-space:nowrap;text-align:center}.sign{display:flex;justify-content:space-between;margin-top:18px;font-size:11px;font-weight:bold}</style></head><body><div class="head"><div>المملكة العربية السعودية<br>وزارة التعليم<br>${esc(p.education||'')}</div><img src="${logo}"><div>${esc(p.school||'')}<br>التوجيه الطلابي</div></div><h1>${title}</h1><h2>العام الدراسي ${esc(c.year)}هـ</h2><table><thead><tr><th>م</th><th>الأسبوع</th><th>التاريخ</th><th>المحور / البرنامج</th><th>أبرز المبادرات</th><th>المناسبات</th></tr></thead><tbody>${trs}</tbody></table><div class="sign"><span>الموجّه الطلابي: ${esc(p.name||'')}</span><span>مدير المدرسة: ${esc(p.principal||'')}</span></div>`;if(typeof printDoc84==='function')printDoc84(html);else{const w=window.open('','_blank');w.document.write(html);w.document.close();setTimeout(()=>w.print(),300)}};
  // Semester calendar uses the same plan source and deep-links to the selected week.
  const calPrev=window.renderCalendarView;
- if(typeof calPrev==='function')window.renderCalendarView=function(mode='month'){if(mode==='semester'){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(box){const ws=rows(context().term);box.innerHTML=`<div class="month-title">${termLabel()} · العام الدراسي ${esc(context().year)}هـ</div><div class="semester-calendar-grid">${ws.map((w,i)=>`<button type="button" class="semester-week-card" onclick="miikOpenWeek12(${i})"><b>${esc(w.w)}</b><div>${esc(w.date)}</div><small>${esc(w.program)}</small></button>`).join('')}</div>`;return}}return calPrev.apply(this,arguments)};
+ if(typeof calPrev==='function')window.__miikObsoleteCalendarRender7=function(mode='month'){if(mode==='semester'){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(box){const ws=rows(context().term);box.innerHTML=`<div class="month-title">${termLabel()} · العام الدراسي ${esc(context().year)}هـ</div><div class="semester-calendar-grid">${ws.map((w,i)=>`<button type="button" class="semester-week-card" onclick="miikOpenWeek12(${i})"><b>${esc(w.w)}</b><div>${esc(w.date)}</div><small>${esc(w.program)}</small></button>`).join('')}</div>`;return}}return calPrev.apply(this,arguments)};
  // If a plan page is already open after this patch loads, refresh it.
  setTimeout(()=>{const t=document.getElementById('moduleTitle')?.textContent||'';if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(t))miikRefreshPlan12(t)},50);
 })();
@@ -3805,6 +3808,18 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 <style id="miik-beta-1722-plan-custom-style">
 .miik1721-programs{display:grid;gap:6px;margin:10px 0 6px}.miik1721-programs .miik-plan12-program{margin:0}.miik1721-programs .custom{background:#edf3ea;border:1px solid #d9e4d6;border-radius:10px;padding:7px 9px}.miik1713-program-label{font-weight:800!important}
 </style>
+<script id="miik-beta-003-date-engine">
+(()=>{'use strict';
+ const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448'}}catch(_){return{year:'1448'}}};
+ const norm=s=>String(s||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
+ const hp=gd=>{const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(gd),g=t=>+(p.find(x=>x.type===t)?.value||0);return{d:g('day'),m:g('month'),y:g('year')}};
+ function find(y,m,d){const base=new Date();for(let o=-500;o<=500;o++){const g=new Date(base);g.setHours(12,0,0,0);g.setDate(base.getDate()+o);const h=hp(g);if(h.y===+y&&h.m===+m&&h.d===+d)return g}return null}
+ function parse(w){const n=(norm(w?.date).match(/\d+/g)||[]).map(Number),fy=+norm(ctx().year)||1448;let y=n.find(x=>x>=1400)||fy,sd,sm,ed,em;if(n.length>=5&&n[0]<32&&n[1]<13&&n[2]<32&&n[3]<13){sd=n[0];sm=n[1];ed=n[2];em=n[3];y=n[4]>=1400?n[4]:y}else if(n.length>=4&&n[1]<13&&n[3]<13){sd=n[0];sm=n[1];ed=n[2];em=n[3]}else if(n.length>=4&&n[0]<32&&n[1]<32&&n[2]<13&&n[3]>=1400){sd=n[0];ed=n[1];sm=em=n[2];y=n[3]}else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}else return null;return{y,sd,sm,ed,em}}
+ window.miikPlanDays1710=function(w){const r=parse(w);if(!r)return[];const g=find(r.y,r.sm,r.sd);if(!g)return[];const out=[];for(let i=0;i<7;i++){const q=new Date(g);q.setDate(g.getDate()+i);const h=hp(q);out.push(h);if(h.d===r.ed&&h.m===r.em)break}return out};
+ window.miikPlanDateLabel1710=function(w){const r=parse(w);if(!r)return String(w?.date||'');return r.sm===r.em?`${r.sd}–${r.ed} / ${r.sm} / ${r.y}هـ`:`${r.sd}/${r.sm} – ${r.ed}/${r.em} / ${r.y}هـ`};
+ window.miikHijriToday1710=()=>hp(new Date());
+})();
+</script>
 <script id="miik-beta-1722-plan-custom-source">
 (()=>{'use strict';
  const STORE='miikPlanCustomPrograms',LEGACY='miikCustomPrograms';
@@ -3836,13 +3851,7 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  function termLabel(){return String(ctx().term)==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول'}
  function programsHtml(w){return `<div class="miik1721-programs">${(w.programs||[{name:w.program}]).map(p=>`<button class="miik-plan12-program ${p.custom?'custom':''}" onclick="event.stopPropagation();miikOpenPlanProgram12('${Q(p.name)}')">${E(p.name)}</button>`).join('')}</div>`}
  function card(w,i){const ds=(w.days||[]).map(d=>`<button class="miik-plan12-day" onclick="event.stopPropagation();miikOpenGlobalDay12('${Q(d)}')">${E(d)}</button>`).join(''),val=w.value?`<button class="miik-plan12-value" onclick="event.stopPropagation();miikOpenPlanValue12('${Q(w.value)}')">القيمة: ${E(w.value)}</button>`:'';return `<article class="miik-plan12-card" onclick="miikOpenWeek12(${i})"><div class="miik-plan12-head"><b>${E(w.w)}</b><span class="miik-plan12-date">${E(w.date)}</span></div>${programsHtml(w)}${val}<div class="miik-plan12-initiatives">${E(w.initiatives)}</div>${ds?`<div class="miik-plan12-days">${ds}</div>`:''}</article>`}
- window.miikRefreshPlan12=function(title){const box=document.getElementById('miikPlanContent');if(!box)return;const ws=mergedRows(ctx().term);if(title==='الخطة الأسبوعية'){let sel=Number(sessionStorage.getItem('miikWeeklyIndex')||0);if(sel<0||sel>=ws.length)sel=0;const w=ws[sel];box.innerHTML=`<div class="miik-week12-title"><div><h3>${E(w.w)} · ${termLabel()}</h3><span>${E(w.date)}</span></div><button class="miik-plan12-print" onclick="miikPrintPlan12()">طباعة</button></div><div class="miik-plan12-grid">${ws.map((x,i)=>card(x,i)).join('')}</div>`;return}box.innerHTML=`<div class="cal-top"><div><b style="font-size:23px">${E(title)}</b><div class="muted">${termLabel()} · مصدر موحّد للخطة والتقويم</div></div><button class="miik-plan12-print" onclick="miikPrintPlan12()">طباعة الخطة</button></div><div class="miik-plan12-grid">${ws.map((w,i)=>card(w,i)).join('')}</div>`};
- // Calendar consumers read programs[] from the same plan row; no separate custom-program calendar feed.
- const oldOpenDay=window.v57OpenHijriDay;
- window.v57OpenHijriDay=function(y,m,d){const ws=mergedRows(ctx().term),w=ws.find(z=>(window.miikPlanDays1710?.(z)||[]).some(x=>same(x,{y,m,d})));if(!w)return oldOpenDay?.apply(this,arguments);hideAllPages();document.getElementById('calendarPage').classList.add('show');const items=[];(w.programs||[{name:w.program}]).forEach(p=>items.push(`<button type="button" class="miik1713-day-item program" onclick="miikOpenPlanProgram12('${Q(p.name)}')"><span><small>البرنامج</small><b>${E(p.name)}</b></span><i>‹</i></button>`));if(w.value)items.push(`<button type="button" class="miik1713-day-item value" onclick="miikOpenPlanValue12('${Q(w.value)}')"><span><small>القيمة</small><b>${E(w.value)}</b></span><i>‹</i></button>`);const box=document.querySelector('#calendarPage .monthbox');if(box)box.innerHTML=`<div class="day-view-head"><div><div class="month-title">${d} / ${m} / ${y}هـ</div><div class="muted">أعمال هذا اليوم من خطة الموجّه الطلابي</div></div><button type="button" class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="miik1713-day-list">${items.join('')}</div>`;window.scrollTo({top:0,behavior:'smooth'})};
- // Month: after the existing renderer, add every plan program scheduled in that week (including custom ones) on its exact date.
- const oldRender=window.renderCalendarView;
- window.renderCalendarView=function(mode='month'){const r=oldRender?.apply(this,arguments);if(mode==='month')setTimeout(()=>{const box=document.querySelector('#calendarPage .monthbox');if(!box)return;mergedRows(ctx().term).forEach(w=>(w.programs||[]).filter(p=>p.custom).forEach(p=>{const h=parseDate(p.date);if(!h)return;const btn=box.querySelector(`button[onclick*="v57OpenHijriDay(${h.y},${h.m},${h.d})"]`);if(!btn)return;if([...btn.querySelectorAll('.cal-label')].some(x=>x.textContent.trim()===p.name))return;const tag=document.createElement('span');tag.className='cal-label miik1713-program-label';tag.textContent=p.name;tag.onclick=e=>{e.stopPropagation();window.miikOpenPlanProgram12?.(p.name)};btn.appendChild(tag)}))},0);return r};
+ window.miikRefreshPlan12=function(title){const box=document.getElementById('miikPlanContent');if(!box)return;const term=String(ctx().term),ws=mergedRows(term),ref=(window.miikReferenceRows003?.(term)||ws);if(title==='الخطة الأسبوعية'){let sel=Number(sessionStorage.getItem('miikWeeklyIndex')||0);if(sel<0||sel>=ws.length)sel=0;const w=ws[sel];box.innerHTML=`<div class="miik-week12-title"><div><h3>${E(w.w)} · ${termLabel()}</h3><span>${E(w.date)}</span></div><button class="miik-plan12-print" onclick="miikPrintPlan12()">طباعة</button></div><div class="miik-plan12-grid">${ws.map((x,i)=>card(x,i)).join('')}</div>`;return}const isRef=title==='الخطة المعتمدة في مِعِك',shown=isRef?ref:ws;box.innerHTML=`<div class="cal-top"><div><b style="font-size:23px">${E(title)}</b><div class="muted">${termLabel()} · ${isRef?'مرجع مِعِك قبل الاعتماد':'هذه الخطة هي المصدر التشغيلي الوحيد للتقويم'}</div></div><button class="miik-plan12-print" onclick="miikPrintPlan12()">طباعة الخطة</button></div><div class="miik-plan12-grid">${shown.map((w,i)=>card(w,i)).join('')}</div>${isRef?`<div class="adopt-actions"><button class="adopt-primary" onclick="miikAdoptReference003()">اعتماد الخطة كما هي</button><button class="adopt-edit" onclick="miikEditOperationalPlan003(true)">تعديل ثم اعتماد</button></div>`:`<div class="adopt-actions"><button class="adopt-edit" onclick="miikEditOperationalPlan003(false)">تعديل الخطة</button></div>`}`};
  window.miikSyncCustomPrograms?.();
 })();
 </script>
@@ -3866,107 +3875,55 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
   window.addEventListener('storage',e=>{if(e.key===PROFILE_KEY)window.miikSyncIdentity()});
 })();
 </script>
+
+<script id="miik-beta-003-canonical-plan-calendar">
+(()=>{'use strict';
+ const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
+ const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
+ const rows=()=>window.miikPlanRows12?.(String(ctx().term))||[];
+ const refRows=()=>window.miikReferenceRows003?.(String(ctx().term))||[];
+ const keyPlan=()=>window.miikOperationalPlanKey003?.(String(ctx().term))||('miikCounselorPlanT'+ctx().term);
+ const same=(a,b)=>a&&b&&+a.y===+b.y&&+a.m===+b.m&&+a.d===+b.d;
+ const hkey=x=>+x.y*10000 + +x.m*100 + +x.d;
+ function hp(gd){const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(gd),g=t=>+(p.find(x=>x.type===t)?.value||0);return{d:g('day'),m:g('month'),y:g('year')}}
+ function today(){return hp(new Date())}
+ function planDays(w){return window.miikPlanDays1710?.(w)||parseRangeDays(w)}
+ function norm(s){return String(s||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c))}
+ function nextH(x){let d=x.d+1,m=x.m,y=x.y;const g=findGregorian(y,m,d);if(g)return hp(g); if(d>30){d=1;m++;if(m>12){m=1;y++}}return{y,m,d}}
+ function parseRangeDays(w){const n=(norm(w?.date).match(/\d+/g)||[]).map(Number),y=n.find(x=>x>=1400)||+ctx().year||1448;let sd,sm,ed,em;if(n.length>=5){sd=n[0];sm=n[1];ed=n[2];em=n[3]}else if(n.length>=4&&n[1]<=12&&n[3]<=12){sd=n[0];sm=n[1];ed=n[2];em=n[3]}else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}else return[];const out=[];let x={y,m:sm,d:sd};for(let i=0;i<7;i++){out.push(x);if(x.d===ed&&x.m===em)break;x=nextH(x)}return out}
+ function parseCustom(s){const raw=norm(s),ns=(raw.match(/\d+/g)||[]).map(Number),mi=MONTHS.findIndex(m=>raw.includes(m));if(mi>=0){const y=ns.find(n=>n>=1400),d=ns.find(n=>n>0&&n<32);return y&&d?{y,m:mi+1,d}:null}return ns.length>=3?(ns[0]>=1400?{y:ns[0],m:ns[1],d:ns[2]}:{d:ns[0],m:ns[1],y:ns[2]}):null}
+ function weekFor(h){return rows().find(w=>planDays(w).some(d=>same(d,h)))||null}
+ function resolve(input,m,d){const gd=input instanceof Date?input:null,h=gd?hp(gd):{y:+input,m:+m,d:+d},w=weekFor(h),items=[];if(w){const ps=w.programs?.length?w.programs:[{name:w.program,custom:false}];ps.forEach(p=>{const ph=p.custom?parseCustom(p.date):null;if(!p.custom||same(ph,h))items.push({kind:'program',label:p.name,sub:p.custom?'برنامج مضاف':'البرنامج',action:`miikOpenPlanProgram12('${Q(p.name)}')`})});if(w.value)items.push({kind:'value',label:w.value,sub:'القيمة',action:`miikOpenPlanValue12('${Q(w.value)}')`});(w.extras||[]).filter(x=>x?.type==='global'&&x.text&&same(x.date,h)).forEach(x=>items.push({kind:'global',label:x.text,sub:'يوم أو مناسبة عالمية',action:`miikOpenGlobalDay12('${Q(x.text)}')`}))}const holiday=(h.y===1448&&h.m===4&&(h.d===12||h.d===13));if(holiday)items.push({kind:'holiday',label:'إجازة اليوم الوطني',sub:'إجازة رسمية',action:''});return{hijri:h,week:w,items,holiday,weekend:gd?(gd.getDay()===5||gd.getDay()===6):false,hasAny:items.length>0}}
+ window.miikCalendarDaySnapshot1713=resolve;window.miikCalendarDayData003=resolve;
+ function findGregorian(y,m,d){const base=new Date();for(let off=-500;off<=500;off++){const g=new Date(base);g.setHours(12,0,0,0);g.setDate(base.getDate()+off);const h=hp(g);if(h.y===+y&&h.m===+m&&h.d===+d)return g}return null}
+ function currentIndex(){const now=new Date(),dow=now.getDay(),target=new Date(now);target.setHours(12,0,0,0);if(dow===5)target.setDate(now.getDate()+2);else if(dow===6)target.setDate(now.getDate()+1);const h=hp(target),i=rows().findIndex(w=>planDays(w).some(d=>same(d,h)));return i}
+ window.miikCurrentWeekIndex1713=currentIndex;
+ function termLabel(){return String(ctx().term)==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول'}
+ function dateLabel(w){return window.miikPlanDateLabel1710?.(w)||String(w?.date||'')}
+ function weekDetail(w,back){const ps=w.programs?.length?w.programs:[{name:w.program,custom:false}],days=planDays(w),names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];return `<div class=\"miik179-week-head\"><div class=\"miik179-week-title\"><b>${E(w.w)} · ${termLabel()}</b><span>${E(dateLabel(w))}</span></div><button type=\"button\" class=\"back miik179-back\" onclick=\"${back==='calendar'?"renderCalendarView('semester')":"openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية.')"}\">العودة ←</button></div><div class=\"miik1711-summary\">${ps.map(p=>`<button class=\"miik1711-link program\" onclick=\"miikOpenPlanProgram12('${Q(p.name)}')\"><span><small>${p.custom?'برنامج مضاف':'البرنامج'}</small><b>${E(p.name)}</b></span><i>‹</i></button>`).join('')}${w.value?`<button class=\"miik1711-link value\" onclick=\"miikOpenPlanValue12('${Q(w.value)}')\"><span><small>القيمة</small><b>${E(w.value)}</b></span><i>‹</i></button>`:''}${(w.extras||[]).filter(x=>x.type==='global').length?`<section class=\"miik1711-events\"><small>الأيام والمناسبات</small><div>${(w.extras||[]).filter(x=>x.type==='global').map(x=>`<button class=\"miik1711-event\" onclick=\"miikOpenGlobalDay12('${Q(x.text)}')\">${E(x.text)} <i>‹</i></button>`).join('')}</div></section>`:''}</div><div class=\"miik179-days\">${days.map((h,i)=>{const s=resolve(h.y,h.m,h.d);return `<div class=\"miik179-day ${same(h,today())?'is-today':''}\"><div class=\"miik179-daytop\"><b>${names[i]||'اليوم'}</b><span>${h.d} ${MONTHS[h.m-1]}</span></div><div class=\"miik1711-daylinks\">${s.items.filter(x=>x.kind==='program'||x.kind==='value').map(x=>`<button class=\"miik1711-mini ${x.kind}\" onclick=\"${x.action}\">${x.kind==='value'?'القيمة: ':''}${E(x.label)}</button>`).join('')}</div></div>`}).join('')}</div>`}
+ window.miikOpenWeek12=function(i){const w=rows()[+i];if(!w)return;sessionStorage.setItem('miikWeeklyIndex',String(i));hideAllPages();modulePage.classList.add('show');moduleTitle.textContent='الخطة الأسبوعية';moduleDesc.textContent='تفصيل الأسبوع المختار من خطة الموجّه الطلابي.';moduleGrid.innerHTML=`<div class=\"miik1723-week-host\">${weekDetail(w,'plan')}</div>`;window.scrollTo({top:0,behavior:'smooth'})};
+ window.miikCalendarOpenSemesterWeek178=function(i){const w=rows()[+i],box=document.querySelector('#calendarPage .monthbox');if(w&&box){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));box.innerHTML=weekDetail(w,'calendar')}};
+ function renderMonth(){const box=document.querySelector('#calendarPage .monthbox'),ht=today(),first=findGregorian(ht.y,ht.m,1);if(!box||!first)return;let cells='',g=new Date(first),d=1;while(true){const h=hp(g);if(h.y!==ht.y||h.m!==ht.m)break;const s=resolve(g),cls=s.holiday||s.weekend?'holiday':s.hasAny?'event-day':'plain-day';cells+=`<button type=\"button\" class=\"num calendar-day-button ${cls} ${h.d===ht.d?'today-ring':''}\" onclick=\"v57OpenHijriDay(${h.y},${h.m},${h.d})\"><b>${h.d}</b>${s.items.map(x=>`<span class=\"cal-label miik1713-${x.kind}-label\">${E(x.kind==='value'?'القيمة: '+x.label:x.label)}</span>`).join('')}</button>`;g.setDate(g.getDate()+1);d++;if(d>31)break}let blanks='';for(let i=0;i<first.getDay();i++)blanks+='<div class=\"num blank-day\"></div>';const names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];box.innerHTML=`<div class=\"month-title\">${MONTHS[ht.m-1]} ${ht.y}هـ</div><div class=\"monthgrid\">${names.map(x=>`<div class=\"head\">${x}</div>`).join('')}${blanks}${cells}</div>${typeof calendarLegend==='function'?calendarLegend():''}`};
+ window.renderCalendarView=function(mode='month'){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(!box)return;if(mode==='month')return renderMonth();if(mode==='semester'){const ci=currentIndex();box.innerHTML=`<div class=\"miik179-sem-head\"><b>${termLabel()}</b><span>العام الدراسي ${E(ctx().year)}هـ</span></div><div class=\"miik179-sem-grid\">${rows().map((w,i)=>`<button class=\"miik179-sem-card ${i===ci?'is-current-week':''}\" onclick=\"miikCalendarOpenSemesterWeek178(${i})\"><div><b>${E(w.w)}</b><span>${E(dateLabel(w))}</span></div>${(w.programs?.length?w.programs:[{name:w.program}]).map(p=>`<strong>${E(p.name)}</strong>`).join('')}${w.value?`<em>القيمة: ${E(w.value)}</em>`:''}${(w.extras||[]).filter(x=>x.type==='global').map(x=>`<small>${E(x.text)}</small>`).join('')}</button>`).join('')}</div>`;return}if(mode==='week'){const i=currentIndex(),w=i>=0?rows()[i]:null;if(w){box.innerHTML=weekDetail(w,'calendar');const head=box.querySelector('.miik179-week-title b');if(head)head.textContent=`${w.w} · الأسبوع الحالي`;return}box.innerHTML='<div class=\"empty-warm\">لا يوجد أسبوع دراسي مطابق للتاريخ الحالي في خطة الموجّه الطلابي.</div>'}};
+ window.v57OpenHijriDay=function(y,m,d){hideAllPages();calendarPage.classList.add('show');const s=resolve(y,m,d),html=s.items.length?s.items.map(x=>x.action?`<button class=\"miik1713-day-item ${x.kind}\" onclick=\"${x.action}\"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span><i>‹</i></button>`:`<div class=\"miik1713-day-item ${x.kind}\"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span></div>`).join(''):'<div class=\"empty-warm\">ما فيه أعمال مسجلة في هذا اليوم.</div>';document.querySelector('#calendarPage .monthbox').innerHTML=`<div class=\"day-view-head\"><div><div class=\"month-title\">${d} ${MONTHS[m-1]} ${y}هـ</div><div class=\"muted\">من خطة الموجّه الطلابي</div></div><button class=\"day-full-calendar\" onclick=\"openCalendar()\">فتح التقويم الكامل</button></div><div class=\"miik1713-day-list\">${html}</div>`};
+ window.miikAdoptReference003=function(){localStorage.setItem(keyPlan(),JSON.stringify(refRows()));localStorage.setItem('miikPlanAdopted','1');localStorage.setItem('miikPlanAdoptedT'+String(ctx().term),'1');showMiikNotice?.('تم الاعتماد','أصبحت خطة الموجّه الطلابي هي المصدر التشغيلي للتقويم.');setTimeout(()=>openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية.'),120)};
+ window.miikEditOperationalPlan003=function(fromReference){const base=(fromReference?refRows():rows()).map(w=>({...w}));showMiikDialog(`<h2>${fromReference?'تعديل ثم اعتماد':'تعديل خطة الموجّه الطلابي'}</h2><p>يمكن تعديل البرامج والقيم. الأيام العالمية ثابتة.</p><form id=\"miik003Edit\"><div class=\"miik003-edit-list\">${base.map((w,i)=>`<div class=\"miik003-edit-week\"><b>${E(w.w)}</b><small>${E(w.date)}</small><input data-i=\"${i}\" data-k=\"program\" value=\"${E(w.program)}\" placeholder=\"البرنامج\"><input data-i=\"${i}\" data-k=\"value\" value=\"${E(w.value)}\" placeholder=\"القيمة\"><label class=\"miik003-delete\"><input type=\"checkbox\" data-del=\"${i}\"> حذف برنامج هذا الأسبوع</label></div>`).join('')}</div><div class=\"dialog-actions\"><button class=\"dialog-primary\" type=\"submit\">حفظ${fromReference?' واعتماد':''}</button><button class=\"dialog-cancel\" type=\"button\" onclick=\"closeMiikDialog()\">إلغاء</button></div></form>`);document.getElementById('miik003Edit').onsubmit=e=>{e.preventDefault();const out=base.map(w=>({...w}));e.target.querySelectorAll('input[data-k]').forEach(x=>out[+x.dataset.i][x.dataset.k]=x.value.trim());e.target.querySelectorAll('input[data-del]:checked').forEach(x=>out[+x.dataset.del].program='');localStorage.setItem(keyPlan(),JSON.stringify(out));localStorage.setItem('miikPlanAdopted','1');localStorage.setItem('miikPlanAdoptedT'+String(ctx().term),'1');closeMiikDialog();showMiikNotice?.('تم الحفظ','تحدثت خطة الموجّه، والتقويم يقرأ منها مباشرة.');setTimeout(()=>openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية.'),100)}};
+ setTimeout(()=>{window.rollingDays?.()},0);
+})();
+</script>
+<style id="miik-beta-003-style">
+@media(max-width:720px){.miik-plan12-value,.miik179-sem-card em,.miik1711-link.value,.miik1711-mini.value{display:flex!important;visibility:visible!important;opacity:1!important}.miik-plan12-value{display:inline-flex!important}.miik003-edit-list{max-height:60vh;overflow:auto}.miik003-edit-week{padding:9px;border-bottom:1px solid var(--line)}.miik003-edit-week small{display:block;color:var(--muted);margin:3px 0 6px}.miik003-edit-week input:not([type=checkbox]){width:100%;box-sizing:border-box;margin:3px 0}.miik003-delete{font-size:11px!important;font-weight:700!important;display:flex;gap:5px;align-items:center}}
+</style>\n
 </body></html>
 
 <!-- MIIK Beta 1.7.8: calendar semester week stays inside calendar -->
-<script id="miik-beta-178-calendar-semester-week-nav">
-(()=>{
-  const esc178=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const ctx178=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
-  const term178=()=>ctx178().term==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول';
-  const rows178=()=>typeof window.miikPlanRows12==='function'?window.miikPlanRows12(ctx178().term):[];
-
-  // Calendar-only navigation: a semester week must never open the plan module.
-  window.miikCalendarOpenSemesterWeek178=function(index){
-    const ws=rows178(), w=ws[Number(index)];
-    const box=document.querySelector('#calendarPage .monthbox');
-    if(!box||!w)return;
-    document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));
-    const days=(w.days||[]).map(x=>`<span class="miik178-chip">${esc178(x)}</span>`).join('');
-    box.innerHTML=`
-      <div class="miik178-week-head">
-        <button type="button" class="back miik178-back" onclick="renderCalendarView('semester')">→ العودة للتقويم الفصلي</button>
-        <div>
-          <div class="month-title">${esc178(w.w)} · ${term178()}</div>
-          <div class="miik178-week-date">${esc178(w.date)}</div>
-        </div>
-      </div>
-      <div class="miik178-week-summary">
-        <div><b>البرنامج</b><span>${esc178(w.program)}</span></div>
-        ${w.value?`<div><b>القيمة</b><span>${esc178(w.value)}</span></div>`:''}
-        ${days?`<div><b>الأيام والمناسبات</b><span class="miik178-chips">${days}</span></div>`:''}
-      </div>
-      <div class="miik178-note">تفاصيل هذا الأسبوع داخل التقويم. لا يتم الانتقال إلى صفحة الخطة.</div>`;
-    window.scrollTo({top:0,behavior:'smooth'});
-  };
-
-  const previous=window.renderCalendarView;
-  if(typeof previous==='function'){
-    window.renderCalendarView=function(mode='month'){
-      if(mode==='semester'){
-        document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));
-        const box=document.querySelector('#calendarPage .monthbox');
-        if(box){
-          const ws=rows178(), c=ctx178();
-          box.innerHTML=`<div class="month-title">${term178()} · العام الدراسي ${esc178(c.year)}هـ</div><div class="semester-calendar-grid">${ws.map((w,i)=>`<button type="button" class="semester-week-card" onclick="miikCalendarOpenSemesterWeek178(${i})"><b>${esc178(w.w)}</b><div>${esc178(w.date)}</div><small>${esc178(w.program)}</small></button>`).join('')}</div>`;
-          return;
-        }
-      }
-      return previous.apply(this,arguments);
-    };
-  }
-})();
-</script>
 <style id="miik-beta-178-calendar-semester-week-style">
 .miik178-week-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}.miik178-week-head>div{text-align:right}.miik178-week-date{color:var(--muted);font-weight:700;margin-top:5px}.miik178-back{white-space:nowrap}.miik178-week-summary{display:grid;gap:12px}.miik178-week-summary>div{border:1px solid var(--line);background:var(--paper);border-radius:16px;padding:15px;display:grid;gap:6px}.miik178-week-summary b{color:var(--deep)}.miik178-week-summary span{color:var(--muted)}.miik178-chips{display:flex;flex-wrap:wrap;gap:7px}.miik178-chip{background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--deep)!important}.miik178-note{margin-top:14px;color:var(--muted);text-align:center;font-size:14px}@media(max-width:700px){.miik178-week-head{align-items:stretch;flex-direction:column-reverse}.miik178-back{width:max-content;max-width:100%}}
 </style>
 
 <!-- MIIK Beta 1.7.9: calendar/weekly detail restoration -->
-<script id="miik-beta-179-calendar-weekly-restoration">
-(()=>{'use strict';
- const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
- const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
- const rows=()=>typeof window.miikPlanRows12==='function'?window.miikPlanRows12(ctx().term):[];
- const term=()=>ctx().term==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول';
- function numbers(s){return (String(s||'').match(/\d+/g)||[]).map(Number)}
- function range(w){
-   const n=numbers(w.date), explicit=n.find(x=>x>=1400), year=explicit||Number(ctx().year)||1448; let sd,sm,ed,em;
-   if(n.length>=4 && n[1]<=12 && n[3]<=12){sd=n[0];sm=n[1];ed=n[2];em=n[3]}
-   else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}
-   else return {sd:0,sm:0,ed:0,em:0,year,days:[]};
-   const ds=[]; let d=sd,m=sm,y=year;
-   for(let i=0;i<7;i++){ds.push({d,m,y});if(d===ed&&m===em)break;d++;if(d>30){d=1;m++;if(m>12){m=1;y++}}}
-   return {sd,sm,ed,em,year,days:ds};
- }
- function dateLabel(w){const r=range(w);if(!r.sd)return E(w.date);return `${r.sd}–${r.ed} / ${r.sm===r.em?r.sm:(r.sm+'–'+r.em)} / ${r.year}هـ`}
- function currentHijri(){try{if(typeof h==='function')return h(new Date());if(typeof h86==='function')return h86(new Date())}catch(_){}return null}
- function isToday(x){const q=currentHijri();return q&&Number(q.y)===x.y&&Number(q.m)===x.m&&Number(q.d)===x.d}
- function dayEvents(x,wd){try{if(typeof events==='function')return events(x.y,x.m,x.d,wd)||[];if(typeof events86==='function')return events86(x.y,x.m,x.d,wd)||[]}catch(_){}return []}
- function weekDayCards(w){
-   const r=range(w), names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-   if(!r.days.length)return '';
-   return `<div class="miik179-days">${r.days.map((x,i)=>{const ev=dayEvents(x,i), today=isToday(x);return `<div class="miik179-day ${today?'is-today':''}"><div class="miik179-daytop"><b>${names[i]||'اليوم'}</b><span>${x.d} ${MONTHS[x.m-1]}</span>${today?'<em>اليوم</em>':''}</div><div class="miik179-daytags"><span class="program">${E(w.program)}</span>${w.value?`<span class="value">القيمة: ${E(w.value)}</span>`:''}${ev.map(e=>`<span class="event">${E(e.t||'')}</span>`).join('')}</div></div>`}).join('')}</div>`;
- }
- function weekDetail(w,index,calendar){
-   const extras=(w.days||[]).filter(Boolean);
-   return `<div class="miik179-week-head"><div class="miik179-week-title"><b>${E(w.w)} · ${term()}</b><span>${dateLabel(w)}</span></div>${calendar?'<button class="back miik179-back" onclick="renderCalendarView(\'semester\')">العودة للتقويم الفصلي ←</button>':'<button class="back miik179-back" onclick="miikRefreshPlan12(\'الخطة الأسبوعية\')">العودة للأسابيع ←</button>'}</div>
-   <div class="miik179-summary"><div class="program"><small>البرنامج</small><b>${E(w.program)}</b></div>${w.value?`<div class="value"><small>القيمة</small><b>${E(w.value)}</b></div>`:''}${extras.length?`<div class="events"><small>الأيام والمناسبات</small><div>${extras.map(x=>`<span>${E(x)}</span>`).join('')}</div></div>`:''}</div>${weekDayCards(w)}`;
- }
- window.miikCalendarOpenSemesterWeek178=function(index){const w=rows()[Number(index)],box=document.querySelector('#calendarPage .monthbox');if(!w||!box)return;document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));box.innerHTML=weekDetail(w,index,true);window.scrollTo({top:0,behavior:'smooth'})};
- window.miikOpenWeek12=function(index){const i=Number(index),w=rows()[i];if(!w)return;sessionStorage.setItem('miikWeeklyIndex',String(i));openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.');setTimeout(()=>{const box=document.getElementById('miikPlanContent');if(box)box.innerHTML=weekDetail(w,i,false)},20)};
- const prev=window.renderCalendarView;
- window.renderCalendarView=function(mode='month'){
-   if(mode==='semester'){
-     document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
-     const ws=rows(),currentIx=currentWeekIndex1713();box.innerHTML=`<div class="miik179-sem-head"><b>${term()}</b><span>العام الدراسي ${E(ctx().year)}هـ</span></div><div class="miik179-sem-grid">${ws.map((w,i)=>`<button class="miik179-sem-card ${i===currentIx?'is-current-week':''}" onclick="miikCalendarOpenSemesterWeek178(${i})"><div><b>${E(w.w)}</b><span>${dateLabel(w)}</span></div>${(w.programs&&w.programs.length?w.programs:[{name:w.program}]).map(p=>`<strong${p.custom?' class="miik1722-custom-sem"':''}>${E(p.name)}</strong>`).join('')}${w.value?`<em>القيمة: ${E(w.value)}</em>`:''}${(w.days||[]).length?`<small>${(w.days||[]).map(E).join(' · ')}</small>`:''}</button>`).join('')}</div>`;return;
-   }
-   if(mode==='week'){
-     const q=currentHijri(),ws=rows();let ix=-1;if(q)ix=ws.findIndex(w=>range(w).days.some(x=>x.y===Number(q.y)&&x.m===Number(q.m)&&x.d===Number(q.d)));if(ix<0)ix=Math.max(0,Number(sessionStorage.getItem('miikWeeklyIndex')||0));const w=ws[ix];if(w){const box=document.querySelector('#calendarPage .monthbox');document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));box.innerHTML=`<div class="miik179-current-head"><b>الأسبوع الحالي</b><span>${dateLabel(w)}</span></div>${weekDayCards(w)}<div class="miik179-week-foot"><span class="program">${E(w.program)}</span>${w.value?`<span class="value">القيمة: ${E(w.value)}</span>`:''}${(w.days||[]).map(x=>`<span class="event">${E(x)}</span>`).join('')}</div>`;return}}
-   return prev.apply(this,arguments);
- };
-})();
-</script>
 <style id="miik-beta-179-calendar-weekly-style">
 .miik179-week-head{display:flex;direction:rtl;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}.miik179-week-title{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}.miik179-week-title b{font-size:18px;color:var(--deep)}.miik179-week-title span{font-size:14px;color:var(--olive);font-weight:800}.miik179-back{margin-inline-start:auto;white-space:nowrap}.miik179-summary{display:grid;grid-template-columns:1.3fr .7fr;gap:10px;margin-bottom:13px}.miik179-summary>div{border:1px solid var(--line);border-radius:15px;padding:13px 15px;background:#fffdf8}.miik179-summary small{display:block;color:var(--olive);font-weight:800;margin-bottom:5px}.miik179-summary b{color:var(--deep)}.miik179-summary .program{background:#edf2e9}.miik179-summary .value{background:#f4f0e4}.miik179-summary .events{grid-column:1/-1;background:#f8f5ed}.miik179-summary .events div{display:flex;gap:6px;flex-wrap:wrap}.miik179-summary .events span,.miik179-week-foot span{border:1px solid #dfe5d9;border-radius:999px;padding:5px 9px;background:#fffdf8}.miik179-days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.miik179-day{border:1px solid var(--line);border-radius:14px;background:#fffdf8;padding:10px;min-height:112px}.miik179-day.is-today{outline:2px solid var(--olive);background:#edf2e9}.miik179-daytop{display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid #eee7da;padding-bottom:7px;margin-bottom:7px}.miik179-daytop b{color:var(--deep)}.miik179-daytop span{font-size:12px;color:var(--muted)}.miik179-daytop em{font-style:normal;font-size:10px;background:var(--olive);color:white;padding:2px 6px;border-radius:999px}.miik179-daytags{display:grid;gap:5px}.miik179-daytags span{font-size:10px;border-radius:8px;padding:5px 6px}.miik179-daytags .program,.miik179-week-foot .program{background:#e8efe5;color:var(--deep)}.miik179-daytags .value,.miik179-week-foot .value{background:#f2eddf;color:#5d6f5b}.miik179-daytags .event,.miik179-week-foot .event{background:#f7f2e9;color:#786f62}.miik179-current-head,.miik179-sem-head{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-bottom:15px}.miik179-current-head b,.miik179-sem-head b{font-size:21px;color:var(--deep)}.miik179-current-head span,.miik179-sem-head span{font-size:13px;color:var(--olive);font-weight:800}.miik179-week-foot{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:12px}.miik179-sem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.miik179-sem-card{border:1px solid var(--line);background:#fffdf8;border-radius:15px;padding:12px;text-align:right;color:var(--deep);cursor:pointer;min-height:130px}.miik179-sem-card:hover{background:#f5f2e8}.miik179-sem-card>div{display:flex;justify-content:space-between;gap:6px;align-items:center;margin-bottom:8px}.miik179-sem-card>div b{font-size:13px}.miik179-sem-card>div span{font-size:10px;color:var(--olive);font-weight:700}.miik179-sem-card strong{display:block;font-size:12px;margin-bottom:7px}.miik179-sem-card em{display:inline-block;font-style:normal;font-size:10px;background:#edf2e9;padding:4px 7px;border-radius:999px;margin-bottom:6px}.miik179-sem-card small{display:block;font-size:9px;color:var(--muted);line-height:1.5}
 @media(max-width:720px){.miik179-week-head{align-items:flex-start}.miik179-week-title{gap:5px}.miik179-week-title b{font-size:13px}.miik179-week-title span{font-size:10px}.miik179-back{font-size:9px;padding:7px 9px}.miik179-summary{grid-template-columns:1fr 1fr;gap:6px}.miik179-summary>div{padding:9px;border-radius:11px}.miik179-summary small{font-size:8px}.miik179-summary b{font-size:10px}.miik179-days{grid-template-columns:1fr;gap:6px}.miik179-day{min-height:0;padding:8px}.miik179-daytags{grid-template-columns:1fr 1fr}.miik179-sem-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.miik179-sem-card{padding:9px;min-height:112px;border-radius:12px}.miik179-sem-card>div{display:block}.miik179-sem-card>div b{font-size:10px}.miik179-sem-card>div span{display:block;font-size:8px;margin-top:2px}.miik179-sem-card strong{font-size:9px}.miik179-sem-card em,.miik179-sem-card small{font-size:7.5px}.miik179-current-head,.miik179-sem-head{gap:6px}.miik179-current-head b,.miik179-sem-head b{font-size:14px}.miik179-current-head span,.miik179-sem-head span{font-size:9px}}
@@ -3974,94 +3931,9 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 
 
 <!-- MIIK Beta 1.7.10 — date engine only: preserve calendar UI/data/routes -->
-<script id="miik-beta-1710-date-engine">
-(()=>{'use strict';
- const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
- const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
- const rows=()=>typeof window.miikPlanRows12==='function'?window.miikPlanRows12(ctx().term):[];
- function hijriToday(){
-   try{
-     const parts=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(new Date());
-     const get=t=>Number(parts.find(x=>x.type===t)?.value||0); const d=get('day'),m=get('month'),y=get('year');
-     if(d&&m&&y)return {d,m,y};
-   }catch(_){ }
-   return null;
- }
- function nums(s){return (String(s||'').match(/\d+/g)||[]).map(Number)}
- function parse(w){
-   const n=nums(w?.date), fallback=Number(ctx().year)||1448, explicit=n.find(x=>x>=1400), year=explicit||fallback; let sd,sm,ed,em;
-   if(n.length>=4 && n[1]<=12 && n[3]<=12){sd=n[0];sm=n[1];ed=n[2];em=n[3]}
-   else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}
-   else return null;
-   return {sd,sm,ed,em,year};
- }
- function label(w){const r=parse(w);if(!r)return String(w?.date||'');return r.sm===r.em?`${r.sd}–${r.ed} / ${r.sm} / ${r.year}هـ`:`${r.sd} / ${r.sm} / ${r.year}هـ – ${r.ed} / ${r.em} / ${r.year}هـ`}
- function nextDay(x){let {d,m,y}=x;d++;if(d>30){d=1;m++;if(m>12){m=1;y++}}return {d,m,y}}
- function prevDay(x){let {d,m,y}=x;d--;if(d<1){m--;if(m<1){m=12;y--}d=30}return {d,m,y}}
- function cmp(a,b){return a.y-b.y||a.m-b.m||a.d-b.d}
- function daysOf(w){const r=parse(w);if(!r)return[];let x={d:r.sd,m:r.sm,y:r.year}, end={d:r.ed,m:r.em,y:r.year}, out=[];for(let i=0;i<10;i++){out.push({...x});if(cmp(x,end)===0)break;x=nextDay(x)}return out}
- function currentScheduledIndex(){const q=hijriToday();if(!q)return -1;return rows().findIndex(w=>daysOf(w).some(x=>cmp(x,q)===0))}
- function gregWeekHijri(){
-   const now=new Date(), ry=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Riyadh',weekday:'short'}).format(now);const map={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};let off=map[ry]??0;
-   const start=new Date(now);start.setDate(start.getDate()-off);const end=new Date(start);end.setDate(end.getDate()+4);
-   const conv=d=>{try{const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(d),g=t=>Number(p.find(x=>x.type===t)?.value||0);return{d:g('day'),m:g('month'),y:g('year')}}catch(_){return null}};
-   return {start:conv(start),end:conv(end)};
- }
- function rangeText(a,b){if(!a||!b)return'';return a.m===b.m&&a.y===b.y?`${a.d}–${b.d} / ${a.m} / ${a.y}هـ`:`${a.d} / ${a.m} / ${a.y}هـ – ${b.d} / ${b.m} / ${b.y}هـ`}
- function dayCardsForCurrent(w){
-   const rw=gregWeekHijri(), names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس']; if(!rw.start)return'';let x={...rw.start},out=[];
-   for(let i=0;i<5;i++){const today=hijriToday(),is=today&&cmp(x,today)===0;out.push(`<div class="miik179-day ${is?'is-today':''}"><div class="miik179-daytop"><b>${names[i]}</b><span>${x.d} ${MONTHS[x.m-1]}</span>${is?'<em>اليوم</em>':''}</div>${w?`<div class="miik179-daytags"><span class="program">${E(w.program)}</span>${w.value?`<span class="value">القيمة: ${E(w.value)}</span>`:''}</div>`:'<div class="miik179-daytags"><span class="event">لا يوجد برنامج مجدول في الخطة لهذا اليوم</span></div>'}</div>`);x=nextDay(x)}return `<div class="miik179-days">${out.join('')}</div>`;
- }
- // Expose one reliable source of today's Umm al-Qura date for later calendar work.
- window.miikHijriToday1710=hijriToday; window.miikPlanDateLabel1710=label; window.miikPlanDays1710=daysOf;
- const previous=window.renderCalendarView;
- window.renderCalendarView=function(mode='month'){
-   if(mode==='week'){
-     const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
-     document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));
-     const ix=currentScheduledIndex(),w=ix>=0?rows()[ix]:null,rw=gregWeekHijri(),title=rangeText(rw.start,rw.end);
-     box.innerHTML=`<div class="miik179-current-head"><b>الأسبوع الحالي</b><span>${E(title)}</span></div>${dayCardsForCurrent(w)}${w?`<div class="miik179-week-foot"><span class="program">${E(w.program)}</span>${w.value?`<span class="value">القيمة: ${E(w.value)}</span>`:''}</div>`:'<div class="miik1710-gap-note">هذا الأسبوع غير مدرج كأسبوع برنامج في الخطة المعتمدة؛ لذلك لم يُسند إليه برنامج تلقائيًا.</div>'}`;
-     return;
-   }
-   if(mode==='semester'){
-     const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
-     document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='semester'));
-     const term=ctx().term==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول';
-     box.innerHTML=`<div class="miik179-sem-head"><b>${term}</b><span>العام الدراسي ${E(ctx().year)}هـ</span></div><div class="miik179-sem-grid">${rows().map((w,i)=>`<button class="miik179-sem-card ${i===(typeof window.miikCurrentWeekIndex1713==='function'?window.miikCurrentWeekIndex1713():currentScheduledIndex())?'is-current-week':''}" onclick="miikCalendarOpenSemesterWeek178(${i})"><div><b>${E(w.w)}</b><span>${E(label(w))}</span></div>${(w.programs&&w.programs.length?w.programs:[{name:w.program}]).map(p=>`<strong${p.custom?' class="miik1722-custom-sem"':''}>${E(p.name)}</strong>`).join('')}${w.value?`<em>القيمة: ${E(w.value)}</em>`:''}${(w.days||[]).length?`<small>${(w.days||[]).map(E).join(' · ')}</small>`:''}</button>`).join('')}</div>`;return;
-   }
-   return previous.apply(this,arguments);
- };
- // Correct date text in the existing semester-week detail without changing its content/routes.
- const oldOpen=window.miikCalendarOpenSemesterWeek178;
- window.miikCalendarOpenSemesterWeek178=function(index){oldOpen(index);const w=rows()[Number(index)],el=document.querySelector('.miik179-week-title span');if(w&&el)el.textContent=label(w)};
-})();
-</script>
 <style id="miik-beta-1710-date-style">.miik1710-gap-note{margin-top:12px;padding:11px 14px;border:1px solid var(--line);border-radius:13px;background:#f8f5ed;color:var(--muted);text-align:center;font-size:12px}</style>
 
 <!-- MIIK Beta 1.7.11 — calendar detail interactions only -->
-<script id="miik-beta-1711-calendar-detail-links">
-(()=>{'use strict';
- const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
- const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
- const rows=()=>typeof window.miikPlanRows12==='function'?window.miikPlanRows12(ctx().term):[];
- const term=()=>ctx().term==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول';
- const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
- function nums(s){return (String(s||'').match(/\d+/g)||[]).map(Number)}
- function parsed(w){const n=nums(w?.date),year=n.find(x=>x>=1400)||Number(ctx().year)||1448;let sd,sm,ed,em;if(n.length>=4&&n[1]<=12&&n[3]<=12){sd=n[0];sm=n[1];ed=n[2];em=n[3]}else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}else return null;return{sd,sm,ed,em,year}}
- function dateLabel(w){if(typeof window.miikPlanDateLabel1710==='function')return window.miikPlanDateLabel1710(w);const r=parsed(w);return r?`${r.sd}–${r.ed} / ${r.sm} / ${r.year}هـ`:String(w?.date||'')}
- function dayList(w){if(typeof window.miikPlanDays1710==='function')return window.miikPlanDays1710(w)||[];return[]}
- function hijriToday(){return typeof window.miikHijriToday1710==='function'?window.miikHijriToday1710():null}
- function same(a,b){return a&&b&&Number(a.d)===Number(b.d)&&Number(a.m)===Number(b.m)&&Number(a.y)===Number(b.y)}
- function programButton(w,cls=''){const ps=(w.programs&&w.programs.length?w.programs:[{name:w.program}]);return ps.map(p=>`<button type="button" class="miik1711-link program ${cls}" onclick="miikOpenPlanProgram12('${Q(p.name)}')"><span><small>${p.custom?'برنامج مضاف':'البرنامج'}</small><b>${E(p.name)}</b></span><i>‹</i></button>`).join('')}
- function valueButton(w,cls=''){return w.value?`<button type="button" class="miik1711-link value ${cls}" onclick="miikOpenPlanValue12('${Q(w.value)}')"><span><small>القيمة</small><b>${E(w.value)}</b></span><i>‹</i></button>`:''}
- function eventButtons(w){return (w.days||[]).filter(Boolean).map(x=>`<button type="button" class="miik1711-event" onclick="miikOpenGlobalDay12('${Q(x)}')">${E(x)} <i>‹</i></button>`).join('')}
- function dayCards(w){const ds=dayList(w),names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],today=hijriToday();if(!ds.length)return'';return `<div class="miik179-days">${ds.map((x,i)=>`<div class="miik179-day ${same(x,today)?'is-today':''}"><div class="miik179-daytop"><b>${names[i]||'اليوم'}</b><span>${x.d} ${MONTHS[x.m-1]}</span>${same(x,today)?'<em>اليوم</em>':''}</div><div class="miik1711-daylinks">${(w.programs&&w.programs.length?w.programs:[{name:w.program}]).map(p=>`<button type="button" class="miik1711-mini program" onclick="miikOpenPlanProgram12('${Q(p.name)}')">${E(p.name)}</button>`).join('')}${w.value?`<button type="button" class="miik1711-mini value" onclick="miikOpenPlanValue12('${Q(w.value)}')">القيمة: ${E(w.value)}</button>`:''}</div></div>`).join('')}</div>`}
- function detail(w){return `<div class="miik179-week-head"><div class="miik179-week-title"><b>${E(w.w)} · ${term()}</b><span>${E(dateLabel(w))}</span></div><button type="button" class="back miik179-back" onclick="renderCalendarView('semester')">العودة للتقويم الفصلي ←</button></div><div class="miik1711-summary">${programButton(w)}${valueButton(w)}${(w.days||[]).length?`<section class="miik1711-events"><small>الأيام والمناسبات</small><div>${eventButtons(w)}</div></section>`:''}</div>${dayCards(w)}`}
- window.miikCalendarOpenSemesterWeek178=function(index){const w=rows()[Number(index)],box=document.querySelector('#calendarPage .monthbox');if(!w||!box)return;document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));box.innerHTML=detail(w);window.scrollTo({top:0,behavior:'smooth'})};
-})();
-</script>
 <style id="miik-beta-1711-calendar-detail-style">
 .miik1711-summary{display:grid;grid-template-columns:minmax(0,2fr) minmax(180px,1fr);gap:10px;margin-bottom:12px}.miik1711-link{width:100%;border:1px solid var(--line);border-radius:16px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:right;cursor:pointer;font:inherit;transition:.15s ease}.miik1711-link.program{background:#e8efe5;color:var(--deep)}.miik1711-link.value{background:#f2eddf;color:#5d6f5b}.miik1711-link span{display:grid;gap:4px}.miik1711-link small,.miik1711-events>small{font-size:11px;color:var(--muted);font-weight:700}.miik1711-link b{font-size:15px}.miik1711-link i,.miik1711-event i{font-style:normal;font-size:20px;color:var(--olive)}.miik1711-link:hover,.miik1711-event:hover,.miik1711-mini:hover{transform:translateY(-1px);border-color:var(--olive)}.miik1711-events{grid-column:1/-1;border:1px solid var(--line);background:#f8f5ed;border-radius:16px;padding:13px 15px}.miik1711-events>div{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}.miik1711-event{border:1px solid #dfe5d9;background:#fffdf8;color:var(--deep);border-radius:999px;padding:7px 11px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;font:inherit;font-size:12px;font-weight:700}.miik1711-daylinks{display:grid;gap:5px}.miik1711-mini{width:100%;border:1px solid transparent;border-radius:8px;padding:5px 6px;text-align:right;cursor:pointer;font:inherit;font-size:10px}.miik1711-mini.program{background:#e8efe5;color:var(--deep)}.miik1711-mini.value{background:#f2eddf;color:#5d6f5b}
 @media(max-width:720px){.miik1711-summary{grid-template-columns:1fr 1fr;gap:6px}.miik1711-link{padding:9px;border-radius:11px}.miik1711-link small,.miik1711-events>small{font-size:8px}.miik1711-link b{font-size:10px}.miik1711-link i,.miik1711-event i{font-size:14px}.miik1711-events{padding:9px;border-radius:11px}.miik1711-event{font-size:9px;padding:6px 8px}}
@@ -4070,65 +3942,6 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 
 
 <!-- MIK Beta 0.0.2 — one canonical day resolver shared by home and main calendar -->
-<script id="miik-beta-002-calendar-source">
-(()=>{'use strict';
- const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
- const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
- const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
- const rows=()=>typeof window.miikPlanRows12==='function'?(window.miikPlanRows12(String(ctx().term))||[]):[];
- const norm=s=>String(s||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
- const same=(a,b)=>a&&b&&+a.y===+b.y&&+a.m===+b.m&&+a.d===+b.d;
- function parsePlanRange(w){
-   const n=(norm(w?.date).match(/\d+/g)||[]).map(Number), fallback=parseInt(norm(ctx().year),10)||1448;
-   let year=n.find(x=>x>=1400)||fallback,sd,sm,ed,em,ey=year;
-   if(n.length>=5&&n[0]<32&&n[1]<13&&n[2]<32&&n[3]<13&&n[4]>=1400){sd=n[0];sm=n[1];ed=n[2];em=n[3];year=ey=n[4]}
-   else if(n.length>=4&&n[0]<32&&n[1]<13&&n[2]<32&&n[3]<13){sd=n[0];sm=n[1];ed=n[2];em=n[3]}
-   else if(n.length>=4&&n[0]<32&&n[1]<32&&n[2]<13&&n[3]>=1400){sd=n[0];ed=n[1];sm=em=n[2];year=ey=n[3]}
-   else if(n.length>=3){sd=n[0];ed=n[1];sm=em=n[2]}
-   else return null;
-   if(em<sm)ey=year+1;
-   return{start:{y:year,m:sm,d:sd},end:{y:ey,m:em,d:ed}};
- }
- function key(x){return +x.y*10000 + +x.m*100 + +x.d}
- function inRange(h,r){return r&&key(h)>=key(r.start)&&key(h)<=key(r.end)}
- function parseCustomDate(s){
-   const raw=norm(s),nums=(raw.match(/\d+/g)||[]).map(Number),mi=MONTHS.findIndex(x=>raw.includes(x));
-   if(mi>=0){const y=nums.find(n=>n>=1400),d=nums.find(n=>n>0&&n<32);return y&&d?{y,m:mi+1,d}:null}
-   if(nums.length>=3)return nums[0]>=1400?{y:nums[0],m:nums[1],d:nums[2]}:{d:nums[0],m:nums[1],y:nums[2]};
-   return null;
- }
- function hijriFromGregorian(gd){
-   const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(gd),get=t=>Number(p.find(z=>z.type===t)?.value||0);
-   return{d:get('day'),m:get('month'),y:get('year')};
- }
- function weekFor(h){return rows().find(w=>inRange(h,parsePlanRange(w))||(w.extras||[]).some(x=>same(x?.date,h)))||null}
- function resolveDay(input,m,d){
-   const gd=input instanceof Date?input:null,h=gd?hijriFromGregorian(gd):{y:+input,m:+m,d:+d},w=weekFor(h),items=[];
-   if(w){
-     const ps=(w.programs&&w.programs.length?w.programs:[{name:w.program,custom:false}]);
-     ps.forEach(p=>{const ph=p.custom?parseCustomDate(p.date):null;if(!p.custom||same(ph,h))items.push({kind:'program',label:p.name,sub:p.custom?'برنامج مضاف':'البرنامج',action:`miikOpenPlanProgram12('${Q(p.name)}')`})});
-     if(w.value)items.push({kind:'value',label:w.value,sub:'القيمة',action:`miikOpenPlanValue12('${Q(w.value)}')`});
-     (w.extras||[]).filter(x=>x?.text&&same(x.date,h)).forEach(x=>items.push({kind:'global',label:x.text,sub:'يوم أو مناسبة عالمية',action:`miikOpenGlobalDay12('${Q(x.text)}')`}));
-   }
-   const holiday=(h.y===1448&&h.m===4&&(h.d===12||h.d===13));
-   if(holiday&&!items.some(x=>x.kind==='holiday'))items.push({kind:'holiday',label:'إجازة اليوم الوطني',sub:'إجازة رسمية',action:''});
-   const weekend=gd?(gd.getDay()===5||gd.getDay()===6):false;
-   return{hijri:h,week:w,items,holiday,weekend,hasAny:items.length>0};
- }
- // This is the only day-data API used by both the home mini calendar and day details.
- window.miikCalendarDaySnapshot1713=resolveDay;
- window.miikCalendarDayData002=resolveDay;
- window.v57OpenHijriDay=function(y,m,d){
-   hideAllPages();document.getElementById('calendarPage').classList.add('show');
-   const snap=resolveDay(y,m,d),html=snap.items.length?snap.items.map(x=>x.action?`<button type="button" class="miik1713-day-item ${x.kind}" onclick="${x.action}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span><i>‹</i></button>`:`<div class="miik1713-day-item ${x.kind}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span></div>`).join(''):'<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>';
-   const box=document.querySelector('#calendarPage .monthbox');if(box)box.innerHTML=`<div class="day-view-head"><div><div class="month-title">${d} ${MONTHS[m-1]} ${y}هـ</div><div class="muted">أعمال هذا اليوم فقط</div></div><button type="button" class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="miik1713-day-list">${html}</div>`;
-   window.scrollTo({top:0,behavior:'smooth'});
- };
- // Repaint home only after the canonical source exists.
- setTimeout(()=>{if(typeof window.rollingDays==='function')window.rollingDays()},0);
-})();
-</script>
 <style id="miik-beta-002-calendar-style">
 #calendarPage .miik1713-program-label{background:#e5eee2!important;color:var(--deep)!important;border:1px solid #d2dfce!important;font-weight:800!important;cursor:pointer}
 #calendarPage .miik1713-value-label{background:#f2eddf!important;color:#5d6f5b!important;border:1px solid #e2dac7!important;font-weight:800!important;cursor:pointer}
@@ -4153,54 +3966,6 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 
 
 <!-- MIIK Beta 1.7.23 — obsolete weekly path deleted; one unified week detail for plan + calendar -->
-<script id="miik-beta-1723-unified-week-path">
-(()=>{'use strict';
- const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const Q=v=>String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' ');
- const ctx=()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}};
- const rows=()=>typeof window.miikPlanRows12==='function'?window.miikPlanRows12(String(ctx().term)):[];
- const term=()=>String(ctx().term)==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول';
- const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
- const daysOf=w=>typeof window.miikPlanDays1710==='function'?(window.miikPlanDays1710(w)||[]):[];
- const today=()=>typeof window.miikHijriToday1710==='function'?window.miikHijriToday1710():null;
- const same=(a,b)=>a&&b&&+a.y===+b.y&&+a.m===+b.m&&+a.d===+b.d;
- function dateLabel(w){return typeof window.miikPlanDateLabel1710==='function'?window.miikPlanDateLabel1710(w):String(w?.date||'')}
- function customDate(p){
-   const raw=String(p?.date||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
-   const nums=(raw.match(/\d+/g)||[]).map(Number),mi=MONTHS.findIndex(x=>raw.includes(x));
-   if(mi>=0){const y=nums.find(n=>n>=1400),d=nums.find(n=>n<100);return y&&d?{y,m:mi+1,d}:null}
-   if(nums.length>=3)return nums[0]>=1400?{y:nums[0],m:nums[1],d:nums[2]}:{d:nums[0],m:nums[1],y:nums[2]};
-   return null;
- }
- function programButtons(w){return (w.programs?.length?w.programs:[{name:w.program}]).map(p=>`<button type="button" class="miik1711-link program" onclick="miikOpenPlanProgram12('${Q(p.name)}')"><span><small>${p.custom?'برنامج مضاف':'البرنامج'}</small><b>${E(p.name)}</b></span><i>‹</i></button>`).join('')}
- function valueButton(w){return w.value?`<button type="button" class="miik1711-link value" onclick="miikOpenPlanValue12('${Q(w.value)}')"><span><small>القيمة</small><b>${E(w.value)}</b></span><i>‹</i></button>`:''}
- function eventButtons(w){return (w.days||[]).filter(Boolean).map(x=>`<button type="button" class="miik1711-event" onclick="miikOpenGlobalDay12('${Q(x)}')">${E(x)} <i>‹</i></button>`).join('')}
- function dayCards(w){
-   const ds=daysOf(w),names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],t=today();if(!ds.length)return'';
-   const ps=w.programs?.length?w.programs:[{name:w.program,custom:false}];
-   return `<div class="miik179-days">${ds.map((d,i)=>{const dayPrograms=ps.filter(p=>!p.custom?true:same(customDate(p),d));return `<div class="miik179-day ${same(d,t)?'is-today':''}"><div class="miik179-daytop"><b>${names[i]||'اليوم'}</b><span>${d.d} ${MONTHS[d.m-1]}</span>${same(d,t)?'<em>اليوم</em>':''}</div><div class="miik1711-daylinks">${dayPrograms.map(p=>`<button type="button" class="miik1711-mini program" onclick="miikOpenPlanProgram12('${Q(p.name)}')">${E(p.name)}</button>`).join('')}${w.value?`<button type="button" class="miik1711-mini value" onclick="miikOpenPlanValue12('${Q(w.value)}')">القيمة: ${E(w.value)}</button>`:''}</div></div>`}).join('')}</div>`;
- }
- function detail(w,back){
-   const backBtn=back==='calendar'?`<button type="button" class="back miik179-back" onclick="renderCalendarView('semester')">العودة للتقويم الفصلي ←</button>`:`<button type="button" class="back miik179-back" onclick="openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية التي تحرك التقويم ومِعِك اليوم والتنبيهات والتقارير.')">العودة لخطة الموجّه الطلابي ←</button>`;
-   return `<div class="miik179-week-head"><div class="miik179-week-title"><b>${E(w.w)} · ${term()}</b><span>${E(dateLabel(w))}</span></div>${backBtn}</div><div class="miik1711-summary">${programButtons(w)}${valueButton(w)}${(w.days||[]).length?`<section class="miik1711-events"><small>الأيام والمناسبات</small><div>${eventButtons(w)}</div></section>`:''}</div>${dayCards(w)}`;
- }
- window.miikRenderUnifiedWeek1723=detail;
- // PLAN: bypass the deleted legacy weekly shell completely. No semester chooser inside a selected week.
- window.miikOpenWeek12=function(index){
-   const i=Number(index),w=rows()[i];if(!w)return;sessionStorage.setItem('miikWeeklyIndex',String(i));
-   hideAllPages();document.getElementById('modulePage').classList.add('show');
-   document.getElementById('moduleTitle').textContent='الخطة الأسبوعية';document.getElementById('moduleDesc').textContent='تفصيل الأسبوع المختار من خطة الموجّه الطلابي.';
-   const g=document.getElementById('moduleGrid');if(g)g.innerHTML=`<div class="miik1723-week-host">${detail(w,'plan')}</div>`;
-   const b=document.querySelector('#modulePage .module-head .students-back');if(b){b.textContent='→ العودة لخطة الموجّه الطلابي';b.onclick=()=>openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية التي تحرك التقويم ومِعِك اليوم والتنبيهات والتقارير.')}
-   window.scrollTo({top:0,behavior:'smooth'});
- };
- // CALENDAR: use the very same renderer, differing only in the back destination.
- window.miikCalendarOpenSemesterWeek178=function(index){const w=rows()[Number(index)],box=document.querySelector('#calendarPage .monthbox');if(!w||!box)return;document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));box.innerHTML=detail(w,'calendar');window.scrollTo({top:0,behavior:'smooth'})};
- // The previously misrouted psychological-prevention item belongs to the existing psychological/social-skills program.
- const prevProgram=window.miikOpenPlanProgram12;
- window.miikOpenPlanProgram12=function(name){if(/الوقاية النفسية|المهارات النفسية|الصحة النفسية|الدعم النفسي|المهارات الحياتية/.test(String(name||'')))return openModule('برنامج تعزيز المهارات النفسية والاجتماعية','من خطة الموجّه الطلابي للفصل النشط.');return prevProgram?.apply(this,arguments)};
-})();
-</script>
 <style id="miik-beta-1723-unified-week-style">
 .miik1723-week-host{grid-column:1/-1;width:100%}
 #modulePage .miik1723-week-host .miik179-week-head{margin-top:2px}
@@ -4234,40 +3999,5 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
   #calendarPage .miik179-back{font-size:10px!important;padding:7px 10px!important}
 }
 </style>
-<script id="miik-beta-1724-mobile-behavior">
-(()=>{
- const isPhone=()=>window.matchMedia&&window.matchMedia('(max-width:720px)').matches;
- const programTitles=new Set(['خفض العنف بالمدارس (رِفق)','تعزيز السلوك الإيجابي','التوجيه المهني','الاستخدام الآمن للإنترنت','تنمية الدافعية لرفع مستوى التحصيل','التوجيه وقت الأزمات','الاحتفاء بطلبة الصف الثالث الثانوي الخريجين','الأيام والمناسبات الوطنية والعالمية','برنامج تعزيز المهارات النفسية والاجتماعية','برنامج التهيئة الإرشادية','اختبارات القدرات','الاختبار التحصيلي','اختبارات نافس']);
- const oldOpen=window.openModule;
- window.openModule=function(title,desc){
-   const r=oldOpen.apply(this,arguments);
-   const page=document.getElementById('modulePage');
-   if(page)page.classList.toggle('miik1724-program-page',programTitles.has(String(title||''))||String(title||'').startsWith('برنامج '));
-   setTimeout(()=>{
-     if(!isPhone()||!page?.classList.contains('miik1724-program-page'))return;
-     const b=page.querySelector('.module-head .students-back');
-     if(b)b.textContent='→ العودة';
-   },0);
-   return r;
- };
- const oldWeek=window.miikOpenWeek12;
- window.miikOpenWeek12=function(){
-   const r=oldWeek?.apply(this,arguments);
-   if(isPhone())setTimeout(()=>{
-     const b=document.querySelector('#modulePage .miik1723-week-host .miik179-back');
-     if(b)b.textContent='العودة ←';
-     const hb=document.querySelector('#modulePage .module-head .students-back');
-     if(hb)hb.textContent='→ العودة';
-   },0);
-   return r;
- };
- const oldCalWeek=window.miikCalendarOpenSemesterWeek178;
- window.miikCalendarOpenSemesterWeek178=function(){
-   const r=oldCalWeek?.apply(this,arguments);
-   if(isPhone())setTimeout(()=>{const b=document.querySelector('#calendarPage .miik179-back');if(b)b.textContent='العودة ←'},0);
-   return r;
- };
-})();
-</script>
 <!-- Release package: MIIK Beta 1.7.24 -->
 
