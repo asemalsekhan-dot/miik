@@ -660,12 +660,16 @@ function miikOpenWork(item){
  openCalendar();
 }
 function rollingDays(){
- const el=document.getElementById('rollingWeek'); if(!el)return; const base=new Date(); base.setHours(0,0,0,0); const work=getWorkItems(); el.innerHTML='';
+ const el=document.getElementById('rollingWeek');if(!el)return;const base=new Date();base.setHours(0,0,0,0);el.innerHTML='';
  for(let i=0;i<8;i++){
-  const d=new Date(base); d.setDate(base.getDate()+i); const iso=miikISODate(d); const items=work.filter(x=>x.date===iso); const weekend=(d.getDay()===5||d.getDay()===6);
-  let planLabels=[];try{const hp=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(d),gv=t=>Number(hp.find(z=>z.type===t)?.value||0),hd={d:gv('day'),m:gv('month'),y:gv('year')},rs=typeof window.miikPlanRows12==='function'?window.miikPlanRows12((JSON.parse(localStorage.getItem('miikAcademicContext')||'{}').term||'1')):[];const w=rs.find(z=>(window.miikPlanDays1710?.(z)||[]).some(q=>+q.d===hd.d&&+q.m===hd.m&&+q.y===hd.y));if(w){const ds=window.miikPlanDays1710?.(w)||[],pos=ds.findIndex(q=>+q.d===hd.d&&+q.m===hd.m&&+q.y===hd.y);if(pos===0){planLabels.push(w.program);if(w.value)planLabels.push('القيمة: '+w.value)}(w.days||[]).forEach((g,n)=>{if(pos===Math.min(4,n+1))planLabels.push(g)})}}catch(_){ }
-  const hasAny=items.length||planLabels.length;const x=document.createElement('div'); x.className='day'+(i===0?' active':'')+(weekend?' weekend':'')+(hasAny?' has-work':'');
-  x.innerHTML=(i===0?'اليوم':arDays[d.getDay()])+'<b>'+miikHijriDay(d)+'</b>'; x.title=[...items.map(a=>a.title),...planLabels].join(' · '); x.onclick=(e)=>{e.stopPropagation();openCalendarDay(d)}; el.appendChild(x);
+  const d=new Date(base);d.setDate(base.getDate()+i);
+  let snap=null;try{snap=typeof window.miikCalendarDaySnapshot1713==='function'?window.miikCalendarDaySnapshot1713(d):null}catch(_){snap=null}
+  const weekend=snap?!!snap.weekend:(d.getDay()===5||d.getDay()===6),holiday=snap?!!snap.holiday:false,hasAny=snap?!!snap.hasAny:false;
+  const x=document.createElement('div');x.className='day'+(i===0?' active':'')+((weekend||holiday)?' weekend':'')+(hasAny?' has-work':'');
+  x.innerHTML=(i===0?'اليوم':arDays[d.getDay()])+'<b>'+(snap?.hijri?.d||miikHijriDay(d))+'</b>';
+  x.title=snap?(snap.items||[]).map(a=>a.label).join(' · '):'';
+  x.onclick=e=>{e.stopPropagation();if(snap?.hijri&&typeof window.v57OpenHijriDay==='function')window.v57OpenHijriDay(snap.hijri.y,snap.hijri.m,snap.hijri.d);else openCalendarDay(d)};
+  el.appendChild(x);
  }
 }
 function renderToday(){
@@ -4065,7 +4069,7 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 
 
 
-<!-- MIIK Beta 1.7.13 — unified calendar views + month programs + complete day details -->
+<!-- MIK Beta 0.0.1 — unified calendar data source for main and home calendars -->
 <script id="miik-beta-1713-calendar-unification">
 (()=>{'use strict';
  const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -4127,13 +4131,26 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  function actionProgram(w){return `miikOpenPlanProgram12('${Q(w.program)}')`}
  function actionValue(w){return `miikOpenPlanValue12('${Q(w.value)}')`}
  function actionGlobal(x){return `miikOpenGlobalDay12('${Q(x)}')`}
- window.v57OpenHijriDay=function(y,m,d){
-   hideAllPages();document.getElementById('calendarPage').classList.add('show');
-   const w=weekFor(y,m,d), extras=exactExtras(w,y,m,d), items=[];
+ function hijriFromGregorian(gd){
+   const p=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(gd),get=t=>Number(p.find(z=>z.type===t)?.value||0);return{d:get('day'),m:get('month'),y:get('year')};
+ }
+ function daySnapshot(y,m,d,gregorian){
+   const w=weekFor(y,m,d),extras=exactExtras(w,y,m,d),items=[];
    if(w){const ps=(w.programs&&w.programs.length?w.programs:[{name:w.program,custom:false}]);ps.forEach(p=>{if(!p.custom||same(parseCustomDate1713(p.date),y,m,d))items.push({kind:'program',label:p.name,sub:p.custom?'برنامج مضاف':'البرنامج',action:`miikOpenPlanProgram12('${Q(p.name)}')`})})}
    if(w?.value)items.push({kind:'value',label:w.value,sub:'القيمة',action:actionValue(w)});
    extras.forEach(x=>items.push({kind:'global',label:x,sub:'يوم أو مناسبة عالمية',action:actionGlobal(x)}));
-   if(y===1448&&m===4&&(d===12||d===13))items.push({kind:'holiday',label:'إجازة اليوم الوطني',sub:'إجازة رسمية',action:''});
+   const nationalHoliday=(+y===1448&&+m===4&&(+d===12||+d===13));
+   if(nationalHoliday)items.push({kind:'holiday',label:'إجازة اليوم الوطني',sub:'إجازة رسمية',action:''});
+   const weekend=gregorian instanceof Date?(gregorian.getDay()===5||gregorian.getDay()===6):false;
+   return{hijri:{y:+y,m:+m,d:+d},week:w,items,holiday:nationalHoliday,weekend,hasAny:items.length>0};
+ }
+ window.miikCalendarDaySnapshot1713=function(input,m,d){
+   if(input instanceof Date){const h=hijriFromGregorian(input);return daySnapshot(h.y,h.m,h.d,input)}
+   return daySnapshot(Number(input),Number(m),Number(d),null);
+ };
+ window.v57OpenHijriDay=function(y,m,d){
+   hideAllPages();document.getElementById('calendarPage').classList.add('show');
+   const snap=daySnapshot(y,m,d,null),items=snap.items;
    const html=items.length?items.map(x=>x.action?`<button type="button" class="miik1713-day-item ${x.kind}" onclick="${x.action}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span><i>‹</i></button>`:`<div class="miik1713-day-item ${x.kind}"><span><small>${E(x.sub)}</small><b>${E(x.label)}</b></span></div>`).join(''):'<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>';
    const box=document.querySelector('#calendarPage .monthbox');if(box)box.innerHTML=`<div class="day-view-head"><div><div class="month-title">${d} ${MONTHS[m-1]} ${y}هـ</div><div class="muted">أعمال هذا اليوم فقط</div></div><button type="button" class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="miik1713-day-list">${html}</div>`;
    window.scrollTo({top:0,behavior:'smooth'});
