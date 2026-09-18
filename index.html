@@ -663,8 +663,9 @@ function rollingDays(){
  const el=document.getElementById('rollingWeek'); if(!el)return; const base=new Date(); base.setHours(0,0,0,0); const work=getWorkItems(); el.innerHTML='';
  for(let i=0;i<8;i++){
   const d=new Date(base); d.setDate(base.getDate()+i); const iso=miikISODate(d); const items=work.filter(x=>x.date===iso); const weekend=(d.getDay()===5||d.getDay()===6);
-  const x=document.createElement('div'); x.className='day'+(i===0?' active':'')+(weekend?' weekend':'')+(items.length?' has-work':'');
-  x.innerHTML=(i===0?'اليوم':arDays[d.getDay()])+'<b>'+miikHijriDay(d)+'</b>'; x.title=items.length?items.map(a=>a.title).join(' · '):''; x.onclick=(e)=>{e.stopPropagation();openCalendarDay(d)}; el.appendChild(x);
+  let planLabels=[];try{const hp=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(d),gv=t=>Number(hp.find(z=>z.type===t)?.value||0),hd={d:gv('day'),m:gv('month'),y:gv('year')},rs=typeof window.miikPlanRows12==='function'?window.miikPlanRows12((JSON.parse(localStorage.getItem('miikAcademicContext')||'{}').term||'1')):[];const w=rs.find(z=>(window.miikPlanDays1710?.(z)||[]).some(q=>+q.d===hd.d&&+q.m===hd.m&&+q.y===hd.y));if(w){const ds=window.miikPlanDays1710?.(w)||[],pos=ds.findIndex(q=>+q.d===hd.d&&+q.m===hd.m&&+q.y===hd.y);if(pos===0){planLabels.push(w.program);if(w.value)planLabels.push('القيمة: '+w.value)}(w.days||[]).forEach((g,n)=>{if(pos===Math.min(4,n+1))planLabels.push(g)})}}catch(_){ }
+  const hasAny=items.length||planLabels.length;const x=document.createElement('div'); x.className='day'+(i===0?' active':'')+(weekend?' weekend':'')+(hasAny?' has-work':'');
+  x.innerHTML=(i===0?'اليوم':arDays[d.getDay()])+'<b>'+miikHijriDay(d)+'</b>'; x.title=[...items.map(a=>a.title),...planLabels].join(' · '); x.onclick=(e)=>{e.stopPropagation();openCalendarDay(d)}; el.appendChild(x);
  }
 }
 function renderToday(){
@@ -3937,7 +3938,7 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  window.renderCalendarView=function(mode='month'){
    if(mode==='semester'){
      document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
-     const ws=rows();box.innerHTML=`<div class="miik179-sem-head"><b>${term()}</b><span>العام الدراسي ${E(ctx().year)}هـ</span></div><div class="miik179-sem-grid">${ws.map((w,i)=>`<button class="miik179-sem-card" onclick="miikCalendarOpenSemesterWeek178(${i})"><div><b>${E(w.w)}</b><span>${dateLabel(w)}</span></div>${(w.programs&&w.programs.length?w.programs:[{name:w.program}]).map(p=>`<strong${p.custom?' class="miik1722-custom-sem"':''}>${E(p.name)}</strong>`).join('')}${w.value?`<em>القيمة: ${E(w.value)}</em>`:''}${(w.days||[]).length?`<small>${(w.days||[]).map(E).join(' · ')}</small>`:''}</button>`).join('')}</div>`;return;
+     const ws=rows(),currentIx=currentWeekIndex1713();box.innerHTML=`<div class="miik179-sem-head"><b>${term()}</b><span>العام الدراسي ${E(ctx().year)}هـ</span></div><div class="miik179-sem-grid">${ws.map((w,i)=>`<button class="miik179-sem-card ${i===currentIx?'is-current-week':''}" onclick="miikCalendarOpenSemesterWeek178(${i})"><div><b>${E(w.w)}</b><span>${dateLabel(w)}</span></div>${(w.programs&&w.programs.length?w.programs:[{name:w.program}]).map(p=>`<strong${p.custom?' class="miik1722-custom-sem"':''}>${E(p.name)}</strong>`).join('')}${w.value?`<em>القيمة: ${E(w.value)}</em>`:''}${(w.days||[]).length?`<small>${(w.days||[]).map(E).join(' · ')}</small>`:''}</button>`).join('')}</div>`;return;
    }
    if(mode==='week'){
      const q=currentHijri(),ws=rows();let ix=-1;if(q)ix=ws.findIndex(w=>range(w).days.some(x=>x.y===Number(q.y)&&x.m===Number(q.m)&&x.d===Number(q.d)));if(ix<0)ix=Math.max(0,Number(sessionStorage.getItem('miikWeeklyIndex')||0));const w=ws[ix];if(w){const box=document.querySelector('#calendarPage .monthbox');document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));box.innerHTML=`<div class="miik179-current-head"><b>الأسبوع الحالي</b><span>${dateLabel(w)}</span></div>${weekDayCards(w)}<div class="miik179-week-foot"><span class="program">${E(w.program)}</span>${w.value?`<span class="value">القيمة: ${E(w.value)}</span>`:''}${(w.days||[]).map(x=>`<span class="event">${E(x)}</span>`).join('')}</div>`;return}}
@@ -4061,6 +4062,16 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  function parseCustomDate1713(s){const raw=String(s||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));const nums=(raw.match(/\d+/g)||[]).map(Number),mi=MONTHS.findIndex(x=>raw.includes(x));if(mi>=0){const y=nums.find(n=>n>=1400),d=nums.find(n=>n<100);return y&&d?{y,m:mi+1,d}:null}if(nums.length>=3)return nums[0]>=1400?{y:nums[0],m:nums[1],d:nums[2]}:{d:nums[0],m:nums[1],y:nums[2]};return null}
  function weekFor(y,m,d){return rows().find(w=>daysOf(w).some(x=>same(x,y,m,d)))||null}
  function weekIndexFor(y,m,d){return rows().findIndex(w=>daysOf(w).some(x=>same(x,y,m,d)))}
+ function daySerial(x){return x?Number(x.y)*360+(Number(x.m)-1)*30+Number(x.d):NaN}
+ function currentWeekIndex1713(){
+   const q=today(),ws=rows();if(!q||!ws.length)return -1;
+   const exact=weekIndexFor(q.y,q.m,q.d);if(exact>=0)return exact;
+   const wd=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Riyadh',weekday:'short'}).format(new Date());
+   if(wd!=='Fri'&&wd!=='Sat')return -1;
+   const qs=daySerial(q);let best=-1,bestDiff=99;
+   ws.forEach((w,i)=>{const first=daysOf(w)[0],diff=daySerial(first)-qs;if(diff>=1&&diff<=2&&diff<bestDiff){best=i;bestDiff=diff}});
+   return best;
+ }
  function exactExtras(w,y,m,d){
    if(!w)return[];const ds=daysOf(w), out=[];
    (w.extras||[]).filter(x=>x&&x.text).forEach((x,n)=>{let target=ds[Math.min(4,n+1)];if(!target)return;if(target.y===1448&&target.m===4&&(target.d===12||target.d===13))target=ds[2]||target;if(same(target,y,m,d))out.push(x.text)});
@@ -4073,8 +4084,8 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  const priorRender=window.renderCalendarView;
  window.renderCalendarView=function(mode='month'){
    if(mode==='week'){
-     const q=today();let ix=q?weekIndexFor(q.y,q.m,q.d):-1;if(ix<0)ix=Math.max(0,Number(sessionStorage.getItem('miikWeeklyIndex')||0));
-     if(ix>=0&&typeof window.miikCalendarOpenSemesterWeek178==='function'){sessionStorage.setItem('miikWeeklyIndex',String(ix));window.miikCalendarOpenSemesterWeek178(ix);return}
+     const ix=currentWeekIndex1713();
+     if(ix>=0&&typeof window.miikCalendarOpenSemesterWeek178==='function'){window.miikCalendarOpenSemesterWeek178(ix);return}
    }
    const r=priorRender?.apply(this,arguments);
    if(mode==='month')setTimeout(injectMonthPrograms,0);
@@ -4082,7 +4093,18 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  };
  function injectMonthPrograms(){
    const box=document.querySelector('#calendarPage .monthbox');if(!box)return;
-   rows().forEach(w=>{const ps=(w.programs&&w.programs.length?w.programs:[{name:w.program,custom:false}]);ps.forEach(p=>{const target=p.custom?parseCustomDate1713(p.date):daysOf(w)[0];if(!target)return;const btn=box.querySelector(`button[onclick*="v57OpenHijriDay(${target.y},${target.m},${target.d})"]`);if(!btn)return;const name=String(p.name||'').trim();if(!name)return;const exists=[...btn.querySelectorAll('.cal-label')].some(x=>x.textContent.trim()===name);if(exists)return;const tag=document.createElement('span');tag.className='cal-label miik1713-program-label';tag.textContent=name;tag.title=name;tag.onclick=e=>{e.stopPropagation();window.miikOpenPlanProgram12?.(name)};btn.appendChild(tag)})});
+   function addTag(target,text,cls,click){
+     if(!target||!text)return;const btn=box.querySelector(`button[onclick*="v57OpenHijriDay(${target.y},${target.m},${target.d})"]`);if(!btn)return;
+     if([...btn.querySelectorAll('.cal-label')].some(x=>x.textContent.trim()===String(text).trim()))return;
+     const tag=document.createElement('span');tag.className='cal-label '+cls;tag.textContent=text;tag.title=text;
+     if(click)tag.onclick=e=>{e.stopPropagation();click()};btn.appendChild(tag);btn.classList.add('event-day');
+   }
+   rows().forEach(w=>{
+     const ds=daysOf(w),ps=(w.programs&&w.programs.length?w.programs:[{name:w.program,custom:false}]);
+     ps.forEach(p=>{const target=p.custom?parseCustomDate1713(p.date):ds[0];addTag(target,p.name,'miik1713-program-label',()=>window.miikOpenPlanProgram12?.(p.name))});
+     if(w.value&&ds[0])addTag(ds[0],'القيمة: '+w.value,'miik1713-value-label',()=>window.miikOpenPlanValue12?.(w.value));
+     (w.days||[]).filter(Boolean).forEach((x,n)=>{let target=ds[Math.min(4,n+1)];if(target?.y===1448&&target?.m===4&&(target.d===12||target.d===13))target=ds[2]||target;addTag(target,x,'miik1713-global-label',()=>window.miikOpenGlobalDay12?.(x))});
+   });
  }
  function actionProgram(w){return `miikOpenPlanProgram12('${Q(w.program)}')`}
  function actionValue(w){return `miikOpenPlanValue12('${Q(w.value)}')`}
@@ -4104,6 +4126,9 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 </script>
 <style id="miik-beta-1713-calendar-style">
 #calendarPage .miik1713-program-label{background:#e5eee2!important;color:var(--deep)!important;border:1px solid #d2dfce!important;font-weight:800!important;cursor:pointer}
+#calendarPage .miik1713-value-label{background:#f2eddf!important;color:#5d6f5b!important;border:1px solid #e2dac7!important;font-weight:800!important;cursor:pointer}
+#calendarPage .miik1713-global-label{background:#dfe8d8!important;color:#536b52!important;border:1px solid #cfd9c7!important;font-weight:800!important;cursor:pointer}
+#calendarPage .miik179-sem-card.is-current-week{outline:3px solid var(--olive)!important;outline-offset:1px!important;background:#f1f5ed!important}
 .miik1713-day-list{display:grid;gap:9px;margin-top:12px}.miik1713-day-item{width:100%;border:1px solid var(--line);border-radius:15px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:right;font:inherit;color:var(--deep);cursor:pointer}.miik1713-day-item span{display:grid;gap:4px}.miik1713-day-item small{font-size:10px;color:var(--muted);font-weight:700}.miik1713-day-item b{font-size:14px}.miik1713-day-item i{font-style:normal;font-size:20px;color:var(--olive)}.miik1713-day-item.program{background:#e8efe5}.miik1713-day-item.value{background:#f2eddf}.miik1713-day-item.global{background:#e4eadc;border-color:#cfd9c7}.miik1713-day-item.holiday{background:#f7f2e9;cursor:default}
 @media(max-width:720px){.miik1713-day-item{padding:9px 10px;border-radius:11px}.miik1713-day-item small{font-size:8px}.miik1713-day-item b{font-size:10px}.miik1713-day-item i{font-size:15px}}
 </style>
@@ -4165,7 +4190,7 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
    window.scrollTo({top:0,behavior:'smooth'});
  };
  // CALENDAR: use the very same renderer, differing only in the back destination.
- window.miikCalendarOpenSemesterWeek178=function(index){const w=rows()[Number(index)],box=document.querySelector('#calendarPage .monthbox');if(!w||!box)return;sessionStorage.setItem('miikWeeklyIndex',String(index));document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));box.innerHTML=detail(w,'calendar');window.scrollTo({top:0,behavior:'smooth'})};
+ window.miikCalendarOpenSemesterWeek178=function(index){const w=rows()[Number(index)],box=document.querySelector('#calendarPage .monthbox');if(!w||!box)return;document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view==='week'));box.innerHTML=detail(w,'calendar');window.scrollTo({top:0,behavior:'smooth'})};
  // The previously misrouted psychological-prevention item belongs to the existing psychological/social-skills program.
  const prevProgram=window.miikOpenPlanProgram12;
  window.miikOpenPlanProgram12=function(name){if(/الوقاية النفسية|المهارات النفسية|الصحة النفسية|الدعم النفسي|المهارات الحياتية/.test(String(name||'')))return openModule('برنامج تعزيز المهارات النفسية والاجتماعية','من خطة الموجّه الطلابي للفصل النشط.');return prevProgram?.apply(this,arguments)};
