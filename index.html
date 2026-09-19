@@ -4239,3 +4239,65 @@ const savePrev=window.saveAction;window.saveAction=function(e){if(currentAction=
 const ctx=window.miik015AcademicContext||null,before=R(ACTIONS,[]).map(x=>x._v55id);const out=savePrev?.apply(this,arguments);if(ctx&&(currentAction==='session'||currentAction==='guardian'))setTimeout(()=>{const a=R(ACTIONS,[]),x=a.find(z=>!before.includes(z._v55id)&&z.type===currentAction&&norm(z.student)===norm(ctx.name))||a.find(z=>z.type===currentAction&&norm(z.student)===norm(ctx.name)&&!z.miik015AcademicLink);if(x){x.miik015AcademicLink={name:ctx.name,period:ctx.period};W(ACTIONS,a)}window.miik015AcademicContext=null},30);return out};
 })();
 </script>
+
+<!-- MIK Beta 0.2.0 — academic follow-up refinements -->
+<style id="miik-beta-020-style">
+/* أوضح قليلًا في متابعة التحصيل، مع سهم موحد في طرف الحقل */
+.miik014-case>b,.miik014-case>div>b{font-size:16px!important;line-height:1.7!important}
+.miik014-case small{font-size:13px!important;line-height:1.7!important}
+.miik014-period select,.miik014-filters select,#miik015FollowPeriod{
+  font-size:14px!important;background-color:#fff!important;
+  background-position:14px 50%,20px 50%!important;
+  padding:11px 12px 11px 40px!important;
+}
+.miik014-period select option,.miik014-filters select option,#miik015FollowPeriod option{background:#fff!important;color:#294b42!important;font-size:14px!important}
+/* الجلسة الجماعية: الطالب + زر الإضافة في صف واحد واضح */
+.v97-plus-row{display:grid!important;grid-template-columns:minmax(0,1fr) 48px!important;gap:9px!important;align-items:center!important}
+.v97-plus{height:46px!important;min-width:46px!important;font-size:22px!important;border-radius:11px!important}
+</style>
+<script id="miik-beta-020-script">
+(()=>{'use strict';
+const VALID_PERIODS_020=['اختبارات منتصف الفصل الدراسي الأول','اختبارات نهاية الفصل الدراسي الأول','اختبارات منتصف الفصل الدراسي الثاني'];
+/* الرئيسية لا تحسب أي متابعة تحصيل قديمة سبقت نظام الفترات. تبقى محفوظة في سجل المتابعات كما هي. */
+window.miikAcademicAlertCounts=function(){
+ const rank={new:0,active:1,closed:2},cases=new Map();
+ miikStudentAlertActions().filter(x=>x.type==='followup'&&x.miik014?.reason==='التأخر الدراسي'&&VALID_PERIODS_020.includes(String(x.miik014?.period||'').trim())).forEach(x=>{
+  const name=String(x.student||'').trim(),period=String(x.miik014?.period||'').trim();if(!name)return;
+  const key=name+'|'+period,st=x.miik014?.academicStatus||'new',prev=cases.get(key);
+  if(!prev||rank[st]>rank[prev])cases.set(key,st);
+ });
+ let fresh=0,active=0;cases.forEach(st=>{if(st==='new')fresh++;else if(st==='active')active++});return{fresh,active};
+};
+/* من متابعة التحصيل نفتح نماذج الإجراءات بدون فرض اسم الطالب تلقائيًا.
+   الجلسة الجماعية تستخدم منتقيها المتعدد (+) الموجود أصلًا. */
+window.miik015OpenAction=function(name,period,type,kind){
+ window.miik015AcademicContext={name,period};
+ if(type==='session'&&kind&&typeof window.v55NewSession==='function'){
+   window.v55NewSession(kind);
+ }else{
+   openAction(type);
+ }
+};
+/* لا نربط الإجراء بالحالة إلا إذا كان الطالب المختار فعليًا هو طالب الحالة.
+   هذا يمنع ربط إجراء يدوي بطالب خاطئ. */
+const oldSave020=window.saveAction;
+window.saveAction=function(e){
+ const ctx=window.miik015AcademicContext||null;
+ const before=(()=>{try{return JSON.parse(localStorage.getItem('miik-demo-actions')||'[]').map(x=>x._v55id)}catch(_){return[]}})();
+ const r=oldSave020?.apply(this,arguments);
+ if(ctx)setTimeout(()=>{
+   try{
+    const a=JSON.parse(localStorage.getItem('miik-demo-actions')||'[]');
+    const created=a.find(x=>!before.includes(x._v55id));
+    if(created){
+      const names=[created.student,...(Array.isArray(created.groupStudents)?created.groupStudents:[])].map(x=>String(x||'').trim());
+      if(names.some(n=>n&&n.replace(/\s+/g,' ')===String(ctx.name||'').trim().replace(/\s+/g,' '))){created.miik015AcademicLink={name:ctx.name,period:ctx.period};localStorage.setItem('miik-demo-actions',JSON.stringify(a));}
+    }
+   }catch(_){}
+   window.miik015AcademicContext=null;
+ },80);
+ return r;
+};
+setTimeout(()=>{try{renderStudentFollowups()}catch(_){}},0);
+})();
+</script>
