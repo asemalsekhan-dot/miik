@@ -4155,7 +4155,53 @@ function currentFiltered(){let a=actionRows(state.type,state.sub);if(state.grade
 window.miik009Filter=function(k,v){state[k]=v;if(k==='grade')state.section='';miik009RenderRecords()};
 window.miik009RenderRecords=function(){const g=document.getElementById('moduleGrid');if(!g||!state.type)return;const base=actionRows(state.type,state.sub),grades=base.map(x=>snap(x).grade),sections=base.filter(x=>!state.grade||snap(x).grade===state.grade).map(x=>snap(x).section),a=currentFiltered(),title=state.type==='session'?(state.sub==='group'?'سجل الجلسات الجماعية':'سجل الجلسات الفردية'):state.type==='emergency'?'سجل المواقف الطارئة':state.type==='guardian'?'سجل تواصل ولي الأمر':'سجل دراسات الحالات';g.innerHTML=`<div class="v55-records"><div class="v55-head"><h3>${title}</h3><div class="v55-head-actions"><button class="v55-btn primary" onclick="miik009PrintCurrent()">طباعة السجل</button><button class="v55-btn" onclick="${state.type==='session'?'v55Sessions()':state.type==='emergency'?'v55Emergency()':state.type==='guardian'?'v55Guardian()':'v55Case()'}">رجوع</button></div></div><div class="miik009-filterbar"><label>الصف<select onchange="miik009Filter('grade',this.value)">${options(grades,state.grade,'جميع الصفوف')}</select></label><label>الفصل<select onchange="miik009Filter('section',this.value)">${options(sections,state.section,'جميع الفصول')}</select></label></div>${a.length?`<div class="v55-row miik009-row header"><span>م</span><span>الطالب</span><span>الصف</span><span>الفصل</span><span>${state.type==='guardian'?'ولي الأمر':'البيان'}</span><span>التاريخ</span><span>إدارة</span></div>${a.map((x,i)=>{const c=snap(x);return `<div class="v55-row miik009-row"><span>${i+1}</span><b>${E(x.student||'—')}</b><span>${E(c.grade||'—')}</span><span>${E(c.section||'—')}</span><span>${E(state.type==='guardian'?(x.values?.[0]||'—'):(x.summary||x.title||'—'))}</span><span>${E(x.date||'—')}</span><span class="v55-actions"><button onclick="v55Edit('${x._v55id}','${state.type}','${state.sub}')">تعديل</button>${state.type==='session'?`<button onclick="v55PrintOne('${x._v55id}')">طباعة</button>`:''}<button onclick="v55Delete('${x._v55id}','${state.type}','${state.sub}')">حذف</button></span></div>`}).join('')}`:'<div class="v55-empty">لا توجد سجلات مطابقة للفلتر الحالي.</div>'}</div>`}
 const rec009=window.v55Records;window.v55Records=function(type,sub=''){state={type,sub,grade:'',section:''};miik009RenderRecords()};
-window.miik009PrintCurrent=function(){const a=currentFiltered();if(!a.length)return showMiikNotice?.('الطباعة','لا توجد سجلات مطابقة للطباعة.');let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(_){}const title=state.type==='session'?(state.sub==='group'?'سجل الجلسات الجماعية':'سجل الجلسات الفردية'):state.type==='emergency'?'سجل المواقف الطارئة':state.type==='guardian'?'سجل تواصل ولي الأمر':'سجل دراسات الحالات',logo=new URL('ministry-logo.png',location.href).href,w=window.open('','_blank','width=950,height=900');if(!w)return;const trs=a.map((x,i)=>{const c=snap(x);return `<tr><td>${i+1}</td><td>${E(x.student||'')}</td><td>${E(c.grade||'')}</td><td>${E(c.section||'')}</td><td>${E(x.date||'')}</td><td>${E(x.summary||x.title||'')}</td></tr>`}).join('');w.document.write(`<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>${title}</title><style>@page{size:A4 portrait;margin:13mm}body{font-family:Tahoma,Arial;color:#29463d;font-size:10px}.head{display:grid;grid-template-columns:1fr 90px 1fr;align-items:center;border-bottom:1.5px solid #71857c;padding-bottom:8px}.head img{max-width:80px;display:block;margin:auto}.gov{line-height:1.7;font-weight:bold}h1{text-align:center;font-size:18px;margin:15px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #aab4af;padding:6px;text-align:center}th{background:#edf1ed}</style></head><body><div class="head"><div class="gov">المملكة العربية السعودية<br>وزارة التعليم<br>${E(p.education||p.region||'')}<br>${E(p.school||'')}</div><img src="${logo}"><div></div></div><h1>${title}</h1><table><thead><tr><th>م</th><th>الطالب</th><th>الصف</th><th>الفصل</th><th>التاريخ</th><th>البيان</th></tr></thead><tbody>${trs}</tbody></table><script>setTimeout(()=>print(),350)<\/script></body></html>`);w.document.close()};
+window.miik009PrintCurrent=function(){const a=currentFiltered();if(!a.length)return showMiikNotice?.('الطباعة','لا توجد سجلات مطابقة للطباعة.');let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(_){}const title=state.type==='session'?(state.sub==='group'?'سجل الجلسات الجماعية':'سجل الجلسات الفردية'):state.type==='emergency'?'سجل المواقف الطارئة':state.type==='guardian'?'سجل تواصل ولي الأمر':'سجل دراسات الحالات',logo=new URL('ministry-logo.png',location.href).href,w=window.open('','_blank','width=950,height=900');if(!w)return;const trs=a.map((x,i)=>{const c=snap(x);return `<tr><td>${i+1}</td><td>${E(x.student||'')}</td><td>${E(c.grade||'')}</td><td>${E(c.section||'')}</td><td>${E(x.date||'')}</td><td>${E(x.summary||x.title||'')}</td></tr>`}).join('');w.document.write(`<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>${title}</title><style>@page{size:A4 portrait;margin:13mm}body{font-family:Tahoma,Arial;color:#29463d;font-size:10px}.head{display:grid;grid-template-columns:1fr 90px 1fr;align-items:center;border-bottom:1.5px solid #71857c;padding-bottom:8px}.head img{max-width:80px;display:block;margin:auto}.gov{line-height:1.7;font-weight:bold}h1{text-align:center;font-size:18px;margin:15px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #aab4af;padding:6px;text-align:center}th{background:#edf1ed}</style></head><body><div class="head"><div class="gov">المملكة العربية السعودية<br>وزارة التعليم<br>${E(p.education||p.region||'')}<br>${E(p.school||'')}</div><img src="${logo}"><div></div></div><h1>${title}</h1><table><thead><tr><th>م</th><th>الطالب</th><th>الصف</th><th>الفصل</th><th>التاريخ</th><th>البيان</th></tr></thead><tbody>${trs}</tbody></table><script>setTimeout(()=>print(),350)<\/script>
+<!-- MIK Beta 0.1.2: source-record navigation + real guardian phone -->
+<style id="miik012-source-nav-style">
+.miik012-target{outline:3px solid rgba(93,120,99,.38)!important;background:#f3f5ea!important;box-shadow:0 0 0 6px rgba(93,120,99,.08)!important}
+</style>
+<script id="miik012-source-nav-js">
+(function(){'use strict';
+function norm012(s){return String(s||'').trim().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه')}
+function records012(){try{return JSON.parse(localStorage.getItem('miik-demo-actions')||'[]')}catch(_){return[]}}
+function realPhone012(){
+  let phone='';
+  try{if(typeof active76!=='undefined'&&active76&&active76.phone)phone=String(active76.phone).trim()}catch(_){}
+  try{if(!phone&&typeof v53StudentPhone!=='undefined')phone=String(v53StudentPhone||'').trim()}catch(_){}
+  if(!phone){
+    try{const a=JSON.parse(localStorage.getItem('miikStudentsV39')||'[]');const st=a.find(x=>norm012(x.name)===norm012(window.currentStudent));phone=String(st?.phone||'').trim()}catch(_){}
+  }
+  return phone;
+}
+window.openGuardianWhatsapp=function(){
+  const phone=realPhone012();
+  const shown=phone||'لا يوجد رقم محفوظ';
+  showMiikDialog(`<h2>واتساب ولي الأمر</h2><p>يرتبط مستقبلًا برقم واتساب مِعِك الرسمي، ويُوثّق التواصل تلقائيًا في سجل الطالب.</p><label>رقم ولي الأمر<input value="${String(shown).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" readonly dir="ltr"></label><label>الرسالة<textarea id="miik011GuardianMessage" rows="4" placeholder="اكتب الرسالة، أو خلّ طير شلوى يقترح لك صياغة"></textarea></label><button type="button" class="miik011-shalwa" onclick="miik011GuardianDraft()">طير شلوى — اقترح صياغة</button><div class="dialog-actions"><button class="dialog-primary" ${phone?'':'disabled'} onclick="showMiikNotice('واتساب مِعِك','الرسالة جاهزة للمراجعة قبل الإرسال عبر التكامل الرسمي.')">إرسال</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);
+};
+function highlight012(id){
+  setTimeout(()=>{
+    const btn=[...document.querySelectorAll('.v55-actions button')].find(b=>(b.getAttribute('onclick')||'').includes(`'${id}'`));
+    const row=btn?.closest('.v55-row');
+    if(row){row.classList.add('miik012-target');row.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>row.classList.remove('miik012-target'),2600)}
+  },80);
+}
+window.miik011OpenSource=function(kind,id){
+  closeMiikDialog?.();
+  setTimeout(()=>{
+    if(kind==='health'||kind==='special'){
+      if(typeof personRecords==='function'){personRecords(kind);highlight012(id)}
+      return;
+    }
+    const map={follow:['followup',''],individual:['session','individual'],group:['session','group'],guardian:['guardian',''],case:['case',''],emergency:['emergency','']};
+    const m=map[kind];if(!m)return;
+    if(typeof openModule==='function')openModule(kind==='individual'||kind==='group'?'الجلسات الإرشادية':(typeof labels!=='undefined'&&labels[kind])||'المتابعة الطلابية','السجل الأصلي للإجراء المحدد.');
+    if(typeof v55Records==='function')v55Records(m[0],m[1]);
+    highlight012(id);
+  },80);
+};
+})();
+</script>
+</body></html>`);w.document.close()};
 // Keep delete/edit refresh on the same filtered record screen.
 const del009=window.v55Delete;window.v55Delete=function(id,t,s){if(typeof confirmDialog==='function')return confirmDialog('حذف السجل','هل تريد حذف هذا السجل؟',()=>{W(AKEY,R(AKEY).filter(x=>x._v55id!==id));state={...state,type:t,sub:s};miik009RenderRecords()});if(confirm('حذف هذا السجل؟')){W(AKEY,R(AKEY).filter(x=>x._v55id!==id));miik009RenderRecords()}};
 // Follow-up list: same grade/section principle and print-current behavior.
