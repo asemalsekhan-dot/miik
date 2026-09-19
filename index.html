@@ -4301,3 +4301,88 @@ window.saveAction=function(e){
 setTimeout(()=>{try{renderStudentFollowups()}catch(_){}},0);
 })();
 </script>
+
+
+<!-- MIK Beta 0.2.1 — unified MIK selects + academic report -->
+<style id="miik-beta-021-style">
+.miik021-select{position:relative;width:100%;font-family:inherit;direction:rtl}
+.miik021-select>select{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important;overflow:hidden!important}
+.miik021-select-btn{width:100%;min-height:46px;border:1px solid #d9dfdb;border-radius:12px;background:#fff;color:#294b42;padding:10px 14px 10px 42px;font:700 15px/1.5 inherit;text-align:right;cursor:pointer;position:relative;box-shadow:none}
+.miik021-select-btn:after{content:'⌄';position:absolute;left:15px;top:50%;transform:translateY(-55%);font-size:18px;color:#71857c;font-weight:700}
+.miik021-select.open .miik021-select-btn{border-color:#879b90;box-shadow:0 0 0 3px rgba(91,116,103,.10)}
+.miik021-select-menu{display:none;position:absolute;z-index:99999;top:calc(100% + 6px);right:0;left:0;background:#fff;border:1px solid #d8dfda;border-radius:12px;padding:6px;box-shadow:0 14px 34px rgba(35,57,49,.16);max-height:250px;overflow:auto}
+.miik021-select.open .miik021-select-menu{display:block}
+.miik021-option{display:block;width:100%;border:0;background:#fff;color:#294b42;padding:10px 12px;border-radius:8px;text-align:right;font:600 15px/1.5 inherit;cursor:pointer}
+.miik021-option:hover{background:#f3f0e7}.miik021-option.selected{background:#e8eee8;color:#24483e;font-weight:800}
+.miik021-option:focus{outline:2px solid #aab9b0;outline-offset:-2px}
+.miik021-select.disabled .miik021-select-btn{opacity:.55;cursor:not-allowed;background:#f7f7f5}
+.miik021-report-row{display:flex;justify-content:flex-start;margin:10px 0 16px}
+.miik021-report-btn{border:0;border-radius:11px;background:#294b42;color:#fff;padding:10px 22px;font:800 14px/1.4 inherit;cursor:pointer;box-shadow:0 5px 14px rgba(41,75,66,.13)}
+.miik021-report-btn:hover{filter:brightness(.96)}
+#actionModal .miik021-select-btn,#miikDialog .miik021-select-btn{font-size:15px}
+@media(max-width:600px){.miik021-select-btn,.miik021-option{font-size:14px}.miik021-report-btn{width:100%}}
+</style>
+<script id="miik-beta-021-script">
+(()=>{'use strict';
+const qsa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+function eligible(sel){return sel&&sel.tagName==='SELECT'&&(sel.closest('.miik014-box')||sel.closest('#actionModal')||sel.closest('#miikDialog'));}
+function closeMenus(except){qsa('.miik021-select.open').forEach(w=>{if(w!==except)w.classList.remove('open')})}
+function enhance(sel){
+ if(!eligible(sel)||sel.dataset.miik021==='1')return;
+ sel.dataset.miik021='1';
+ const wrap=document.createElement('div');wrap.className='miik021-select'+(sel.disabled?' disabled':'');
+ sel.parentNode.insertBefore(wrap,sel);wrap.appendChild(sel);
+ const btn=document.createElement('button');btn.type='button';btn.className='miik021-select-btn';
+ const menu=document.createElement('div');menu.className='miik021-select-menu';
+ wrap.append(btn,menu);
+ function rebuild(){
+   wrap.classList.toggle('disabled',!!sel.disabled);
+   const opts=Array.from(sel.options);const chosen=opts.find(o=>o.value===sel.value)||opts[sel.selectedIndex]||opts[0];
+   btn.textContent=chosen?.textContent||'اختر';btn.disabled=!!sel.disabled;
+   menu.innerHTML='';
+   opts.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='miik021-option'+(o.value===sel.value?' selected':'');b.textContent=o.textContent;b.disabled=o.disabled;b.onclick=e=>{e.stopPropagation();sel.value=o.value;sel.dispatchEvent(new Event('change',{bubbles:true}));rebuild();wrap.classList.remove('open')};menu.appendChild(b)});
+ }
+ btn.onclick=e=>{e.stopPropagation();if(sel.disabled)return;rebuild();closeMenus(wrap);wrap.classList.toggle('open')};
+ sel.addEventListener('change',rebuild);rebuild();wrap._miikSync=rebuild;
+}
+function scan(root=document){qsa('select',root).forEach(enhance)}
+window.miik021SyncSelects=()=>qsa('.miik021-select').forEach(w=>w._miikSync?.());
+document.addEventListener('click',()=>closeMenus());
+const mo=new MutationObserver(ms=>{ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1){if(n.matches?.('select'))enhance(n);scan(n)}}))});
+mo.observe(document.body,{childList:true,subtree:true});scan();
+
+/* تقرير متابعة التحصيل: يقرأ الفترة والفلاتر الحالية ويشمل الحالات الثلاث وإجراءاتها. */
+window.miik021AcademicReport=function(){
+ try{
+  const st=document.getElementById('miik014Stage')?.value||'',gr=document.getElementById('miik014Grade')?.value||'',se=document.getElementById('miik014Section')?.value||'';
+  const period=window.academicPeriod||document.querySelector('.miik014-period select')?.value||'';
+  let all=caseMap().filter(c=>c.period===period);
+  if(st)all=all.filter(c=>c.student?.stage===st);if(gr)all=all.filter(c=>c.student?.grade===gr);if(se)all=all.filter(c=>c.student?.section===se);
+  const labels={new:'متابعة جديدة',active:'تحت الإجراء',closed:'مغلقة'};
+  const counts={new:0,active:0,closed:0};all.forEach(c=>counts[c.status]=(counts[c.status]||0)+1);
+  const E=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  let prof={};try{prof=typeof pinfo==='function'?pinfo():{}}catch(_){}
+  const school=prof.school||localStorage.getItem('schoolName')||'';const region=prof.region||localStorage.getItem('regionName')||'';
+  const logo=new URL('ministry-logo.png',location.href).href;
+  const scope=[st,gr,se].filter(Boolean).join(' — ')||'جميع الطلاب';
+  const rows=all.map((c,i)=>{const acts=linkedActions(c)||[];const ad=acts.length?acts.map(a=>`${E(a.title||'إجراء')}${a.date?' — '+E(a.date):''}`).join('<br>'):'لا يوجد إجراء مسجل';return `<tr><td>${i+1}</td><td>${E(c.name)}</td><td>${E((c.subjects||[]).join('، ')||'—')}</td><td>${E(labels[c.status]||c.status||'—')}</td><td>${ad}</td></tr>`}).join('');
+  const w=window.open('','_blank','width=1000,height=900');if(!w){showMiikNotice?.('التقرير','تعذر فتح نافذة التقرير. اسمح بالنوافذ المنبثقة ثم حاول مرة أخرى.');return}
+  w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>تقرير متابعة التحصيل الدراسي</title><style>@page{size:A4 portrait;margin:14mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial;color:#263a34;margin:0}.head{display:grid;grid-template-columns:1fr 90px 1fr;align-items:center;border-bottom:1.5px solid #71857c;padding-bottom:9px;font-size:11px;line-height:1.7}.gov{text-align:right;font-weight:700}.logo{text-align:center}.logo img{max-width:78px}h1{text-align:center;font-size:21px;margin:18px 0 8px}.meta{text-align:center;font-size:12px;line-height:1.9;margin-bottom:13px}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 0}.card{border:1px solid #d5ddd8;border-radius:9px;padding:9px;text-align:center}.card b{display:block;font-size:17px}.card span{font-size:10px}table{width:100%;border-collapse:collapse;font-size:10.5px}th,td{border:1px solid #cfd8d3;padding:7px;vertical-align:top;line-height:1.65}th{background:#edf1ed}th:nth-child(1){width:5%}th:nth-child(2){width:18%}th:nth-child(3){width:15%}th:nth-child(4){width:13%}.empty{text-align:center;border:1px solid #d5ddd8;border-radius:10px;padding:22px;margin-top:15px}.foot{display:flex;justify-content:space-between;margin-top:18px;font-size:11px}.print{display:block;margin:18px auto;padding:9px 24px;border:0;border-radius:8px;background:#294b42;color:#fff}@media print{.print{display:none}}</style></head><body><div class="head"><div class="gov">المملكة العربية السعودية<br>وزارة التعليم${region?'<br>الإدارة العامة للتعليم بمنطقة '+E(region):''}${school?'<br>'+E(school):''}</div><div class="logo"><img src="${logo}"></div><div></div></div><h1>تقرير متابعة التحصيل الدراسي</h1><div class="meta"><b>فترة المتابعة:</b> ${E(period)}<br><b>نطاق التقرير:</b> ${E(scope)}</div><div class="summary"><div class="card"><b>${all.length}</b><span>إجمالي الحالات</span></div><div class="card"><b>${counts.new||0}</b><span>متابعة جديدة</span></div><div class="card"><b>${counts.active||0}</b><span>تحت الإجراء</span></div><div class="card"><b>${counts.closed||0}</b><span>حالات مغلقة</span></div></div>${all.length?`<table><thead><tr><th>م</th><th>الطالب</th><th>المادة / المواد</th><th>الحالة</th><th>الإجراءات المنفذة</th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">لا توجد حالات مطابقة للاختيارات الحالية.</div>'}<div class="foot"><span>الموجّه الطلابي: ${E(typeof counselor==='function'?counselor():'')}</span><span>التوقيع: __________________</span></div><button class="print" onclick="print()">طباعة التقرير</button></body></html>`);w.document.close();
+ }catch(err){console.error(err);showMiikNotice?.('التقرير','تعذر إنشاء التقرير من البيانات الحالية.')}
+};
+function addReportButton(){
+ const box=document.querySelector('.miik014-box');if(!box||box.querySelector('.miik021-report-row'))return;
+ const filters=box.querySelector('.miik014-filters');if(!filters)return;
+ const row=document.createElement('div');row.className='miik021-report-row';row.innerHTML='<button type="button" class="miik021-report-btn" onclick="miik021AcademicReport()">تقرير</button>';filters.insertAdjacentElement('afterend',row);
+}
+const baseRender021=window.renderAcademic;
+if(typeof baseRender021==='function')window.renderAcademic=function(g){const r=baseRender021.apply(this,arguments);setTimeout(()=>{addReportButton();scan(document.querySelector('.miik014-box')||document);window.miik021SyncSelects()},0);return r};
+const baseShow021=window.showMiikDialog;
+if(typeof baseShow021==='function')window.showMiikDialog=function(html){const r=baseShow021.apply(this,arguments);setTimeout(()=>scan(document.getElementById('miikDialog')),0);return r};
+const baseOpen021=window.openAction;
+if(typeof baseOpen021==='function')window.openAction=function(){const r=baseOpen021.apply(this,arguments);setTimeout(()=>scan(document.getElementById('actionModal')),0);return r};
+const baseAcademicAction021=window.miik015OpenAction;
+if(typeof baseAcademicAction021==='function')window.miik015OpenAction=function(){const r=baseAcademicAction021.apply(this,arguments);setTimeout(()=>window.miik021SyncSelects(),150);return r};
+setTimeout(()=>{addReportButton();scan();},0);
+})();
+</script>
