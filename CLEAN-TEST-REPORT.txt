@@ -1,27 +1,30 @@
-MIK Clean Base 1.0 RC5 — Deep Clean Audit Candidate
+MIIK Clean Base 1.0 RC6 — functional regression repair
 
-Basis: RC4. Stable 0.3.5 remains untouched.
+Basis: RC5. Stable 0.3.5 remains untouched.
 
-RC5 targeted work:
-1) Build marker updated to clean-base-1.0-rc5.
-2) Removed student names from inline JavaScript arguments in the remaining identified suggestion generations:
-   - early v27 suggestion path
-   - v29 v27 override
-   - universalSuggestions (v27/v30 path)
-   - v82 suggestion path
-   - v83 studentSuggestions override
-   These now use numeric data indexes + DOM onclick handlers and pass the stored name as data, not executable source text.
-3) Escaped displayed student metadata in those paths.
-4) Hardened the legacy v38 CSV temporary render: user CSV fields are HTML-escaped and the temporary inline openStudent(name,...) handler was removed. The function reloads immediately after import, so that temporary card did not need to be interactive.
-5) No localStorage migration/clear was introduced. No feature redesign was intended.
+User-observed RC5 regressions addressed:
+1) PLAN/CALENDAR ROOT CAUSE FIX
+   - RC3/RC4 security cleanup had incorrectly changed two internal numeric cache keys from `${y}-${m}-${d}` to `${y}-${E(m)}-${d}`.
+   - Those two IIFEs do not define E, so calendar/plan execution could throw ReferenceError at runtime even though node --check passed.
+   - RC6 restores both internal numeric keys to `${y}-${m}-${d}`.
+   - This is the concrete runtime cause targeted for: empty plan pages, empty calendar data, week/semester/day interactions failing.
+
+2) STUDENT DATA PRINT ORIENTATION
+   - Remaining legacy student-data print templates that explicitly requested A4 landscape were changed to A4 portrait.
+   - Plan printing that intentionally uses landscape was NOT changed.
+
+3) NOOR IMPORT FEEDBACK
+   - On successful import, the student page is reopened first and then the success notice is shown, so the result is not immediately hidden by navigation/rerender.
+   - Import parsing/storage logic itself was not rewritten.
 
 Static checks after edits:
-- 87 script tags total; 86 non-empty inline script bodies checked with node --check.
-- JavaScript syntax errors: 0.
-- Duplicate IDs in static DOM: 0.
-- miikEditWeeklyV24 references: 0.
-- Direct template patterns v27AddStudent('${...}), v82AddStudent('${...}), chooseActionStudent('${...}) in suggestion code: 0.
-- Bundled static assets are byte-identical to RC4.
+- 87 script tags total / 86 non-empty inline-or-external units as before.
+- 0 JavaScript syntax errors in inline script blocks under node --check.
+- 0 duplicate static DOM IDs.
+- 0 occurrences of the erroneous `${y}-${E(m)}-${d}` cache-key pattern.
+- 0 localStorage.clear().
+- No data migration or new data deletion added.
+- Static packaged assets copied unchanged from RC5.
 
-Important scope statement:
-RC5 is still a compatibility/deep-clean candidate, not a claim that the historical single-file architecture has been rewritten from scratch. Remaining raw template expressions must be judged by context: some intentionally inject trusted HTML/CSS/assets or internal numeric/state values. Browser interaction testing is still required before replacing stable 0.3.5.
+Important limitation:
+This repair is based on a concrete runtime root cause plus static checks. Browser interaction must verify plan/calendar restoration, Noor import feedback, and portrait student-data printing.
