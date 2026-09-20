@@ -1,7 +1,0 @@
-MIK Beta 0.3.0 — Clean Core
-
-- Removed the two latest stacked patch layers (Clean2 and 0.2.9 safe-identity).
-- Removed one obsolete duplicate printOpen implementation where safely superseded.
-- Replaced them with one canonical 0.3.0 core for: register identity, filters, writable dialog controls, Hijri chronological ordering, and guidance-register printing.
-- No demo data added. Existing localStorage keys/data remain untouched.
-- This is a structural cleanup release, not a feature release.
