@@ -1,0 +1,6 @@
+MIK Beta 0.2.6 Clean3
+- Base: Clean1 (to avoid Clean2 malformed trailing JavaScript text).
+- Reapplied the accepted Clean2 fixes: full program-execution text entry + chronological Hijri record ordering.
+- Replaced native grade/section selects in guidance registers with a unified custom MIIK dropdown component (individual/group registers).
+- Added universal print-safe A4 centering and width protection for popup reports and the shared iframe print engine.
+- No result-analysis module added; no unrelated UI/functionality intentionally changed.

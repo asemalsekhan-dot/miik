@@ -1,6 +1,0 @@
-MIK Beta 0.2.6 clean2
-Focused acceptance-test fixes only:
-1) Program execution: rebuilt the execution-entry form as a dedicated form so all writable input/textarea controls accept focus and typing; beneficiary options remain intact.
-2) Printing: added shared safe-width/centering CSS to the common print engine for A4 documents.
-3) Guidance records: added Hijri chronological-key support and MIIK styling/readability improvements for grade/section filters and record text.
-No new feature (including result analysis) was added.
