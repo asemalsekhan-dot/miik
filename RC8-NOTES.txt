@@ -1,9 +1,0 @@
-MIIK Clean Base 1.0 RC8
-- Root duplicate fix: suppresses duplicate student representations across legacy DOM cards and miikStudentsV39 using normalized name+grade+section.
-- Existing duplicate localStorage rows are deduplicated; one canonical record remains.
-- Manual add now refuses an exact same student/grade/section duplicate.
-- Student edit dialog now includes Delete Student.
-- Delete requires explicit confirmation and removes the student plus student-linked records from stored modules; group lists retain other students.
-- Legacy static student cards use deletion tombstones so a deleted student does not reappear.
-- Stable 0.3.5 remains untouched.
-- Static JavaScript syntax audit completed after build.

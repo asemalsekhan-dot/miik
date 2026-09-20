@@ -4473,65 +4473,59 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
 })();
 </script>
 
-<!-- MIIK RC7 — field-test fixes: plan routes, special-category route, import feedback/dedupe, student identity, desktop scale -->
-<style id="miik-rc7-style">
-@media (min-width:900px){html{zoom:.82}}
-#studentsPage .students-panel,#studentsPage .student-filters,#studentsPage .student-actions{border-color:#d9e0d6!important}
-#studentsPage select,#studentsPage input{background-color:#fffdf8!important;border:1px solid #c5d0c7!important;color:#314f46!important;border-radius:12px!important}
-#studentsPage .student-actions button{border-radius:11px!important;font-weight:800!important}
-.miik-rc7-toast{position:fixed;z-index:999999;left:50%;top:28px;transform:translateX(-50%);width:min(520px,calc(100vw - 32px));background:#fffdf8;border:1px solid #b9c9bb;border-radius:16px;box-shadow:0 14px 38px rgba(35,58,49,.18);padding:14px 17px;text-align:right;color:#294b42}
-.miik-rc7-toast b{display:block;font-size:15px;margin-bottom:4px}.miik-rc7-toast span{font-size:12px;line-height:1.8;color:#61736b}.miik-rc7-toast.ok{border-right:5px solid #708d72}
-</style>
-<script id="miik-rc7-script">
-(()=>{'use strict';
- const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const N=v=>String(v??'').replace(/\u00a0/g,' ').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/\s+/g,' ').trim();
- function toast(title,msg){document.querySelector('.miik-rc7-toast')?.remove();const d=document.createElement('div');d.className='miik-rc7-toast ok';d.innerHTML='<b>'+E(title)+'</b><span>'+E(msg)+'</span>';document.body.appendChild(d);setTimeout(()=>d.remove(),6500)}
- window.miikRC7Toast=toast;
- // Remove exact duplicate student records already accumulated in the same grade/section; keep the first record and its data.
- function dedupeStudents(){let a=[];try{a=JSON.parse(localStorage.getItem('miikStudentsV39')||'[]');if(!Array.isArray(a))return 0}catch(_){return 0}const seen=new Set(),out=[];let removed=0;for(const x of a){const k=[N(x?.name),N(x?.grade),N(x?.section)].join('|');if(k&&seen.has(k)){removed++;continue}seen.add(k);out.push(x)}if(removed)localStorage.setItem('miikStudentsV39',JSON.stringify(out));return removed}
- const removedAtLoad=dedupeStudents();if(removedAtLoad)setTimeout(()=>toast('تم ترتيب بيانات الطلاب','أزيل '+removedAtLoad+' سجل مكرر مطابق بالاسم والصف والفصل، دون حذف السجل الأصلي.'),500);
- // Preserve the good Noor import behavior and make its result impossible to miss.
- const importPrev=window.v39DoImport;if(typeof importPrev==='function')window.v39DoImport=async function(){const before=(()=>{try{return JSON.parse(localStorage.getItem('miikStudentsV39')||'[]').length}catch(_){return 0}})();await importPrev.apply(this,arguments);setTimeout(()=>{const removed=dedupeStudents();let after=0;try{after=JSON.parse(localStorage.getItem('miikStudentsV39')||'[]').length}catch(_){}const added=Math.max(0,after-before);toast('تمت قراءة كشف نور',added?('أضيف '+added+' طالب جديد، وتم منع التكرار تلقائيًا.'):'لم يضف طالب جديد؛ الأسماء الموجودة مسبقًا لم تتكرر.'+(removed?' وأزيل '+removed+' تكرار قديم.':''));try{openStudents?.()}catch(_){}},120)};
- // Canonical plan entrance: bypass legacy render chains that could leak the orientation-program report into plan pages.
- const planTitles=new Set(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية']);
- const openPrev=window.openModule;
- window.openModule=function(title,desc){
-   if(planTitles.has(String(title))){hideAllPages();document.getElementById('modulePage').classList.add('show');document.getElementById('moduleTitle').textContent=title;document.getElementById('moduleDesc').textContent=desc||'خطة التوجيه الطلابي للفصل النشط.';const g=document.getElementById('moduleGrid');const c=window.miikAcademicContext?.()||{year:'1448',term:'1'};g.innerHTML='<div style="grid-column:1/-1"><div class="miik-academic-bar"><div><b>العام الدراسي '+E(c.year)+'هـ</b><div><span>الخطة محفوظة مستقلة لكل فصل دراسي.</span></div></div><b>'+(String(c.term)==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول')+'</b></div><div class="miik-term-cards"><button class="miik-term-card '+(String(c.term)==='1'?'active':'')+'" onclick="miikOpenPlanTerm(1)"><b>الفصل الدراسي الأول</b><span>الخطة والبرامج والتنفيذ والتقويم.</span></button><button class="miik-term-card '+(String(c.term)==='2'?'active':'')+'" onclick="miikOpenPlanTerm(2)"><b>الفصل الدراسي الثاني</b><span>مسار مستقل للفصل الثاني.</span></button></div><div id="miikPlanContent"></div></div>';document.getElementById('drawer')?.classList.remove('show');setTimeout(()=>window.miikRefreshPlan12?.(title),0);window.scrollTo({top:0,behavior:'smooth'});return;
-   }
-   return openPrev.apply(this,arguments)
- };
- // Week 4 special-category program belongs to Student Follow-up > Special Categories, not to a synthetic program page.
- const progPrev=window.miikOpenPlanProgram12;
- window.miikOpenPlanProgram12=function(name){if(/رعاية الطلبة من الفئات الخاصة|الفئات الخاصة/.test(String(name||''))){if(typeof window.v56Special==='function')return window.v56Special();if(typeof window.openFollowupHome==='function'){window.openFollowupHome();setTimeout(()=>window.v56Special?.(),30);return}return openModule('المتابعات الطلابية','رعاية الطلبة من الفئات الخاصة.')}return progPrev?.apply(this,arguments)};
-})();
-</script>
 
-<!-- MIIK RC8 — canonical student identity, duplicate suppression, safe manual delete -->
-<style id="miik-rc8-style">
-.miik-rc8-danger{background:#8a4f48!important;color:#fff!important;border:0!important}
-.miik-rc8-warning{margin-top:10px;padding:11px 12px;border:1px solid #e0c9c3;border-radius:12px;background:#fbf3f0;color:#744941;font-size:11px;line-height:1.8}
+<!-- MIIK RC10 — consolidated corrective layer (replaces RC7/RC8/RC9) -->
+<style id="miik-rc10-style">
+@media (min-width:900px){html{zoom:.82}}
+.miik-rc10-toast{position:fixed;z-index:999999;left:50%;top:28px;transform:translateX(-50%);width:min(520px,calc(100vw - 32px));background:#fffdf8;border:1px solid #b9c9bb;border-right:5px solid #708d72;border-radius:16px;box-shadow:0 14px 38px rgba(35,58,49,.18);padding:14px 17px;text-align:right;color:#294b42}.miik-rc10-toast b{display:block;font-size:15px;margin-bottom:4px}.miik-rc10-toast span{font-size:12px;line-height:1.8;color:#61736b}
+.miik-rc10-danger{background:#8a4f48!important;color:#fff!important;border:0!important}.miik-rc10-warning{margin-top:10px;padding:11px 12px;border:1px solid #e0c9c3;border-radius:12px;background:#fbf3f0;color:#744941;font-size:11px;line-height:1.8}
 </style>
-<script id="miik-rc8-script">
+<script id="miik-rc10-script">
 (()=>{'use strict';
- const SKEY='miikStudentsV39',TKEY='miikDeletedStudentIdentitiesRC8';
- const N=v=>String(v??'').replace(/\u00a0/g,' ').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[ـ]/g,'').replace(/\s+/g,' ').trim();
- const R=k=>{try{const v=JSON.parse(localStorage.getItem(k)||'[]');return v}catch(_){return []}};
- const W=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
- const idOf=x=>[N(x?.name),N(x?.grade),N(x?.section)].join('|');
- function cardRec(c){const oc=c.getAttribute('onclick')||'',m=oc.match(/openStudent\('([^']*)','([^']*)','([^']*)','([^']*)'\)/),meta=c.querySelector('.student-meta')?.innerText||'';return{name:c.dataset.name||m?.[1]||'',grade:c.dataset.grade||m?.[2]||'',section:c.dataset.section||m?.[3]||'',phone:m?.[4]||'',stage:c.dataset.stage||(meta.match(/المرحلة:\s*([^\n]+)/)||[])[1]?.trim()||''}}
- function tombs(){const a=R(TKEY);return new Set(Array.isArray(a)?a:[])}
- function canonicalizeDOM(){const list=document.getElementById('studentList');if(!list)return 0;const seen=new Set(),del=tombs();let removed=0;[...list.querySelectorAll('.student-card')].forEach(c=>{const k=idOf(cardRec(c));if(!k||k==='||')return;if(del.has(k)||seen.has(k)){c.remove();removed++;return}seen.add(k)});return removed}
- function dedupeStore(){let a=R(SKEY);if(!Array.isArray(a))return 0;const seen=new Set(),out=[];let n=0;for(const x of a){const k=idOf(x);if(k&&k!=='||'&&seen.has(k)){n++;continue}seen.add(k);out.push(x)}if(n)W(SKEY,out);return n}
- window.miikRC8CanonicalizeStudents=function(){const a=dedupeStore(),b=canonicalizeDOM();return a+b};
- const oldOpen=window.openStudents;if(typeof oldOpen==='function')window.openStudents=function(){const r=oldOpen.apply(this,arguments);setTimeout(canonicalizeDOM,0);return r};
- document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{const n=window.miikRC8CanonicalizeStudents();if(n&&window.miikRC7Toast)miikRC7Toast('تم تصحيح سجل الطلاب','أزيل '+n+' ظهور مكرر للطالب مع الإبقاء على سجل واحد فقط.')},80));
- // Prevent a manual add from creating the same student in the same grade/section again.
- document.addEventListener('submit',e=>{if(e.target?.id!=='v39Add')return;const x={name:document.getElementById('v39Name')?.value,grade:document.getElementById('v39AddGrade')?.value,section:document.getElementById('v39AddSection')?.value};const k=idOf(x);const exists=[...document.querySelectorAll('#studentList .student-card')].some(c=>idOf(cardRec(c))===k)||R(SKEY).some(y=>idOf(y)===k);if(exists){e.preventDefault();e.stopImmediatePropagation();showMiikNotice?.('الطالب موجود مسبقًا','لم تتم الإضافة لأن الاسم والصف والفصل مطابق لسجل موجود.');}},true);
- function cascadeName(oldName){const target=N(oldName),changed=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||k===SKEY||k===TKEY)continue;let v;try{v=JSON.parse(localStorage.getItem(k))}catch(_){continue}let dirty=false;const walk=x=>{if(Array.isArray(x)){const out=[];for(const item of x){if(item&&typeof item==='object'&&!Array.isArray(item)&&N(item.student)===target){dirty=true;continue}const z=walk(item);if(z!==undefined)out.push(z)}return out}if(x&&typeof x==='object'){const y={};for(const [a,b] of Object.entries(x)){if((a==='groupStudents'||a==='students'||a==='beneficiaries')&&Array.isArray(b)){const nb=b.filter(q=>N(typeof q==='string'?q:q?.name)!==target);if(nb.length!==b.length)dirty=true;y[a]=nb}else y[a]=walk(b)}return y}return x};const nv=walk(v);if(dirty){try{localStorage.setItem(k,JSON.stringify(nv));changed.push(k)}catch(_){}}}return changed}
- window.miikRC8DeleteStudent=function(){const hit=(typeof find76==='function'?find76():null);if(!hit){showMiikNotice?.('حذف الطالب','تعذر العثور على سجل الطالب الحالي.');return}const rec=hit.rec,name=rec.name||'',k=idOf(rec);showMiikDialog(`<h2>حذف الطالب</h2><div class="miik-rc8-warning"><b>تنبيه مهم:</b><br>سيُحذف الطالب <b>${String(name).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}</b> من بيانات الطلاب، وستُحذف السجلات المرتبطة به مثل المتابعات والجلسات ودراسات الحالة والحالات الصحية والفئات الخاصة. هذا الإجراء لا يمكن التراجع عنه من داخل مِعِك.</div><div class="dialog-actions"><button class="dialog-primary miik-rc8-danger" onclick="miikRC8ConfirmDeleteStudent()">نعم، حذف الطالب وبياناته</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);window.__miikRC8Delete={name,k}}
- window.miikRC8ConfirmDeleteStudent=function(){const q=window.__miikRC8Delete;if(!q)return;let a=R(SKEY);if(!Array.isArray(a))a=[];a=a.filter(x=>idOf(x)!==q.k&&N(x.name)!==N(q.name));W(SKEY,a);const ts=tombs();ts.add(q.k);W(TKEY,[...ts]);const keys=cascadeName(q.name);try{if(typeof currentStudent!=='undefined'&&N(currentStudent)===N(q.name))currentStudent=''}catch(_){}window.currentStudent='';closeMiikDialog?.();try{openStudents?.()}catch(_){}setTimeout(canonicalizeDOM,0);showMiikNotice?.('تم حذف الطالب','تم حذف الطالب وبياناته المرتبطة في '+keys.length+' سجل/وحدة محفوظة.');delete window.__miikRC8Delete}
- const oldEdit=window.v75EditStudent;if(typeof oldEdit==='function')window.v75EditStudent=function(){oldEdit.apply(this,arguments);setTimeout(()=>{const actions=document.querySelector('.miik-dialog-card .dialog-actions');if(actions&&!actions.querySelector('.miik-rc8-danger')){const b=document.createElement('button');b.type='button';b.className='dialog-primary miik-rc8-danger';b.textContent='حذف الطالب';b.onclick=window.miikRC8DeleteStudent;actions.prepend(b)}},0)};
+ const SKEY='miikStudentsV39';
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const N=v=>String(v??'').replace(/\u00a0/g,' ').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ـ/g,'').replace(/\s+/g,' ').trim();
+ const read=(k,d=[])=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v??d}catch(_){return d}};
+ const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+ function toast(title,msg){document.querySelector('.miik-rc10-toast')?.remove();const d=document.createElement('div');d.className='miik-rc10-toast';d.innerHTML='<b>'+E(title)+'</b><span>'+E(msg)+'</span>';document.body.appendChild(d);setTimeout(()=>d.remove(),6500)}
+ function studentKey(x){return [N(x?.name),N(x?.grade),N(x?.section)].join('|')}
+ function dedupeStudents(){const a=read(SKEY,[]);if(!Array.isArray(a))return 0;const seen=new Set(),out=[];let removed=0;for(const x of a){const k=studentKey(x);if(N(x?.name)&&seen.has(k)){removed++;continue}seen.add(k);out.push(x)}if(removed)write(SKEY,out);return removed}
+
+ // Noor import: keep one exact student per name + grade + section and show clear feedback.
+ const importBase=window.v39DoImport;
+ if(typeof importBase==='function')window.v39DoImport=async function(){const before=read(SKEY,[]).length;await importBase.apply(this,arguments);setTimeout(()=>{const removed=dedupeStudents(),after=read(SKEY,[]).length,added=Math.max(0,after-before);toast('تمت قراءة كشف نور',added?('أضيف '+added+' طالب جديد، وتم منع التكرار تلقائيًا.'):'لم يضف طالب جديد؛ الأسماء الموجودة مسبقًا لم تتكرر.'+(removed?' وأزيل '+removed+' تكرار قديم.':''));try{openStudents?.()}catch(_){}},120)};
+
+ // One canonical family-contact destination. No synthetic page and no routing through Parents Council.
+ function openGuardianCanonical(){
+   hideAllPages();
+   modulePage.classList.add('show');
+   moduleTitle.textContent='التواصل مع أولياء الأمور';
+   moduleDesc.textContent='تواصل مباشر وتوثيق وسجل في مسار واحد.';
+   moduleGrid.innerHTML=`<div class="v97-family-actions"><button class="v97-family-btn wa" onclick="v97GuardianMessage()"><b><img class="v98-wa-icon" src="whatsapp.png" alt="">تواصل مع ولي الأمر</b><small>اختيار الطالب ثم إعداد رسالة واتساب</small></button><button class="v97-family-btn" onclick="openAction('guardian')"><b>توثيق تواصل ولي الأمر</b><small>تسجيل تواصل حضوري أو عن بُعد</small></button><button class="v97-family-btn" onclick="v55Records('guardian')"><b>سجل تواصل ولي الأمر</b><small>عرض وتعديل وطباعة السجل</small></button></div>`;
+   document.getElementById('drawer')?.classList.remove('show');
+   const back=document.querySelector('#modulePage .module-head .students-back');if(back){back.textContent='← الرئيسية';back.onclick=()=>goHome()}
+   window.scrollTo({top:0,behavior:'smooth'});
+ }
+ window.v55Guardian=openGuardianCanonical;
+ function wireFamily(){
+   const fam=[...document.querySelectorAll('#drawer details')].find(d=>d.querySelector(':scope>summary')?.textContent.includes('إطار توثيق علاقة الأسرة مع المدرسة'));
+   if(fam){const contact=[...fam.querySelectorAll(':scope .subnav>button')].find(b=>b.textContent.trim()==='التواصل مع أولياء الأمور');if(contact)contact.onclick=()=>openGuardianCanonical();const council=[...fam.querySelectorAll(':scope .subnav>button')].find(b=>b.textContent.trim()==='مجلس أولياء الأمور');if(council)council.onclick=()=>{document.getElementById('drawer')?.classList.remove('show');v56ParentsCouncil()}}
+ }
+ document.addEventListener('DOMContentLoaded',wireFamily,{once:true});setTimeout(wireFamily,300);
+
+ // Plan routing: family relationship goes DIRECTLY to guardian communication; special categories goes to its real follow-up page.
+ const planBase=window.miikOpenPlanProgram12;
+ window.miikOpenPlanProgram12=function(name){const t=String(name||'').trim();if(/توثيق العلاقة بين الأسرة والمدرسة|الأسرة ودورها في العملية التعليمية/.test(t))return openGuardianCanonical();if(/رعاية الطلبة من الفئات الخاصة|الفئات الخاصة/.test(t)&&typeof window.v56Special==='function')return window.v56Special();return planBase?.apply(this,arguments)};
+
+ // Manual delete: resolve current student from the visible file, then delete the exact student record and linked records.
+ function currentVisibleStudent(){const name=String(document.getElementById('fileName')?.textContent||window.currentStudent||'').trim();const meta=String(document.getElementById('fileMeta')?.textContent||'');const grade=(meta.split('·')[0]||'').trim();const section=(meta.match(/الفصل\s*([^·]+)/)||[])[1]?.trim()||'';const rows=read(SKEY,[]);return rows.find(x=>N(x?.name)===N(name)&&(!grade||N(x?.grade)===N(grade))&&(!section||N(x?.section)===N(section)))||rows.find(x=>N(x?.name)===N(name))||null}
+ function purgeLinked(name){const target=N(name);let touched=0;for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(!k||k===SKEY)continue;let v;try{v=JSON.parse(localStorage.getItem(k))}catch(_){continue}let dirty=false;const walk=x=>{if(Array.isArray(x)){const z=[];for(const item of x){if(item&&typeof item==='object'&&!Array.isArray(item)&&N(item.student||item.studentName)===target){dirty=true;continue}if(typeof item==='string'&&N(item)===target){dirty=true;continue}z.push(walk(item))}return z}if(x&&typeof x==='object'){const y={};for(const [a,b] of Object.entries(x)){if(['groupStudents','students','beneficiaries'].includes(a)&&Array.isArray(b)){const nb=b.filter(q=>N(typeof q==='string'?q:q?.name)!==target);if(nb.length!==b.length)dirty=true;y[a]=nb}else y[a]=walk(b)}return y}return x};const nv=walk(v);if(dirty){try{localStorage.setItem(k,JSON.stringify(nv));touched++}catch(_){}}}return touched}
+ window.miikRC10DeleteStudent=function(){const rec=currentVisibleStudent();if(!rec)return showMiikNotice?.('حذف الطالب','تعذر العثور على سجل الطالب الحالي.');window.__miikRC10Delete=rec;showMiikDialog(`<h2>حذف الطالب</h2><div class="miik-rc10-warning"><b>تنبيه مهم:</b><br>سيُحذف الطالب <b>${E(rec.name)}</b> من بيانات الطلاب، وستُحذف سجلاته الفردية المرتبطة به ويُزال اسمه من السجلات الجماعية. هذا الإجراء لا يمكن التراجع عنه من داخل مِعِك.</div><div class="dialog-actions"><button id="miikRC10Confirm" type="button" class="dialog-primary miik-rc10-danger">نعم، حذف الطالب وبياناته</button><button type="button" class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);setTimeout(()=>document.getElementById('miikRC10Confirm')?.addEventListener('click',window.miikRC10ConfirmDelete,{once:true}),0)};
+ window.miikRC10ConfirmDelete=function(){const rec=window.__miikRC10Delete;if(!rec)return;const k=studentKey(rec),name=rec.name;write(SKEY,read(SKEY,[]).filter(x=>studentKey(x)!==k));purgeLinked(name);closeMiikDialog?.();window.currentStudent='';try{openStudents?.()}catch(_){};toast('تم حذف الطالب','تم حذف الطالب وبياناته المرتبطة.');delete window.__miikRC10Delete};
+ const editBase=window.v75EditStudent;if(typeof editBase==='function')window.v75EditStudent=function(){editBase.apply(this,arguments);setTimeout(()=>{const actions=document.querySelector('.miik-dialog-card .dialog-actions');if(!actions)return;actions.querySelectorAll('.miik-rc8-danger,.miik-rc10-danger').forEach(b=>b.remove());const b=document.createElement('button');b.type='button';b.className='dialog-primary miik-rc10-danger';b.textContent='حذف الطالب';b.onclick=window.miikRC10DeleteStudent;actions.prepend(b)},20)};
+
+ const removed=dedupeStudents();if(removed)setTimeout(()=>toast('تم ترتيب بيانات الطلاب','أزيل '+removed+' سجل مكرر مطابق بالاسم والصف والفصل، مع الإبقاء على سجل واحد.'),450);
+ const printBase=window.v39PrintNow;if(typeof printBase==='function')window.v39PrintNow=function(){dedupeStudents();return printBase.apply(this,arguments)};
 })();
 </script>
 
