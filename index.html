@@ -142,10 +142,21 @@ function showProgramReport(title){const arr=JSON.parse(localStorage.getItem('mii
 
 
 function getWorkItems(){
- const today=new Date().toISOString().slice(0,10), items=[];
+ const now=new Date(), today=miikISODate(now), items=[];
  const acts=JSON.parse(localStorage.getItem('miik-demo-actions')||'[]');
  acts.forEach((x,i)=>{if(x.type==='followup'){let raw=''; try{raw=(x.values&&x.values[2])||''}catch(e){}; if(raw)items.push({title:'متابعة '+(x.student||'طالب'),date:raw,kind:'متابعة طالب',id:'a'+i})}});
- if(localStorage.getItem('miikPlanAdopted')==='1') items.push({title:'برنامج التهيئة الإرشادية',date:today,kind:'من الخطة',id:'plan1'});
+ // مِعِك اليوم يقرأ برامج الأسبوع الحالي من خطة الموجّه الطلابي نفسها؛ لا ينشئ برنامجًا افتراضيًا.
+ try{
+   const c=JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{term:'1'};
+   const ws=typeof window.miikPlanRows12==='function'?window.miikPlanRows12(String(c.term||'1')):[];
+   const hp=(()=>{const ps=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Riyadh'}).formatToParts(now),g=t=>+(ps.find(x=>x.type===t)?.value||0);return{d:g('day'),m:g('month'),y:g('year')}})();
+   const same=(a,b)=>a&&b&&+a.y===+b.y&&+a.m===+b.m&&+a.d===+b.d;
+   const wi=ws.findIndex(w=>(typeof window.miikPlanDays1710==='function'?window.miikPlanDays1710(w):[]).some(d=>same(d,hp)));
+   if(wi>=0){
+     const w=ws[wi], ps=(Array.isArray(w.programs)&&w.programs.length?w.programs:(w.program?[{name:w.program}]:[]));
+     ps.forEach((p,j)=>{const name=String(p?.name||'').trim();if(name)items.push({title:name,date:today,kind:'من خطة هذا الأسبوع',id:'plan-week-'+wi+'-'+j,planWeekProgram:true})});
+   }
+ }catch(_){/* تبقى الأعمال الأخرى ظاهرة حتى لو تعذر تحديد أسبوع الخطة */}
  const rem=JSON.parse(localStorage.getItem('miik-reminders')||'[]'); rem.forEach((x,i)=>items.push({title:x.title,date:x.date,kind:'تذكير',id:'r'+i,time:x.time||''}));
  return items.sort((a,b)=>a.date.localeCompare(b.date));
 }
@@ -562,7 +573,7 @@ function miikHijriDay(d){return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umal
 window.miikOpenWorkByIndex=function(i){const item=(window.__miikDayWorkItems||[])[Number(i)];if(item)miikOpenWork(item)};
 function miikOpenWork(item){
  if(!item)return;
- if(item.kind==='من الخطة'||item.title.includes('برنامج التهيئة')){openModule('برنامج التهيئة الإرشادية','التنفيذ والتوثيق والتقرير.');return}
+ if(item.planWeekProgram||item.kind==='من خطة هذا الأسبوع'){if(typeof window.miikOpenPlanProgram12==='function')window.miikOpenPlanProgram12(item.title);else openModule(item.title,'التنفيذ والتوثيق والتقرير.');return}
  if(item.student){const card=[...document.querySelectorAll('.student-card')].find(c=>c.dataset.name===item.student||c.dataset.name.includes(item.student)||item.student.includes(c.dataset.name));if(card){card.click();return}}
  if(item.kind==='متابعة طالب'){openStudents();return}
  openCalendar();
@@ -4158,10 +4169,10 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
  ['miikWeeklyStatus','miikWeeklyStatusByWeek'].forEach(k=>localStorage.removeItem(k));
 })();
 </script>
-<!-- MIIK RC10 — consolidated corrective layer (replaces RC7/RC8/RC9) -->
+<!-- MIIK RC12 — current-week home feed + centered notices; based on RC11 -->
 <style id="miik-rc10-style">
 @media (min-width:900px){html{zoom:.82}}
-.miik-rc10-toast{position:fixed;z-index:999999;left:50%;top:28px;transform:translateX(-50%);width:min(520px,calc(100vw - 32px));background:#fffdf8;border:1px solid #b9c9bb;border-right:5px solid #708d72;border-radius:16px;box-shadow:0 14px 38px rgba(35,58,49,.18);padding:14px 17px;text-align:right;color:#294b42}.miik-rc10-toast b{display:block;font-size:15px;margin-bottom:4px}.miik-rc10-toast span{font-size:12px;line-height:1.8;color:#61736b}
+.miik-rc10-toast{position:fixed;z-index:999999;left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,calc(100vw - 32px));background:#fffdf8;border:1px solid #b9c9bb;border-right:5px solid #708d72;border-radius:16px;box-shadow:0 14px 38px rgba(35,58,49,.18);padding:20px 22px;text-align:center;color:#294b42}.miik-rc10-toast b{display:block;font-size:18px;margin-bottom:7px;font-weight:900}.miik-rc10-toast span{display:block;font-size:14px;line-height:1.8;color:#52675e;font-weight:700}
 .miik-rc10-danger{background:#8a4f48!important;color:#fff!important;border:0!important}.miik-rc10-warning{margin-top:10px;padding:11px 12px;border:1px solid #e0c9c3;border-radius:12px;background:#fbf3f0;color:#744941;font-size:11px;line-height:1.8}
 </style>
 <script id="miik-rc10-script">
