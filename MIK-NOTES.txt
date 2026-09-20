@@ -1,9 +1,7 @@
-مِعِك Beta 0.3.2 — Repair Only
-
-لا توجد إضافات وظيفية جديدة.
-الإصلاحات المستهدفة فقط:
-1) استيراد كشف نور XLSX لبيانات الطلاب (الاسم + الصف + الفصل فقط).
-2) قوائم بيانات الطلاب وسجلات المتابعة والجلسات بهوية مِعِك بدل القائمة الزرقاء الأصلية للمتصفح.
-3) طباعة سجلات المتابعة والجلسات من الصفوف الظاهرة فعليًا، لتجنب رسالة عدم وجود سجلات بسبب تعارض الحالة القديمة.
-
-النسخة مخصصة للفحص الشامل قبل إيقاف التطوير والانتقال لاحقًا إلى إعادة البناء النظيفة.
+MIIK Beta 0.3.3 — stability repair only
+- Fixed shared follow-up/session print path without relying on closure-private state.
+- Bundled jszip.min.js required by Noor XLSX import.
+- Removed standalone weekly-plan menu entry; counselor-plan week detail remains, without execution-status duplication.
+- Weekly status storage retired.
+- Drawer closes on module navigation.
+- No new features.
