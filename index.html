@@ -3996,9 +3996,14 @@ function canonSec(v){v=norm(v).replace(/^(الفصل|الشعبة)\s*[:：-]?\s*
 function stage(g){return g.includes('ابتدائي')?'الابتدائية':g.includes('متوسط')?'المتوسطة':g.includes('ثانوي')?'الثانوية':''}
 function extract(rows){let header=-1,nc=-1,gc=-1,sc=-1;for(let r=0;r<rows.length;r++){for(let c=0;c<rows[r].length;c++){const v=norm(rows[r][c]);if(/^(اسم|إسم)\s*الطالب$/.test(v)||v==='الطالب'){header=r;nc=c;break}}if(header>=0)break}if(header<0)return[];for(let c=0;c<rows[header].length;c++){const v=norm(rows[header][c]);if(/^(الصف|الصف الدراسي)$/.test(v))gc=c;if(/^(الفصل|الشعبة|الفصل الدراسي)$/.test(v))sc=c}let metaGrade='',metaSec='';for(let r=0;r<=header;r++)for(let c=0;c<rows[r].length;c++){metaGrade=metaGrade||canonGrade(rows[r][c]);if(/الفصل|الشعبة/.test(norm(rows[r][c])))metaSec=metaSec||canonSec(rows[r][c]);metaSec=metaSec||(/^\s*(أ|ب|ج|د|هـ|و)\s*$/.test(norm(rows[r][c]))?canonSec(rows[r][c]):'')}const out=[];for(let r=header+1;r<rows.length;r++){const name=norm(rows[r][nc]);if(!name||name.length<5||name.split(' ').length<2||/اسم الطالب|المجموع|عدد الطلاب/.test(name))continue;const g=canonGrade(gc>=0?rows[r][gc]:'')||metaGrade,s=canonSec(sc>=0?rows[r][sc]:'')||metaSec;if(!g||!s)continue;out.push({name,stage:stage(g),grade:g,section:s,phone:'',last:'لا يوجد'})}return out}
 window.v39DoImport=async function(){const f=document.getElementById('v39File')?.files?.[0];if(!f)return showMiikNotice?.('اختر ملفًا','اختر كشف نور بصيغة XLSX أولًا.');try{let incoming=[];for(const rows of await workbook(f))incoming.push(...extract(rows));const uniq=new Map(incoming.map(x=>[[norm(x.name),x.grade,x.section].join('|'),x]));incoming=[...uniq.values()];if(!incoming.length)return showMiikNotice?.('لم يتم الاستيراد','لم يتمكن مِعِك من العثور على اسم الطالب والصف والفصل في كشف نور.');let old=[];try{old=JSON.parse(localStorage.getItem('miikStudentsV39')||'[]');if(!Array.isArray(old))old=[]}catch(_){old=[]}const keys=new Set(old.map(x=>[norm(x.name),norm(x.grade),norm(x.section)].join('|')));let added=0,skipped=0;for(const x of incoming){const k=[norm(x.name),norm(x.grade),norm(x.section)].join('|');if(keys.has(k)){skipped++;continue}old.push(x);keys.add(k);added++}localStorage.setItem('miikStudentsV39',JSON.stringify(old));closeMiikDialog?.();showMiikNotice?.('تم الاستيراد',`تم استيراد ${added} طالب جديد${skipped?`، وتجاهل ${skipped} طالب موجود مسبقًا`:''}.`);setTimeout(()=>openStudents?.(),120)}catch(e){console.error('MIIK 0.3.2 Noor import',e);showMiikNotice?.('تعذر قراءة الملف','تعذر قراءة كشف نور. تأكد أنه ملف XLSX أصلي من نور.') }};
-document.addEventListener('DOMContentLoaded',()=>{ensureIds();if(document.getElementById('studentFile')?.classList.contains('show'))render()});
 })();
 </script>
+
+</body></html>`);w.document.close()};
+ document.addEventListener('DOMContentLoaded',()=>{ensureIds();if(document.getElementById('studentFile')?.classList.contains('show'))render()});
+})();
+</script>
+</body></html>
 
 <!-- MIIK Beta 1.7.8: calendar semester week stays inside calendar -->
 <style id="miik-beta-178-calendar-semester-week-style">
