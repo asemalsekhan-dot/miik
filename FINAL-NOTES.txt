@@ -1,0 +1,6 @@
+MIK Beta 0.2.7 Final Candidate
+- Unified registry print header: government block right, Ministry logo center, school + student guidance left.
+- Added student counselor and school principal signatures to guidance-register printouts.
+- Tightened number and section columns; gave more space to date and statement fields.
+- Added universal print protection against blank pages caused by fixed A4 heights/overflow.
+- Preserved the working fixes from 0.2.6-clean3 (program execution inputs, chronological registers, unified dropdown identity, print centering).
