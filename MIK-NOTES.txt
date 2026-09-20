@@ -1,7 +1,9 @@
-MIIK Beta 0.3.3 — stability repair only
-- Fixed shared follow-up/session print path without relying on closure-private state.
-- Bundled jszip.min.js required by Noor XLSX import.
-- Removed standalone weekly-plan menu entry; counselor-plan week detail remains, without execution-status duplication.
-- Weekly status storage retired.
-- Drawer closes on module navigation.
-- No new features.
+مِعِك | Beta 0.3.4 — Reference Candidate
+
+هذه نسخة إصلاح واعتماد، بلا إضافات تطويرية جديدة.
+التعديل الوحيد على 0.3.3: قالب طباعة قسم المتابعة الطلابية:
+- حذف شعار مِعِك من رأس الطباعة، والإبقاء على شعار وزارة التعليم في الوسط.
+- تحسين موضع بيانات المدرسة والتوجيه الطلابي يسار الرأس.
+- تثبيت تذييل «مِعِك | الموجّه الذكي» وخطه في أسفل صفحة A4.
+
+لم يتم تغيير مسار البيانات أو محرك الطباعة الذي نجح في 0.3.3.
