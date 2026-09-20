@@ -1,6 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <!-- MIIK CLEAN BASE RC6: functional-regression repair; stable 0.3.5 remains untouched. -->
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>مِعِك | الموجّه الذكي</title><meta name="miik-build" content="clean-base-1.0-rc6"><!-- RC5 deep-clean: classified dynamic output hardening; student suggestions use data/index handlers instead of names in inline JavaScript --><style>
+<html dir="rtl" lang="ar"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><title>مِعِك | الموجّه الذكي</title><meta content="clean-base-1.0-rc6" name="miik-build"/><!-- RC5 deep-clean: classified dynamic output hardening; student suggestions use data/index handlers instead of names in inline JavaScript --><style>
 :root{--deep:#173f36;--olive:#6E8B6B;--sage:#A9B89A;--sand:#E7C99C;--cream:#F6F2E8;--maroon:#5A1728;--paper:#fffdf8;--ink:#173f36;--muted:#80796d;--line:#e5ddce;--shadow:0 12px 34px rgba(35,55,44,.075)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#f8f4eb,#f2ecdf);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh}button,input{font:inherit}.app{max-width:1100px;margin:auto;padding:16px 22px 100px}.masthead{background:rgba(255,253,248,.94);border:1px solid var(--line);border-radius:24px;box-shadow:0 8px 26px rgba(35,55,44,.05);padding:12px 24px;position:sticky;top:8px;z-index:20;backdrop-filter:blur(14px)}.identity{display:grid;grid-template-columns:1fr 118px 1fr;align-items:center;gap:18px;min-height:82px}.school{font-size:12px;font-weight:750;line-height:1.45;justify-self:start;text-align:center;white-space:nowrap}.school .levels{display:block}.school .school-name{display:block;font-size:11.5px;margin-top:2px;text-align:center}.brand{width:118px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}.brand img{width:48px;height:48px;border-radius:14px;display:block;object-fit:cover;box-shadow:0 5px 13px rgba(28,62,52,.07);margin:0 auto}.brand b{font-size:19px;display:block;line-height:1;margin-top:5px;width:100%;text-align:center}.brand span{font-size:8.5px;color:var(--olive);display:block;margin-top:4px;line-height:1;width:100%;text-align:center}.profile{display:flex;align-items:center;justify-self:end;gap:7px;cursor:pointer;direction:ltr}.avatar{width:29px;height:29px;border-radius:50%;background:linear-gradient(145deg,#d9cbb3,#f5ead6);display:grid;place-items:center;font-size:16px;flex:none}.profile b{font-size:10.8px;white-space:nowrap;direction:rtl}.hero{max-width:820px;margin:21px auto 0;padding:0 6px}.datebar{text-align:center;font-size:10.5px;color:var(--olive);margin-bottom:11px}.greeting{font-size:20px;margin:0 0 12px;text-align:right}.toolrow{display:flex;align-items:center;gap:9px;direction:rtl}.menu{border:1px solid #dfe5d9;background:#edf0e7;width:42px;height:42px;border-radius:13px;color:var(--deep);font-size:19px;flex:none;box-shadow:0 5px 15px rgba(35,55,44,.035)}.quick-search{display:flex;gap:7px;flex:1;min-width:0}.quick-search input{flex:1;min-width:0;border:1px solid var(--line);background:rgba(255,253,248,.97);border-radius:14px;padding:11px 14px;outline:none;box-shadow:0 7px 20px rgba(36,54,43,.035);font-size:12px}.searchgo{width:42px;border:0;border-radius:13px;background:var(--olive);color:#fff;font-size:18px;box-shadow:0 7px 18px rgba(110,139,107,.22);flex:none}.workspace{max-width:820px;margin:14px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:13px;padding:0 6px}.card{background:rgba(255,253,248,.96);border:1px solid var(--line);border-radius:19px;padding:16px;box-shadow:var(--shadow);min-height:176px;position:relative;overflow:hidden}.card:before{content:"";position:absolute;inset:0;background:url("miik-logo.png") center/118px 118px no-repeat;opacity:.035;pointer-events:none}.card:after{content:"";position:absolute;width:105px;height:105px;border-radius:50%;background:#eef1e8;left:-62px;bottom:-66px;opacity:.42}.card>*{position:relative;z-index:1}.card h2{font-size:15px;margin:0 0 11px}.today-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0eadf;font-size:10.5px;position:relative;z-index:1}.today-item:last-child{border:0}.time{min-width:50px;font-weight:800}.today-item i{width:7px;height:7px;background:var(--sand);border-radius:50%;flex:none}.calendar-card{cursor:pointer}.calendar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.calendar-head span{font-size:9.5px;color:var(--muted)}.week{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;text-align:center;margin-top:8px}.day{padding:6px 2px;border-radius:9px;font-size:8.5px;background:#f7f4ec}.day b{font-size:11px;display:block;margin-top:2px}.day.active{background:#e7ede3;color:var(--deep);outline:1px solid #d4dfcf}.calendar-note{margin-top:9px;font-size:9.5px;color:var(--muted)}.alerts{max-width:808px;margin:12px auto 0;background:rgba(255,253,248,.96);border:1px solid var(--line);border-radius:17px;padding:13px 15px;box-shadow:0 8px 24px rgba(35,55,44,.045)}.alerts{position:relative;overflow:hidden}.alerts:before{content:"";position:absolute;inset:0;background:url("miik-logo.png") center/130px 130px no-repeat;opacity:.025;pointer-events:none}.alerts>*{position:relative;z-index:1}.alerts-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.alerts-head h2{font-size:13.5px;margin:0}.alerts-head button{border:0;background:transparent;color:var(--olive);font-size:9.5px}.alert-row{display:grid;grid-template-columns:8px 1fr auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid #f1ebdf;font-size:10px}.alert-row:first-of-type{border-top:0}.alert-dot{width:7px;height:7px;border-radius:50%;background:var(--sand)}.alert-row small{color:var(--muted);font-size:8.5px}.quick-add{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));width:52px;height:52px;border-radius:50%;border:0;background:var(--olive);color:white;font-size:28px;box-shadow:0 12px 28px rgba(110,139,107,.3);z-index:30}.assistant{position:fixed;display:flex;align-items:center;gap:7px;left:max(16px,env(safe-area-inset-left));bottom:max(18px,env(safe-area-inset-bottom));background:var(--maroon);color:#fff;border:0;border-radius:15px;padding:11px 14px;font-weight:800;font-size:11px;box-shadow:0 12px 28px rgba(90,23,40,.28);z-index:30}.assistant .ai-mark{font-size:17px;line-height:1;font-weight:900}.add-menu{position:fixed;right:16px;bottom:80px;width:max-content;max-width:calc(100vw - 32px);background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:7px;box-shadow:0 18px 45px rgba(25,47,37,.16);display:none;z-index:31}.add-menu.show{display:block}.add-menu button{display:block;width:100%;border:0;background:transparent;text-align:right;padding:10px 13px;border-radius:11px;color:var(--ink);font-size:12px;white-space:nowrap}.drawer{position:fixed;inset:0;display:none;background:transparent;z-index:40}.drawer.show{display:block}.drawer-panel{position:fixed;width:max-content;min-width:205px;max-width:min(290px,82vw);height:auto;background:var(--paper);padding:8px;border:1px solid var(--line);border-radius:17px;box-shadow:0 16px 38px rgba(20,40,32,.14);overflow:hidden}.drawer-panel h2{margin:3px 8px 7px;font-size:11px;color:var(--olive)}.drawer-panel button{display:block;width:100%;border:0;background:transparent;text-align:right;padding:9px 10px;border-radius:10px;color:var(--ink);font-size:10.5px;white-space:nowrap}.drawer-panel button:hover{background:#f4f1e8}.footer{max-width:808px;margin:27px auto 0;border-top:1px solid var(--line);padding:15px 4px 6px;text-align:center;color:var(--muted);font-size:9px;line-height:1.8}.footer b{color:var(--deep);font-size:10.5px}.footer a{margin:0 5px;color:var(--olive)}
 .calendar-page{display:none;max-width:820px;margin:20px auto 0;padding:0 6px}.calendar-page.show{display:block}.home-content.hide{display:none}.cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.back{border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:8px 11px;color:var(--deep);font-size:11px}.view-switch{display:flex;gap:5px;background:#ece9df;border-radius:12px;padding:4px}.view-switch button{border:0;background:transparent;padding:6px 10px;border-radius:9px;color:var(--muted);font-size:10px}.view-switch button.active{background:var(--paper);color:var(--deep);font-weight:800}.monthbox{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow)}.month-title{text-align:center;font-weight:800;font-size:15px;margin-bottom:12px}.monthgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}.monthgrid div{font-size:9px;padding:7px 2px;border-radius:9px}.monthgrid .head{color:var(--olive);font-weight:800}.monthgrid .num{background:#f7f4ec;min-height:35px}.monthgrid .selected{background:#e7ede3;outline:1px solid #d4dfcf;font-weight:800}
 
@@ -34,7 +35,6 @@ button, a, [role="button"], [onclick], summary, select, input[type="button"], in
 :root{--content:1380px} body{font-size:17px}.app{max-width:var(--content);padding:18px 28px 110px}.masthead{top:8px;padding:13px 28px;border-radius:22px}.identity{grid-template-columns:1fr 150px 1fr;min-height:94px}.brand{width:150px}.brand img{width:60px;height:60px;border-radius:16px}.brand b{font-size:25px;margin-top:3px}.brand span{font-size:12px;margin-top:3px}.school{font-size:16px;font-weight:800}.school .school-name{font-size:15px}.profile b{font-size:14px}.avatar{width:36px;height:36px}.hero,.workspace,.calendar-page,.alerts,.footer{max-width:1220px}.greeting{font-size:30px}.datebar{font-size:15px}.quick-search input{font-size:16px;padding:13px 16px}.menu,.searchgo{width:48px;height:48px}.card{padding:22px;min-height:220px}.card h2{font-size:23px}.today-item{font-size:16px}.calendar-head span,.calendar-note{font-size:14px}.day{font-size:13px;padding:10px 3px}.day b{font-size:17px}.alerts-head h2{font-size:21px}.alerts-head button,.alert-row{font-size:14px}.alert-row small{font-size:12px}.footer{font-size:13px}.footer b{font-size:16px}.drawer-panel{width:360px;max-width:88vw;max-height:calc(100dvh - 90px);overflow-y:auto;overscroll-behavior:contain;padding:12px}.drawer-panel h2{font-size:17px}.drawer-panel button,.drawer-panel summary{font-size:16px!important;font-weight:650!important;line-height:1.35;padding:12px!important}.drawer-panel .subnav button,.drawer-panel .subnav summary{font-size:15px!important;font-weight:550!important}.module-page{max-width:1320px}.module-box{padding:24px 28px}.module-head h1{font-size:32px!important}.module-head p{font-size:16px!important}.eyebrow{display:none!important}.students-back,.back,.view-switch button{font-size:15px!important;padding:10px 14px}.module-grid{gap:16px}.module-tile b,.program-panel>b{font-size:21px!important}.module-tile span,.program-panel p,.muted,.plan-item small{font-size:15px!important;line-height:1.75}.program-panel{padding:22px!important}.plan-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.plan-item{min-height:105px}.plan-item b{font-size:17px}.exec-btn,.program-tabs button{font-size:15px!important;padding:11px 16px!important}.monthbox{padding:22px}.month-title{font-size:26px}.monthgrid{gap:8px}.monthgrid div{font-size:14px}.monthgrid .num{min-height:92px;padding:10px 7px;text-align:right}.cal-label{display:block;font-size:11px;line-height:1.35;margin-top:7px;padding:4px 5px;border-radius:6px;background:#f2dfdc;color:#7a2c2c}.holiday{background:#e4efe2!important}.event-day{outline:2px solid #d8a39b}.calendar-actions{display:flex;justify-content:flex-start;margin-top:14px}.weekly-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.week-day{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:15px;min-height:190px}.week-day h3{font-size:18px;margin:0 0 12px}.week-task{background:#f7f4ec;border-radius:12px;padding:11px;margin-bottom:9px;cursor:pointer}.week-task b{font-size:15px}.week-task small{display:block;margin:5px 0 8px}.status-actions{display:flex;gap:5px}.status-actions button{border:0;border-radius:8px;padding:6px 8px;font-size:12px}.owner-shell{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:start}.owner-nav{position:sticky;top:135px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:10px}.owner-nav h3{font-size:21px;margin:8px 10px 12px}.owner-nav button{display:block;width:100%;text-align:right;border:0;background:transparent;padding:11px;border-radius:10px;font-size:15px}.owner-nav button.active{background:#edf1e8;font-weight:800}.owner-main{min-width:0}.owner-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px}.metric strong{display:block;font-size:31px;margin-top:8px}.owner-panels{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-top:14px}.owner-panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px}.owner-panel h3{font-size:20px}.miik-dialog{position:fixed;inset:0;background:rgba(19,42,34,.38);backdrop-filter:blur(5px);z-index:100;display:none;place-items:center;padding:18px}.miik-dialog.show{display:grid}.miik-dialog-card{width:min(560px,94vw);max-height:88dvh;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 30px 80px rgba(20,40,32,.25)}.miik-dialog-card h2{font-size:25px;margin:0 0 5px}.miik-dialog-card p{font-size:15px;color:var(--muted)}.miik-dialog-card label{display:block;font-size:14px;font-weight:750;margin-top:13px}.miik-dialog-card input,.miik-dialog-card textarea,.miik-dialog-card select{width:100%;margin-top:6px;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;font-size:16px;direction:rtl}.dialog-actions{display:flex;gap:8px;margin-top:18px}.dialog-actions button{flex:1;border:0;border-radius:12px;padding:12px;font-size:15px}.dialog-primary{background:var(--deep);color:#fff}.dialog-cancel{background:#eee9df;color:var(--ink)}.quick-add{display:grid;place-items:center;line-height:1;padding:0}.action-box{width:min(620px,94vw)!important}.action-head h2{font-size:25px!important}.action-form label{font-size:15px!important}.action-form input,.action-form textarea,.action-form select{font-size:16px!important}
 @media(max-width:720px){body{font-size:16px}.app{padding:8px 12px 92px}.masthead{padding:9px 10px}.identity{grid-template-columns:1fr 92px 1fr;min-height:76px}.brand{width:92px}.brand img{width:45px;height:45px}.brand b{font-size:18px;margin-top:2px}.brand span{font-size:9px}.school,.school .school-name{font-size:10px}.profile b{font-size:9.5px}.avatar{width:27px;height:27px}.greeting{font-size:21px}.datebar{font-size:11.5px}.quick-search input{font-size:13px}.card{padding:13px 11px;min-height:175px}.card h2{font-size:16px}.today-item{font-size:11.5px}.calendar-head span,.calendar-note{font-size:10px}.day{font-size:9px}.day b{font-size:12px}.alerts-head h2{font-size:16px}.alert-row{font-size:11.5px}.drawer-panel{top:70px!important;bottom:12px!important;height:auto!important;max-height:none!important;width:min(360px,88vw);overflow-y:auto!important;-webkit-overflow-scrolling:touch}.drawer-panel h2{font-size:16px}.drawer-panel button,.drawer-panel summary{font-size:15px!important;padding:11px!important}.drawer-panel .subnav button,.drawer-panel .subnav summary{font-size:14px!important}.module-box{padding:16px 12px!important}.module-head h1{font-size:25px!important}.module-head p{font-size:13px!important}.students-back,.back,.view-switch button{font-size:12px!important}.plan-board{grid-template-columns:1fr}.program-panel{padding:15px!important}.module-tile b,.program-panel>b{font-size:18px!important}.module-tile span,.program-panel p,.muted,.plan-item small{font-size:13px!important}.monthbox{padding:12px 8px}.month-title{font-size:21px}.monthgrid{gap:3px}.monthgrid .num{min-height:68px;padding:6px 3px;font-size:11px}.cal-label{font-size:8px;padding:3px 2px}.weekly-grid{grid-template-columns:1fr}.owner-shell{grid-template-columns:1fr}.owner-nav{position:static;display:flex;overflow-x:auto;gap:5px}.owner-nav h3{display:none}.owner-nav button{white-space:nowrap;width:auto}.owner-metrics{grid-template-columns:repeat(2,1fr)}.owner-panels{grid-template-columns:1fr}.metric strong{font-size:25px}.miik-dialog-card{padding:19px;border-radius:20px}.miik-dialog-card h2{font-size:22px}}
 </style>
-
 <style id="v13-fixes">
 /* v13 — دفعة إصلاحات صغيرة فوق v12 */
 .drawer-panel{bottom:12px!important;height:auto!important;max-height:none!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
@@ -44,7 +44,6 @@ button, a, [role="button"], [onclick], summary, select, input[type="button"], in
 .dialog-primary,.adopt-primary,.student-actions .primary{background:#0F3D34!important;color:#fff!important;border-color:#0F3D34!important}
 .profile-menu{z-index:120!important}
 </style>
-
 <style id="v16-calendar-fixes">
 /* v16 — تقويم مِعِك */
 .monthgrid .num{background:#f7f1e5!important;cursor:pointer;transition:.15s ease}
@@ -58,14 +57,9 @@ button, a, [role="button"], [onclick], summary, select, input[type="button"], in
 .calendar-actions .exec-btn{background:var(--olive)!important;color:#fff!important;border:1px solid var(--olive)!important;font-weight:850!important}
 .reminder-time-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
-
-
-
-
 <style id="v104-pointer-rule">
 button,a,[onclick],[role="button"],summary,select,input[type="button"],input[type="submit"],.clickable{cursor:pointer!important}
 </style>
-
 <script id="v107-shared-print-helper">
 window.miikCleanRegion=function(v){
  let x=String(v||'القصيم').trim();
@@ -76,30 +70,27 @@ window.miikCleanRegion=function(v){
  return x||'القصيم';
 };
 </script>
-
 <style>.miik-add-program-btn{border:1px dashed #7d9588!important;background:#f7f4eb!important;color:#315c4e!important;font-weight:900!important}.miik-add-program-btn:hover{background:#edf2e9!important}</style>
 <style id="miik-beta-1720-custom-program-style">
 #miikCustomProgramButtons{display:grid;gap:4px}.miik-custom-program-row{display:grid;grid-template-columns:minmax(0,1fr) 34px 34px;gap:4px;align-items:center}.miik-custom-program-row>button{margin:0!important}.miik-custom-edit,.miik-custom-delete{min-width:34px!important;width:34px!important;padding:7px 4px!important}.miik-custom-delete{color:#8a4d46!important}
 </style>
-</head><body><div class="app"><header class="masthead"><div class="identity"><div class="school"><span class="school-name">اسم المدرسة</span></div><div class="brand" onclick="goHome()" title="الرئيسية"><img src="miik-logo.png" alt="شعار مِعِك"><b>مِعِك</b><span>الموجّه الذكي</span></div><div class="profile profile-wrap" onclick="toggleProfileMenu(event)"><div class="avatar">👤</div><b>الموجّه الطلابي</b><div class="profile-menu" id="profileMenu" onclick="event.stopPropagation()"><button onclick="openModule('بياناتي','بيانات الموجّه والمدرسة.')">بياناتي</button><button onclick="openModule('الاشتراك','حالة الاشتراك والتجديد.')">الاشتراك</button><button onclick="openModule('الدعم','الدعم والبلاغات.')">الدعم</button></div></div></div></header>
-<main><div class="home-content" id="homeContent"><section class="hero"><div class="datebar" id="datebar">الأحد · 17 ربيع الأول 1448هـ · 30 أغسطس 2026م</div><h1 class="greeting" id="greeting">حيّاك الله 🤗</h1><div class="toolrow"><button class="menu" aria-label="القائمة" onclick="toggleDrawer()">☰</button><div class="quick-search"><input id="search" placeholder="وش تبي أبحث لك؟ أنا مِعِك"><button class="searchgo" aria-label="بحث" onclick="demoSearch()">⌕</button></div></div></section>
-<section class="workspace"><article class="card"><h2>مِعِك اليوم</h2><div id="todayList"></div><button id="todayMore" class="mini-link" style="display:none" onclick="alert('عرض بقية أعمال اليوم في النسخة الكاملة')"></button></article>
+</head><body><div class="app"><header class="masthead"><div class="identity"><div class="school"><span class="school-name">اسم المدرسة</span></div><div class="brand" onclick="goHome()" title="الرئيسية"><img alt="شعار مِعِك" src="miik-logo.png"/><b>مِعِك</b><span>الموجّه الذكي</span></div><div class="profile profile-wrap" onclick="toggleProfileMenu(event)"><div class="avatar">👤</div><b>الموجّه الطلابي</b><div class="profile-menu" id="profileMenu" onclick="event.stopPropagation()"><button onclick="openModule('بياناتي','بيانات الموجّه والمدرسة.')">بياناتي</button><button onclick="openModule('الاشتراك','حالة الاشتراك والتجديد.')">الاشتراك</button><button onclick="openModule('الدعم','الدعم والبلاغات.')">الدعم</button></div></div></div></header>
+<main><div class="home-content" id="homeContent"><section class="hero"><div class="datebar" id="datebar">الأحد · 17 ربيع الأول 1448هـ · 30 أغسطس 2026م</div><h1 class="greeting" id="greeting">حيّاك الله 🤗</h1><div class="toolrow"><button aria-label="القائمة" class="menu" onclick="toggleDrawer()">☰</button><div class="quick-search"><input id="search" placeholder="وش تبي أبحث لك؟ أنا مِعِك"/><button aria-label="بحث" class="searchgo" onclick="demoSearch()">⌕</button></div></div></section>
+<section class="workspace"><article class="card"><h2>مِعِك اليوم</h2><div id="todayList"></div><button class="mini-link" id="todayMore" onclick="alert('عرض بقية أعمال اليوم في النسخة الكاملة')" style="display:none"></button></article>
 <article class="card student-follow-card"><h2>المتابعة الطلابية</h2><div id="studentFollowups"><div class="empty-warm">ما عندك متابعة طلابية مسجلة لليوم 🌿</div></div></article></section><section class="home-calendar-wrap"><article class="card calendar-card" onclick="openCalendar()"><div class="calendar-head"><h2>التقويم</h2><span>هذا الأسبوع</span></div><div class="week" id="rollingWeek"></div><div class="calendar-note">اضغط في أي مكان لفتح التقويم الكامل</div></article></section>
 </div>
 <section class="calendar-page" id="calendarPage"><div class="cal-top"><button class="back" onclick="closeCalendar()">→ العودة للرئيسية</button><div class="view-switch"><button>أسبوع</button><button class="active">شهر</button><button>فصل دراسي</button></div></div><div class="monthbox"><div class="month-title">التقويم</div><div style="text-align:center;margin-bottom:10px"><button class="exec-btn" onclick="addReminder()">＋ تذكير بسيط</button></div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div><div class="num">30</div><div class="num">31</div><div class="num event-day">1</div><div class="num">2</div><div class="num event-day">3</div><div class="num holiday">4</div><div class="num holiday">5</div><div class="num">6</div><div class="num event-day">7</div><div class="num">8</div><div class="num today-ring">9</div><div class="num">10</div><div class="num holiday">11</div><div class="num holiday">12</div><div class="num event-day">13</div><div class="num">14</div><div class="num">15</div><div class="num event-day">16</div><div class="num">17</div><div class="num holiday">18</div><div class="num holiday">19</div><div class="num">20</div><div class="num event-day">21</div><div class="num">22</div><div class="num event-day">23</div><div class="num">24</div><div class="num holiday">25</div><div class="num holiday">26</div><div class="num">27</div></div><div class="calendar-legend"><span><i></i>يوم عادي</span><span><i class="event"></i>فيه عمل أو موعد</span><span><i class="holiday-key"></i>إجازة</span></div></div></section>
 <section class="students-page" id="studentsPage"><div class="students-shell"><div class="students-top"><div class="students-title"><h1>الطلاب</h1><p>كل ما يتعلق بالطالب في مكان واحد، بدون تكرار للبيانات</p></div><button class="students-back" onclick="closeStudents()">→ العودة للرئيسية</button></div>
-
-<div class="students-panel active" id="students-list"><div class="student-search"><input id="studentSearch" placeholder="ابحث باسم الطالب…" oninput="filterStudents()"><button aria-label="بحث">⌕</button></div><div class="student-filters"><button class="filter"><span>المرحلة</span><b>الكل⌄</b></button><button class="filter"><span>الصف</span><b>الكل⌄</b></button><button class="filter"><span>الفصل</span><b>الكل⌄</b></button></div><div class="student-actions"><button class="primary">إضافة طالب</button><button>استيراد بيانات الطلاب</button><button>طباعة بيانات الطلاب</button></div><p class="students-count">إجمالي الطلاب: 0 طالب</p><div class="student-list" id="studentList">
-</div><div class="student-empty" id="studentEmpty">ما لقينا طالب بهذا الاسم.</div><nav class="pagination" aria-label="صفحات الطلاب"><button class="active">١</button><button>٢</button><button>٣</button><button>٤</button><button>٥</button><button>…</button><button>١١</button><button>←</button></nav></div>
-
+<div class="students-panel active" id="students-list"><div class="student-search"><input id="studentSearch" oninput="filterStudents()" placeholder="ابحث باسم الطالب…"/><button aria-label="بحث">⌕</button></div><div class="student-filters"><button class="filter"><span>المرحلة</span><b>الكل⌄</b></button><button class="filter"><span>الصف</span><b>الكل⌄</b></button><button class="filter"><span>الفصل</span><b>الكل⌄</b></button></div><div class="student-actions"><button class="primary">إضافة طالب</button><button>استيراد بيانات الطلاب</button><button>طباعة بيانات الطلاب</button></div><p class="students-count">إجمالي الطلاب: 0 طالب</p><div class="student-list" id="studentList">
+</div><div class="student-empty" id="studentEmpty">ما لقينا طالب بهذا الاسم.</div><nav aria-label="صفحات الطلاب" class="pagination"><button class="active">١</button><button>٢</button><button>٣</button><button>٤</button><button>٥</button><button>…</button><button>١١</button><button>←</button></nav></div>
 </div></section>
-<section class="student-file" id="studentFile"><div class="student-file-box"><div class="student-file-head"><div><h1 id="fileName">ملف الطالب</h1><p id="fileMeta"></p></div><button class="students-back" onclick="backToStudents()">→ بيانات الطلاب</button></div><div class="student-file-grid"><div class="student-stat"><b>0</b>متابعات</div><div class="student-stat"><b>0</b>جلسة إرشادية</div><div class="student-stat"><b>0</b>تواصل ولي الأمر</div></div><div class="student-file-actions"><button onclick="openAction('followup')">متابعة طالب</button><button onclick="openAction('session')">جلسة إرشادية</button><button onclick="openAction('emergency')">موقف طارئ</button><button onclick="openAction('case')">دراسة حالة</button><button onclick="openHealthCard()">الحالة الصحية</button><button id="guardianContact" onclick="openAction('guardian')">توثيق التواصل مع ولي الأمر</button><button id="guardianWhatsapp" class="wa-contact" onclick="openGuardianWhatsapp()">واتساب</button></div><div class="timeline" id="studentTimeline"><h3>السجل الإرشادي</h3><div id="timelineItems"><div class="timeline-item"><b>لا توجد إجراءات مسجلة بعد</b>أي إجراء تسجله من هنا سيظهر في هذا السجل مباشرة.</div></div></div></div></section>
+<section class="student-file" id="studentFile"><div class="student-file-box"><div class="student-file-head"><div><h1 id="fileName">ملف الطالب</h1><p id="fileMeta"></p></div><button class="students-back" onclick="backToStudents()">→ بيانات الطلاب</button></div><div class="student-file-grid"><div class="student-stat"><b>0</b>متابعات</div><div class="student-stat"><b>0</b>جلسة إرشادية</div><div class="student-stat"><b>0</b>تواصل ولي الأمر</div></div><div class="student-file-actions"><button onclick="openAction('followup')">متابعة طالب</button><button onclick="openAction('session')">جلسة إرشادية</button><button onclick="openAction('emergency')">موقف طارئ</button><button onclick="openAction('case')">دراسة حالة</button><button onclick="openHealthCard()">الحالة الصحية</button><button id="guardianContact" onclick="openAction('guardian')">توثيق التواصل مع ولي الأمر</button><button class="wa-contact" id="guardianWhatsapp" onclick="openGuardianWhatsapp()">واتساب</button></div><div class="timeline" id="studentTimeline"><h3>السجل الإرشادي</h3><div id="timelineItems"><div class="timeline-item"><b>لا توجد إجراءات مسجلة بعد</b>أي إجراء تسجله من هنا سيظهر في هذا السجل مباشرة.</div></div></div></div></section>
 <section class="module-page" id="modulePage"><div class="module-box"><div class="module-head"><div><span class="eyebrow">مِعِك</span><h1 id="moduleTitle">القسم</h1><p id="moduleDesc"></p></div><button class="students-back" onclick="goHome()">→ الرئيسية</button></div><div class="module-grid" id="moduleGrid"></div></div></section></main>
-<footer class="footer"><b>مِعِك | الموجّه الذكي</b><br>مساندة ذكية.. لأثر تربوي يبقى<br><a onclick="openModule('سياسة الخصوصية','سياسة الخصوصية والاحتفاظ بالبيانات.')">الخصوصية</a> · <a onclick="openModule('الدعم','الدعم والبلاغات.')">الدعم</a></footer></div>
-<button class="quick-add" onclick="toggleAdd(event)">+</button><div class="add-menu" id="addMenu"><button onclick="openAction('followup')">متابعة طالب</button><button onclick="openAction('emergency')">موقف طارئ</button><button onclick="openAction('guardian')">تواصل مع ولي أمر</button></div><button class="assistant" onclick="openShalwa()"><span class="ai-mark" aria-hidden="true">✦</span><span>طير شلوى</span></button>
+<footer class="footer"><b>مِعِك | الموجّه الذكي</b><br/>مساندة ذكية.. لأثر تربوي يبقى<br/><a onclick="openModule('سياسة الخصوصية','سياسة الخصوصية والاحتفاظ بالبيانات.')">الخصوصية</a> · <a onclick="openModule('الدعم','الدعم والبلاغات.')">الدعم</a></footer></div>
+<button class="quick-add" onclick="toggleAdd(event)">+</button><div class="add-menu" id="addMenu"><button onclick="openAction('followup')">متابعة طالب</button><button onclick="openAction('emergency')">موقف طارئ</button><button onclick="openAction('guardian')">تواصل مع ولي أمر</button></div><button class="assistant" onclick="openShalwa()"><span aria-hidden="true" class="ai-mark">✦</span><span>طير شلوى</span></button>
 <div class="drawer" id="drawer" onclick="if(event.target===this)toggleDrawer()"><aside class="drawer-panel">
 <h2>القائمة</h2>
-<details><summary>خطة التوجيه الطلابي</summary><div class="subnav"><button onclick="openModule('الخطة المعتمدة في مِعِك','مرجع مِعِك السنوي قبل الاعتماد. لا يؤثر على التقويم أو التنفيذ حتى تعتمد خطتك.')">الخطة المعتمدة في مِعِك</button><button onclick="openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية التي تحرك التقويم ومِعِك اليوم والتنبيهات والتقارير.')">خطة الموجّه الطلابي</button></div></details>
+<details><summary>خطة التوجيه الطلابي</summary><div class="subnav"><button onclick="miikOpenPlanClean('الخطة المعتمدة في مِعِك')">الخطة المعتمدة في مِعِك</button><button onclick="miikOpenPlanClean('خطة الموجّه الطلابي')">خطة الموجّه الطلابي</button></div></details>
 <details><summary>برامج التوجيه الطلابي</summary><div class="subnav">
 <button onclick="openModule('برنامج التهيئة الإرشادية','التنفيذ والتوثيق والتقرير من مصدر واحد.')">برنامج التهيئة الإرشادية</button><button onclick="openModule('خفض العنف بالمدارس (رِفق)','التنفيذ والتوثيق والتقرير من مصدر واحد.')">خفض العنف بالمدارس (رِفق)</button><button onclick="openModule('تعزيز السلوك الإيجابي','التنفيذ والتوثيق والتقرير من مصدر واحد.')">تعزيز السلوك الإيجابي</button><button onclick="openModule('التوجيه المهني','التنفيذ والتوثيق والتقرير من مصدر واحد.')">التوجيه المهني</button><button onclick="openModule('الاستخدام الآمن للإنترنت','التنفيذ والتوثيق والتقرير من مصدر واحد.')">الاستخدام الآمن للإنترنت</button>
 <details><summary>تنمية الدافعية لرفع مستوى التحصيل</summary><div class="subnav deeper"><button onclick="openModule('التحصيل الدراسي','التنفيذ والتوثيق والتقرير لأعمال التحصيل الدراسي.')">التحصيل الدراسي</button><button onclick="openModule('متابعة التحصيل الدراسي','متابعة حالات التأخر الدراسي والإجراءات العلاجية المرتبطة بها.')">متابعة التحصيل الدراسي</button><details><summary>الاختبارات الوطنية والمعيارية</summary><div class="subnav deeper"><button onclick="openModule('اختبارات القدرات','متابعة نتائج اختبارات القدرات وتحليلها.')">اختبارات القدرات</button><button onclick="openModule('الاختبار التحصيلي','متابعة نتائج الاختبار التحصيلي وتحليلها.')">الاختبار التحصيلي</button><button onclick="openModule('اختبارات نافس','متابعة نتائج اختبارات نافس وتحليلها.')">اختبارات نافس</button></div></details></div></details>
@@ -114,7 +105,7 @@ window.miikCleanRegion=function(v){
 <button onclick="openMiikArchive();toggleDrawer()">الأرشيف</button>
 <details><summary>الإعدادات</summary><div class="subnav"><button onclick="openModule('بياناتي','بيانات الموجّه والمدرسة.')">بياناتي</button><button onclick="openModule('الاشتراك','حالة الاشتراك والتجديد وكود التفعيل.')">الاشتراك</button><button onclick="openModule('سياسة الخصوصية','سياسة الخصوصية.')">سياسة الخصوصية</button><button onclick="openModule('الدعم','الدعم والبلاغات.')">الدعم</button><button onclick="openOwner()">بوابة المالك — معاينة تطويرية</button></div></details>
 </aside></div>
-<div class="action-modal" id="actionModal"><div class="action-box"><div class="action-head"><div><h2 id="actionTitle">إجراء جديد</h2><p id="actionHint">سجّل أقل قدر لازم من المعلومات.</p></div><button class="action-close" onclick="closeAction()">×</button></div><form class="action-form" id="actionForm" onsubmit="saveAction(event)"><label>الطالب<div class="student-picker"><input id="actionStudent" required placeholder="ابحث باسم الطالب…" oninput="studentSuggestions(this.value)"><div id="studentSuggestions" class="student-suggestions"></div></div></label><label>التاريخ الهجري<input id="actionDate" type="text" readonly required placeholder="اختر التاريخ الهجري" onclick="openHijriPicker(this)"></label><div id="dynamicFields"></div><button class="action-save" type="submit">حفظ</button><div class="save-note" id="saveNote">تم الحفظ ✓ وظهر الإجراء في سجل الطالب.</div></form></div></div><div class="whatsnew" id="whatsNew"><div class="whatsnew-card"><button class="x" onclick="closeWhatsNew()">×</button><img src="miik-logo.png" alt="مِعِك"><h2>مِعِك يسابق الريح 🌿</h2><p>جمعنا لك جملة من التطويرات في النسخة المتكاملة:</p><ul><li>رتبنا الخطة إلى مرجع مِعِك وخطة الموجّه التشغيلية.</li><li>أضفنا مسارات المتابعة والجلسات والمواقف والتواصل ودراسة الحالة.</li><li>ربطنا البرامج بالتنفيذ والتوثيق والتقرير.</li><li>حدّثنا القائمة والتقارير والتحصيل وعلاقة الأسرة.</li></ul><strong>غَدِيّه يعجبك 🤗</strong><button class="done" onclick="closeWhatsNew()">تم، أبشر 👍🏼</button></div></div><script>
+<div class="action-modal" id="actionModal"><div class="action-box"><div class="action-head"><div><h2 id="actionTitle">إجراء جديد</h2><p id="actionHint">سجّل أقل قدر لازم من المعلومات.</p></div><button class="action-close" onclick="closeAction()">×</button></div><form class="action-form" id="actionForm" onsubmit="saveAction(event)"><label>الطالب<div class="student-picker"><input id="actionStudent" oninput="studentSuggestions(this.value)" placeholder="ابحث باسم الطالب…" required=""/><div class="student-suggestions" id="studentSuggestions"></div></div></label><label>التاريخ الهجري<input id="actionDate" onclick="openHijriPicker(this)" placeholder="اختر التاريخ الهجري" readonly="" required="" type="text"/></label><div id="dynamicFields"></div><button class="action-save" type="submit">حفظ</button><div class="save-note" id="saveNote">تم الحفظ ✓ وظهر الإجراء في سجل الطالب.</div></form></div></div><div class="whatsnew" id="whatsNew"><div class="whatsnew-card"><button class="x" onclick="closeWhatsNew()">×</button><img alt="مِعِك" src="miik-logo.png"/><h2>مِعِك يسابق الريح 🌿</h2><p>جمعنا لك جملة من التطويرات في النسخة المتكاملة:</p><ul><li>رتبنا الخطة إلى مرجع مِعِك وخطة الموجّه التشغيلية.</li><li>أضفنا مسارات المتابعة والجلسات والمواقف والتواصل ودراسة الحالة.</li><li>ربطنا البرامج بالتنفيذ والتوثيق والتقرير.</li><li>حدّثنا القائمة والتقارير والتحصيل وعلاقة الأسرة.</li></ul><strong>غَدِيّه يعجبك 🤗</strong><button class="done" onclick="closeWhatsNew()">تم، أبشر 👍🏼</button></div></div><script>
 // Clean Base RC3: canonical HTML text escaping helper for shared/legacy renderers.
 window.miikEscapeHTML=function(value){return String(value??'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 
@@ -232,7 +223,6 @@ function renderSettings(title,g){if(title==='المعلومات الشخصية'|
 function openCalendar(){hideAllPages();document.getElementById('calendarPage').classList.add('show');const box=document.querySelector('#calendarPage .monthbox');const labels={3:'برنامج التهيئة',8:'متابعة برنامج',15:'اليوم الوطني',22:'التوجيه المهني'};let cells='';for(let i=1;i<=30;i++){const weekend=(i%7===6||i%7===0),lab=labels[i];cells+=`<div class="num ${weekend?'holiday':''} ${lab?'event-day':''}"><b>${i}</b>${lab?`<span class="cal-label">${lab}</span>`:''}</div>`}box.innerHTML=`<div class="month-title">ربيع الأول 1448هـ</div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div>${cells}</div><div class="calendar-legend"><span><i class="holiday-key"></i>نهاية الأسبوع</span><span><i class="event"></i>فيه برنامج أو مناسبة</span></div><div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">＋ إضافة تذكير</button></div>`;window.scrollTo({top:0,behavior:'smooth'})}
 function openOwner(){hideAllPages();document.getElementById('modulePage').classList.add('show');document.getElementById('moduleTitle').textContent='إدارة مِعِك';document.getElementById('moduleDesc').textContent='مركز إدارة المنصة';const tickets=supportRows().length;document.getElementById('moduleGrid').innerHTML=`<div class="owner-shell" style="grid-column:1/-1"><aside class="owner-nav"><h3>إدارة مِعِك</h3>${['الرئيسية','المستخدمون','الاشتراكات','الخطة والمحتوى','التواصل','الدعم','الفريق والصلاحيات','طلبات الاعتماد','حالة المنصة والإصدارات','إعدادات المنصة'].map((x,i)=>`<button class="${i===0?'active':''}">${x}</button>`).join('')}</aside><section class="owner-main"><div class="owner-metrics"><div class="metric">المستخدمون<strong>128</strong><small>حساب تجريبي</small></div><div class="metric">الاشتراكات النشطة<strong>104</strong><small>حاليًا</small></div><div class="metric">قريبة من الانتهاء<strong>9</strong><small>تحتاج متابعة</small></div><div class="metric">طلبات الدعم<strong>${tickets}</strong><small>مفتوحة</small></div><div class="metric">طلبات الاعتماد<strong>3</strong><small>بانتظار المراجعة</small></div><div class="metric">حالة المنصة<strong style="font-size:22px">طبيعي ✓</strong><small>الخدمات الأساسية</small></div></div><div class="owner-panels"><div class="owner-panel"><h3>يحتاج انتباهك</h3><div class="plan-item"><div><b>اشتراكات قاربت على الانتهاء</b><small>9 حسابات خلال الفترة القادمة</small></div><span class="status-pill">متابعة</span></div><div class="plan-item"><div><b>طلبات اعتماد</b><small>3 عناصر محتوى بانتظار القرار</small></div><span class="status-pill">مراجعة</span></div></div><div class="owner-panel"><h3>الدعم والشكاوى</h3><p class="muted">البلاغات تظهر هنا بدون إتاحة ملفات الطلاب.</p><div class="plan-item"><div><b>البلاغات المفتوحة</b><small>جديد ← تحت المعالجة ← تم الحل</small></div><span class="status-pill">${tickets}</span></div></div></div></section></div>`;document.getElementById('drawer').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})}
 </script>
-
 <style id="v12-final-overrides">
 /* v12 is intentionally based on the real v10 file */
 .drawer-panel{max-height:calc(100dvh - 90px)!important;overflow-y:auto!important;overscroll-behavior:contain!important}.home-calendar-wrap{max-width:1220px;margin:13px auto 0;padding:0 6px}.home-calendar-wrap .card{min-height:190px}.workspace{grid-template-columns:1fr 1fr!important}.workspace .student-follow-card{display:block}.greeting{font-size:30px!important}.brand{cursor:pointer}.brand span{font-weight:800}.profile-wrap{position:relative}.profile-menu{position:absolute;left:0;top:44px;width:185px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:7px;box-shadow:0 18px 45px rgba(25,47,37,.16);display:none;z-index:70}.profile-menu.show{display:block}.profile-menu button{display:block;width:100%;border:0;background:transparent;text-align:right;padding:10px 11px;border-radius:9px;color:var(--ink);font-size:14px}.profile-menu .logout{border-top:1px solid var(--line);margin-top:4px}.students-back,.back{color:var(--olive)!important;font-weight:900!important;font-size:15px!important;padding:10px 14px!important}.action-form input::placeholder,.action-form textarea::placeholder,.miik-dialog-card input::placeholder,.miik-dialog-card textarea::placeholder{font-size:12px!important;font-weight:400;color:#aaa398}.action-form label,.miik-dialog-card label{font-weight:800}.action-form input,.action-form textarea,.action-form select,.miik-dialog-card input,.miik-dialog-card textarea,.miik-dialog-card select{direction:rtl;text-align:right;unicode-bidi:plaintext}.student-picker{position:relative}.student-suggestions{display:none;position:absolute;z-index:90;right:0;left:0;top:100%;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:190px;overflow:auto}.student-suggestions.show{display:block}.student-suggestions button{width:100%;border:0;background:transparent;text-align:right;padding:10px;border-bottom:1px solid var(--line)}.holiday{background:#dfeedd!important}.event-day{outline:none!important;background:#e6dfd1!important}.cal-label{display:block;font-size:11px;line-height:1.35;margin-top:7px;padding:4px 5px;border-radius:6px;background:rgba(255,255,255,.55);color:var(--deep)}.calendar-actions{display:flex;justify-content:flex-end;margin-top:14px}.calendar-actions .exec-btn{background:transparent;color:var(--olive);border:1px solid #cbd8c7}.program-panel{background:transparent!important;border:0!important;box-shadow:none!important;padding:4px 0!important}.program-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.program-action{border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:14px;font-weight:850;color:var(--deep)}.execution-log{margin-top:18px}.execution-row{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding:12px 3px}.print-icon{width:40px;height:40px;border:1px solid var(--line);border-radius:11px;background:transparent;color:var(--deep);font-size:19px;cursor:pointer}.adopt-actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}.adopt-actions button{border:0;border-radius:12px;padding:12px 18px;font-weight:850}.adopt-primary{background:var(--deep);color:#fff}.adopt-edit{background:#e8eee5;color:var(--deep)}.semester-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}.semester-week{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:13px;min-height:130px}.semester-week .week-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.semester-week .week-date{font-size:12px;color:var(--muted)}.semester-week .program-name{font-weight:850;margin-top:14px}.week-value{font-size:12px;color:var(--olive);margin-top:8px}.weekly-plan{background:transparent}.weekly-grid-v12{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.week-day-v12{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:13px;min-height:190px}.week-day-v12 h3{text-align:center;margin:0 0 12px}.week-entry{background:#f5f1e7;border-radius:11px;padding:10px;margin-bottom:8px}.week-entry small{display:block;margin-top:5px;color:var(--muted)}.status-actions{display:flex;justify-content:center;gap:6px;margin-top:12px}.status-actions button{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:6px 9px;font-weight:750}.settings-sheet,.subscription-sheet,.family-sheet,.privacy-doc{grid-column:1/-1;max-width:1050px}.settings-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.setting-line{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:13px}.subscription-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}.sub-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px}.family-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.family-stat{display:inline-flex;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:12px 0}.contact-log{margin-top:15px}.contact-row{border-top:1px solid var(--line);padding:12px 2px}.student-file-actions{grid-template-columns:repeat(4,minmax(0,1fr))!important}.wa-contact{direction:ltr}.owner-shell{display:grid;grid-template-columns:260px 1fr;gap:18px}.owner-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.owner-metrics .metric{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:16px}.owner-metrics strong{display:block;font-size:30px;margin:8px 0}.owner-panels{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:14px}.owner-panel{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:15px}.report-toolbar{display:flex;justify-content:flex-start;margin:12px 0}.print-document{display:none}
@@ -270,7 +260,6 @@ const openModuleBaseV12=openModule;openModule=function(title,desc){hideAllPages(
 function openCalendar(){hideAllPages();calendarPage.classList.add('show');const labels={3:'برنامج التهيئة',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'};let cells='';for(let i=1;i<=30;i++){const weekend=(i%7===5||i%7===6),lab=labels[i];cells+=`<div class="num ${weekend?'holiday':''} ${lab&&!weekend?'event-day':''}"><b>${i}</b>${lab?`<span class="cal-label">${lab}</span>`:''}</div>`}document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="month-title">ربيع الأول 1448هـ</div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div>${cells}</div><div class="calendar-legend"><span><i class="holiday-key"></i>الجمعة والسبت</span><span><i class="event"></i>يوم فيه عمل</span></div><div class="calendar-actions"><button class="exec-btn" onclick="addReminder()">إضافة تذكير</button></div>`;window.scrollTo({top:0,behavior:'smooth'})}
 function addReminder(){dialogForm('إضافة تذكير','أضف ما تحتاج تتذكره فقط.',`<label>عنوان التذكير<input name="title" required></label><label>التاريخ الهجري<input name="date" readonly onclick="openHijriPicker(this)" required></label><label>الوقت — اختياري<select name="time"><option value="">بدون وقت</option>${Array.from({length:24},(_,h)=>`<option>${String(h).padStart(2,'0')}:00</option>`).join('')}</select></label><label>ملاحظة — اختياري<textarea name="note" rows="3"></textarea></label>`,fd=>{const a=JSON.parse(localStorage.getItem('miik-reminders')||'[]');a.push(Object.fromEntries(fd));localStorage.setItem('miik-reminders',JSON.stringify(a));renderToday()})}
 </script>
-
 <style id="v15-home-day-css">
 .day-work-list{display:grid;gap:10px;margin-top:18px}.day-work-row{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;text-align:right;color:var(--ink);cursor:pointer}.day-work-row:hover{background:#f5f1e8}.day-work-row small{display:block;color:var(--muted);margin-top:5px}.day-work-row strong{font-size:24px;color:var(--olive)}.day-view-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.day-full-calendar{border:1px solid #cbd8c7;background:#edf0e7;color:var(--deep);border-radius:11px;padding:9px 12px;font-weight:800}
 .hijri-abbr{display:inline-block;white-space:nowrap}
@@ -305,7 +294,6 @@ function addReminder(){
   dialogForm('إضافة تذكير','أضف ما تحتاج تتذكره فقط.',`<label>عنوان التذكير<input name="title" required></label><label>التاريخ الهجري<input name="date" readonly onclick="openHijriPicker(this)" required></label><label>الوقت — اختياري<div class="reminder-time-row"><select name="hour"><option value="">بدون وقت</option>${hours}</select><select name="period"><option value="AM">AM</option><option value="PM">PM</option></select></div></label><label>ملاحظة — اختياري<textarea name="note" rows="3"></textarea></label>`,fd=>{const obj=Object.fromEntries(fd);obj.time=obj.hour?`${obj.hour} ${obj.period}`:'';delete obj.hour;delete obj.period;const a=JSON.parse(localStorage.getItem('miik-reminders')||'[]');a.push(obj);localStorage.setItem('miik-reminders',JSON.stringify(a));renderToday();renderAlerts&&renderAlerts()});
 }
 </script>
-
 <style id="v17-calendar-final">
 .calendar-page .monthgrid .num.holiday{background:#dfe9dc!important}
 .calendar-page .monthgrid .num.event-day{background:#e7ddc8!important}
@@ -340,7 +328,6 @@ function openCalendar(){hideAllPages();document.getElementById('calendarPage').c
 function wireCalendarSwitch(){const sw=document.querySelector('#calendarPage .view-switch');if(!sw)return;const bs=sw.querySelectorAll('button');const modes=['week','month','semester'];bs.forEach((b,i)=>{b.dataset.view=modes[i];b.onclick=()=>renderCalendarView(modes[i])})}
 document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wireCalendarSwitch,0);
 </script>
-
 <style id="v21-calendar-final-fix">
 #calendarPage .calendar-day-button{cursor:pointer!important}
 #calendarPage .weekly-calendar-grid .calendar-day-button{display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center!important;padding:12px 8px!important}
@@ -396,7 +383,6 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
  setTimeout(wireV21,0);document.addEventListener('DOMContentLoaded',wireV21);
 })();
 </script>
-
 <style id="v22-plan-page-fixes">
 /* v22 — plan pages only */
 .semester-grid{gap:13px!important}
@@ -422,75 +408,10 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
 .plan-edit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}.plan-edit-card{background:#f0eadf;border:1px solid #ded4c5;border-radius:15px;padding:14px}.plan-edit-card b{display:block;margin-bottom:9px}.plan-edit-card input{width:100%;box-sizing:border-box;border:1px solid #d8d0c4;border-radius:10px;background:#fffdf8;padding:10px;margin-top:7px;font-family:inherit;font-size:14px;direction:rtl}.plan-edit-actions{display:flex;gap:10px;justify-content:center;margin-top:18px}.plan-edit-actions button{border:0;border-radius:12px;padding:12px 18px;font-weight:850;cursor:pointer}.plan-save-adopt{background:#6E8B6B;color:#fff}.plan-cancel-edit{background:#eee8dc;color:#0F3D34}
 @media(max-width:850px){.plan-edit-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.plan-edit-grid{grid-template-columns:1fr}}
 </style>
-<script id="v22-plan-page-fixes-js">
-(function(){
- const WEEK_NAMES=['الأسبوع الأول','الأسبوع الثاني','الأسبوع الثالث','الأسبوع الرابع','الأسبوع الخامس','الأسبوع السادس','الأسبوع السابع','الأسبوع الثامن','الأسبوع التاسع','الأسبوع العاشر','الأسبوع الحادي عشر','الأسبوع الثاني عشر','الأسبوع الثالث عشر','الأسبوع الرابع عشر','الأسبوع الخامس عشر','الأسبوع السادس عشر','الأسبوع السابع عشر','الأسبوع الثامن عشر','الأسبوع التاسع عشر'];
- const programs=['التهيئة الإرشادية','تعزيز السلوك الإيجابي','الاستخدام الآمن للإنترنت','التوجيه المهني','الأيام والمناسبات الوطنية والعالمية','تنمية الدافعية للتحصيل'];
- const vals=['الانتماء','المسؤولية','الوعي','الطموح','الوطنية','المثابرة'];
- const realDates=['10 ربيع الأول','17 ربيع الأول','24 ربيع الأول','2 ربيع الثاني','9 ربيع الثاني','16 ربيع الثاني','23 ربيع الثاني','30 ربيع الثاني','7 جمادى الأولى','14 جمادى الأولى','21 جمادى الأولى','28 جمادى الأولى','5 جمادى الثانية','19 جمادى الثانية','26 جمادى الثانية','4 رجب','11 رجب','18 رجب','25 رجب'];
- window.planWeeks=function(){
-   const saved=JSON.parse(localStorage.getItem('miikCounselorPlan')||'null');
-   if(Array.isArray(saved)&&saved.length===19)return saved;
-   return WEEK_NAMES.map((w,i)=>({w,date:realDates[i]+' 1448هـ',program:programs[i%programs.length],value:vals[i%vals.length]}));
- };
- function printerButton(title){return `<button class="print-icon miik-printer" title="طباعة" onclick="printCurrentPlan('${title}')" aria-label="طباعة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="11.5" r=".8" fill="currentColor"/></svg></button>`}
- window.miikStartPlanEdit=function(){
-   const g=document.getElementById('moduleGrid'), weeks=planWeeks();
-   document.getElementById('moduleTitle').textContent='تعديل خطة الموجّه الطلابي';
-   document.getElementById('moduleDesc').textContent='عدّل ما تحتاجه، ثم اعتمد الخطة.';
-   g.innerHTML=`<div style="grid-column:1/-1"><div class="plan-edit-grid">${weeks.map((x,i)=>`<div class="plan-edit-card"><b>${E(x.w)}</b><input data-i="${i}" data-k="program" value="${String(x.program).replace(/"/g,'&quot;')}" aria-label="برنامج ${E(x.w)}"><input data-i="${i}" data-k="value" value="${String(x.value).replace(/"/g,'&quot;')}" aria-label="قيمة ${E(x.w)}"></div>`).join('')}</div><div class="plan-edit-actions"><button class="plan-save-adopt" onclick="miikSaveEditedPlan()">حفظ واعتماد الخطة</button><button class="plan-cancel-edit" onclick="openModule('الخطة المعتمدة في مِعِك','مرجع مِعِك السنوي قبل الاعتماد.')">إلغاء</button></div></div>`;
- };
- window.miikSaveEditedPlan=function(){
-   const weeks=planWeeks().map(x=>({...x}));
-   document.querySelectorAll('.plan-edit-card input').forEach(inp=>{const i=+inp.dataset.i,k=inp.dataset.k;if(weeks[i])weeks[i][k]=inp.value.trim()||weeks[i][k]});
-   localStorage.setItem('miikCounselorPlan',JSON.stringify(weeks));localStorage.setItem('miikPlanAdopted','1');
-   if(typeof showMiikNotice==='function')showMiikNotice('تم اعتماد الخطة','حُفظت تعديلاتك واعتمدت كخطة الموجّه الطلابي.');
-   setTimeout(()=>openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية التي تحرك التقويم ومِعِك اليوم والتنبيهات والتقارير.'),150);
- };
- window.miikAdoptReferencePlan=function(){
-   localStorage.removeItem('miikCounselorPlan');localStorage.setItem('miikPlanAdopted','1');
-   if(typeof showMiikNotice==='function')showMiikNotice('تم الاعتماد','اعتمدت الخطة كما هي كخطة للموجّه.');
- };
- function planProgramTitle(p){if(p==='التهيئة الإرشادية')return 'برنامج التهيئة الإرشادية';if(p==='تنمية الدافعية للتحصيل')return 'تنمية الدافعية لرفع مستوى التحصيل';return p}
- window.miikWeeklyStatus=function(i,status){const obj=JSON.parse(localStorage.getItem('miikWeeklyStatus')||'{}');obj[i]=status;localStorage.setItem('miikWeeklyStatus',JSON.stringify(obj));renderPlan('الخطة الأسبوعية',document.getElementById('moduleGrid'))}
- window.renderWeeklyPlan=function(g){
-   const tasks=[['الأحد','17','برنامج التهيئة الإرشادية','الانتماء'],['الاثنين','18','تعزيز السلوك الإيجابي','المسؤولية'],['الثلاثاء','19','اليوم العالمي للصحة النفسية','السلام'],['الأربعاء','20','الاستخدام الآمن للإنترنت','الوعي'],['الخميس','21','التوجيه المهني','الطموح']];
-   const st=JSON.parse(localStorage.getItem('miikWeeklyStatus')||'{}');
-   g.innerHTML=`<div class="weekly-plan screen-only" style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:23px">الأسبوع الحالي</b><div class="muted">17–21 ربيع الأول 1448هـ</div></div>${printerButton('الخطة الأسبوعية')}</div><div class="weekly-grid-v12">${tasks.map((t,i)=>`<div class="week-day-v12"><h3><span class="weekday-name">${t[0]}</span><span class="weekday-number">${t[1]}</span></h3><div class="week-entry"><button class="week-program-link" onclick="openModule('${t[2]==='اليوم العالمي للصحة النفسية'?'الأيام والمناسبات الوطنية والعالمية':t[2]}','صفحة البرنامج')"><b>${t[2]}</b></button><button class="week-value-link" onclick="openModule('تعزيز السلوك الإيجابي','القيمة مرتبطة ببرنامج تعزيز السلوك الإيجابي')">القيمة: ${t[3]}</button><div class="status-actions"><button class="${st[i]==='done'?'done':''}" onclick="miikWeeklyStatus(${i},'done')">نُفّذ</button><button class="${st[i]==='notdone'?'notdone':''}" onclick="miikWeeklyStatus(${i},'notdone')">لم يُنفّذ</button></div></div></div>`).join('')}</div></div><div class="print-document">${printPlanDocument('الخطة الأسبوعية',true)}</div>`;
- };
- window.renderPlan=function(title,g){
-   if(title==='الخطة الأسبوعية')return renderWeeklyPlan(g);
-   const weeks=planWeeks(),ref=title==='الخطة المعتمدة في مِعِك';
-   g.innerHTML=`<div class="screen-only" style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:23px">${title}</b><div class="muted">الخطة موزعة على كامل أسابيع الفصل</div></div>${printerButton(title)}</div><div class="semester-grid">${weeks.map(x=>`<div class="semester-week"><div class="week-head"><b>${E(x.w)}</b><span class="week-date">${E(x.date)}</span></div><div class="program-name">${E(x.program)}</div><div class="week-value">القيمة: ${E(x.value)}</div></div>`).join('')}</div>${ref?`<div class="adopt-actions"><button class="adopt-primary" onclick="miikAdoptReferencePlan()">اعتماد الخطة كما هي</button><button class="adopt-edit" onclick="miikStartPlanEdit()">تعديل الخطة ثم اعتمادها</button></div>`:''}</div><div class="print-document">${printPlanDocument(title,false)}</div>`;
- };
-})();
-</script>
-
-
-
 
 <style id="v25-plan-edit-final">
 .plan-edit-card .edit-week-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.plan-edit-card .edit-week-range{font-size:12px;color:#81796d;font-weight:750}.plan-edit-card .week-add-btn{width:34px;height:34px;border:1px solid #cbd8c7;border-radius:50%;background:#e7ede3;color:#0F3D34;font-size:23px;line-height:1;cursor:pointer;font-family:inherit;font-weight:800}.plan-edit-card .week-add-btn:hover{background:#dce7d8}.plan-extra-row{display:grid;grid-template-columns:110px 1fr 34px;gap:7px;align-items:center;margin-top:7px}.plan-extra-row select,.plan-extra-row input{margin:0!important}.plan-extra-row select{border:1px solid #d8d0c4;border-radius:10px;background:#fffdf8;padding:10px;font-family:inherit}.plan-extra-remove{height:34px;border:0;border-radius:9px;background:#eee8dc;color:#6b5f50;cursor:pointer;font-size:18px}.semester-week .extra-plan-item{margin-top:8px;padding-top:7px;border-top:1px dashed #d2c8b9;font-size:13px;color:#0F3D34}.semester-week .extra-plan-item.value-extra{color:#6E8B6B;font-weight:800}
 </style>
-<script id="v25-plan-edit-final-js">
-(function(){
- const monthOrder=['محرم','صفر','ربيع الأول','ربيع الثاني','جمادى الأولى','جمادى الثانية','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
- function parseStart(w){const m=String(w.date||'').match(/(\d+)\s+(.+?)\s+1448/);return m?{d:+m[1],m:m[2].trim()}:{d:1,m:'ربيع الأول'}}
- function weekRange(w){const x=parseStart(w),idx=monthOrder.indexOf(x.m),end=x.d+4;if(end<=30)return `${x.d}–${end} ${x.m} 1448هـ`;const nm=monthOrder[(idx+1+12)%12]||x.m;return `${x.d} ${x.m} – ${end-30} ${nm} 1448هـ`}
- window.miikAddPlanItemV25=function(i){const host=document.getElementById('extras-'+i);if(!host)return;const row=document.createElement('div');row.className='plan-extra-row';row.innerHTML=`<select aria-label="نوع الإضافة"><option value="program">برنامج</option><option value="value">قيمة</option><option value="other">إضافة أخرى</option></select><input placeholder="اكتب الإضافة هنا" aria-label="إضافة جديدة"><button type="button" class="plan-extra-remove" title="حذف" onclick="this.parentElement.remove()">×</button>`;host.appendChild(row);row.querySelector('input').focus()}
- window.miikStartPlanEdit=function(){
-   const g=document.getElementById('moduleGrid'),weeks=planWeeks();
-   document.getElementById('moduleTitle').textContent='تعديل خطة الموجّه الطلابي';document.getElementById('moduleDesc').textContent='عدّل ما تحتاجه، ثم اعتمد الخطة.';
-   g.innerHTML=`<div style="grid-column:1/-1"><div class="plan-edit-grid">${weeks.map((x,i)=>`<div class="plan-edit-card" data-week="${i}"><div class="edit-week-head"><div><b>${E(x.w)}</b><div class="edit-week-range">${weekRange(x)}</div></div><button type="button" class="week-add-btn" title="إضافة برنامج أو قيمة أو عنصر آخر" onclick="miikAddPlanItemV25(${i})">+</button></div><input data-i="${i}" data-k="program" value="${String(x.program).replace(/"/g,'&quot;')}" aria-label="برنامج ${E(x.w)}"><input data-i="${i}" data-k="value" value="${String(x.value).replace(/"/g,'&quot;')}" aria-label="قيمة ${E(x.w)}"><div id="extras-${i}">${(x.extras||[]).map(e=>`<div class="plan-extra-row"><select aria-label="نوع الإضافة"><option value="program" ${e.type==='program'?'selected':''}>برنامج</option><option value="value" ${e.type==='value'?'selected':''}>قيمة</option><option value="other" ${e.type==='other'?'selected':''}>إضافة أخرى</option></select><input value="${String(e.text||'').replace(/"/g,'&quot;')}" aria-label="إضافة"><button type="button" class="plan-extra-remove" title="حذف" onclick="this.parentElement.remove()">×</button></div>`).join('')}</div></div>`).join('')}</div><div class="plan-edit-actions"><button class="plan-save-adopt" onclick="miikSaveEditedPlan()">حفظ واعتماد الخطة</button><button class="plan-cancel-edit" onclick="openModule('الخطة المعتمدة في مِعِك','مرجع مِعِك السنوي قبل الاعتماد.')">إلغاء</button></div></div>`;
- };
- window.miikSaveEditedPlan=function(){
-   const weeks=planWeeks().map(x=>({...x}));document.querySelectorAll('.plan-edit-card').forEach(card=>{const i=+card.dataset.week;card.querySelectorAll('input[data-k]').forEach(inp=>{weeks[i][inp.dataset.k]=inp.value.trim()||weeks[i][inp.dataset.k]});weeks[i].extras=[...card.querySelectorAll('.plan-extra-row')].map(r=>({type:r.querySelector('select').value,text:r.querySelector('input').value.trim()})).filter(e=>e.text)});localStorage.setItem('miikCounselorPlan',JSON.stringify(weeks));localStorage.setItem('miikPlanAdopted','1');if(typeof showMiikNotice==='function')showMiikNotice('تم اعتماد الخطة','حُفظت تعديلاتك واعتمدت كخطة الموجّه الطلابي.');setTimeout(()=>openModule('خطة الموجّه الطلابي','خطتك التشغيلية الفعلية التي تحرك التقويم ومِعِك اليوم والتنبيهات والتقارير.'),150)
- };
- const priorRender=window.renderPlan;window.renderPlan=function(title,g){priorRender(title,g);if(title==='خطة الموجّه الطلابي'){const weeks=planWeeks();g.querySelectorAll('.semester-week').forEach((card,i)=>{(weeks[i]?.extras||[]).forEach(e=>{const d=document.createElement('div');d.className='extra-plan-item'+(e.type==='value'?' value-extra':'');d.textContent=(e.type==='value'?'القيمة: ':e.type==='program'?'برنامج إضافي: ':'')+e.text;card.appendChild(d)})})}};
- const oldOpenWeekly=window.miikOpenWeeklyProgram;window.miikOpenWeeklyProgram=function(name){if(name==='التهيئة الإرشادية'||name==='برنامج التهيئة الإرشادية'){openModule('برنامج التهيئة الإرشادية','التنفيذ والتوثيق والتقرير من مصدر واحد.');return}return oldOpenWeekly(name)};
-})();
-</script>
-
 
 <style id="v27-release">
 /* v27 — هوية البرامج + التاريخ داخل النموذج + المستفيدون الذكيون */
@@ -525,8 +446,6 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
  window.showProgramReport=function(title){const arr=JSON.parse(localStorage.getItem('miikExec_'+title)||'[]'),total=arr.reduce((n,x)=>n+(parseInt(x.count)||0),0);const g=document.getElementById('moduleGrid');g.innerHTML=`<div class="program-surface"><div class="program-actions"><button class="program-action" onclick="renderProgram('${String(title).replace(/'/g,"\\'")}',document.getElementById('moduleGrid'))">التنفيذ</button><button class="program-action">التوثيق</button><button class="program-action">التقرير</button></div><div class="report-preview"><b>تقرير ${esc(title)}</b><p>عدد مرات التنفيذ: ${arr.length}</p><p>إجمالي المستفيدين: ${total}</p><p class="muted"></p></div></div>`}
 })();
 </script>
-
-
 <style id="v29-release">
 /* v29 — تحسينات الحذف، وضوح أزرار السجل، بيانات الطالب في البحث، وتصحيح هـ */
 .v28-open,.v28-delete,.v28-doc{font-weight:850!important}
@@ -548,10 +467,6 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
  setTimeout(fixHijriAbbr,0);
 })();
 </script>
-
-
-
-
 <script id="v107-special-categories">
 (()=>{
  const R=(k)=>{try{const a=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}};
@@ -589,8 +504,6 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
  };
 })();
 </script>
-
-
 <style id="v110-behavior-style">
 .v110-behavior{gap:12px!important}
 .v110-behavior-head{display:flex;align-items:center;justify-content:space-between;gap:18px;background:linear-gradient(145deg,#fffdf7,#f2f4eb);border:1px solid #d7dfd2;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(35,55,44,.05)}
@@ -631,7 +544,6 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
  };
 })();
 </script>
-
 <style id="v14-home-final">
 /* v14 — الصفحة الرئيسية فقط */
 .add-menu button{font-size:14px!important;font-weight:800!important;padding:12px 15px!important}
@@ -707,7 +619,6 @@ function renderAlerts(full){
 function refreshHijri(){const el=document.querySelector('.datebar');if(el)el.textContent=hijriParts(new Date()).replace(/ـ/g,'')}
 setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowups();renderAlerts();},0);
 </script>
-
 <style id="v20-calendar-click-week-fix">
 #calendarPage .view-switch button{cursor:pointer!important}
 #calendarPage .monthgrid .num,#calendarPage .weekly-calendar-grid .num{cursor:pointer!important}
@@ -769,50 +680,12 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
   setTimeout(wire,0);
 })();
 </script>
-
 <style id="v23-plan-week-navigation-and-greeting">
 /* v23 — توحيد الهوية الخطية وربط خطة الموجّه بالخطة الأسبوعية */
 .greeting{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif!important}
 .semester-week.counselor-week-link{cursor:pointer!important;transition:background .15s ease,border-color .15s ease}
 .semester-week.counselor-week-link:hover{background:#ebe3d4!important;border-color:#cfc3b2!important}
 </style>
-<script id="v23-plan-week-navigation-and-greeting-js">
-(function(){
- const dayNames=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
- window.miikOpenCounselorWeek=function(i){
-   window.miikSelectedPlanWeek=Math.max(0,Math.min(18,Number(i)||0));
-   openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.');
- };
- window.renderWeeklyPlan=function(g){
-   const weeks=planWeeks();
-   const i=Math.max(0,Math.min(weeks.length-1,Number(window.miikSelectedPlanWeek)||0));
-   const w=weeks[i];
-   const stAll=JSON.parse(localStorage.getItem('miikWeeklyStatusByWeek')||'{}');
-   const status=stAll[i]||'';
-   const nums=(String(w.date).match(/\d+/)||[''])[0];
-   const program=(typeof planProgramTitle==='function'?planProgramTitle(w.program):w.program);
-   g.innerHTML=`<div class="weekly-plan screen-only" style="grid-column:1/-1"><div class="cal-top"><div><b style="font-size:23px">${E(w.w)}</b><div class="muted">${E(w.date)}</div></div>${typeof printerButton==='function'?printerButton('الخطة الأسبوعية'):''}</div><div class="weekly-grid-v12"><div class="week-day-v12" style="grid-column:1/-1;min-height:0!important"><h3><span class="weekday-name">خطة الأسبوع</span><span class="weekday-number">${nums}</span></h3><div class="week-entry"><button class="week-program-link" onclick="openModule('${program.replace(/'/g,"\\'")}','صفحة البرنامج')"><b>${E(w.program)}</b></button><button class="week-value-link" onclick="openModule('تعزيز السلوك الإيجابي','القيمة مرتبطة ببرنامج تعزيز السلوك الإيجابي')">القيمة: ${E(w.value)}</button><div class="status-actions"><button class="${status==='done'?'done':''}" onclick="miikWeeklyStatusV23(${i},'done')">نُفّذ</button><button class="${status==='notdone'?'notdone':''}" onclick="miikWeeklyStatusV23(${i},'notdone')">لم يُنفّذ</button></div></div></div></div></div><div class="print-document">${printPlanDocument('الخطة الأسبوعية',true)}</div>`;
- };
- window.miikWeeklyStatusV23=function(i,status){
-   const all=JSON.parse(localStorage.getItem('miikWeeklyStatusByWeek')||'{}'); all[i]=status; localStorage.setItem('miikWeeklyStatusByWeek',JSON.stringify(all)); renderWeeklyPlan(document.getElementById('moduleGrid'));
- };
- const oldRender=window.renderPlan;
- window.renderPlan=function(title,g){
-   if(title==='الخطة الأسبوعية') return renderWeeklyPlan(g);
-   oldRender(title,g);
-   if(title==='خطة الموجّه الطلابي'){
-     const cards=g.querySelectorAll('.semester-week');
-     cards.forEach((card,i)=>{
-       card.classList.add('counselor-week-link');
-       card.setAttribute('role','button'); card.setAttribute('tabindex','0');
-       card.setAttribute('aria-label','فتح الخطة الأسبوعية لـ '+(planWeeks()[i]?.w||''));
-       card.onclick=function(){miikOpenCounselorWeek(i)};
-       card.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();miikOpenCounselorWeek(i)}};
-     });
-   }
- };
-})();
-</script>
 
 <!-- v26: final plan refinements requested after v25 -->
 <style id="v26-plan-refinements">
@@ -828,73 +701,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
 .weekly-slot-v26{background:#f5f1e7;border-radius:11px;padding:10px;margin-bottom:8px}.weekly-slot-v26 button.item-link{width:100%;border:0;background:transparent;text-align:right;font:inherit;color:var(--ink);cursor:pointer;padding:0}.weekly-slot-v26 button.item-link:hover{text-decoration:underline}.weekly-empty-v26{color:var(--muted);font-size:12px;text-align:center;padding:20px 4px}.weekly-v26-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.weekly-v26-actions{display:flex;align-items:center;gap:8px}.weekly-v26-edit{border:1px solid #cbd8c7;background:#edf0e7;color:var(--deep);border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}
 @media(max-width:850px){.weekly-grid-v26{grid-template-columns:1fr 1fr}}@media(max-width:560px){.weekly-grid-v26{grid-template-columns:1fr}}
 </style>
-<script id="v26-plan-refinements-js">
-(function(){
- const TERM_RANGES=[
-  {label:'10–14 ربيع الأول 1448هـ',days:[['الأحد','10 ربيع الأول'],['الاثنين','11 ربيع الأول'],['الثلاثاء','12 ربيع الأول'],['الأربعاء','13 ربيع الأول'],['الخميس','14 ربيع الأول']]},
-  {label:'17–21 ربيع الأول 1448هـ',days:[['الأحد','17 ربيع الأول'],['الاثنين','18 ربيع الأول'],['الثلاثاء','19 ربيع الأول'],['الأربعاء','20 ربيع الأول'],['الخميس','21 ربيع الأول']]},
-  {label:'24–28 ربيع الأول 1448هـ',days:[['الأحد','24 ربيع الأول'],['الاثنين','25 ربيع الأول'],['الثلاثاء','26 ربيع الأول'],['الأربعاء','27 ربيع الأول'],['الخميس','28 ربيع الأول']]},
-  {label:'2–6 ربيع الثاني 1448هـ',days:[['الأحد','2 ربيع الثاني'],['الاثنين','3 ربيع الثاني'],['الثلاثاء','4 ربيع الثاني'],['الأربعاء','5 ربيع الثاني'],['الخميس','6 ربيع الثاني']]},
-  {label:'9–13 ربيع الثاني 1448هـ',days:[['الأحد','9 ربيع الثاني'],['الاثنين','10 ربيع الثاني'],['الثلاثاء','11 ربيع الثاني'],['الأربعاء','12 ربيع الثاني'],['الخميس','13 ربيع الثاني']]},
-  {label:'16–20 ربيع الثاني 1448هـ',days:[['الأحد','16 ربيع الثاني'],['الاثنين','17 ربيع الثاني'],['الثلاثاء','18 ربيع الثاني'],['الأربعاء','19 ربيع الثاني'],['الخميس','20 ربيع الثاني']]},
-  {label:'23–27 ربيع الثاني 1448هـ',days:[['الأحد','23 ربيع الثاني'],['الاثنين','24 ربيع الثاني'],['الثلاثاء','25 ربيع الثاني'],['الأربعاء','26 ربيع الثاني'],['الخميس','27 ربيع الثاني']]},
-  {label:'30 ربيع الثاني – 4 جمادى الأولى 1448هـ',days:[['الأحد','30 ربيع الثاني'],['الاثنين','1 جمادى الأولى'],['الثلاثاء','2 جمادى الأولى'],['الأربعاء','3 جمادى الأولى'],['الخميس','4 جمادى الأولى']]},
-  {label:'7–11 جمادى الأولى 1448هـ',days:[['الأحد','7 جمادى الأولى'],['الاثنين','8 جمادى الأولى'],['الثلاثاء','9 جمادى الأولى'],['الأربعاء','10 جمادى الأولى'],['الخميس','11 جمادى الأولى']]},
-  {label:'14–18 جمادى الأولى 1448هـ',days:[['الأحد','14 جمادى الأولى'],['الاثنين','15 جمادى الأولى'],['الثلاثاء','16 جمادى الأولى'],['الأربعاء','17 جمادى الأولى'],['الخميس','18 جمادى الأولى']]},
-  {label:'21–25 جمادى الأولى 1448هـ',days:[['الأحد','21 جمادى الأولى'],['الاثنين','22 جمادى الأولى'],['الثلاثاء','23 جمادى الأولى'],['الأربعاء','24 جمادى الأولى'],['الخميس','25 جمادى الأولى']]},
-  {label:'28 جمادى الأولى – 3 جمادى الثانية 1448هـ',days:[['الأحد','28 جمادى الأولى'],['الاثنين','29 جمادى الأولى'],['الثلاثاء','1 جمادى الثانية'],['الأربعاء','2 جمادى الثانية'],['الخميس','3 جمادى الثانية']]},
-  {label:'5–9 جمادى الثانية 1448هـ',days:[['الأحد','5 جمادى الثانية'],['الاثنين','6 جمادى الثانية'],['الثلاثاء','7 جمادى الثانية'],['الأربعاء','8 جمادى الثانية'],['الخميس','9 جمادى الثانية']]},
-  {label:'19–23 جمادى الثانية 1448هـ',days:[['الأحد','19 جمادى الثانية'],['الاثنين','20 جمادى الثانية'],['الثلاثاء','21 جمادى الثانية'],['الأربعاء','22 جمادى الثانية'],['الخميس','23 جمادى الثانية']]},
-  {label:'26 جمادى الثانية – 1 رجب 1448هـ',days:[['الأحد','26 جمادى الثانية'],['الاثنين','27 جمادى الثانية'],['الثلاثاء','28 جمادى الثانية'],['الأربعاء','29 جمادى الثانية'],['الخميس','1 رجب']]},
-  {label:'4–8 رجب 1448هـ',days:[['الأحد','4 رجب'],['الاثنين','5 رجب'],['الثلاثاء','6 رجب'],['الأربعاء','7 رجب'],['الخميس','8 رجب']]},
-  {label:'11–15 رجب 1448هـ',days:[['الأحد','11 رجب'],['الاثنين','12 رجب'],['الثلاثاء','13 رجب'],['الأربعاء','14 رجب'],['الخميس','15 رجب']]},
-  {label:'18–22 رجب 1448هـ',days:[['الأحد','18 رجب'],['الاثنين','19 رجب'],['الثلاثاء','20 رجب'],['الأربعاء','21 رجب'],['الخميس','22 رجب']]},
-  {label:'25–29 رجب 1448هـ',days:[['الأحد','25 رجب'],['الاثنين','26 رجب'],['الثلاثاء','27 رجب'],['الأربعاء','28 رجب'],['الخميس','29 رجب']]}
- ];
- window.MIIK_PLAN_TERM_RANGES=TERM_RANGES;
- const basePlanWeeks=window.planWeeks;
- window.planWeeks=function(){
-   let base=basePlanWeeks();
-   try{const saved=JSON.parse(localStorage.getItem('miikCounselorPlan')||'null');if(Array.isArray(saved)&&saved.length===19)base=saved}catch(e){}
-   return base.map((w,i)=>({...w,date:TERM_RANGES[i].label}));
- };
- function orientationPage(){
-   hideAllPages();document.getElementById('modulePage').classList.add('show');
-   document.getElementById('moduleTitle').textContent='برنامج التهيئة الإرشادية';
-   document.getElementById('moduleDesc').textContent='التنفيذ والتوثيق والتقرير من مصدر واحد.';
-   renderProgram('برنامج التهيئة الإرشادية',document.getElementById('moduleGrid'));
-   document.getElementById('drawer')?.classList.remove('show');window.scrollTo({top:0,behavior:'smooth'});
- }
- window.miikOpenOrientationProgram=orientationPage;
- window.miikOpenWeeklyProgram=function(name){
-   if(String(name).includes('التهيئة')){orientationPage();const b=document.querySelector('#modulePage .module-head .students-back');if(b){b.textContent='→ العودة للخطة الأسبوعية';b.onclick=function(){openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.')}};return;}
-   const title=(typeof planProgramTitle==='function'?planProgramTitle(name):name);openModule(title,'التنفيذ والتوثيق والتقرير من مصدر واحد.');
-   const b=document.querySelector('#modulePage .module-head .students-back');if(b){b.textContent='→ العودة للخطة الأسبوعية';b.onclick=function(){openModule('الخطة الأسبوعية','تفصيل الأسبوع المختار من خطة الموجّه الطلابي.')}}
- };
- window.openHijriCalendarDay=function(day){
-   hideAllPages();document.getElementById('calendarPage').classList.add('show');
-   const labels={3:'برنامج التهيئة الإرشادية',8:'قيمة: المسؤولية',15:'اليوم الوطني',22:'التوجيه المهني'},lab=labels[day];
-   let rows='<div class="empty-warm">ما فيه أعمال مسجلة في هذا اليوم.</div>';
-   if(lab){const action=String(lab).includes('التهيئة')?'miikOpenOrientationProgram()':String(lab).startsWith('قيمة')?"openModule('تعزيز السلوك الإيجابي','القيمة مرتبطة ببرنامج تعزيز السلوك الإيجابي')":`openModule('${String(lab).replace(/'/g,"\\'")}','صفحة البرنامج')`;rows=`<button class="day-work-row" onclick="${action}"><span><b>${lab}</b><small>من أعمال هذا اليوم</small></span><strong>‹</strong></button>`;}
-   document.querySelector('#calendarPage .monthbox').innerHTML=`<div class="day-view-head"><div><div class="month-title">${day} ربيع الأول 1448 <span class="hijri-abbr" dir="rtl">هـ</span></div><div class="muted">أعمال هذا اليوم فقط</div></div><button class="day-full-calendar" onclick="openCalendar()">فتح التقويم الكامل</button></div><div class="day-work-list">${rows}</div>`;window.scrollTo({top:0,behavior:'smooth'});
- };
- function distKey(i){return 'miikWeeklyDistributionV24_'+i}
- function getDist(i){try{const d=JSON.parse(localStorage.getItem(distKey(i))||'null');if(d)return d}catch(e){}return {programDay:0,valueDay:4}}
- window.renderWeeklyPlan=function(g){
-   const weeks=planWeeks(),i=Math.max(0,Math.min(18,Number(window.miikSelectedPlanWeek)||0)),w=weeks[i],range=TERM_RANGES[i],d=getDist(i);
-   const stAll=JSON.parse(localStorage.getItem('miikWeeklyStatusByWeek')||'{}'),status=stAll[i]||'';
-   g.innerHTML=`<div class="weekly-plan screen-only" style="grid-column:1/-1"><div class="weekly-v26-toolbar"><div><b style="font-size:23px">${E(w.w)}</b><div class="muted">${range.label}</div></div><div class="weekly-v26-actions">${typeof printerButton==='function'?printerButton('الخطة الأسبوعية'):''}</div></div><div class="weekly-grid-v26">${range.days.map((dd,j)=>{let slots='';if(d.programDay===j)slots+=`<div class="weekly-slot-v26"><button class="item-link" onclick="miikOpenWeeklyProgram('${String(w.program).replace(/'/g,"\\'")}')"><b>${E(w.program)}</b></button><div class="status-actions"><button class="${status==='done'?'done':''}" onclick="miikWeeklyStatusV23(${i},'done')">نُفّذ</button><button class="${status==='notdone'?'notdone':''}" onclick="miikWeeklyStatusV23(${i},'notdone')">لم يُنفّذ</button></div></div>`;if(d.valueDay===j)slots+=`<div class="weekly-slot-v26"><button class="item-link" onclick="openModule('تعزيز السلوك الإيجابي','القيمة مرتبطة ببرنامج تعزيز السلوك الإيجابي')">القيمة: ${E(w.value)}</button></div>`;return `<div class="weekly-day-v26"><h3>${dd[0]}<small>${dd[1]}</small></h3>${slots||'<div class="weekly-empty-v26">لا يوجد توزيع لهذا اليوم</div>'}</div>`}).join('')}</div></div><div class="print-document">${printPlanDocument('الخطة الأسبوعية',true)}</div>`;
-   const b=document.querySelector('#modulePage .module-head .students-back');if(b){b.textContent='→ العودة لخطة الموجّه الطلابي';b.onclick=miikBackToCounselorPlan}
- };
- const previousRender=window.renderPlan;
- window.renderPlan=function(title,g){
-   previousRender(title,g);
-   if(title==='خطة الموجّه الطلابي'||title==='الخطة المعتمدة في مِعِك'){
-     const weeks=planWeeks();g.querySelectorAll('.semester-week').forEach((card,i)=>{const date=card.querySelector('.week-date');if(date&&TERM_RANGES[i])date.textContent=TERM_RANGES[i].label;if(title==='خطة الموجّه الطلابي'){card.classList.add('counselor-week-link');card.onclick=function(){miikOpenCounselorWeek(i)}}});
-   }
- };
-})();
-</script>
 
 <style id="v28-release">
 /* v28 — سجل التنفيذ، التوثيق، مسارات التحصيل، وتقويم أم القرى */
@@ -935,8 +741,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  window.v28DocumentExecution=function(title,i){const key='miikExec_'+title,a=JSON.parse(localStorage.getItem(key)||'[]'),x=a[i];if(!x)return;const d=x.documentation||{};showMiikDialog(`<h2>توثيق التنفيذ</h2><p>${esc28(x.execTitle||title)} — الصور اختيارية بحد أقصى صورتين.</p><form id="v28DocForm"><label>ملاحظة التوثيق<textarea name="docNote" rows="3" placeholder="اختياري">${esc28(d.note||'')}</textarea></label><div class="v28-photo-row"><label class="v28-photo-box">الصورة الأولى<input id="v28Photo1" type="file" accept="image/*"></label><label class="v28-photo-box">الصورة الثانية<input id="v28Photo2" type="file" accept="image/*"></label></div>${d.files?.length?`<p class="muted">الصور المحفوظة سابقًا: ${d.files.map(esc28).join('، ')}</p>`:''}<div class="dialog-actions"><button type="submit" class="dialog-primary">حفظ التوثيق</button><button type="button" class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div></form>`);document.getElementById('v28DocForm').onsubmit=e=>{e.preventDefault();const files=[document.getElementById('v28Photo1').files[0],document.getElementById('v28Photo2').files[0]].filter(Boolean).map(f=>f.name);x.documentation={note:new FormData(e.target).get('docNote')||'',files:files.length?files:(d.files||[]),updatedAt:new Date().toISOString()};a[i]=x;localStorage.setItem(key,JSON.stringify(a));closeMiikDialog();v28ShowDocumentation(title)}}
 })();
 </script>
-
-
 <style id="v30-release">
 /* v30 — توحيد تعديل التنفيذ مع تسجيل التنفيذ + نافذة حذف مِعِك الداخلية */
 .v30-confirm-mark{width:54px;height:54px;border-radius:17px;background:#f3e8df;display:grid;place-items:center;margin:0 auto 11px;font-size:25px;color:#7a3434;font-weight:900}
@@ -984,7 +788,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  window.v28DeleteExecution=function(title,i){showMiikDialog(`<div class="v30-confirm-mark">⌫</div><h2 style="text-align:center">تأكيد حذف التنفيذ</h2><p style="text-align:center">هل أنت متأكد من حذف هذا التنفيذ؟ لا يمكن التراجع عن الحذف.</p><div class="dialog-actions"><button class="v30-danger" id="v30ConfirmDelete">حذف</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);const b=document.getElementById('v30ConfirmDelete');if(b)b.onclick=()=>{const key='miikExec_'+title,a=JSON.parse(localStorage.getItem(key)||'[]');a.splice(i,1);localStorage.setItem(key,JSON.stringify(a));closeMiikDialog();renderProgram(title,document.getElementById('moduleGrid'))}}
 })();
 </script>
-
 <style id="v31-council-style">
 /* v31 — لجنة التوجيه الطلابي بهوية مِعِك */
 .v31-council-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 22px}.v31-miik-btn{border:1px solid #d9d2c4;background:linear-gradient(145deg,#fffdf8,#f3efe5);color:var(--deep);border-radius:15px;padding:15px 16px;font-weight:850;font-size:15px;cursor:pointer;box-shadow:0 5px 15px rgba(15,61,52,.05)}.v31-miik-btn:hover{background:#edf2e9;border-color:#b9cbb3}.v31-meeting{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #ebe5da;padding:14px 4px}.v31-meeting small{display:block;color:var(--muted);margin-top:5px}.v31-minutes-btn{border:1px solid #d8d0c2;background:#f8f5ee;color:var(--deep);border-radius:10px;padding:8px 13px;font-weight:900;cursor:pointer}.v31-member-table{width:100%;border-collapse:separate;border-spacing:0 8px;margin:12px 0}.v31-member-table th{background:#52675f;color:#fff;padding:11px 8px;font-weight:850}.v31-member-table th:first-child{border-radius:0 11px 11px 0}.v31-member-table th:last-child{border-radius:11px 0 0 11px}.v31-member-table td{background:#fffdf8;border-top:1px solid #e4ddd0;border-bottom:1px solid #e4ddd0;padding:6px}.v31-member-table td:first-child{border-right:1px solid #e4ddd0;border-radius:0 11px 11px 0}.v31-member-table td:last-child{border-left:1px solid #e4ddd0;border-radius:11px 0 0 11px}.v31-member-table input,.v31-member-table select{width:100%;box-sizing:border-box;border:0!important;background:transparent!important;margin:0!important;padding:8px!important}.v31-row-del{border:0;background:transparent;color:#8b5e5e;font-weight:900;font-size:18px;cursor:pointer}.v31-add-row{border:1px dashed #b9cbb3;background:#edf2e9;color:var(--deep);border-radius:11px;padding:9px 14px;font-weight:850;cursor:pointer}.v31-att-list{display:grid;gap:8px;margin-top:8px}.v31-att-row{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fffdf8;border:1px solid #e4ddd0;border-radius:11px;padding:9px 11px}.v31-att-row small{color:var(--muted)}.v31-att-row button{border:0;background:transparent;color:#8b5e5e;font-weight:900;cursor:pointer}.v31-outside{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;margin-top:10px}.v31-outside input{margin:0!important}.v31-date-wrap{display:flex;align-items:center;border:1px solid #ddd6c8;border-radius:12px;background:#fffdf8;overflow:hidden}.v31-date-wrap input{border:0!important;margin:0!important;background:transparent!important}.v31-date-wrap button{width:48px;border:0;background:transparent;font-size:20px;cursor:pointer}.v31-print{font-weight:900!important}.v31-dialog-wide{max-width:760px!important}
@@ -1162,7 +965,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  window.refreshHijri=function(){let el=document.getElementById('hijriDate');if(!el)return;let parts=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).formatToParts(new Date()),v=t=>parts.find(x=>x.type===t)?.value||'';el.textContent=`${v('weekday')}، ${v('day')} ${v('month')} ${v('year')} هـ`};refreshHijri();document.addEventListener('DOMContentLoaded',refreshHijri);
 })();
 </script>
-
 <style id="v37-fixes-css">
 /* v37: council refinements, based strictly on v35 */
 #modulePage.v37-council-page .program-actions .program-action{background:linear-gradient(135deg,#315d55,#3b7469)!important;color:#fff!important;border:1px solid rgba(255,255,255,.18)!important;box-shadow:0 7px 18px rgba(39,82,73,.14)!important;font-weight:800!important;border-radius:18px!important;min-height:64px!important;position:relative;overflow:hidden}
@@ -1204,7 +1006,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  setTimeout(()=>{let t=document.getElementById('moduleTitle')?.textContent?.trim();if(t==='لجنة التوجيه الطلابي'||t==='المجلس الطلابي'){active37=t;document.getElementById('modulePage')?.classList.add('v37-council-page')}},50);
 })();
 </script>
-
 <!-- v38: student data finalization -->
 <style id="v38-students-css">
 #studentsPage .students-title h1{font-size:22px!important}#studentsPage .students-title p{font-size:12px!important}
@@ -1324,7 +1125,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  document.addEventListener('DOMContentLoaded',()=>setTimeout(init,20));setTimeout(init,50);
 })();
 </script>
-
 <style id="v40-students-css">
 #studentsPage .students-title{display:none!important}
 #studentsPage #v39Intro{border:0!important;background:transparent!important;box-shadow:none!important;padding:2px 2px 12px!important;margin:0 0 10px!important}
@@ -1390,7 +1190,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  setTimeout(()=>{cleanPage();patchImportDialog()},100);
 })();
 </script>
-
 <style id="v42-students-css">
 #miikDialog .v42-note{background:#f3f5ef;border:1px solid #d9e1d7;border-radius:14px;padding:10px 12px;color:#4b5f57;font-size:13px;font-weight:700;margin:0 0 14px}
 #miikDialog select{font-weight:800;color:#344b44}
@@ -1441,7 +1240,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  document.addEventListener('DOMContentLoaded',()=>{normalizeStore();setTimeout(patchAddButton,80)},{once:true});setTimeout(()=>{normalizeStore();patchAddButton()},200);
 })();
 </script>
-
 <style id="v44-students-css">
 #studentList .student-card .student-photo{font-variant-numeric:tabular-nums}
 </style>
@@ -1482,7 +1280,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  document.addEventListener('DOMContentLoaded',()=>setTimeout(clean,120),{once:true});setTimeout(clean,250);
 })();
 </script>
-
 <script id="v51-students-final">
 (function(){
  'use strict';
@@ -1615,8 +1412,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  document.addEventListener('DOMContentLoaded',()=>setTimeout(setupPage,120),{once:true});setTimeout(setupPage,220);
 })();
 </script>
-
-
 <style id="v53-student-polish">
 /* v53 — built on stable v51; student-file UI only */
 #studentFile{margin-top:6px!important}
@@ -1646,7 +1441,6 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
 .miik-hijri-pop .hp-title{font-weight:900;color:var(--deep);font-size:15px;margin-bottom:9px}.miik-hijri-pop .hp-grid{display:grid;grid-template-columns:.8fr 1.4fr .9fr;gap:6px}.miik-hijri-pop select{width:100%;border:1px solid #d3dcd1;border-radius:9px;padding:8px;background:#fff;font-size:14px}.miik-hijri-pop .hp-actions{display:flex;gap:7px;margin-top:9px}.miik-hijri-pop button{flex:1;border:0;border-radius:9px;padding:8px;font-weight:850}.miik-hijri-pop .ok{background:var(--deep);color:#fff}.miik-hijri-pop .cancel{background:#ece8df;color:var(--ink)}
 @media(max-width:760px){#studentFile .student-file-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}#studentFile .student-file-head h1{font-size:20px!important}}
 </style>
-
 <script id="v53-student-polish-js">
 (function(){
 'use strict';
@@ -1709,8 +1503,6 @@ window.miikWaShalwa=function(){const raw=document.getElementById('waHeads')?.val
 document.addEventListener('DOMContentLoaded',()=>{const stats=document.querySelectorAll('#studentFile .student-stat');if(stats.length>=3){stats[0].innerHTML='<b>0</b>متابعات';stats[1].innerHTML='<b>0</b>جلسة إرشادية';stats[2].innerHTML='<b>0</b>تواصل أسرة'}const t=document.getElementById('timelineItems');if(t)t.innerHTML='<div class="timeline-item"><b>لا توجد إجراءات مسجلة بعد</b>أي إجراء تسجله من هنا سيظهر في هذا السجل مباشرة.</div>'},{once:true});
 })();
 </script>
-
-
 <style id="v54-refinements-css">
 /* v54 — approved refinements: student file + Hijri calendar + student follow-ups */
 #studentFile .student-file-grid{gap:8px!important;margin:12px 0 14px!important}
@@ -1767,7 +1559,6 @@ const openStudentBaseV54=window.openStudent;window.openStudent=function(){const 
 document.addEventListener('DOMContentLoaded',refreshLabels,{once:true});
 })();
 </script>
-
 <style id="v55-followup-modules">
 #modulePage.v55-hub #moduleGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important}
 .v55-tile{min-height:132px;border:1px solid #cbd8ca;border-radius:21px;background:linear-gradient(145deg,#f2f1e7,#e5ece2);padding:21px 18px;text-align:right;color:#294b42;box-shadow:0 9px 24px rgba(38,65,53,.06);cursor:pointer;transition:.15s;font-family:inherit}.v55-tile:hover{transform:translateY(-2px);border-color:#abc0ac}.v55-tile b{display:block;font-size:19px;font-weight:900;margin-bottom:8px}.v55-tile span{font-size:13px;color:#708078;line-height:1.75}.v55-tile.whatsapp b:before{content:'🟢 ';font-size:14px}
@@ -1824,7 +1615,6 @@ function wire2(){document.querySelectorAll('.subnav button').forEach(b=>{const t
 document.addEventListener('DOMContentLoaded',()=>{try{wire()}catch(e){console.error(e)}wire2()},{once:true});setTimeout(()=>{try{wire()}catch(e){}wire2()},100);
 })();
 </script>
-
 <style id="v56-css">
 .v56-hub{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.v56-card{min-height:145px;border:1px solid #cbd8ca;border-radius:22px;background:linear-gradient(145deg,#f2f1e7,#e5ece2);padding:24px 20px;text-align:right;color:#294b42;box-shadow:0 10px 24px rgba(38,65,53,.06);cursor:pointer}.v56-card b{display:block;font-size:20px;margin-bottom:8px}.v56-card span{color:#687a72;line-height:1.7}.v56-card.wa b{display:flex;align-items:center;gap:9px}.v56-card.wa img{width:27px;height:27px}.v56-list{grid-column:1/-1;background:#fffdf8;border:1px solid #d8dfd5;border-radius:20px;padding:18px}.v56-list-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.v56-table{width:100%;border-collapse:collapse}.v56-table th,.v56-table td{border-bottom:1px solid #e4e9e4;padding:10px;text-align:right}.v56-table th{background:#eef2eb}.v56-actions{display:flex;gap:5px;flex-wrap:wrap}.v56-actions button,.v56-mini{border:1px solid #c8d3c8;background:#f4f3ea;color:#294b42;border-radius:9px;padding:6px 9px;cursor:pointer}.v56-plus-row{display:flex;gap:8px;align-items:center}.v56-plus-row input{flex:1}.v56-plus-row button{width:42px;height:42px;border:0;border-radius:12px;background:#526f65;color:white;font-size:23px}.v56-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.v56-chip{background:#edf1e9;border:1px solid #d0d9ce;border-radius:999px;padding:6px 9px}.v56-chip button{border:0;background:transparent;color:#8a4b42;cursor:pointer}@media(max-width:720px){.v56-hub{grid-template-columns:1fr}}
 </style>
@@ -1897,7 +1687,6 @@ const oldPrintOne56=window.v55PrintOne;window.v55PrintOne=id=>{const x=(typeof r
 document.addEventListener('DOMContentLoaded',wireMenus56,{once:true});setTimeout(wireMenus56,150);
 })();
 </script>
-
 <style id="v57-css">
 .v57-search-wrap{position:relative}.v57-search-results{position:absolute;z-index:120;top:100%;right:0;left:0;background:#fffdf8;border:1px solid #cfd9cf;border-radius:12px;box-shadow:0 12px 28px rgba(25,48,39,.14);max-height:230px;overflow:auto;display:none}.v57-search-results.show{display:block}.v57-search-results button{width:100%;border:0;border-bottom:1px solid #ece8df;background:transparent;padding:10px 12px;text-align:right;font-family:inherit;color:#294b42;cursor:pointer}.v57-search-results button:last-child{border-bottom:0}.v57-search-results small{display:block;color:#7a857f;margin-top:3px}.v57-shalwa{margin:10px 0;border:1px solid #b9cab7;background:linear-gradient(145deg,#718b71,#587365);color:#fff;border-radius:13px;padding:11px 14px;font-weight:900;cursor:pointer;font-family:inherit}.v57-report-card{cursor:pointer!important;background:linear-gradient(145deg,#f1f1e6,#e4ebe1)!important;border-color:#c8d5c6!important;transition:.15s}.v57-report-card:hover{transform:translateY(-2px)}.v57-report-print{margin-top:14px;border:0;border-radius:11px;padding:10px 16px;background:#38584e;color:white;font-weight:850;cursor:pointer}.v57-behavior-grid{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.v57-behavior-card{border:1px solid #cad6c8;border-radius:21px;background:linear-gradient(145deg,#f2f0e6,#e5ece2);padding:24px;text-align:right;color:#294b42;cursor:pointer;min-height:130px}.v57-behavior-card b{font-size:20px;display:block;margin-bottom:8px}.v57-behavior-card span{color:#6e7d76;line-height:1.7}.v57-group-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.v57-group-chip{background:#edf1e8;border:1px solid #d0dacd;border-radius:999px;padding:6px 9px;font-size:13px}.v57-group-chip button{border:0;background:transparent;color:#8b4f46;cursor:pointer}.v57-parent-text{line-height:2;margin:8px 0 14px}.v57-signatures{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:30px;text-align:center;line-height:2}.v57-mini-list{grid-column:1/-1;background:#fffdf8;border:1px solid #d8dfd5;border-radius:18px;padding:16px}.v57-mini-list .row{display:flex;justify-content:space-between;gap:10px;padding:10px;border-bottom:1px solid #ece8df}.v57-mini-list .row:last-child{border-bottom:0}@media(max-width:720px){.v57-behavior-grid{grid-template-columns:1fr}.v57-signatures{grid-template-columns:1fr;gap:20px}}
 </style>
@@ -2015,7 +1804,6 @@ const vf=window.v57FinalReport;if(vf)window.v57FinalReport=function(kind='مخت
 const pe=window.v57ProgramsExecuted;if(pe)window.v57ProgramsExecuted=function(){pe();const back=document.createElement('button');back.className='v58-back';back.textContent='← العودة';back.onclick=()=>v57FinalReport('مختصر');moduleGrid.prepend(back)};
 })();
 </script>
-
 <!-- v64 stability patch: navigation + direct behavior reference + school gender -->
 <style id="v64-stability-style">
 .v64-behavior{grid-column:1/-1;display:grid;gap:18px}
@@ -2069,7 +1857,6 @@ if(typeof save64==='function')window.saveMyData58=function(){save64.apply(this,a
 document.addEventListener('DOMContentLoaded',wireBehavior64,{once:true});setTimeout(wireBehavior64,250);
 })();
 </script>
-
 <style id="v65-style">
 .v65-privacy{grid-column:1/-1;display:grid;gap:16px;background:linear-gradient(145deg,#fffdf8,#f1f5eb);border:1px solid #d7dfd2;border-radius:28px;padding:26px;box-shadow:0 12px 34px #52665c10}.v65-privacy-hero{padding-bottom:18px;border-bottom:1px solid #dde3d9}.v65-privacy-hero .mark{display:inline-flex;background:#eaf0e6;color:#52695b;border-radius:999px;padding:7px 12px;font-weight:800;font-size:13px}.v65-privacy-hero h2{margin:12px 0 7px;color:#40534e;font-size:28px}.v65-privacy-hero p{margin:0;color:#707b76;line-height:1.9}.v65-privacy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.v65-policy-card{background:#fff;border:1px solid #dde3d9;border-radius:20px;padding:20px}.v65-policy-card h3{margin:0 0 10px;color:#465a54}.v65-policy-card li{color:#68746e;line-height:1.9}.v65-policy-card ul{margin:0;padding-inline-start:20px}.v65-policy-note{background:#eef3e9;border:1px solid #d5dfd1;border-radius:18px;padding:16px;color:#596a61;line-height:1.9}@media(max-width:760px){.v65-privacy-grid{grid-template-columns:1fr}}
 </style>
@@ -2080,7 +1867,6 @@ const oldOpen65=window.openModule;window.openModule=function(title,desc){if(titl
 function clean65(){document.querySelectorAll('#drawer button').forEach(b=>{if(b.textContent.trim()==='الشروط والأحكام')b.remove()})}document.addEventListener('DOMContentLoaded',clean65,{once:true});setTimeout(clean65,250);
 })();
 </script>
-
 <!-- v66: professional subscription + privacy presentation -->
 <style id="v66-style">
 .v66-sub{grid-column:1/-1;display:grid;gap:18px}.v66-sub-hero,.v66-policy{background:linear-gradient(145deg,#fffdf8,#f2f5ed);border:1px solid #d8dfd3;border-radius:28px;box-shadow:0 14px 38px #52665c10}.v66-sub-hero{padding:26px}.v66-brandline{display:flex;align-items:center;gap:12px}.v66-brandline img{width:46px;height:46px;object-fit:contain}.v66-brandline b{display:block;color:#40534e;font-size:20px}.v66-brandline span{display:block;color:#7a857f;font-size:13px;margin-top:2px}.v66-sub-title{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-top:22px}.v66-sub-title h2{margin:0;color:#3f534d;font-size:29px}.v66-sub-title p{margin:7px 0 0;color:#748078}.v66-live{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:999px;background:#e7efe3;color:#526a59;font-weight:900;white-space:nowrap}.v66-live:before{content:'';width:8px;height:8px;border-radius:50%;background:#6e8d72}.v66-sub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:22px}.v66-sub-card{background:#fff;border:1px solid #dde3d9;border-radius:20px;padding:18px}.v66-sub-card small{display:block;color:#8a938e;margin-bottom:7px}.v66-sub-card strong{display:block;color:#465952;font-size:18px;line-height:1.6}.v66-sub-card em{display:block;color:#89928d;font-size:12px;font-style:normal;margin-top:5px}.v66-sub-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.v66-primary,.v66-secondary{border-radius:14px;padding:12px 18px;font-weight:900;cursor:pointer}.v66-primary{border:1px solid #50675d;background:#50675d;color:#fff}.v66-secondary{border:1px solid #ccd6cc;background:#fff;color:#50625b}.v66-sub-note{padding:16px 20px;border-radius:18px;background:#f7f5ed;border:1px solid #e5dfcf;color:#756f61;line-height:1.8}
@@ -2109,7 +1895,6 @@ function renderPrivacy66(){const g=document.getElementById('moduleGrid');if(!g)r
 const open66=window.openModule;window.openModule=function(title,desc){const r=open66.apply(this,arguments);if(title==='الاشتراك')setTimeout(renderSub66,0);if(title==='سياسة الخصوصية')setTimeout(renderPrivacy66,0);return r};
 })();
 </script>
-
 <!-- v67: closing refinements before Owner dashboard -->
 <style id="v67-style">
 /* Quieter report hierarchy */
@@ -2201,7 +1986,6 @@ window.renderSupport=function(g){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{}); 
 })();
 </script>
-
 <!-- v68: Owner portal home — standalone visual shell for development preview -->
 <style id="v68-owner-css">
 body.v68-owner-mode{background:#f3f1e9;color:#263f38}
@@ -2247,7 +2031,6 @@ window.openOwner=function(){
 const oldGoHomeV68=window.goHome;window.goHome=function(){document.body.classList.remove('v68-owner-mode');return oldGoHomeV68.apply(this,arguments)};
 })();
 </script>
-
 <!-- v69: Owner home refinement — approved structure -->
 <style id="v69-owner-css">
 body.v68-owner-mode .quick-add{display:grid!important;z-index:90}
@@ -2290,7 +2073,6 @@ window.toggleAdd=function(e){
 window.v69OwnerAction=function(name){document.getElementById('addMenu')?.classList.remove('show');if(typeof devNotice==='function')devNotice(name);else if(typeof showMiikDialog==='function')showMiikDialog(`<h2>${name}</h2><p>سيُفعّل هذا الإجراء عند بناء قسمه في بوابة المالك.</p><div class="dialog-actions"><button class="dialog-primary" onclick="closeMiikDialog()">تمام</button></div>`)};
 })();
 </script>
-
 <!-- v70: Owner dashboard visual refinement -->
 <style id="v70-owner-css">
 /* All owner dashboard text uses a stronger weight, while keeping hierarchy readable */
@@ -2352,7 +2134,6 @@ body.v68-owner-mode .add-menu button+button{
   };
 })();
 </script>
-
 <!-- v71: Final owner-home activity + unified Hijri/Gregorian date -->
 <style id="v71-owner-css">
 body.v68-owner-mode .v71-owner-date{display:block!important;white-space:normal;line-height:1.7;font-weight:800!important;color:#52665d!important}
@@ -2389,7 +2170,6 @@ body.v68-owner-mode .v71-owner-date{display:block!important;white-space:normal;l
   };
 })();
 </script>
-
 <!-- v72: Owner users management — first functional management section -->
 <style id="v72-owner-users-css">
 .v72-users-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}
@@ -2476,7 +2256,6 @@ body.v68-owner-mode .v71-owner-date{display:block!important;white-space:normal;l
   };
 })();
 </script>
-
 <!-- v73: unified official education departments + owner schools -->
 <style id="v73-style">
 .v58-field select{width:100%;box-sizing:border-box;padding:14px 16px;border:1px solid #d9ded4;border-radius:14px;background:#fff;font:inherit;color:#34444b;outline:none}.v58-field select:focus{border-color:#7d9a82;box-shadow:0 0 0 3px #7d9a8218}
@@ -2545,8 +2324,6 @@ const oldNav73=window.v68OwnerNav;
 window.v68OwnerNav=function(btn,title){if(title==='المدارس'){v73RenderSchools();return}return oldNav73.apply(this,arguments)};
 })();
 </script>
-
-
 <!-- v74: owner subscriptions — next management section -->
 <style id="v74-style">
 .v74-sub-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:16px}.v74-sub-summary article{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;padding:16px;min-height:105px;box-shadow:0 7px 20px rgba(45,71,60,.035);cursor:pointer}.v74-sub-summary article.active{background:#e9efe6;border-color:#bdccbe}.v74-sub-summary b{display:block;color:#51675f;font-size:12px}.v74-sub-summary strong{display:block;color:#2f5047;font-size:25px;margin-top:10px}.v74-sub-summary small{display:block;color:#8a9791;font-size:9.5px;margin-top:3px}.v74-sub-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #e1e4dc;border-radius:13px;overflow:hidden}.v74-sub-table th{background:#f1f3ec;color:#52675f;font-size:10px;padding:11px;text-align:right;font-weight:800}.v74-sub-table td{padding:12px 11px;border-top:1px solid #eceee8;color:#52635d;font-size:10.5px;font-weight:700}.v74-empty{padding:42px 18px;text-align:center;color:#6f7f78}.v74-empty .ico{width:48px;height:48px;border-radius:16px;background:#eef2ea;display:grid;place-items:center;margin:0 auto 12px;font-size:21px}.v74-empty b{display:block;color:#3e5b52;font-size:13px;margin-bottom:6px}.v74-empty span{font-size:10px;line-height:1.8;color:#8a958f}@media(max-width:850px){.v74-sub-summary{grid-template-columns:1fr 1fr}}@media(max-width:520px){.v74-sub-summary{grid-template-columns:1fr}}
@@ -2569,7 +2346,6 @@ window.v74RenderSubscriptions=function(segment=''){
 const oldNav74=window.v68OwnerNav; window.v68OwnerNav=function(btn,title){if(title==='الاشتراكات'){v74RenderSubscriptions();return}return oldNav74.apply(this,arguments)};
 })();
 </script>
-
 <!-- v75: editable student profile + owner support management -->
 <style id="v75-style">
 #studentFile .v75-edit-student{background:#eef1e8!important;border-color:#c7d3c4!important;color:#294b42!important;font-weight:900!important}
@@ -2618,7 +2394,6 @@ window.v75RenderOwnerSupport=function(){
 const oldNav75=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='الدعم'){v75RenderOwnerSupport();return}return oldNav75.apply(this,arguments)};
 })();
 </script>
-
 <!-- v76: robust student edit binding + owner communications -->
 <style id="v76-style">
 .v76-comm-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:16px}.v76-comm-summary article{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;padding:16px;min-height:102px;box-shadow:0 7px 20px rgba(45,71,60,.035)}.v76-comm-summary b{display:block;color:#51675f;font-size:12px}.v76-comm-summary strong{display:block;color:#2f5047;font-size:17px;margin-top:12px}.v76-comm-summary small{display:block;color:#8a9791;font-size:9.5px;margin-top:4px}.v76-compose{display:grid;grid-template-columns:1fr 1fr;gap:12px}.v76-compose .full{grid-column:1/-1}.v76-compose label{display:block;color:#4d625a;font-size:10px;font-weight:900;margin-bottom:5px}.v76-compose input,.v76-compose select,.v76-compose textarea{width:100%;box-sizing:border-box;border:1px solid #d9dfd7;background:#f9f8f3;border-radius:11px;padding:11px 12px;color:#3d564e;font:inherit;font-weight:750;outline:none}.v76-compose textarea{min-height:115px;resize:vertical}.v76-channel-row{display:flex;gap:9px;flex-wrap:wrap}.v76-channel{display:flex!important;align-items:center;gap:7px;border:1px solid #d9dfd7;background:#f6f6f0;border-radius:11px;padding:10px 12px!important;cursor:pointer;margin:0!important}.v76-channel input{width:auto;margin:0}.v76-comm-actions{display:flex;gap:9px;justify-content:flex-start;margin-top:14px}.v76-comm-actions button{border:0;border-radius:11px;padding:11px 17px;font:inherit;font-weight:900;cursor:pointer}.v76-primary{background:#405f54;color:white}.v76-secondary{background:#eceee7;color:#476057}.v76-info{margin-top:13px;background:#f3f5ef;border:1px solid #dfe5dc;border-radius:12px;padding:11px 13px;color:#718078;font-size:10px;line-height:1.9;font-weight:700}@media(max-width:700px){.v76-comm-summary,.v76-compose{grid-template-columns:1fr}.v76-compose .full{grid-column:auto}}
@@ -2681,7 +2456,6 @@ window.v76RenderCommunication=function(){
 const nav76=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='التواصل'){v76RenderCommunication();return}return nav76.apply(this,arguments)};
 })();
 </script>
-
 <!-- v77: owner team & permissions -->
 <style id="v77-style">
 .v77-team-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:16px}.v77-team-summary article{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;padding:16px;min-height:102px;box-shadow:0 7px 20px rgba(45,71,60,.035)}.v77-team-summary b{display:block;color:#51675f;font-size:12px}.v77-team-summary strong{display:block;color:#2f5047;font-size:17px;margin-top:12px}.v77-team-summary small{display:block;color:#8a9791;font-size:9.5px;margin-top:4px}.v77-team-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.v77-card{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;padding:16px;box-shadow:0 7px 20px rgba(45,71,60,.035)}.v77-card h3{margin:0 0 5px;color:#355248;font-size:15px;font-weight:950}.v77-card>p{margin:0 0 14px;color:#87938e;font-size:10px;font-weight:750;line-height:1.8}.v77-add{border:0;border-radius:11px;background:#405f54;color:#fff;padding:10px 15px;font:inherit;font-weight:900;cursor:pointer}.v77-empty{min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#84918b;padding:18px}.v77-empty .ico{width:40px;height:40px;border-radius:13px;background:#edf1eb;display:grid;place-items:center;color:#50675e;font-size:18px;margin-bottom:10px}.v77-empty b{color:#51655e;font-size:12px}.v77-empty span{font-size:9.5px;line-height:1.8;max-width:390px;margin-top:5px}.v77-perm{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #edf0e9}.v77-perm:last-child{border-bottom:0}.v77-perm b{display:block;color:#465e55;font-size:11px}.v77-perm small{display:block;color:#8a9691;font-size:9px;margin-top:3px;line-height:1.6}.v77-switch{width:38px;height:21px;border-radius:20px;background:#dfe4de;position:relative;flex:0 0 auto;margin-top:2px}.v77-switch:after{content:"";position:absolute;width:15px;height:15px;border-radius:50%;background:#fff;top:3px;right:3px;box-shadow:0 1px 4px #0002}.v77-security{margin-top:14px;background:#f2f5ef;border:1px solid #dce4da;border-radius:14px;padding:13px 14px;color:#61736c;font-size:9.7px;line-height:1.9;font-weight:750}.v77-security b{color:#3f5c52}.v77-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:right}.v77-modal-grid .full{grid-column:1/-1}.v77-modal-grid label{display:block;color:#4d625a;font-size:10px;font-weight:900}.v77-modal-grid input,.v77-modal-grid select{width:100%;box-sizing:border-box;margin-top:5px;border:1px solid #d9dfd7;background:#f9f8f3;border-radius:10px;padding:10px;font:inherit;color:#3d564e;font-weight:750}@media(max-width:760px){.v77-team-summary,.v77-team-grid,.v77-modal-grid{grid-template-columns:1fr}.v77-modal-grid .full{grid-column:auto}}
@@ -2704,7 +2478,6 @@ window.v77RenderTeam=function(){
 const nav77=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='الفريق والصلاحيات'){v77RenderTeam();return}return nav77.apply(this,arguments)};
 })();
 </script>
-
 <!-- v78: owner content & plan -->
 <style id="v78-style">
 .v78-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:16px}.v78-summary article,.v78-card{background:#fffdf8;border:1px solid #dfe3d8;border-radius:16px;box-shadow:0 7px 20px rgba(45,71,60,.035)}.v78-summary article{padding:15px;min-height:96px}.v78-summary b{display:block;color:#53685f;font-size:11px;font-weight:950}.v78-summary strong{display:block;color:#315148;font-size:16px;font-weight:950;margin-top:11px}.v78-summary small{display:block;color:#8b9792;font-size:9px;font-weight:750;margin-top:4px;line-height:1.55}.v78-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.v78-card{padding:16px}.v78-card h3{margin:0;color:#355248;font-size:15px;font-weight:950}.v78-card>p{margin:5px 0 13px;color:#87938e;font-size:9.7px;font-weight:750;line-height:1.8}.v78-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #edf0e9}.v78-row:first-of-type{border-top:0}.v78-row b{display:block;color:#465f56;font-size:11px;font-weight:950}.v78-row small{display:block;color:#8a9691;font-size:9px;font-weight:750;margin-top:3px;line-height:1.6}.v78-pill{background:#edf2ec;border:1px solid #dce4da;color:#52695f;border-radius:999px;padding:5px 9px;font-size:8.8px;font-weight:900;white-space:nowrap}.v78-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.v78-btn{border:0;border-radius:10px;background:#405f54;color:#fff;padding:9px 13px;font:inherit;font-size:10px;font-weight:950;cursor:pointer}.v78-btn.alt{background:#f0f3ee;color:#52685f;border:1px solid #dce3da}.v78-note{grid-column:1/-1;background:#f2f5ef;border:1px solid #dce4da;border-radius:14px;padding:13px 15px;color:#60736b;font-size:9.7px;line-height:1.9;font-weight:750}.v78-note b{color:#3f5d52}@media(max-width:760px){.v78-summary{grid-template-columns:1fr 1fr}.v78-grid{grid-template-columns:1fr}.v78-note{grid-column:auto}}@media(max-width:480px){.v78-summary{grid-template-columns:1fr}}
@@ -2725,7 +2498,6 @@ window.v78RenderContentPlan=function(){
 const nav78=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='المحتوى والخطة'){v78RenderContentPlan();return}return nav78.apply(this,arguments)};
 })();
 </script>
-
 <!-- v79: MIIK content development center -->
 <style id="v79-style">
 .v79-hub{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-top:15px}.v79-tile{appearance:none;border:1px solid #dfe5da;background:#fffdf8;border-radius:19px;min-height:155px;padding:18px;text-align:right;cursor:pointer;box-shadow:0 8px 24px rgba(45,71,60,.045);transition:.18s ease;font:inherit;position:relative;overflow:hidden}.v79-tile:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:#718c78;opacity:.45}.v79-tile:hover{transform:translateY(-2px);border-color:#cbd7ca;box-shadow:0 12px 28px rgba(45,71,60,.08)}.v79-icon{width:39px;height:39px;border-radius:13px;background:#edf2e9;color:#4c675b;display:grid;place-items:center;font-size:18px;margin-bottom:14px}.v79-tile b{display:block;color:#355248;font-size:13px;font-weight:950;line-height:1.55}.v79-tile small{display:block;color:#87948e;font-size:9.4px;font-weight:780;line-height:1.75;margin-top:6px}.v79-brandline{margin-top:16px;border:1px solid #dce5d9;background:linear-gradient(135deg,#f1f5ed,#fbfaf4);border-radius:15px;padding:12px 15px;color:#5d7168;font-size:9.7px;font-weight:800;line-height:1.8}.v79-brandline b{color:#3f5e52}.v79-mini{position:absolute;left:14px;bottom:13px;color:#819087;font-size:8px;font-weight:900}.v79-tile.brand{background:linear-gradient(145deg,#f5f5ec,#fffdf8)}@media(max-width:980px){.v79-hub{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:720px){.v79-hub{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:460px){.v79-hub{grid-template-columns:1fr}}
@@ -2753,7 +2525,6 @@ window.v78RenderContentPlan=function(){
 };
 })();
 </script>
-
 <!-- v80: national & standardized tests + owner platform status/releases -->
 <style id="v80-style">
 .v80-status-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:15px}.v80-status-card{background:#fffdf8;border:1px solid #dfe5da;border-radius:18px;padding:17px;min-height:116px;box-shadow:0 8px 24px rgba(45,71,60,.04)}.v80-status-card b{display:block;color:#52685f;font-size:11px;font-weight:950}.v80-status-card strong{display:block;color:#355248;font-size:17px;font-weight:950;margin-top:12px}.v80-status-card small{display:block;color:#89958f;font-size:9.3px;font-weight:780;line-height:1.7;margin-top:5px}.v80-release-panel{margin-top:14px;background:#fffdf8;border:1px solid #dfe5da;border-radius:18px;padding:17px;box-shadow:0 8px 24px rgba(45,71,60,.04)}.v80-release-panel h3{margin:0;color:#355248;font-size:15px;font-weight:950}.v80-release-panel>p{margin:5px 0 14px;color:#87948e;font-size:9.7px;font-weight:780;line-height:1.8}.v80-release-row{display:grid;grid-template-columns:1.1fr .7fr .8fr .6fr;gap:10px;align-items:center;padding:12px 0;border-top:1px solid #edf0e9;color:#53675f;font-size:9.7px;font-weight:850}.v80-release-row.head{color:#7d8b85;font-size:8.8px;border-top:0;padding-top:4px}.v80-empty{padding:28px 10px;text-align:center;color:#87948e;font-size:10px;font-weight:800;border-top:1px solid #edf0e9}.v80-note{margin-top:14px;background:linear-gradient(135deg,#f1f5ed,#fbfaf4);border:1px solid #dce5d9;border-radius:15px;padding:12px 15px;color:#5d7168;font-size:9.7px;font-weight:800;line-height:1.8}.v80-note b{color:#3f5e52}@media(max-width:760px){.v80-status-grid{grid-template-columns:1fr}.v80-release-row{grid-template-columns:1fr 1fr}.v80-release-row.head{display:none}}
@@ -2780,7 +2551,6 @@ window.v80RenderPlatformStatus=function(){
 const nav80=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='حالة المنصة والإصدارات'){v80RenderPlatformStatus();return}return nav80.apply(this,arguments)};
 })();
 </script>
-
 <!-- v81: owner platform settings -->
 <style id="v81-style">
 .v81-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:15px}.v81-card{background:#fffdf8;border:1px solid #dfe5da;border-radius:19px;padding:18px;box-shadow:0 8px 24px rgba(45,71,60,.04)}.v81-card h3{margin:0;color:#355248;font-size:14px;font-weight:950}.v81-card>p{margin:5px 0 13px;color:#87948e;font-size:9.6px;font-weight:780;line-height:1.8}.v81-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #edf0e9}.v81-row:first-of-type{border-top:0}.v81-row b{display:block;color:#4b6259;font-size:10.5px;font-weight:950}.v81-row small{display:block;color:#8a9691;font-size:9px;font-weight:760;margin-top:3px;line-height:1.55}.v81-state{background:#edf2ec;border:1px solid #dce4da;color:#52695f;border-radius:999px;padding:5px 9px;font-size:8.5px;font-weight:950;white-space:nowrap}.v81-brand{grid-column:1/-1;background:linear-gradient(135deg,#eef4ea,#fffdf8);border:1px solid #dce5d9;border-radius:17px;padding:15px 17px;display:flex;align-items:center;gap:13px}.v81-brand img{width:44px;height:44px;object-fit:contain}.v81-brand b{display:block;color:#3f5e52;font-size:12px;font-weight:950}.v81-brand small{display:block;color:#718078;font-size:9.4px;font-weight:780;line-height:1.7;margin-top:3px}.v81-note{grid-column:1/-1;color:#65776f;font-size:9.4px;font-weight:780;line-height:1.8;padding:2px 3px}.v81-note b{color:#405e53}@media(max-width:760px){.v81-grid{grid-template-columns:1fr}.v81-brand,.v81-note{grid-column:auto}}
@@ -2803,8 +2573,6 @@ window.v81RenderSettings=function(){
 const nav81=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==='إعدادات المنصة'){v81RenderSettings();return}return nav81.apply(this,arguments)};
 })();
 </script>
-
-
 <!-- v82: counselor data-link cleanup; no demo beneficiaries -->
 <style id="v82-counselor-cleanup-style">
 .v82-student-result{display:block;width:100%;text-align:right;border:0;background:#fff;padding:9px 10px;border-radius:9px;margin:2px 0;cursor:pointer}.v82-student-result:hover{background:#f6f2e8}.v82-student-result b{display:block}.v82-student-result small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.v82-chip{display:inline-flex;align-items:center;gap:7px;background:#edf2e9;border-radius:999px;padding:7px 10px;margin:4px 3px;font-size:12px}.v82-chip button{border:0;background:transparent;color:#7a5a5a;font-weight:900;cursor:pointer}.v82-empty-data{padding:12px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:11px;background:#fffdf8}
@@ -2839,7 +2607,6 @@ window.miikUpdateExecCount82=updateExecCount82;
 /* clean1: removed name-based demo purge to avoid deleting genuine students. */
 })();
 </script>
-
 <!-- v83: counselor cleanup + two-line student search + smart program reports -->
 <style id="v83-counselor-report-style">
 .v83-student-result{width:100%;display:block;text-align:right;border:0;border-bottom:1px solid #eee8dc;background:#fffdf8;padding:10px 12px;cursor:pointer;font-family:inherit}.v83-student-result:last-child{border-bottom:0}.v83-student-result:hover{background:#f3f0e7}.v83-student-result b{display:block;color:var(--deep);font-size:14px;line-height:1.5}.v83-student-result small{display:block;color:var(--muted);font-size:11px;line-height:1.6;margin-top:3px}
@@ -2897,7 +2664,6 @@ window.v83PrintProgram=function(title,index){const a=read83('miikExec_'+title,[]
 window.showProgramReport=function(title){const arr=read83('miikExec_'+title,[]),total=arr.reduce((n,x)=>n+(parseInt(x.count)||0),0),g=document.getElementById('moduleGrid');g.innerHTML=`<div class="program-surface"><div class="program-actions"><button class="program-action" onclick="renderProgram('${Q83(title)}',moduleGrid)">التنفيذ</button><button class="program-action" onclick="v28ShowDocumentation('${Q83(title)}')">التوثيق</button><button class="program-action">التقرير</button></div><div class="report-preview"><b>تقرير ${ESC83(title)}</b><p>عدد مرات التنفيذ: ${arr.length}</p><p>إجمالي المستفيدين: ${total}</p><div class="v83-report-note">اختر التنفيذ المطلوب، ومِعِك يبني التقرير تلقائيًا من البيانات والتوثيق المسجلين.</div><div class="v83-report-list">${arr.length?arr.map((x,i)=>`<div class="v83-report-row"><div><b>${ESC83(x.execTitle||'تنفيذ '+(i+1))}</b><small>${ESC83(x.date||'')} • ${ESC83(x.method||'')} • ${ESC83(x.count||0)} مستفيد${x.documentation?.images?.length?' • الشواهد '+x.documentation.images.length:''}</small></div><button onclick="v83PrintProgram('${Q83(title)}',${i})">فتح التقرير</button></div>`).join(''):'<div class="empty-warm">لا يوجد تنفيذ مسجل لهذا البرنامج حتى الآن.</div>'}</div></div></div>`};
 })();
 </script>
-
 <script>
 (()=>{
 const E84=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2961,7 +2727,6 @@ window.v39PrintNow=function(){const st=document.getElementById('v39Stage')?.valu
 `)};
 })();
 </script>
-
 <script>
 (()=>{
  const E85=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -2990,7 +2755,6 @@ window.v39PrintNow=function(){const st=document.getElementById('v39Stage')?.valu
  };
 })();
 </script>
-
 <style>
 .v86-final-picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.v86-final-picker label{font-weight:850;color:#3d584e}.v86-final-picker select{width:100%;margin-top:7px;padding:12px;border:1px solid #d8ded9;border-radius:12px;background:#fff;font:inherit;color:#344b43}.v86-final-note{padding:12px;border-radius:12px;background:#f5f2e8;color:#5b6d64;line-height:1.9;margin:12px 0}@media(max-width:680px){.v86-final-picker{grid-template-columns:1fr}}
 </style>
@@ -3059,7 +2823,6 @@ const oldProg86=prog86; prog86=function(){const a=oldProg86(),names=['اختبا
 /* Keep v85 roster fix active and ensure portrait. */
 })();
 </script>
-
 <style id="v87-release-style">
 .v87-evidence-row{margin-top:12px;padding-top:12px;border-top:1px solid #e0e4df}.v87-evidence-btn{border:1px solid #aebdaf;background:#f8f6ef;color:#31584a;border-radius:12px;padding:11px 16px;font-family:inherit;font-weight:850;cursor:pointer}.v87-evidence-count{margin-right:10px;color:#6d7b73;font-size:13px}.v87-evidence-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-height:52vh;overflow:auto;margin:14px 0}.v87-evidence-tile{border:2px solid transparent;border-radius:12px;padding:4px;background:#f5f3ec;cursor:pointer;position:relative}.v87-evidence-tile.selected{border-color:#6e8b6b;background:#e8efe5}.v87-evidence-tile img{display:block;width:100%;height:120px;object-fit:cover;border-radius:8px}.v87-evidence-tile i{display:none;position:absolute;top:8px;right:8px;width:25px;height:25px;border-radius:50%;background:#456b5a;color:#fff;font-style:normal;text-align:center;line-height:25px}.v87-evidence-tile.selected i{display:block}.v87-evidence-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.v87-evidence-actions button,.v87-add-image{border:0;border-radius:10px;padding:10px 14px;font-family:inherit;font-weight:850;cursor:pointer}.v87-evidence-save{background:#456b5a;color:#fff}.v87-add-image{background:#ece7dc;color:#345348}@media(max-width:700px){.v87-evidence-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -3133,8 +2896,6 @@ const oldProg86=prog86; prog86=function(){const a=oldProg86(),names=['اختبا
 `)};
 })();
 </script>
-
-
 <script id="v95-program-report-link-fix">
 (()=>{
   const esc95=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -3149,7 +2910,6 @@ const oldProg86=prog86; prog86=function(){const a=oldProg86(),names=['اختبا
   };
 })();
 </script>
-
 <style id="v96-search-style">
 .v96-search-result{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:14px 16px;margin:8px 0;border:1px solid #dfe5df;border-radius:14px;background:#fff;cursor:pointer;text-align:right}.v96-search-result:hover{background:#f7f8f2}.v96-search-result b{display:block;color:#294f42;font-size:15px}.v96-search-result small{display:block;color:#7b827d;margin-top:4px}.v96-search-result span{white-space:nowrap;color:#5d725f;font-weight:800}.v96-search-group{margin-bottom:18px}.v96-search-group h3{color:#315d4e;margin:4px 0 8px}
 </style>
@@ -3218,7 +2978,6 @@ const oldProg86=prog86; prog86=function(){const a=oldProg86(),names=['اختبا
  const search=document.getElementById('search');if(search){search.placeholder='ابحث في مِعِك: طالب، تقرير، برنامج، خدمة…';search.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();window.demoSearch()}})}
 })();
 </script>
-
 <!-- v97: approved group-session UX, guardian communication, and comprehensive report visual system -->
 <style id="v97-ui-style">
 .v97-family-actions{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
@@ -3292,7 +3051,6 @@ window.v86PrintFinal=function(kind){if(kind!=='شامل')return oldFinal97?.appl
 `;if(typeof window.print86==='function')window.print86(html);else{const w=window.open('','_blank');if(w){w.document.write(html);w.document.close()}}};
 })();
 </script>
-
 <!-- v98: approved visual/report/guardian refinements -->
 <style id="v98-ui-style">
 .v97-family-btn.wa b:before{content:none!important}.v98-wa-icon{width:22px;height:22px;object-fit:contain;vertical-align:middle;margin-left:7px}.v98-shalwa-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;padding:8px 10px;border:1px solid #d9e0d8;border-radius:11px;background:#f7f6f0}.v98-shalwa-row span{font-size:12px;color:#6b7871}.v98-shalwa-btn{border:0;border-radius:9px;background:#567467;color:#fff;padding:7px 11px;font-family:inherit;font-weight:850;cursor:pointer}.v98-suggestion{margin-top:8px;border:1px solid #d7ded6;border-radius:12px;background:#fbfaf6;padding:10px;font-size:12px;line-height:1.8}.v98-suggestion button{margin-top:7px;border:0;border-radius:8px;background:#31584a;color:white;padding:7px 10px;font-family:inherit;font-weight:800;cursor:pointer}
@@ -3395,9 +3153,7 @@ const html=`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"
 `;printDoc(html)};
 })();
 </script>
-
 <!-- MIIK integrated v107: final achievement report refinements -->
-
 <!-- v108: full-width privacy policy aligned with Saudi PDPL guidance -->
 <style id="v108-privacy-style">
 #modulePage.v108-privacy-page #moduleGrid{display:block!important;width:100%!important;max-width:none!important}
@@ -3430,7 +3186,6 @@ window.renderPrivacy108=function(){const g=document.getElementById('moduleGrid')
 const oldOpen108=window.openModule;window.openModule=function(title,desc){const r=oldOpen108.apply(this,arguments);if(title==='سياسة الخصوصية'||title==='الخصوصية')setTimeout(window.renderPrivacy108,0);else document.getElementById('modulePage')?.classList.remove('v108-privacy-page');return r};
 })();
 </script>
-
 <style id="miik-beta1-responsive">
 @media(max-width:760px){
  html,body{max-width:100%;overflow-x:hidden}.app{width:100%;max-width:100%;padding-left:10px!important;padding-right:10px!important}
@@ -3470,42 +3225,10 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
  const oldShow=window.showMiikDialog;if(typeof oldShow==='function')window.showMiikDialog=function(html){if(String(html).includes('استيراد بيانات الطلاب'))html=`<h2>استيراد بيانات الطلاب من نور</h2><p class="v39-help">اختر كشف نور الأصلي بصيغة XLSX. سيستورد مِعِك فقط <b>اسم الطالب + الصف + الفصل</b>، ويتجاهل أرقام الجوال والهوية والسجل المدني وبقية الأرقام.</p><div class="v39-file"><input id="v39File" type="file" accept=".xlsx" style="width:100%"></div><div class="v39-dialog-actions"><button class="v39-primary" type="button" onclick="v39DoImport()">قراءة واستيراد</button><button class="v39-secondary" type="button" onclick="closeMiikDialog()">إلغاء</button></div>`;return oldShow(html)};
 })();
 </script>
-
 <style>
 .miik-academic-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f4f0e5;border:1px solid #d8ddcf;border-radius:14px;padding:11px 14px;margin:0 0 14px;color:#35584d}.miik-academic-bar b{font-size:14px}.miik-academic-bar span{font-size:12px;color:#6d786f}.miik-term-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 16px}.miik-term-card{border:1px solid #d7ddd3;background:#fffdf7;border-radius:16px;padding:18px;text-align:right;cursor:pointer;color:#314f46}.miik-term-card b{display:block;font-size:17px;margin-bottom:6px}.miik-term-card span{font-size:12px;line-height:1.8;color:#788078}.miik-term-card.active{border:2px solid #557565;background:#f2f5ec}.miik-plan-content{margin-top:8px}.miik-week-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:14px 0}.miik-week-nav button{border:1px solid #d8ddd5;background:#fff;border-radius:11px;padding:9px 6px;font-weight:800;color:#456458;cursor:pointer}.miik-week-nav button.active{background:#496b5d;color:#fff;border-color:#496b5d}.miik-week-panel{background:#fffdf8;border:1px solid #d9ddd5;border-radius:15px;padding:16px}.miik-archive-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.miik-archive-card{border:1px solid #d8ddd4;background:#fffdf8;border-radius:17px;padding:22px;text-align:right;color:#35574c}.miik-archive-card b{font-size:18px;display:block;margin-bottom:7px}.miik-archive-empty{grid-column:1/-1;background:#f5f1e7;border:1px dashed #cfd6ca;border-radius:14px;padding:18px;text-align:center;color:#6e786f}.miik-readonly{display:inline-block;background:#eee9dc;border-radius:999px;padding:5px 10px;font-size:11px;color:#6f766f}
 @media(max-width:700px){.miik-term-cards,.miik-archive-grid{grid-template-columns:1fr}.miik-week-nav{grid-template-columns:repeat(2,1fr)}.miik-academic-bar{align-items:flex-start;flex-direction:column}}
 </style>
-<script>
-(()=>{
- const CKEY='miikAcademicContext';
- function ctx(){try{return JSON.parse(localStorage.getItem(CKEY)||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}}
- function saveCtx(c){localStorage.setItem(CKEY,JSON.stringify(c));}
- window.miikAcademicContext=ctx;
- const planTitles=['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'];
- let activePlan='';
- function esc11(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
- function termName(t){return String(t)==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول'}
- function weeks11(){try{return typeof planWeeks==='function'?planWeeks():[]}catch(_){return[]}}
- function header11(){const c=ctx();return `<div class="miik-academic-bar"><div><b>العام الدراسي ${esc11(c.year)}هـ</b><div><span>العمل الجديد محفوظ في العام الحالي فقط.</span></div></div><b>${termName(c.term)}</b></div>`}
- function termCards11(){const c=ctx();return `<div class="miik-term-cards"><button class="miik-term-card ${c.term==='1'?'active':''}" onclick="miikOpenPlanTerm(1)"><b>الفصل الدراسي الأول</b><span>الخطة والبرامج والتنفيذ والتقويم الخاصة بالفصل الأول.</span></button><button class="miik-term-card ${c.term==='2'?'active':''}" onclick="miikOpenPlanTerm(2)"><b>الفصل الدراسي الثاني</b><span>مسار مستقل للفصل الثاني؛ يُستكمل محتواه لاحقًا دون المساس بالفصل الأول.</span></button></div>`}
- function oldPlan11(title){const holder=document.createElement('div');holder.className='miik-plan-content';try{if(title==='الخطة الأسبوعية')renderWeeklyAll11(holder);else if(typeof renderPlan==='function')renderPlan(title,holder)}catch(e){holder.innerHTML='<div class="empty-warm">تعذر عرض الخطة.</div>'}return holder.innerHTML}
- function renderWeeklyAll11(holder){const ws=weeks11();if(!ws.length){holder.innerHTML='<div class="empty-warm">لا توجد أسابيع مسجلة.</div>';return}let sel=+(sessionStorage.getItem('miikWeeklyIndex')||0);if(sel<0||sel>=ws.length)sel=0;const w=ws[sel];holder.innerHTML=`<div class="cal-top"><div><b style="font-size:23px">الخطة الأسبوعية</b><div class="muted">${termName(ctx().term)} · جميع أسابيع الفصل</div></div></div><div class="miik-week-nav">${ws.map((x,i)=>`<button class="${i===sel?'active':''}" onclick="miikWeek(${i})">${esc11(x.w)}</button>`).join('')}</div><div class="miik-week-panel"><h3>${esc11(w.w)}</h3><div class="muted">${esc11(w.date||'')}</div><div class="week-entry" style="margin-top:12px"><b>${esc11(w.program||'')}</b><small>القيمة: ${esc11(w.value||'')}</small></div></div>`}
- window.miikWeek=function(i){sessionStorage.setItem('miikWeeklyIndex',String(i));renderPlanShell11(activePlan||'الخطة الأسبوعية')}
- function renderPlanShell11(title){activePlan=title;const g=document.getElementById('moduleGrid');if(!g)return;const c=ctx();let content='';if(c.term==='1')content=oldPlan11(title);else content=`<div class="program-panel"><b>${esc11(title)} — الفصل الدراسي الثاني</b><p class="muted">المسار جاهز ومستقل. سيُضاف محتوى خطة الفصل الثاني لاحقًا بعد اعتماد ملفات الخطة، دون إضافة بيانات أو برامج افتراضية.</p></div>`;g.innerHTML=`<div style="grid-column:1/-1">${header11()}${termCards11()}<div id="miikPlanContent">${content}</div></div>`}
- window.miikOpenPlanTerm=function(t){const c=ctx();c.term=String(t);saveCtx(c);renderPlanShell11(activePlan||'خطة الموجّه الطلابي');try{if(document.getElementById('calendarPage')?.classList.contains('show'))renderCalendarView?.('semester')}catch(_){}}
- // Keep all three plan entrances under the same two-term architecture.
- const openPrev=window.openModule;
- window.openModule=function(title,desc){const r=openPrev.apply(this,arguments);if(planTitles.includes(title))setTimeout(()=>renderPlanShell11(title),0);return r}
- // Calendar follows active term context. Term 2 stays empty until its plan is supplied.
- const calPrev=window.renderCalendarView;
- if(typeof calPrev==='function')window.__miikObsoleteCalendarRender6=function(mode='month'){const c=ctx();if(c.term==='2'&&mode==='semester'){const box=document.querySelector('#calendarPage .monthbox');if(box){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));box.innerHTML=`${header11()}<div class="empty-warm">تقويم الفصل الدراسي الثاني سيُبنى تلقائيًا بعد اعتماد خطة الفصل الثاني.</div>`;return}}return calPrev.apply(this,arguments)};
- // Archive: previous academic year is read-only and remains empty until a year is actually closed.
- window.openMiikArchive=function(){hideAllPages();document.getElementById('modulePage').classList.add('show');document.getElementById('moduleTitle').textContent='الأرشيف';document.getElementById('moduleDesc').textContent='أعمال العام السابق للعرض والطباعة فقط.';const g=document.getElementById('moduleGrid');const archived=localStorage.getItem('miikArchivedYear');g.innerHTML=`<div style="grid-column:1/-1">${header11()}<div class="cal-top"><div><b style="font-size:24px">الأرشيف</b><div class="muted">العام الدراسي السابق · للعرض والطباعة فقط</div></div><span class="miik-readonly">قراءة فقط</span></div>${archived?`<div class="miik-archive-grid"><button class="miik-archive-card"><b>خطط الموجّه الطلابي</b><span>الفصل الدراسي الأول والفصل الدراسي الثاني.</span></button><button class="miik-archive-card"><b>التقارير الختامية</b><span>التقرير الختامي المختصر والتقرير الختامي الشامل.</span></button></div>`:`<div class="miik-archive-grid"><div class="miik-archive-empty"><b>لا يوجد عام دراسي مؤرشف حتى الآن.</b><br>سيظهر هنا أرشيف العام السابق بعد إقفال العام الدراسي الحالي.</div></div>`}</div>`;window.scrollTo({top:0,behavior:'smooth'})}
- // Tag new guidance services with the current academic year. Services remain continuous across both terms.
- const savePrev=window.saveAction;
- if(typeof savePrev==='function')window.saveAction=function(e){const before=localStorage.getItem('miik-demo-actions');const r=savePrev.apply(this,arguments);setTimeout(()=>{try{const a=JSON.parse(localStorage.getItem('miik-demo-actions')||'[]'),c=ctx();if(a.length&&(!a[0].academicYear)){a[0].academicYear=c.year;localStorage.setItem('miik-demo-actions',JSON.stringify(a))}}catch(_){}},0);return r}
-})();
-</script>
 
 <style id="miik-beta-12-plan-style">
 .miik-plan12-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}.miik-plan12-card{position:relative;background:#fffdf8;border:1px solid #d9ddd4;border-radius:15px;padding:13px;text-align:right;min-height:142px;cursor:pointer;color:#314f46;transition:.15s}.miik-plan12-card:hover{transform:translateY(-1px);border-color:#8da397;box-shadow:0 5px 15px rgba(43,72,62,.07)}.miik-plan12-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.miik-plan12-head b{font-size:15px}.miik-plan12-date{font-size:10.5px;color:#7a827c;white-space:nowrap}.miik-plan12-program{border:0;background:transparent;padding:0;margin:12px 0 6px;width:100%;text-align:right;color:#263f37;font:inherit;font-weight:900;cursor:pointer;line-height:1.55}.miik-plan12-program:hover{text-decoration:underline}.miik-plan12-value,.miik-plan12-day{border:0;background:#f1eee4;border-radius:999px;padding:5px 8px;margin:3px 0 0 4px;font:inherit;font-size:10.5px;color:#536c62;cursor:pointer}.miik-plan12-day{background:#edf3ea}.miik-plan12-initiatives{font-size:11px;color:#737c75;line-height:1.7;margin-top:7px}.miik-plan12-days{margin-top:7px}.miik-plan12-note{background:#f5f1e7;border:1px solid #ded9ca;border-radius:13px;padding:11px 13px;margin-top:12px;color:#6c756e;font-size:12px}.miik-plan12-print{border:1px solid #cbd7cb;background:#496b5d;color:#fff;border-radius:10px;padding:9px 13px;font-weight:800;cursor:pointer}.miik-week12-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 3px}.miik-week12-title h3{margin:0;color:#35584d}.miik-week12-title span{font-size:12px;color:#788078}@media(max-width:1050px){.miik-plan12-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){.miik-plan12-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.miik-plan12-grid{grid-template-columns:1fr}.miik-plan12-card{min-height:auto}}
@@ -3604,7 +3327,6 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
  setTimeout(()=>{const t=document.getElementById('moduleTitle')?.textContent||'';if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(t))miikRefreshPlan12(t)},50);
 })();
 </script>
-
 <script id="miik-beta-17-print-only-final">
 (()=>{
  const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -3633,7 +3355,6 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
  };
 })();
 </script>
-
 <style id="miik171-style">
 .miik171-wrap{grid-column:1/-1;background:#fffdf8;border:1px solid #d8dfd5;border-radius:20px;padding:18px}.miik171-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.miik171-top h3{margin:0;color:#315c4e}.miik171-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.miik171-form label{display:flex;flex-direction:column;gap:6px;font-weight:800;color:#40564e}.miik171-form input,.miik171-form textarea{font:inherit;border:1px solid #cbd6cb;border-radius:11px;background:#fff;padding:10px 12px;color:#294b42}.miik171-form textarea{min-height:92px;resize:vertical}.miik171-wide{grid-column:1/-1}.miik171-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.miik171-btn{border:1px solid #c6d2c6;background:#eef2e9;color:#315c4e;border-radius:10px;padding:9px 13px;font-weight:900;cursor:pointer}.miik171-btn.primary{background:#5f796c;color:#fff;border-color:#5f796c}.miik171-table{width:100%;border-collapse:collapse;margin-top:18px;font-size:13px}.miik171-table th,.miik171-table td{padding:10px;border-bottom:1px solid #e3e8e2;text-align:right}.miik171-table th{background:#e6ece2;color:#315c4e}.miik171-evidence-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.miik171-ev-card{border:1px solid #d7dfd5;border-radius:14px;padding:12px;background:#faf9f3}.miik171-ev-card b{display:block;color:#315c4e;margin-bottom:8px}.miik171-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.miik171-preview img{width:92px;height:72px;object-fit:cover;border-radius:9px;border:1px solid #d4ddd3}.miik171-report-pick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.miik171-pick{position:relative;border:2px solid transparent;border-radius:12px;overflow:hidden;cursor:pointer;background:#eef1e9}.miik171-pick img{display:block;width:100%;height:110px;object-fit:cover}.miik171-pick input{position:absolute;top:7px;right:7px;width:20px;height:20px}.miik171-empty{padding:25px;text-align:center;color:#78857e;background:#f7f4ec;border-radius:13px}.miik171-note{font-size:12px;color:#77847c;margin-top:8px}
 /* Beta 1.7.2 — compact group-guidance hub */
@@ -3747,8 +3468,6 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  };
 })();
 </script>
-
-
 <style id="miik-beta174-mobile-drawer">
 @media (max-width:760px){
   #drawer .drawer-panel{
@@ -3772,7 +3491,6 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 }
 @media (max-width:390px){#drawer .drawer-panel{width:62vw!important;min-width:198px!important;max-width:225px!important}}
 </style>
-
 <style id="miik-beta177-mobile-hijri-colors">
 @media (max-width:760px){
   .v54-hijri-pop .hijri-grid button,
@@ -3781,8 +3499,6 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
   .v54-hijri-pop .hijri-grid button.selected{background:var(--deep)!important;color:#fff!important;border-color:var(--olive)!important}
 }
 </style>
-
-
 <style id="miik-beta-1722-plan-custom-style">
 .miik1721-programs{display:grid;gap:6px;margin:10px 0 6px}.miik1721-programs .miik-plan12-program{margin:0}.miik1721-programs .custom{background:#edf3ea;border:1px solid #d9e4d6;border-radius:10px;padding:7px 9px}.miik1713-program-label{font-weight:800!important}
 </style>
@@ -3849,7 +3565,6 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  window.miikSyncCustomPrograms?.();
 })();
 </script>
-
 <script id="miik-beta-1-7-26-identity-source">
 (function(){
   const PROFILE_KEY='miikProfileV58';
@@ -3868,7 +3583,6 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
   window.addEventListener('storage',e=>{if(e.key===PROFILE_KEY)window.miikSyncIdentity()});
 })();
 </script>
-
 <script id="miik-beta-003-canonical-plan-calendar">
 (()=>{'use strict';
  const MONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
@@ -3962,7 +3676,6 @@ setTimeout(()=>{try{w.focus();w.print()}catch(_){}},350);
 document.addEventListener('DOMContentLoaded',()=>{ensureIds();if(document.getElementById('studentFile')?.classList.contains('show'))render()});
 })();
 </script>
-
 <style id="miik-repair-032-style">
 .miik-native-hidden{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important}
 .miik-choice{position:relative;min-width:0}.miik-choice-btn{width:100%;min-height:42px;border:1px solid #b9c8be;border-radius:11px;background:#fffdf8;color:#294b42;font:inherit;font-weight:800;padding:9px 38px 9px 12px;text-align:right;cursor:pointer;position:relative}.miik-choice-btn:after{content:'⌄';position:absolute;left:13px;top:50%;transform:translateY(-55%);color:#657c70;font-size:16px}.miik-choice-btn:disabled{opacity:.55;cursor:not-allowed}.miik-choice-menu{display:none;position:absolute;z-index:9999;right:0;left:0;top:calc(100% + 5px);max-height:245px;overflow:auto;background:#fffdf8;border:1px solid #b9c8be;border-radius:12px;padding:5px;box-shadow:0 16px 36px rgba(31,57,46,.16)}.miik-choice.open .miik-choice-menu{display:block}.miik-choice-option{display:block;width:100%;border:0;background:transparent;color:#294b42;text-align:right;padding:9px 10px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer}.miik-choice-option:hover,.miik-choice-option.active{background:#e7ede1;color:#0f3d34}.student-filters .miik-choice{width:100%}.miik009-filterbar .miik-choice{min-width:160px}
@@ -3990,26 +3703,18 @@ window.v39DoImport=async function(){const f=document.getElementById('v39File')?.
 document.addEventListener('DOMContentLoaded',()=>{ensureIds();if(document.getElementById('studentFile')?.classList.contains('show'))render()});
 })();
 </script>
-
 <style id="miik-beta-178-calendar-semester-week-style">
 .miik178-week-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}.miik178-week-head>div{text-align:right}.miik178-week-date{color:var(--muted);font-weight:700;margin-top:5px}.miik178-back{white-space:nowrap}.miik178-week-summary{display:grid;gap:12px}.miik178-week-summary>div{border:1px solid var(--line);background:var(--paper);border-radius:16px;padding:15px;display:grid;gap:6px}.miik178-week-summary b{color:var(--deep)}.miik178-week-summary span{color:var(--muted)}.miik178-chips{display:flex;flex-wrap:wrap;gap:7px}.miik178-chip{background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--deep)!important}.miik178-note{margin-top:14px;color:var(--muted);text-align:center;font-size:14px}@media(max-width:700px){.miik178-week-head{align-items:stretch;flex-direction:column-reverse}.miik178-back{width:max-content;max-width:100%}}
 </style>
-
 <style id="miik-beta-179-calendar-weekly-style">
 .miik179-week-head{display:flex;direction:rtl;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}.miik179-week-title{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}.miik179-week-title b{font-size:18px;color:var(--deep)}.miik179-week-title span{font-size:14px;color:var(--olive);font-weight:800}.miik179-back{margin-inline-start:auto;white-space:nowrap}.miik179-summary{display:grid;grid-template-columns:1.3fr .7fr;gap:10px;margin-bottom:13px}.miik179-summary>div{border:1px solid var(--line);border-radius:15px;padding:13px 15px;background:#fffdf8}.miik179-summary small{display:block;color:var(--olive);font-weight:800;margin-bottom:5px}.miik179-summary b{color:var(--deep)}.miik179-summary .program{background:#edf2e9}.miik179-summary .value{background:#f4f0e4}.miik179-summary .events{grid-column:1/-1;background:#f8f5ed}.miik179-summary .events div{display:flex;gap:6px;flex-wrap:wrap}.miik179-summary .events span,.miik179-week-foot span{border:1px solid #dfe5d9;border-radius:999px;padding:5px 9px;background:#fffdf8}.miik179-days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.miik179-day{border:1px solid var(--line);border-radius:14px;background:#fffdf8;padding:10px;min-height:112px}.miik179-day.is-today{outline:2px solid var(--olive);background:#edf2e9}.miik179-daytop{display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid #eee7da;padding-bottom:7px;margin-bottom:7px}.miik179-daytop b{color:var(--deep)}.miik179-daytop span{font-size:12px;color:var(--muted)}.miik179-daytop em{font-style:normal;font-size:10px;background:var(--olive);color:white;padding:2px 6px;border-radius:999px}.miik179-daytags{display:grid;gap:5px}.miik179-daytags span{font-size:10px;border-radius:8px;padding:5px 6px}.miik179-daytags .program,.miik179-week-foot .program{background:#e8efe5;color:var(--deep)}.miik179-daytags .value,.miik179-week-foot .value{background:#f2eddf;color:#5d6f5b}.miik179-daytags .event,.miik179-week-foot .event{background:#f7f2e9;color:#786f62}.miik179-current-head,.miik179-sem-head{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-bottom:15px}.miik179-current-head b,.miik179-sem-head b{font-size:21px;color:var(--deep)}.miik179-current-head span,.miik179-sem-head span{font-size:13px;color:var(--olive);font-weight:800}.miik179-week-foot{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:12px}.miik179-sem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.miik179-sem-card{border:1px solid var(--line);background:#fffdf8;border-radius:15px;padding:12px;text-align:right;color:var(--deep);cursor:pointer;min-height:130px}.miik179-sem-card:hover{background:#f5f2e8}.miik179-sem-card>div{display:flex;justify-content:space-between;gap:6px;align-items:center;margin-bottom:8px}.miik179-sem-card>div b{font-size:13px}.miik179-sem-card>div span{font-size:10px;color:var(--olive);font-weight:700}.miik179-sem-card strong{display:block;font-size:12px;margin-bottom:7px}.miik179-sem-card em{display:inline-block;font-style:normal;font-size:10px;background:#edf2e9;padding:4px 7px;border-radius:999px;margin-bottom:6px}.miik179-sem-card small{display:block;font-size:9px;color:var(--muted);line-height:1.5}
 @media(max-width:720px){.miik179-week-head{align-items:flex-start}.miik179-week-title{gap:5px}.miik179-week-title b{font-size:13px}.miik179-week-title span{font-size:10px}.miik179-back{font-size:9px;padding:7px 9px}.miik179-summary{grid-template-columns:1fr 1fr;gap:6px}.miik179-summary>div{padding:9px;border-radius:11px}.miik179-summary small{font-size:8px}.miik179-summary b{font-size:10px}.miik179-days{grid-template-columns:1fr;gap:6px}.miik179-day{min-height:0;padding:8px}.miik179-daytags{grid-template-columns:1fr 1fr}.miik179-sem-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.miik179-sem-card{padding:9px;min-height:112px;border-radius:12px}.miik179-sem-card>div{display:block}.miik179-sem-card>div b{font-size:10px}.miik179-sem-card>div span{display:block;font-size:8px;margin-top:2px}.miik179-sem-card strong{font-size:9px}.miik179-sem-card em,.miik179-sem-card small{font-size:7.5px}.miik179-current-head,.miik179-sem-head{gap:6px}.miik179-current-head b,.miik179-sem-head b{font-size:14px}.miik179-current-head span,.miik179-sem-head span{font-size:9px}}
 </style>
-
-
 <style id="miik-beta-1710-date-style">.miik1710-gap-note{margin-top:12px;padding:11px 14px;border:1px solid var(--line);border-radius:13px;background:#f8f5ed;color:var(--muted);text-align:center;font-size:12px}</style>
-
 <style id="miik-beta-1711-calendar-detail-style">
 .miik1711-summary{display:grid;grid-template-columns:minmax(0,2fr) minmax(180px,1fr);gap:10px;margin-bottom:12px}.miik1711-link{width:100%;border:1px solid var(--line);border-radius:16px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:right;cursor:pointer;font:inherit;transition:.15s ease}.miik1711-link.program{background:#e8efe5;color:var(--deep)}.miik1711-link.value{background:#f2eddf;color:#5d6f5b}.miik1711-link span{display:grid;gap:4px}.miik1711-link small,.miik1711-events>small{font-size:11px;color:var(--muted);font-weight:700}.miik1711-link b{font-size:15px}.miik1711-link i,.miik1711-event i{font-style:normal;font-size:20px;color:var(--olive)}.miik1711-link:hover,.miik1711-event:hover,.miik1711-mini:hover{transform:translateY(-1px);border-color:var(--olive)}.miik1711-events{grid-column:1/-1;border:1px solid var(--line);background:#f8f5ed;border-radius:16px;padding:13px 15px}.miik1711-events>div{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}.miik1711-event{border:1px solid #dfe5d9;background:#fffdf8;color:var(--deep);border-radius:999px;padding:7px 11px;display:inline-flex;align-items:center;gap:7px;cursor:pointer;font:inherit;font-size:12px;font-weight:700}.miik1711-daylinks{display:grid;gap:5px}.miik1711-mini{width:100%;border:1px solid transparent;border-radius:8px;padding:5px 6px;text-align:right;cursor:pointer;font:inherit;font-size:10px}.miik1711-mini.program{background:#e8efe5;color:var(--deep)}.miik1711-mini.value{background:#f2eddf;color:#5d6f5b}
 @media(max-width:720px){.miik1711-summary{grid-template-columns:1fr 1fr;gap:6px}.miik1711-link{padding:9px;border-radius:11px}.miik1711-link small,.miik1711-events>small{font-size:8px}.miik1711-link b{font-size:10px}.miik1711-link i,.miik1711-event i{font-size:14px}.miik1711-events{padding:9px;border-radius:11px}.miik1711-event{font-size:9px;padding:6px 8px}}
 </style>
-
-
-
 <style id="miik-beta-002-calendar-style">
 #calendarPage .miik1713-program-label{background:#e5eee2!important;color:var(--deep)!important;border:1px solid #d2dfce!important;font-weight:800!important;cursor:pointer}
 #calendarPage .miik1713-value-label{background:#f2eddf!important;color:#5d6f5b!important;border:1px solid #e2dac7!important;font-weight:800!important;cursor:pointer}
@@ -4018,9 +3723,6 @@ document.addEventListener('DOMContentLoaded',()=>{ensureIds();if(document.getEle
 .miik1713-day-list{display:grid;gap:9px;margin-top:12px}.miik1713-day-item{width:100%;border:1px solid var(--line);border-radius:15px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:right;font:inherit;color:var(--deep);cursor:pointer}.miik1713-day-item span{display:grid;gap:4px}.miik1713-day-item small{font-size:10px;color:var(--muted);font-weight:700}.miik1713-day-item b{font-size:14px}.miik1713-day-item i{font-style:normal;font-size:20px;color:var(--olive)}.miik1713-day-item.program{background:#e8efe5}.miik1713-day-item.value{background:#f2eddf}.miik1713-day-item.global{background:#e4eadc;border-color:#cfd9c7}.miik1713-day-item.holiday{background:#f7f2e9;cursor:default}
 @media(max-width:720px){.miik1713-day-item{padding:9px 10px;border-radius:11px}.miik1713-day-item small{font-size:8px}.miik1713-day-item b{font-size:10px}.miik1713-day-item i{font-size:15px}}
 </style>
-
-
-
 <style id="miik-beta-1714-single-source-style">
 /* Semester cards borrow the approved week-detail palette without changing layout. */
 #calendarPage .miik179-sem-card strong{background:#e8efe5;border-radius:8px;padding:6px 8px;margin:0 0 6px;line-height:1.45}
@@ -4029,14 +3731,10 @@ document.addEventListener('DOMContentLoaded',()=>{ensureIds();if(document.getEle
 #calendarPage .miik1714-program-label{display:block!important;background:#e8efe5!important;color:var(--deep)!important;border:1px solid #d2dfce!important;border-radius:7px!important;padding:4px 5px!important;font-weight:800!important;cursor:pointer!important;line-height:1.35!important}
 </style>
 <!-- Release package: MIIK Beta 1.7.16 -->
-
-
-
 <style id="miik-beta-1723-unified-week-style">
 .miik1723-week-host{grid-column:1/-1;width:100%}
 #modulePage .miik1723-week-host .miik179-week-head{margin-top:2px}
 </style>
-
 <style id="miik-beta-1724-mobile-fixes">
 @media(max-width:720px){
   /* Values: never suppress the plan/calendar value on phone layouts. */
@@ -4065,8 +3763,6 @@ document.addEventListener('DOMContentLoaded',()=>{ensureIds();if(document.getEle
 }
 </style>
 <!-- Release package: MIIK Beta 1.7.24 -->
-
-
 <style id="miik-beta-008-guidance-style">
 .miik008-extra{display:none}.miik008-extra.show{display:block}.miik008-required{color:#a34b3f;font-size:11px;font-weight:800;margin-top:4px}.miik008-shalwa{border:1px solid #c8d5c5;background:#eef2e8;color:#31584c;border-radius:11px;padding:9px 12px;font-weight:850;cursor:pointer;width:100%;margin-top:4px}.miik008-shalwa-note{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.6}
 </style>
@@ -4101,7 +3797,6 @@ function valid008(p){if(p.topic==='أخرى'&&!p.other){showMiikNotice?.('الج
 const saveBefore008=window.saveAction;window.saveAction=function(e){if(currentAction!=='session')return saveBefore008.apply(this,arguments);const p=sessionPayload008();if(!valid008(p)){e?.preventDefault();return false}e?.preventDefault();let all=[];try{all=JSON.parse(localStorage.getItem('miik-demo-actions')||'[]')}catch(_){}const student=document.getElementById('actionStudent')?.value.trim()||currentStudent||'',date=document.getElementById('actionDate')?.value||'';let group=[];try{if(typeof group97!=='undefined'&&Array.isArray(group97))group=group97.map(x=>x.name).filter(Boolean)}catch(_){}if(!group.length){const raw=document.getElementById('v97GroupNames')?.value||'';group=raw.split('|').map(x=>x.trim()).filter(Boolean)}const isGroup=p.kind.includes('جماعية');if(isGroup&&!group.length){showMiikNotice?.('الجلسة الجماعية','أضف طالبًا واحدًا على الأقل.');return false}const item={_v55id:editing008||('a'+Date.now().toString(36)),student:isGroup?(group[0]||student):student,date,type:'session',title:'جلسة إرشادية',summary:p.displayTopic+(p.material?' · '+p.material:''),values:[p.kind,p.displayTopic,p.summary,...(isGroup&&group.length?[group.join('|')]:[])],miik008:{topic:p.topic,other:p.other,material:p.material,summary:p.summary},groupStudents:isGroup?group:undefined};if(editing008){const i=all.findIndex(x=>x._v55id===editing008);if(i>=0)all[i]={...all[i],...item};else all.unshift(item)}else all.unshift(item);localStorage.setItem('miik-demo-actions',JSON.stringify(all));editing008='';currentStudent=item.student||currentStudent;document.getElementById('saveNote')?.classList.add('show');try{renderTimeline?.();renderToday?.();renderAlerts?.()}catch(_){}setTimeout(()=>closeAction?.(),500);return false};
 })();
 </script>
-
 <style id="miik-beta-009-record-architecture-style">
 #studentFile .student-file-box{max-width:820px!important;padding:18px!important}#studentFile .student-file-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important;margin:14px 0!important}
 #studentFile .student-stat{cursor:pointer;transition:.15s;border:1px solid #d6ddd1;background:linear-gradient(145deg,#fffdf8,#f4f3e9);min-height:64px;border-radius:13px!important;padding:10px 7px!important;font-weight:800!important;color:var(--deep)!important}
@@ -4163,8 +3858,6 @@ function personRecords(kind){const key=kind==='health'?HKEY:PKEY,all=R(key),titl
 setTimeout(()=>{if(document.getElementById('studentFile')?.classList.contains('show'))rebuildFile()},80);
 })();
 </script>
-
-
 <style id="miik-beta-011-finalize-style">
 .miik011-source-row{width:100%;text-align:right;cursor:pointer;font:inherit;color:inherit}.miik011-source-row:hover{border-color:var(--olive);background:#f5f4ea}.miik011-source-row span{display:block}.miik011-source-row small{display:block;margin-top:6px;color:var(--olive);font-weight:800}
 .miik011-shalwa{margin-top:8px;border:1px solid #cfd8ca;background:#f2f4ea;color:var(--deep);border-radius:11px;padding:8px 12px;font-weight:900;cursor:pointer;width:100%}.miik011-shalwa:hover{background:#e9eee4}
@@ -4176,7 +3869,6 @@ window.miik011GuardianDraft=function(){const t=document.getElementById('miik011G
 window.openGuardianWhatsapp=function(){let phone='';try{const rows=JSON.parse(localStorage.getItem('miikStudentsV39')||'[]');const visibleName=String(document.getElementById('fileName')?.textContent||'').replace(/\s+/g,' ').trim();const currentName=String(typeof currentStudent!=='undefined'?currentStudent:'').replace(/\s+/g,' ').trim();const windowName=String(window.currentStudent||'').replace(/\s+/g,' ').trim();const n=visibleName||currentName||windowName;const norm=s=>String(s||'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim();let rec=Array.isArray(rows)?rows.find(x=>norm(x?.name)===norm(n)):null;if(!rec&&Array.isArray(rows)){const meta=String(document.getElementById('fileMeta')?.textContent||'');rec=rows.find(x=>norm(x?.name)===norm(visibleName)&&(!x.grade||meta.includes(String(x.grade))))||null}phone=String(rec?.phone||rec?.guardianPhone||rec?.parentPhone||'').trim()}catch(_){}const hasPhone=!!phone;if(!phone)phone='لا يوجد رقم محفوظ';const safePhone=phone.replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));showMiikDialog(`<h2>واتساب ولي الأمر</h2><p>يرتبط مستقبلًا برقم واتساب مِعِك الرسمي، ويُوثّق التواصل تلقائيًا في سجل الطالب.</p><label>رقم ولي الأمر<input value="${safePhone}" readonly dir="ltr"></label><label>الرسالة<textarea id="miik011GuardianMessage" rows="4" placeholder="اكتب الرسالة، أو خلّ طير شلوى يقترح لك صياغة"></textarea></label><button type="button" class="miik011-shalwa" onclick="miik011GuardianDraft()">طير شلوى — اقترح صياغة</button><div class="dialog-actions"><button class="dialog-primary" ${hasPhone?'':'disabled'} onclick="showMiikNotice('واتساب مِعِك','نموذج تجريبي للتكامل مع WhatsApp Business.')">إرسال</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`)};
 })();
 </script>
-
 <style id="miik-015-academic-followup">
 .miik014-box{grid-column:1/-1;background:#fffdf8;border:1px solid #d8dfd4;border-radius:20px;padding:18px}.miik014-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.miik014-period{min-width:280px}.miik014-period label{display:block;font-size:12px;font-weight:850;color:#526f65;margin-bottom:5px}.miik014-period select,.miik014-filters select,#miik015FollowPeriod{appearance:none;-webkit-appearance:none;width:100%;padding:11px 38px 11px 12px;border:1px solid #cdd8ce;border-radius:12px;background:#fff;color:#294b42;font-family:inherit;font-weight:800;background-image:linear-gradient(45deg,transparent 50%,#526f65 50%),linear-gradient(135deg,#526f65 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 12px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.miik014-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.miik014-tab{border:1px solid #ccd7cd;background:#f4f1e9;color:#35574d;border-radius:11px;padding:9px 13px;font-weight:850;cursor:pointer}.miik014-tab.active{background:#526f65;color:#fff;border-color:#526f65}.miik014-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0}.miik014-case{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 4px;border-top:1px solid #ece7dd}.miik014-case:first-child{border-top:0}.miik014-case b{display:block;color:#294b42}.miik014-case small{display:block;margin-top:5px;color:#718078}.miik014-case button,.miik015-actions button{border:0;border-radius:9px;padding:8px 10px;background:#e9eee8;color:#35574d;font-weight:850;cursor:pointer;white-space:nowrap}.miik014-empty{padding:28px 10px;text-align:center;color:#7c867f;background:#f7f4ec;border-radius:13px}.miik014-student-panel{margin:0 0 12px;padding:12px;border:1px solid #d8dfd4;border-radius:13px;background:#f8f6ef}.miik014-plusrow{display:grid;grid-template-columns:1fr 44px;gap:7px}.miik014-plusrow input{width:100%}.miik014-plus{border:0;border-radius:10px;background:#526f65;color:white;font-size:22px;font-weight:900;cursor:pointer}.miik014-results{max-height:150px;overflow:auto;background:white;border:1px solid #e0e3dd;border-radius:9px;margin-top:5px;display:none}.miik014-results.show{display:block}.miik014-results button{display:block;width:100%;border:0;border-bottom:1px solid #eee9df;background:white;text-align:right;padding:9px;font-family:inherit;cursor:pointer}.miik014-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.miik014-chip{display:inline-flex;align-items:center;gap:7px;background:#e8eee8;color:#35574d;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}.miik014-chip button{border:0;background:transparent;color:#8b4c46;cursor:pointer;font-weight:900}.miik014-subjects{display:none}.miik014-subjects.show{display:block}.miik014-subject-note{font-size:11px;color:#7a857e;margin-top:5px}.miik015-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.miik015-actions .primary{background:#526f65;color:#fff}.miik015-detail{background:#f8f6ef;border:1px solid #d8dfd4;border-radius:14px;padding:12px;margin-top:10px}.miik015-log{margin-top:10px}.miik015-log div{padding:8px 0;border-top:1px solid #e4e5de}.miik015-period-wrap{display:none}.miik015-period-wrap.show{display:block}.miik015-period-wrap select{width:100%;background-color:#fff}.miik014-period select option,.miik014-filters select option,#miik015FollowPeriod option{background:#fff;color:#294b42}
 @media(max-width:680px){.miik014-head{align-items:stretch}.miik014-period{min-width:0;width:100%}.miik014-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.miik014-tab{padding:8px 4px;font-size:11px;white-space:nowrap}.miik014-filters{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.miik014-filters select{font-size:11px!important;padding-right:7px!important;padding-left:25px!important}.miik014-case{align-items:flex-start;flex-direction:column}.miik015-actions{justify-content:flex-start}.miik014-case button{font-size:12px}}
@@ -4217,7 +3909,6 @@ const savePrev=window.saveAction;window.saveAction=function(e){if(currentAction=
 const ctx=window.miik015AcademicContext||null,before=R(ACTIONS,[]).map(x=>x._v55id);const out=savePrev?.apply(this,arguments);if(ctx&&(currentAction==='session'||currentAction==='guardian'))setTimeout(()=>{const a=R(ACTIONS,[]),x=a.find(z=>!before.includes(z._v55id)&&z.type===currentAction&&norm(z.student)===norm(ctx.name))||a.find(z=>z.type===currentAction&&norm(z.student)===norm(ctx.name)&&!z.miik015AcademicLink);if(x){x.miik015AcademicLink={name:ctx.name,period:ctx.period};W(ACTIONS,a)}window.miik015AcademicContext=null},30);return out};
 })();
 </script>
-
 <style id="miik-beta-020-style">
 /* أوضح قليلًا في متابعة التحصيل، مع سهم موحد في طرف الحقل */
 .miik014-case>b,.miik014-case>div>b{font-size:16px!important;line-height:1.7!important}
@@ -4278,8 +3969,6 @@ window.saveAction=function(e){
 setTimeout(()=>{try{renderStudentFollowups()}catch(_){}},0);
 })();
 </script>
-
-
 <style id="miik-beta-021-style">
 .miik021-select{position:relative;width:100%;font-family:inherit;direction:rtl}
 .miik021-select>select{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important;overflow:hidden!important}
@@ -4366,7 +4055,6 @@ if(typeof baseAcademicAction021==='function')window.miik015OpenAction=function()
 setTimeout(()=>{addReportButton();scan();},0);
 })();
 </script>
-
 <style id="miik-beta-024-style">
 .miik024-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0 14px;direction:rtl}.miik024-letter-btn{border:1px solid #8ca095;background:#f4f1e5;color:#294b42;border-radius:10px;padding:9px 15px;font-weight:800;cursor:pointer}.miik024-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.miik024-students{margin-top:12px;border:1px solid #d7dfda;border-radius:12px;padding:10px;background:#fbfcf9}.miik024-student-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 6px;border-bottom:1px solid #edf0ed}.miik024-student-row:last-child{border-bottom:0}.miik024-student-row small{display:block;color:#6a7b73;margin-top:2px}.miik024-add{width:34px;height:34px;border-radius:9px;border:1px solid #9aac9f;background:#fff;color:#315c4e;font-size:20px;font-weight:800}.miik024-chips{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.miik024-chip{display:inline-flex;align-items:center;gap:7px;background:#eef2e8;border:1px solid #cdd8cd;border-radius:999px;padding:6px 10px;font-weight:700}.miik024-chip button{border:0;background:transparent;color:#8b3d35;font-size:17px;cursor:pointer}.miik024-note{font-size:12px;color:#66776f;margin-top:5px}.miik024-empty{padding:14px;text-align:center;color:#718078;background:#f7f8f4;border-radius:10px}@media(max-width:650px){.miik024-grid{grid-template-columns:1fr}.miik024-toolbar{align-items:center!important;justify-content:flex-start!important;gap:6px!important}.miik024-letter-btn{padding:8px 11px!important;font-size:12px!important;border-radius:9px!important}}
 </style>
@@ -4390,7 +4078,6 @@ function addLetterButton024(){const box=document.querySelector('.miik014-box');i
 const render024=window.renderAcademic;if(typeof render024==='function')window.renderAcademic=function(g){const r=render024.apply(this,arguments);setTimeout(addLetterButton024,30);return r};setTimeout(addLetterButton024,80);
 })();
 </script>
-
 <!-- MIK 0.3.1 CLEAN FOUNDATION — single maintained compatibility layer -->
 <style id="miik-core-style">
 :root{--miik-green:#315c4e;--miik-green2:#526f65;--miik-soft:#e8eee4;--miik-cream:#fffdf8;--miik-line:#d8dfd4;--miik-text:#263a34}
@@ -4441,7 +4128,6 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
  };
 })();
 </script>
-
 <style id="miik-033-stability-style">
 .miik009-filterbar select,#studentsPage select,.students-toolbar select,.students-filters select{appearance:none!important;-webkit-appearance:none!important;background:#fffdf8!important;border:1px solid #b9c8be!important;border-radius:11px!important;color:#294b42!important;font-weight:750!important;padding:10px 34px 10px 12px!important;background-image:linear-gradient(45deg,transparent 50%,#557164 50%),linear-gradient(135deg,#557164 50%,transparent 50%)!important;background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%!important;background-size:5px 5px,5px 5px!important;background-repeat:no-repeat!important}
 </style>
@@ -4472,8 +4158,6 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
  ['miikWeeklyStatus','miikWeeklyStatusByWeek'].forEach(k=>localStorage.removeItem(k));
 })();
 </script>
-
-
 <!-- MIIK RC10 — consolidated corrective layer (replaces RC7/RC8/RC9) -->
 <style id="miik-rc10-style">
 @media (min-width:900px){html{zoom:.82}}
@@ -4528,6 +4212,30 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
  const printBase=window.v39PrintNow;if(typeof printBase==='function')window.v39PrintNow=function(){dedupeStudents();return printBase.apply(this,arguments)};
 })();
 </script>
-
-</body>
+<script id="miik-rc11-canonical-plan-router">(()=>{'use strict';
+ const PLAN_TITLES=new Set(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي']);
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function ctx(){try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'null')||{year:'1448',term:'1'}}catch(_){return{year:'1448',term:'1'}}}
+ function saveCtx(c){localStorage.setItem('miikAcademicContext',JSON.stringify(c))}
+ function shell(title){
+   hideAllPages();
+   const page=document.getElementById('modulePage'),grid=document.getElementById('moduleGrid');
+   page?.classList.add('show');
+   if(moduleTitle)moduleTitle.textContent=title;
+   if(moduleDesc)moduleDesc.textContent=title==='الخطة المعتمدة في مِعِك'?'مرجع مِعِك السنوي قبل الاعتماد.':'خطتك التشغيلية الفعلية التي تحرك التقويم ومِعِك اليوم والتنبيهات والتقارير.';
+   const c=ctx(), term=String(c.term||'1');
+   grid.innerHTML=`<div style="grid-column:1/-1"><div class="miik-term-context"><div><b>العام الدراسي ${E(c.year||'1448')}هـ</b><div>الخطة المعتمدة وخطة الموجّه محفوظتان في مسار مستقل عن التواصل مع أولياء الأمور.</div></div><span>الفصل الحالي في العرض: ${term==='2'?'الثاني':'الأول'}</span></div><div class="miik-term-cards"><button class="miik-term-card ${term==='1'?'active':''}" onclick="miikOpenPlanTermClean(1)"><b>الفصل الدراسي الأول</b><span>عرض خطة الفصل الأول.</span></button><button class="miik-term-card ${term==='2'?'active':''}" onclick="miikOpenPlanTermClean(2)"><b>الفصل الدراسي الثاني</b><span>عرض خطة الفصل الثاني.</span></button></div><div id="miikPlanContent"></div></div>`;
+   document.getElementById('drawer')?.classList.remove('show');
+   window.__miikActivePlanClean=title;
+   if(typeof window.miikRefreshPlan12==='function')window.miikRefreshPlan12(title);
+   window.scrollTo({top:0,behavior:'smooth'});
+ }
+ window.miikOpenPlanClean=function(title){title=String(title||'').trim();if(!PLAN_TITLES.has(title))return;shell(title)};
+ window.miikOpenPlanTermClean=function(t){const c=ctx();c.term=String(t)==='2'?'2':'1';saveCtx(c);sessionStorage.setItem('miikWeeklyIndex','0');shell(window.__miikActivePlanClean||'خطة الموجّه الطلابي');try{if(document.getElementById('calendarPage')?.classList.contains('show'))renderCalendarView?.('semester')}catch(_){}};
+ // Week detail must return to the plan itself, never through the legacy openModule chain.
+ const weekBase=window.miikOpenWeek12;
+ if(typeof weekBase==='function')window.miikOpenWeek12=function(i){weekBase.apply(this,arguments);setTimeout(()=>{const back=document.querySelector('#modulePage .miik179-back');if(back){back.textContent='العودة إلى خطة الموجّه الطلابي ←';back.onclick=()=>window.miikOpenPlanClean('خطة الموجّه الطلابي')}},0)};
+ // Read-only archive retained after removing the old plan-shell wrapper.
+ window.openMiikArchive=function(){hideAllPages();document.getElementById('modulePage')?.classList.add('show');if(moduleTitle)moduleTitle.textContent='الأرشيف';if(moduleDesc)moduleDesc.textContent='أعمال العام السابق للعرض والطباعة فقط.';const g=document.getElementById('moduleGrid'),archived=localStorage.getItem('miikArchivedYear');if(g)g.innerHTML=archived?'<div class="program-panel" style="grid-column:1/-1"><b>الأرشيف</b><p class="muted">العام الدراسي السابق · للعرض والطباعة فقط.</p></div>':'<div class="empty-warm" style="grid-column:1/-1"><b>لا يوجد عام دراسي مؤرشف حتى الآن.</b><br>سيظهر هنا أرشيف العام السابق بعد إقفال العام الدراسي الحالي.</div>';document.getElementById('drawer')?.classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})};
+})();</script></body>
 </html>
