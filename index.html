@@ -4439,64 +4439,14 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
 </script>
 
 
-<!-- MIK Clean3 — unified dropdown identity + universal print-safe centering -->
-<style id="miik-clean3-style">
-.miik009-filterbar{background:#f7f4ec!important;border:1px solid #d8dfd4!important;border-radius:16px!important;padding:12px!important;gap:12px!important}
-.miik009-filterbar label{font-size:13px!important;font-weight:850!important;color:#35574d!important}
-.miik3-select{position:relative;min-width:180px;font-family:Tahoma,Arial,sans-serif;direction:rtl}
-.miik3-select-native{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important}
-.miik3-select-btn{width:100%;min-height:46px;border:1px solid #c8d5cb;border-radius:12px;background:#fffdf8;color:#294b42;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;font:800 14px Tahoma,Arial;cursor:pointer;box-shadow:0 2px 8px rgba(41,75,66,.05)}
-.miik3-select-btn:after{content:'⌄';font-size:18px;color:#5f786d;line-height:1}.miik3-select.open .miik3-select-btn{border-color:#7d998b;box-shadow:0 0 0 3px rgba(76,112,95,.10)}
-.miik3-menu{display:none;position:absolute;z-index:99999;top:calc(100% + 6px);right:0;left:0;background:#fffdf8;border:1px solid #c8d5cb;border-radius:12px;padding:6px;box-shadow:0 12px 28px rgba(35,58,50,.16);max-height:260px;overflow:auto}
-.miik3-select.open .miik3-menu{display:block}.miik3-option{display:block;width:100%;border:0;background:transparent;color:#294b42;text-align:right;padding:10px 12px;border-radius:9px;font:750 13.5px Tahoma,Arial;cursor:pointer}.miik3-option:hover,.miik3-option.active{background:#e8eee4;color:#24493d}.miik3-option.active{font-weight:900}
-.v55-records table,.v55-records .v55-record{font-size:13px!important}
-@media(max-width:700px){.miik3-select{min-width:0;width:100%}.miik009-filterbar{grid-template-columns:1fr!important}}
+<!-- MIK Beta 0.2.9 STABLE CLEANUP — no global event/window/input patches -->
+<style id="miik-029-safe-identity">
+/* Visual identity only. This block intentionally contains no pointer-events, overlays, observers, or JS. */
+.v55-records{border-color:#d9dfd6!important;background:#fffdf8!important}
+.v55-records .v55-head h3{color:#294b42!important}
+.v55-records .v55-row.header,.miik009-row.header{background:#e8eee4!important;color:#294b42!important;font-weight:900!important}
+.v55-records .v55-row:not(.header):nth-of-type(even){background:#fbfaf6!important}
+.v55-records .v55-btn.primary{background:#526f65!important;color:#fff!important}
+.miik009-filterbar{background:#f7f4ec!important;border:1px solid #d8dfd4!important;border-radius:14px!important}
+@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
 </style>
-<script id="miik-clean3-script">
-(()=>{'use strict';
- function enhanceSelect(sel){
-   if(!sel||sel.dataset.miik3==='1')return; sel.dataset.miik3='1'; sel.classList.add('miik3-select-native');
-   const wrap=document.createElement('div');wrap.className='miik3-select';sel.parentNode.insertBefore(wrap,sel);wrap.appendChild(sel);
-   const btn=document.createElement('button');btn.type='button';btn.className='miik3-select-btn';
-   const menu=document.createElement('div');menu.className='miik3-menu';wrap.append(btn,menu);
-   function paint(){const opt=sel.options[sel.selectedIndex];btn.textContent=opt?opt.textContent:'اختر';menu.innerHTML='';[...sel.options].forEach((o,i)=>{const b=document.createElement('button');b.type='button';b.className='miik3-option'+(i===sel.selectedIndex?' active':'');b.textContent=o.textContent;b.onclick=e=>{e.stopPropagation();sel.selectedIndex=i;sel.dispatchEvent(new Event('change',{bubbles:true}));wrap.classList.remove('open');paint()};menu.appendChild(b)})}
-   btn.onclick=e=>{e.stopPropagation();document.querySelectorAll('.miik3-select.open').forEach(x=>{if(x!==wrap)x.classList.remove('open')});wrap.classList.toggle('open')};
-   sel.addEventListener('change',paint);paint();
- }
- function scan(){document.querySelectorAll('.miik009-filterbar select').forEach(enhanceSelect)}
- document.addEventListener('click',()=>document.querySelectorAll('.miik3-select.open').forEach(x=>x.classList.remove('open')));
- new MutationObserver(()=>scan()).observe(document.documentElement,{childList:true,subtree:true});scan();
-
- /* Universal print safety: every popup report receives one A4-safe centering rule before rendering. */
- const originalOpen=window.open;
- window.open=function(){const w=originalOpen.apply(window,arguments);if(!w)return w;try{const d=w.document,ow=d.write.bind(d);d.write=function(html){let x=String(html);if(/<html|<!doctype/i.test(x)&&!x.includes('miik-clean3-print')){const css=`<style id="miik-clean3-print">@page{size:A4 portrait;margin:12mm}html{width:100%;margin:0;padding:0}body{box-sizing:border-box;width:100%;max-width:186mm!important;margin:0 auto!important;padding:0!important;overflow:visible!important}body>*{max-width:100%;box-sizing:border-box}.sheet,.page,.paper,.print-page,.a4{width:100%!important;max-width:186mm!important;margin-left:auto!important;margin-right:auto!important;box-sizing:border-box!important}table{width:100%!important;max-width:100%!important;table-layout:fixed;box-sizing:border-box}img{max-width:100%}@media screen{body{min-height:260mm;padding:0!important}}@media print{html,body{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}.sheet,.page,.paper,.print-page,.a4{max-width:100%!important;margin:0 auto!important}}</style>`;x=x.includes('</head>')?x.replace('</head>',css+'</head>'):css+x}return ow(x)};}catch(_){}return w};
-
- /* Shared iframe print engine receives the same safe-width rule. */
- const basePrint=window.printDoc84;if(typeof basePrint==='function')window.printDoc84=function(html){const css=`<style id="miik-clean3-print84">@page{size:A4 portrait;margin:12mm}*{box-sizing:border-box}html,body{width:100%!important;margin:0!important;padding:0!important;overflow:visible!important}.sheet,.page,.paper,.print-page,.a4{width:100%!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important}table{width:100%!important;max-width:100%!important;table-layout:fixed}</style>`;let x=String(html);x=x.includes('</head>')?x.replace('</head>',css+'</head>'):css+x;return basePrint.call(this,x)};
-})();
-</script>
-
-
-<!-- MIK Beta 0.2.7 FINAL — registry print polish + blank-page prevention -->
-<style id="miik-final-027-style"></style>
-<script id="miik-final-027-script">
-(()=>{'use strict';
- const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- function prof(){try{return JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(_){return{}}}
- function education(p){const r=String(p.education||p.region||'').trim();if(!r)return '';return /^الإدارة العامة للتعليم/.test(r)?r:'الإدارة العامة للتعليم بمنطقة '+r.replace(/^منطقة\s*/,'')}
- function regHead(p,logo){return `<div class="mf-head"><div class="mf-gov">المملكة العربية السعودية<br>وزارة التعليم${education(p)?'<br>'+E(education(p)):''}</div><div class="mf-logo"><img src="${logo}"></div><div class="mf-school">${E(p.school||'')}<br>التوجيه الطلابي</div></div>`}
- function signs(p){return `<div class="mf-sign"><div><b>الموجّه الطلابي</b><br>${E(p.name||p.fullName||p.counselorName||p.guideName||'')}</div><div><b>مدير المدرسة</b><br>${E(p.principal||p.principalName||'')}</div></div>`}
- const regCSS=`@page{size:A4 portrait;margin:13mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}html,body{margin:0!important;padding:0!important;width:100%!important}body{font-family:Tahoma,Arial,sans-serif;color:#29463d;font-size:10px}.mf-sheet{width:100%;margin:0 auto}.mf-head{display:grid;grid-template-columns:1fr 90px 1fr;align-items:center;border-bottom:1.5px solid #71857c;padding-bottom:8px}.mf-gov{text-align:right;line-height:1.65;font-weight:800}.mf-school{text-align:left;line-height:1.65;font-weight:800}.mf-logo{text-align:center}.mf-logo img{max-width:80px;max-height:56px;object-fit:contain}h1{text-align:center;font-size:18px;margin:14px 0 12px}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #aab4af;padding:5px 6px;text-align:center;vertical-align:middle;line-height:1.55;overflow-wrap:anywhere}th{background:#edf1ed}th:nth-child(1),td:nth-child(1){width:7%}th:nth-child(3),td:nth-child(3){width:15%}th:nth-child(4),td:nth-child(4){width:8%}th:nth-child(5),td:nth-child(5){width:19%}th:nth-child(2),td:nth-child(2){width:24%}th:nth-child(6),td:nth-child(6){width:27%}.mf-sign{display:grid;grid-template-columns:1fr 1fr;gap:70px;margin-top:26px;text-align:center;font-size:11px;line-height:1.9}.mf-sign b{font-size:11.5px}.mf-print{display:block;margin:15px auto;padding:8px 20px}@media print{.mf-print{display:none}html,body{height:auto!important;min-height:0!important}.mf-sheet{height:auto!important;min-height:0!important;break-after:auto!important;page-break-after:auto!important}}`;
- /* سجل الجلسات/المواقف/التواصل/دراسة الحالة: كليشة موحدة + توقيعات + أعمدة عملية. */
- if(false&&typeof window.miik009PrintCurrent==='function')window.miik009PrintCurrent=function(){
-   const a=typeof currentFiltered==='function'?currentFiltered():[];if(!a.length)return showMiikNotice?.('الطباعة','لا توجد سجلات مطابقة للطباعة.');
-   const p=prof(),title=state.type==='session'?(state.sub==='group'?'سجل الجلسات الجماعية':'سجل الجلسات الفردية'):state.type==='emergency'?'سجل المواقف الطارئة':state.type==='guardian'?'سجل تواصل ولي الأمر':'سجل دراسات الحالات',logo=new URL('ministry-logo.png',location.href).href;
-   const trs=a.map((x,i)=>{const c=snap(x);return `<tr><td>${i+1}</td><td>${E(x.student||'')}</td><td>${E(c.grade||'')}</td><td>${E(c.section||'')}</td><td>${E(x.date||'')}</td><td>${E(x.summary||x.title||'')}</td></tr>`}).join('');
-   const w=window.open('','_blank','width=950,height=900');if(!w)return;w.document.write(`<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>${title}</title><style>${regCSS}</style></head><body><div class="mf-sheet">${regHead(p,logo)}<h1>${title}</h1><table><thead><tr><th>م</th><th>الطالب</th><th>الصف</th><th>الفصل</th><th>التاريخ</th><th>البيان</th></tr></thead><tbody>${trs}</tbody></table>${signs(p)}</div><button class="mf-print" onclick="print()">طباعة</button><script>setTimeout(()=>print(),350)<\/script></body></html>`);w.document.close();
- };
- /* علاج عام للصفحات البيضاء: لا نسمح لارتفاع A4 ثابت أن يفيض إلى ورقة تالية، مع إبقاء فاصل الصفحات الحقيقي فقط بين عناصر الصفحة. */
- const openNow=window.open;
- window.open=function(){const w=openNow.apply(window,arguments);if(!w)return w;try{const d=w.document,write=d.write.bind(d);d.write=function(html){let x=String(html);if(/<html|<!doctype/i.test(x)&&!x.includes('miik-final-no-blank')){const css=`<style id="miik-final-no-blank">@media print{html,body{height:auto!important;min-height:0!important;overflow:visible!important}body{padding-bottom:0!important;margin-bottom:0!important}.page,.sheet,.paper,.print-page,.a4{height:auto!important;min-height:0!important;max-height:none!important}.page:last-child,.sheet:last-child,.paper:last-child,.print-page:last-child,.a4:last-child{break-after:auto!important;page-break-after:auto!important}body:after,html:after{display:none!important;content:none!important}}</style>`;x=x.includes('</head>')?x.replace('</head>',css+'</head>'):css+x}return write(x)};}catch(_){}return w};
- const pd=window.printDoc84;if(typeof pd==='function')window.printDoc84=function(html){const css=`<style id="miik-final-no-blank84">@media print{html,body{height:auto!important;min-height:0!important;margin-bottom:0!important;padding-bottom:0!important}.page,.sheet,.paper,.print-page,.a4{height:auto!important;min-height:0!important;max-height:none!important}.page:last-child,.sheet:last-child,.paper:last-child,.print-page:last-child,.a4:last-child{break-after:auto!important;page-break-after:auto!important}body:after,html:after{display:none!important;content:none!important}}</style>`;let x=String(html);x=x.includes('</head>')?x.replace('</head>',css+'</head>'):css+x;return pd.call(this,x)};
-})();
-</script>
