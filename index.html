@@ -4507,5 +4507,33 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
 })();
 </script>
 
+<!-- MIIK RC8 — canonical student identity, duplicate suppression, safe manual delete -->
+<style id="miik-rc8-style">
+.miik-rc8-danger{background:#8a4f48!important;color:#fff!important;border:0!important}
+.miik-rc8-warning{margin-top:10px;padding:11px 12px;border:1px solid #e0c9c3;border-radius:12px;background:#fbf3f0;color:#744941;font-size:11px;line-height:1.8}
+</style>
+<script id="miik-rc8-script">
+(()=>{'use strict';
+ const SKEY='miikStudentsV39',TKEY='miikDeletedStudentIdentitiesRC8';
+ const N=v=>String(v??'').replace(/\u00a0/g,' ').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[ـ]/g,'').replace(/\s+/g,' ').trim();
+ const R=k=>{try{const v=JSON.parse(localStorage.getItem(k)||'[]');return v}catch(_){return []}};
+ const W=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+ const idOf=x=>[N(x?.name),N(x?.grade),N(x?.section)].join('|');
+ function cardRec(c){const oc=c.getAttribute('onclick')||'',m=oc.match(/openStudent\('([^']*)','([^']*)','([^']*)','([^']*)'\)/),meta=c.querySelector('.student-meta')?.innerText||'';return{name:c.dataset.name||m?.[1]||'',grade:c.dataset.grade||m?.[2]||'',section:c.dataset.section||m?.[3]||'',phone:m?.[4]||'',stage:c.dataset.stage||(meta.match(/المرحلة:\s*([^\n]+)/)||[])[1]?.trim()||''}}
+ function tombs(){const a=R(TKEY);return new Set(Array.isArray(a)?a:[])}
+ function canonicalizeDOM(){const list=document.getElementById('studentList');if(!list)return 0;const seen=new Set(),del=tombs();let removed=0;[...list.querySelectorAll('.student-card')].forEach(c=>{const k=idOf(cardRec(c));if(!k||k==='||')return;if(del.has(k)||seen.has(k)){c.remove();removed++;return}seen.add(k)});return removed}
+ function dedupeStore(){let a=R(SKEY);if(!Array.isArray(a))return 0;const seen=new Set(),out=[];let n=0;for(const x of a){const k=idOf(x);if(k&&k!=='||'&&seen.has(k)){n++;continue}seen.add(k);out.push(x)}if(n)W(SKEY,out);return n}
+ window.miikRC8CanonicalizeStudents=function(){const a=dedupeStore(),b=canonicalizeDOM();return a+b};
+ const oldOpen=window.openStudents;if(typeof oldOpen==='function')window.openStudents=function(){const r=oldOpen.apply(this,arguments);setTimeout(canonicalizeDOM,0);return r};
+ document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{const n=window.miikRC8CanonicalizeStudents();if(n&&window.miikRC7Toast)miikRC7Toast('تم تصحيح سجل الطلاب','أزيل '+n+' ظهور مكرر للطالب مع الإبقاء على سجل واحد فقط.')},80));
+ // Prevent a manual add from creating the same student in the same grade/section again.
+ document.addEventListener('submit',e=>{if(e.target?.id!=='v39Add')return;const x={name:document.getElementById('v39Name')?.value,grade:document.getElementById('v39AddGrade')?.value,section:document.getElementById('v39AddSection')?.value};const k=idOf(x);const exists=[...document.querySelectorAll('#studentList .student-card')].some(c=>idOf(cardRec(c))===k)||R(SKEY).some(y=>idOf(y)===k);if(exists){e.preventDefault();e.stopImmediatePropagation();showMiikNotice?.('الطالب موجود مسبقًا','لم تتم الإضافة لأن الاسم والصف والفصل مطابق لسجل موجود.');}},true);
+ function cascadeName(oldName){const target=N(oldName),changed=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||k===SKEY||k===TKEY)continue;let v;try{v=JSON.parse(localStorage.getItem(k))}catch(_){continue}let dirty=false;const walk=x=>{if(Array.isArray(x)){const out=[];for(const item of x){if(item&&typeof item==='object'&&!Array.isArray(item)&&N(item.student)===target){dirty=true;continue}const z=walk(item);if(z!==undefined)out.push(z)}return out}if(x&&typeof x==='object'){const y={};for(const [a,b] of Object.entries(x)){if((a==='groupStudents'||a==='students'||a==='beneficiaries')&&Array.isArray(b)){const nb=b.filter(q=>N(typeof q==='string'?q:q?.name)!==target);if(nb.length!==b.length)dirty=true;y[a]=nb}else y[a]=walk(b)}return y}return x};const nv=walk(v);if(dirty){try{localStorage.setItem(k,JSON.stringify(nv));changed.push(k)}catch(_){}}}return changed}
+ window.miikRC8DeleteStudent=function(){const hit=(typeof find76==='function'?find76():null);if(!hit){showMiikNotice?.('حذف الطالب','تعذر العثور على سجل الطالب الحالي.');return}const rec=hit.rec,name=rec.name||'',k=idOf(rec);showMiikDialog(`<h2>حذف الطالب</h2><div class="miik-rc8-warning"><b>تنبيه مهم:</b><br>سيُحذف الطالب <b>${String(name).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}</b> من بيانات الطلاب، وستُحذف السجلات المرتبطة به مثل المتابعات والجلسات ودراسات الحالة والحالات الصحية والفئات الخاصة. هذا الإجراء لا يمكن التراجع عنه من داخل مِعِك.</div><div class="dialog-actions"><button class="dialog-primary miik-rc8-danger" onclick="miikRC8ConfirmDeleteStudent()">نعم، حذف الطالب وبياناته</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);window.__miikRC8Delete={name,k}}
+ window.miikRC8ConfirmDeleteStudent=function(){const q=window.__miikRC8Delete;if(!q)return;let a=R(SKEY);if(!Array.isArray(a))a=[];a=a.filter(x=>idOf(x)!==q.k&&N(x.name)!==N(q.name));W(SKEY,a);const ts=tombs();ts.add(q.k);W(TKEY,[...ts]);const keys=cascadeName(q.name);try{if(typeof currentStudent!=='undefined'&&N(currentStudent)===N(q.name))currentStudent=''}catch(_){}window.currentStudent='';closeMiikDialog?.();try{openStudents?.()}catch(_){}setTimeout(canonicalizeDOM,0);showMiikNotice?.('تم حذف الطالب','تم حذف الطالب وبياناته المرتبطة في '+keys.length+' سجل/وحدة محفوظة.');delete window.__miikRC8Delete}
+ const oldEdit=window.v75EditStudent;if(typeof oldEdit==='function')window.v75EditStudent=function(){oldEdit.apply(this,arguments);setTimeout(()=>{const actions=document.querySelector('.miik-dialog-card .dialog-actions');if(actions&&!actions.querySelector('.miik-rc8-danger')){const b=document.createElement('button');b.type='button';b.className='dialog-primary miik-rc8-danger';b.textContent='حذف الطالب';b.onclick=window.miikRC8DeleteStudent;actions.prepend(b)}},0)};
+})();
+</script>
+
 </body>
 </html>
