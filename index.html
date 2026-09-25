@@ -1818,7 +1818,7 @@ if(typeof final64==='function')window.v57FinalReport=function(kind='مختصر')
 const render64=window.renderMyData58;
 if(typeof render64==='function')window.renderMyData58=function(){render64.apply(this,arguments);const host=document.querySelector('.v58-settings');const stages=[...document.querySelectorAll('.v58-block')].find(x=>x.querySelector(':scope>label')?.textContent.trim()==='المراحل الدراسية');if(!host||!stages||host.querySelector('.v64-gender'))return;let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){}const gender=p.gender||'بنين';const box=document.createElement('div');box.className='v64-gender';box.innerHTML=`<label style="font-weight:800;color:#4b5b61">جنس المدرسة</label><div class="v58-choices"><button type="button" class="v58-chip ${gender==='بنين'?'on':''}" data-g="بنين">بنين</button><button type="button" class="v58-chip ${gender==='بنات'?'on':''}" data-g="بنات">بنات</button></div>`;stages.before(box);box.querySelectorAll('[data-g]').forEach(btn=>btn.onclick=()=>{box.querySelectorAll('[data-g]').forEach(x=>x.classList.remove('on'));btn.classList.add('on');box.dataset.gender=btn.dataset.g});box.dataset.gender=gender};
 const save64=window.saveMyData58;
-if(typeof save64==='function')window.saveMyData58=function(){save64.apply(this,arguments);let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){}const box=document.querySelector('.v64-gender');p.gender=box?.dataset.gender||p.gender||'بنين';localStorage.setItem('miikProfileV58',JSON.stringify(p));window.miikGenderRefresh?.()};
+if(typeof save64==='function')window.saveMyData58=function(){save64.apply(this,arguments);let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){}const box=document.querySelector('.v64-gender');p.gender=box?.dataset.gender||p.gender||'بنين';localStorage.setItem('miikProfileV58',JSON.stringify(p));window.miikSyncIdentity?.();window.miikGenderRefresh?.()};
 
 document.addEventListener('DOMContentLoaded',wireBehavior64,{once:true});setTimeout(wireBehavior64,250);
 })();
@@ -3532,7 +3532,7 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
     const nameEl=document.querySelector('.profile-wrap>b,.profile>b'); if(nameEl)nameEl.textContent=name||'الموجّه الطلابي';
     const schoolEl=document.querySelector('.school-name'); if(schoolEl)schoolEl.textContent=school||'اسم المدرسة';
     const greeting=document.getElementById('greeting');
-    if(greeting){const h=new Date().getHours(),first=(name.split(/\s+/).filter(Boolean)[0]||'الموجّه');const morning=[`صبّحت بالخير ☀️، أ. ${first} 🤗`,`صبّحك الله بالخير ☀️، أ. ${first} 🤗`],evening=[`مسّيت بالخير 🌙، أ. ${first} 🤗`,`مسّاك الله بالخير 🌙، أ. ${first} 🤗`],pool=h<12?morning:evening;greeting.textContent=pool[new Date().getDate()%pool.length]}
+    if(greeting){const h=new Date().getHours(),first=(name.split(/\s+/).filter(Boolean)[0]||'الموجّه'),rose=p.gender==='بنات'&&name?' 🌹':'';const morning=[`صبّحت بالخير ☀️، أ. ${first}${rose} 🤗`,`صبّحك الله بالخير ☀️، أ. ${first}${rose} 🤗`],evening=[`مسّيت بالخير 🌙، أ. ${first}${rose} 🤗`,`مسّاك الله بالخير 🌙، أ. ${first}${rose} 🤗`],pool=h<12?morning:evening;greeting.textContent=pool[new Date().getDate()%pool.length]}
   };
   window.updateGreeting=window.miikSyncIdentity;
   document.addEventListener('DOMContentLoaded',window.miikSyncIdentity,{once:true});
