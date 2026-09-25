@@ -115,7 +115,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 .compare-warning{position:relative;overflow:hidden;background:#fff8e9;border:1px solid #e6cf9e;border-right:5px solid #c89b48;color:#6c5429;border-radius:14px 4px 14px 4px;padding:10px 13px;margin:9px 0 14px;line-height:1.75}
 .compare-warning:after{content:"";position:absolute;width:42px;height:42px;left:-24px;bottom:-25px;background:#E7C99C;opacity:.24;transform:rotate(45deg);border-radius:8px}
 .report-signature{margin-top:26px;padding:18px 14px 4px;border-top:1.5px solid var(--olive);display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;width:100%;color:var(--deep);font-size:14px;break-inside:avoid}.report-signature span{font-weight:800}.report-signature b{font-weight:700}
-.report-print-controls{width:100%;display:flex;direction:rtl;align-items:flex-end;justify-content:space-between;gap:16px}.counselor-field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:var(--deep)}.counselor-field input{width:min(100%,260px);min-width:190px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--deep);font:inherit}
+.report-print-controls{width:100%;display:flex;direction:rtl;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px}
 #analysisPrintBtn,#comparePrintBtn{background:var(--olive)!important;color:#fff!important;border:2px solid var(--deep)!important;box-shadow:0 4px 10px rgba(35,63,54,.18);font-weight:800}#analysisPrintBtn:hover,#comparePrintBtn:hover{background:var(--deep)!important}
 @media(max-width:800px){.compare-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){
@@ -287,7 +287,6 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
       </div>
       <div class="report-signature"><span>الموجّه الطلابي</span><b id="analysisCounselorSignature">..............................</b></div>
       <div class="actions no-print report-print-controls">
-        <label class="counselor-field" for="analysisCounselorInput">اسم الموجّه الطلابي للطباعة<input id="analysisCounselorInput" type="text" autocomplete="name" placeholder="اكتب اسمك هنا"></label>
         <button id="analysisPrintBtn" class="btn secondary" type="button">طباعة التحليل</button>
       </div>
     </section>
@@ -332,7 +331,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     <div class="analysis-section narrative-section"><h3>القراءة العامة للمقارنة</h3><div id="compareReading" class="narrative-box compare-reading"></div></div>
     <div class="analysis-section narrative-section"><h3>التوصيات</h3><div id="compareRecommendations" class="narrative-box compare-reading"></div></div>
     <div class="report-signature"><span>الموجّه الطلابي</span><b id="compareCounselorSignature">..............................</b></div>
-    <div class="actions no-print report-print-controls"><label class="counselor-field" for="compareCounselorInput">اسم الموجّه الطلابي للطباعة<input id="compareCounselorInput" type="text" autocomplete="name" placeholder="اكتب اسمك هنا"></label><button id="comparePrintBtn" class="btn secondary" type="button">طباعة تقرير المقارنة</button></div>
+    <div class="actions no-print report-print-controls"><button id="comparePrintBtn" class="btn secondary" type="button">طباعة تقرير المقارنة</button></div>
   </div>
 </section>
 </div>
@@ -1316,11 +1315,9 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   $("runComparison").addEventListener("click",run);
   function setCounselorName(value){
     const name=String(value||'').trim();
-    for(const id of ['analysisCounselorInput','compareCounselorInput'])$(id).value=name;
     for(const id of ['analysisCounselorSignature','compareCounselorSignature'])$(id).textContent=name||'..............................';
   }
-  for(const id of ['analysisCounselorInput','compareCounselorInput'])$(id).addEventListener('input',e=>setCounselorName(e.target.value));
-  // عند الدمج يمرر مِعِك اسم الموجّه من بيانات حسابه؛ تبقى الخانة اليدوية للملف المستقل.
+  // يمرّر مِعِك اسم الموجّه من بيانات حسابه إلى توقيع التقريرين.
   window.MiikNoorSetCounselorName=setCounselorName;
   $("comparePrintBtn").addEventListener("click",()=>{
     if(window.MiikNoorMobilePrint?.("comparison"))return;
