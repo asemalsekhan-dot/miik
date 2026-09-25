@@ -148,9 +148,25 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   body.print-comparison .compare-reading{font-size:9px;line-height:1.6;break-inside:auto}
   body.print-comparison .compare-reading li{margin:2px 0}
 }
+@media print{
+  /* خلفية مستقلة وثابتة؛ تتكرر على كل ورقة ولا تتوقف عند نهاية المحتوى. */
+  body.print-analysis,body.print-comparison{background:#fffdf8!important}
+  body.print-analysis #miikPrintPageBackground,body.print-comparison #miikPrintPageBackground{
+    display:block!important;position:fixed;inset:-10mm;z-index:0;pointer-events:none;
+    background:linear-gradient(135deg,rgba(169,184,154,.15),transparent 28%) left top/75mm 75mm no-repeat,
+      linear-gradient(315deg,rgba(231,201,156,.13),transparent 28%) right bottom/75mm 75mm no-repeat,
+      #fffdf8!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important
+  }
+  body.print-analysis .wrap,body.print-comparison .wrap{position:relative;z-index:1;background:transparent!important}
+  body.print-analysis #analysisPanel,body.print-comparison #comparisonPanel{
+    background:transparent!important;border-radius:0!important;overflow:visible!important;box-shadow:none!important
+  }
+  body.print-analysis #analysisPanel:before,body.print-comparison #comparisonPanel:before{display:none!important}
+}
 </style>
 </head>
 <body>
+<div id="miikPrintPageBackground" aria-hidden="true"></div>
 <div class="wrap">
   <section class="panel single-analysis-branch" hidden>
     <div class="upload">
@@ -1067,7 +1083,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     document.body.classList.add("print-analysis");
     const pageStyle=document.createElement("style");
     pageStyle.id="miikAnalysisPageStyle";
-    pageStyle.textContent="@page{size:A4 portrait;margin:8mm}";
+    pageStyle.textContent="@page{size:A4 portrait;margin:8mm;background:#fffdf8}";
     document.head.appendChild(pageStyle);
     const cleanup=()=>{
       document.body.classList.remove("print-analysis");
@@ -1284,7 +1300,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   window.MiikNoorSetCounselorName=setCounselorName;
   $("comparePrintBtn").addEventListener("click",()=>{
     document.body.classList.add('print-comparison');
-    const pageStyle=document.createElement('style');pageStyle.id='miikComparePageStyle';pageStyle.textContent='@page{size:A4 portrait;margin:9mm}';document.head.appendChild(pageStyle);
+    const pageStyle=document.createElement('style');pageStyle.id='miikComparePageStyle';pageStyle.textContent='@page{size:A4 portrait;margin:9mm;background:#fffdf8}';document.head.appendChild(pageStyle);
     const cleanup=()=>{document.body.classList.remove('print-comparison');pageStyle.remove();window.removeEventListener('afterprint',cleanup)};
     window.addEventListener('afterprint',cleanup);window.print();
     setTimeout(()=>{if(document.body.classList.contains('print-comparison'))cleanup()},1500);
