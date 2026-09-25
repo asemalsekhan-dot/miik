@@ -1353,7 +1353,7 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
    const q=imported[0], actual=saved.filter(x=>x.stage===q.stage&&x.grade===q.grade&&x.section===q.section).length;
    closeMiikDialog();
    if(actual<imported.length){showMiikNotice('تنبيه في الاستيراد',`قرأ مِعِك ${imported.length} طالبًا، لكن تم ربط ${actual} فقط. لم يتم اعتماد النتيجة بصمت.`)}else{showMiikNotice('تم الاستيراد',`تم حفظ وربط ${imported.length} طالبًا في ${q.grade} — الفصل ${q.section}. العدد داخل الفصل الآن: ${actual}.`)}
-   setTimeout(()=>{if(typeof openStudents==='function')openStudents();setTimeout(()=>{setupPage();const st=$('#v39Stage'),g=$('#v39Grade'),sec=$('#v39Section');if(st){st.value=q.stage;st.onchange?.()}if(g){g.value=q.grade;g.onchange?.()}if(sec){sec.value=q.section;sec.onchange?.()}},80)},80);
+   setTimeout(()=>{if(typeof openStudents==='function')openStudents();setTimeout(()=>{setupPage();const st=$('#v39Stage'),g=$('#v39Grade'),sec=$('#v39Section');if(st){st.value=q.stage;st.onchange?.()}if(g){g.value=q.grade;g.onchange?.()}if(sec){sec.value=q.section;sec.onchange?.()}window.miik021SyncSelects?.()},80)},80);
   }catch(e){console.error('MIIK v51 import',e);showMiikNotice('تعذر قراءة الملف','تعذر قراءة كشف نور بصيغة XLSX الأصلية.')}
  };
  function profile(){let p={region:'',school:''};try{for(const k of ['miikProfileV58']){const o=JSON.parse(localStorage.getItem(k)||'null');if(o){p.region=p.region||o.region||o.educationRegion||o.education||o.administration||'';p.school=p.school||o.school||o.schoolName||''}}}catch(e){}return{region:p.region||'المنطقة',school:p.school||document.querySelector('.school-name')?.textContent?.trim()||'اسم المدرسة'}}
@@ -4013,7 +4013,7 @@ setTimeout(()=>{try{renderStudentFollowups()}catch(_){}},0);
 <script id="miik-beta-021-script">
 (()=>{'use strict';
 const qsa=(s,r=document)=>Array.from(r.querySelectorAll(s));
-function eligible(sel){return sel&&sel.tagName==='SELECT'&&(sel.closest('.miik014-box')||sel.closest('#actionModal')||sel.closest('#miikDialog'));}
+function eligible(sel){return sel&&sel.tagName==='SELECT'&&(sel.closest('.miik014-box')||sel.closest('#actionModal')||sel.closest('#miikDialog')||sel.closest('#studentsPage .student-filters'));}
 function closeMenus(except){qsa('.miik021-select.open').forEach(w=>{if(w!==except)w.classList.remove('open')})}
 function enhance(sel){
  if(!eligible(sel)||sel.dataset.miik021==='1')return;
@@ -4031,7 +4031,7 @@ function enhance(sel){
    opts.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='miik021-option'+(o.value===sel.value?' selected':'');b.textContent=o.textContent;b.disabled=o.disabled;b.onclick=e=>{e.stopPropagation();sel.value=o.value;sel.dispatchEvent(new Event('change',{bubbles:true}));rebuild();wrap.classList.remove('open')};menu.appendChild(b)});
  }
  btn.onclick=e=>{e.stopPropagation();if(sel.disabled)return;rebuild();closeMenus(wrap);wrap.classList.toggle('open')};
- sel.addEventListener('change',rebuild);rebuild();wrap._miikSync=rebuild;
+ sel.addEventListener('change',rebuild);new MutationObserver(rebuild).observe(sel,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled']});rebuild();wrap._miikSync=rebuild;
 }
 function scan(root=document){qsa('select',root).forEach(enhance)}
 window.miik021SyncSelects=()=>qsa('.miik021-select').forEach(w=>w._miikSync?.());
@@ -4403,5 +4403,15 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
 })();
 </script>
-</body>
+<style id="miik-student-choice-style">
+#studentsPage .student-filters{position:relative;z-index:20}
+#studentsPage .students-shell:has(.student-filters .miik021-select.open){overflow:visible}
+#studentsPage .student-filters .miik021-select{min-width:0;width:100%;position:relative}
+#studentsPage .student-filters .miik021-select.open{z-index:10020}
+#studentsPage .student-filters .miik021-select-btn{width:100%;min-height:47px;background:#fffdf8;border-color:#b9c8be;color:#294b42;font:800 14px/1.5 Tahoma,Arial,sans-serif}
+#studentsPage .student-filters .miik021-select-btn:focus-visible{outline:2px solid #6e8b6b;outline-offset:2px}
+#studentsPage .student-filters .miik021-select-menu{background:#fffdf8;border-color:#b9c8be;box-shadow:0 16px 36px rgba(31,57,46,.16)}
+#studentsPage .student-filters .miik021-option:hover,#studentsPage .student-filters .miik021-option.selected{background:#e7ede1;color:#0f3d34}
+@media(max-width:720px){#studentsPage .student-filters .miik021-select-btn{font-size:13px;min-height:44px}}
+</style></body>
 </html>
