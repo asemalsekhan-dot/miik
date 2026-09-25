@@ -152,10 +152,20 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   /* خلفية مستقلة وثابتة؛ تتكرر على كل ورقة ولا تتوقف عند نهاية المحتوى. */
   body.print-analysis,body.print-comparison{background:#fffdf8!important}
   body.print-analysis #miikPrintPageBackground,body.print-comparison #miikPrintPageBackground{
-    display:block!important;position:fixed;inset:-10mm;z-index:0;pointer-events:none;
+    display:block!important;position:fixed;inset:-10mm;z-index:0;pointer-events:none;overflow:hidden;
     background:linear-gradient(135deg,rgba(169,184,154,.15),transparent 28%) left top/75mm 75mm no-repeat,
       linear-gradient(315deg,rgba(231,201,156,.13),transparent 28%) right bottom/75mm 75mm no-repeat,
       #fffdf8!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important
+  }
+  body.print-analysis #miikPrintPageBackground:before,body.print-comparison #miikPrintPageBackground:before,
+  body.print-analysis #miikPrintPageBackground:after,body.print-comparison #miikPrintPageBackground:after{
+    content:"";position:absolute;display:block;transform:rotate(45deg);border-radius:3mm
+  }
+  body.print-analysis #miikPrintPageBackground:before,body.print-comparison #miikPrintPageBackground:before{
+    top:32mm;left:5mm;width:31mm;height:31mm;background:rgba(169,184,154,.11)
+  }
+  body.print-analysis #miikPrintPageBackground:after,body.print-comparison #miikPrintPageBackground:after{
+    bottom:20mm;right:5mm;width:37mm;height:37mm;background:rgba(231,201,156,.11)
   }
   body.print-analysis .wrap,body.print-comparison .wrap{position:relative;z-index:1;background:transparent!important}
   body.print-analysis #analysisPanel,body.print-comparison #comparisonPanel{
