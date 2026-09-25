@@ -3942,24 +3942,26 @@ window.openGuardianWhatsapp=function(){let phone='';try{const rows=JSON.parse(lo
 <script id="miik-015-academic-followup-js">
 (function(){'use strict';
 const ACTIONS='miik-demo-actions',STUDENTS='miikStudentsV39';
-const PERIODS=['اختبارات منتصف الفصل الدراسي الأول','اختبارات نهاية الفصل الدراسي الأول','اختبارات منتصف الفصل الدراسي الثاني'];
+const PERIODS=['اختبارات الفترة الأولى للفصل الدراسي الأول','اختبارات الفترة الثانية للفصل الدراسي الأول','اختبارات نهاية الفصل الدراسي الأول','اختبارات الفترة الأولى للفصل الدراسي الثاني','اختبارات الفترة الثانية للفصل الدراسي الثاني'];
 const R=(k,d=[])=>{try{const x=JSON.parse(localStorage.getItem(k)||'null');return x??d}catch(_){return d}},W=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const norm=s=>String(s||'').trim().replace(/\s+/g,' ').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').toLowerCase();
 const students=()=>R(STUDENTS,[]).filter(x=>x&&String(x.name||'').trim());let picked=[],subjects=[],academicStatus='new',academicPeriod='';
 function metaStudent(name){return students().find(x=>norm(x.name)===norm(name))||{name}}
 function isAcademic(x){return x.type==='followup'&&((x.miik014&&x.miik014.reason==='التأخر الدراسي')||(!x.miik014&&(x.values||[])[0]==='التأخر الدراسي'))}
-function periodOf(x){return x.miik014?.period||''}
+const ACADEMIC_PERIOD_ALIASES={'اختبارات منتصف الفصل الدراسي الأول':PERIODS[0],'اختبارات منتصف الفصل الدراسي الثاني':PERIODS[3]};
+function normalizeAcademicPeriod(p){return ACADEMIC_PERIOD_ALIASES[String(p||'').trim()]||String(p||'').trim()}
+function periodOf(x){return normalizeAcademicPeriod(x.miik014?.period)}
 function caseMap(){const m=new Map();R(ACTIONS,[]).filter(isAcademic).forEach(x=>{const n=String(x.student||'').trim();if(!n)return;const period=periodOf(x),key=norm(n)+'|'+period,subs=x.miik014?.subjects?.length?x.miik014.subjects:((x.values||[])[2]?[String((x.values||[])[2])]:((x.values||[])[1]?[String((x.values||[])[1])]:[]));if(!m.has(key))m.set(key,{key,name:n,period,student:metaStudent(n),subjects:[],rows:[],status:'new'});const c=m.get(key);c.rows.push(x);subs.forEach(v=>{v=String(v||'').trim();if(v&&!c.subjects.includes(v))c.subjects.push(v)});const rank={new:0,active:1,closed:2},st=x.miik014?.academicStatus||'new';if(rank[st]>rank[c.status])c.status=st});return [...m.values()]}
-function matching(name,period){return R(ACTIONS,[]).filter(x=>isAcademic(x)&&norm(x.student)===norm(name)&&periodOf(x)===period)}
-function setCase(name,period,patch){const a=R(ACTIONS,[]);a.forEach(x=>{if(isAcademic(x)&&norm(x.student)===norm(name)&&periodOf(x)===period)x.miik014={...(x.miik014||{}),reason:'التأخر الدراسي',...patch}});W(ACTIONS,a)}
+function matching(name,period){return R(ACTIONS,[]).filter(x=>isAcademic(x)&&norm(x.student)===norm(name)&&periodOf(x)===normalizeAcademicPeriod(period))}
+function setCase(name,period,patch){const a=R(ACTIONS,[]);a.forEach(x=>{if(isAcademic(x)&&norm(x.student)===norm(name)&&periodOf(x)===normalizeAcademicPeriod(period))x.miik014={...(x.miik014||{}),reason:'التأخر الدراسي',...patch}});W(ACTIONS,a)}
 window.miik014AcademicStatus=s=>{academicStatus=s;renderAcademic(document.getElementById('moduleGrid'))};
 window.miik015Period=v=>{academicPeriod=v;renderAcademic(document.getElementById('moduleGrid'))};window.miik014FilterAcademic=()=>renderAcademic(document.getElementById('moduleGrid'));
 window.miik015Start=function(name,period){setCase(name,period,{academicStatus:'active',startedAt:new Date().toISOString()});academicStatus='active';academicPeriod=period;renderAcademic(document.getElementById('moduleGrid'))};
 window.miik015OpenAction=function(name,period,type,kind){window.currentStudent=name;window.miik015AcademicContext={name,period};openAction(type);if(type==='session'&&kind)setTimeout(()=>{const e=document.getElementById('f1');if(e)e.value=kind},80)};
 window.miik015Close=function(name,period){showMiikDialog(`<h2>إغلاق المتابعة التحصيلية</h2><p>${esc(name)} · ${esc(period)}</p><label>نتيجة المتابعة<select id="miik015CloseResult"><option>تحسن مستوى الطالب</option><option>تمت المتابعة واستكملت الإجراءات</option><option>يحتاج متابعة لاحقة</option></select></label><label>ملاحظة ختامية<textarea id="miik015CloseNote" rows="3" placeholder="ملاحظة مختصرة عن نتيجة المتابعة"></textarea></label><div class="dialog-actions"><button class="dialog-primary" onclick="miik015ConfirmClose('${String(name).replace(/'/g,"\\'")}','${String(period).replace(/'/g,"\\'")}')">إغلاق الحالة</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`)};
 window.miik015ConfirmClose=function(name,period){setCase(name,period,{academicStatus:'closed',closedAt:new Date().toISOString(),closeResult:document.getElementById('miik015CloseResult')?.value||'',closeNote:document.getElementById('miik015CloseNote')?.value.trim()||''});closeMiikDialog();academicStatus='closed';academicPeriod=period;renderAcademic(document.getElementById('moduleGrid'))};
-function linkedActions(c){return R(ACTIONS,[]).filter(x=>x.miik015AcademicLink&&norm(x.miik015AcademicLink.name)===norm(c.name)&&x.miik015AcademicLink.period===c.period)}
+function linkedActions(c){return R(ACTIONS,[]).filter(x=>x.miik015AcademicLink&&norm(x.miik015AcademicLink.name)===norm(c.name)&&normalizeAcademicPeriod(x.miik015AcademicLink.period)===c.period)}
 /* 0.2.2: canonical read-only bridge for academic reports/final-report summaries. */
 window.miikAcademicCases=()=>caseMap();
 window.miikAcademicLinkedActions=c=>linkedActions(c);
@@ -3991,12 +3993,13 @@ const ctx=window.miik015AcademicContext||null,before=R(ACTIONS,[]).map(x=>x._v55
 </style>
 <script id="miik-beta-020-script">
 (()=>{'use strict';
-const VALID_PERIODS_020=['اختبارات منتصف الفصل الدراسي الأول','اختبارات نهاية الفصل الدراسي الأول','اختبارات منتصف الفصل الدراسي الثاني'];
+const VALID_PERIODS_020=['اختبارات الفترة الأولى للفصل الدراسي الأول','اختبارات الفترة الثانية للفصل الدراسي الأول','اختبارات نهاية الفصل الدراسي الأول','اختبارات الفترة الأولى للفصل الدراسي الثاني','اختبارات الفترة الثانية للفصل الدراسي الثاني'];
+const ACADEMIC_PERIOD_ALIASES_020={'اختبارات منتصف الفصل الدراسي الأول':VALID_PERIODS_020[0],'اختبارات منتصف الفصل الدراسي الثاني':VALID_PERIODS_020[3]};
 /* الرئيسية لا تحسب أي متابعة تحصيل قديمة سبقت نظام الفترات. تبقى محفوظة في سجل المتابعات كما هي. */
 window.miikAcademicAlertCounts=function(){
  const rank={new:0,active:1,closed:2},cases=new Map();
- miikStudentAlertActions().filter(x=>x.type==='followup'&&x.miik014?.reason==='التأخر الدراسي'&&VALID_PERIODS_020.includes(String(x.miik014?.period||'').trim())).forEach(x=>{
-  const name=String(x.student||'').trim(),period=String(x.miik014?.period||'').trim();if(!name)return;
+ miikStudentAlertActions().filter(x=>x.type==='followup'&&x.miik014?.reason==='التأخر الدراسي'&&VALID_PERIODS_020.includes(ACADEMIC_PERIOD_ALIASES_020[String(x.miik014?.period||'').trim()]||String(x.miik014?.period||'').trim())).forEach(x=>{
+  const name=String(x.student||'').trim(),period=ACADEMIC_PERIOD_ALIASES_020[String(x.miik014?.period||'').trim()]||String(x.miik014?.period||'').trim();if(!name)return;
   const key=name+'|'+period,st=x.miik014?.academicStatus||'new',prev=cases.get(key);
   if(!prev||rank[st]>rank[prev])cases.set(key,st);
  });
@@ -4348,9 +4351,14 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
   window.addEventListener('message',function(event){
     const frame=document.querySelector('#moduleGrid.miik-noor-host iframe.miik-noor-frame');
     if(!frame || event.source!==frame.contentWindow)return;
+    if(event.origin!==location.origin && location.protocol!=='file:')return;
     if(event.data?.type==='miik-noor-height'){
       const height=Number(event.data.height);
       if(Number.isFinite(height) && height>0 && height<30000)frame.style.height=height+'px';
+      return;
+    }
+    if(event.data?.type==='miik-noor-followup-review'){
+      window.miikNoorReviewFollowups?.(event.data.payload);
       return;
     }
     if(event.data?.type!=='miik-noor-ready')return;
@@ -4359,6 +4367,96 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
   const host=document.getElementById('moduleGrid');
   new MutationObserver(()=>{if(!host.querySelector('iframe.miik-noor-frame'))host.classList.remove('miik-noor-host')}).observe(host,{childList:true});
 })();
+</script>
+<style id="miik-noor-followup-review-style">
+.miik-noor-review-list{max-height:48vh;overflow:auto;display:grid;gap:8px;margin:12px 0}
+.miik-noor-review-row{padding:10px;border:1px solid #d6dfd6;border-radius:12px;background:#f8f9f4;display:grid;gap:5px}
+.miik-noor-review-row label{font-weight:800;color:#294b42}.miik-noor-review-row small{color:#5d7068}
+.miik-noor-review-row select,#miikNoorReviewPeriod{width:100%;padding:9px;border:1px solid #b8c9bd;border-radius:9px;background:#fff;color:#294b42}
+.miik-noor-review-hint{font-size:12px;color:#65796f}
+@media(max-width:600px){.miik-noor-review-list{max-height:42vh}}
+</style><script id="miik-noor-followup-bridge">
+(function(){'use strict';
+ const ROSTER='miikStudentsV39',ACTIONS='miik-demo-actions';
+ const PERIODS=['اختبارات الفترة الأولى للفصل الدراسي الأول','اختبارات الفترة الثانية للفصل الدراسي الأول','اختبارات نهاية الفصل الدراسي الأول','اختبارات الفترة الأولى للفصل الدراسي الثاني','اختبارات الفترة الثانية للفصل الدراسي الثاني'];
+ const aliases={'اختبارات منتصف الفصل الدراسي الأول':PERIODS[0],'اختبارات منتصف الفصل الدراسي الثاني':PERIODS[3]};
+ const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const N=x=>String(x??'').trim().replace(/\s+/g,' ').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/[ًٌٍَُِّْـ]/g,'');
+ const G=x=>N(x).split(' ').map(w=>w.replace(/^ال(?=\S)/,'')).join(' ');
+ const sameGrade=(a,b)=>{const x=G(a),y=G(b);return x===y||(x.length>=3&&y.length>=3&&(x.includes(y)||y.includes(x)))};
+ const S=x=>{const s=N(x);return /ثانو/.test(s)?'ثانوي':/متوسط/.test(s)?'متوسط':/ابتدائ/.test(s)?'ابتدائي':s};
+ const C=x=>N(x).replace(/^(?:الفصل|فصل)\s*/,'');
+ const read=k=>{try{const x=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(x)?x:[]}catch(_){return[]}};
+ let draft=null;
+ function rosterOptions(row,roster){
+  return roster.map((st,i)=>({st,i})).filter(({st})=>
+   (!row.stage||S(st.stage)===S(row.stage))&&(!row.grade||sameGrade(st.grade,row.grade)));
+ }
+ function rowMatches(row,st){return N(row.name)===N(st.name)&&(!row.stage||S(row.stage)===S(st.stage))&&
+  (!row.grade||sameGrade(row.grade,st.grade))&&(!row.section||!st.section||C(row.section)===C(st.section))}
+ function review(payload){
+  if(!payload||!['individual','comparison'].includes(payload.kind)||!Array.isArray(payload.rows)||payload.rows.length>150)return;
+  const roster=read(ROSTER).filter(x=>x&&String(x.name||'').trim());
+  if(!roster.length){showMiikNotice?.('متابعة من نتائج نور','أضف أسماء الطلاب إلى بيانات الطلاب أولًا، ثم راجع المقترحات.');return}
+  const rows=payload.rows.map(row=>({
+   name:String(row.name||'').trim().slice(0,130),stage:String(row.stage||'').trim().slice(0,90),
+   grade:String(row.grade||'').trim().slice(0,90),section:String(row.section||'').trim().slice(0,90),
+   subjects:[...new Set((Array.isArray(row.subjects)?row.subjects:[]).slice(0,25).map(x=>String(x||'').trim().slice(0,90)).filter(Boolean))]
+  })).filter(x=>x.name&&x.subjects.length);
+  if(!rows.length){showMiikNotice?.('متابعة من نتائج نور','لا توجد حالات تحصيلية مقترحة في هذا التحليل.');return}
+  draft={rows,roster};
+  const cards=rows.map((r,i)=>{
+   const choices=rosterOptions(r,roster),exact=choices.filter(({st})=>rowMatches(r,st));
+   const uniqueName=exact.length===1&&roster.filter(st=>N(st.name)===N(exact[0].st.name)).length===1;
+   const selected=uniqueName?String(exact[0].i):'';
+   return `<div class="miik-noor-review-row"><label><input type="checkbox" data-noor-check="${i}" ${selected?'checked':''}> <b>${E(r.name)}</b></label><small>${E(r.subjects.join('، '))}</small><small>${E([r.grade,r.section].filter(Boolean).join(' · '))}</small><select data-noor-student="${i}"><option value="">${choices.length?'اختر الطالب من بيانات مِعِك':'لا يوجد طالب مطابق للمرحلة والصف'}</option>${choices.map(({st,i:j})=>`<option value="${j}" ${selected===String(j)?'selected':''}>${E(st.name)} · ${E([st.grade,st.section].filter(Boolean).join(' / '))}</option>`).join('')}</select></div>`;
+  }).join('');
+  showMiikDialog(`<h2>مراجعة متابعات التحصيل</h2><p>هذه مقترحات من ${payload.kind==='comparison'?'مقارنة النتائج':'تحليل النتائج'}. اختر فترة الاختبار وراجع مطابقة كل طالب قبل الحفظ. الدرجات وملف نور لا يُحفظان هنا.</p><label>فترة المتابعة *<select id="miikNoorReviewPeriod"><option value="">اختر الفترة</option>${PERIODS.map(x=>`<option>${x}</option>`).join('')}</select></label><p class="miik-noor-review-hint">الطالب الذي لم يُعثر له على مطابقة محددة يظل غير محدد حتى تختاره بنفسك. الدرجات الصفرية ليست تعثرًا مؤكدًا حتى تُراجع.</p><div class="miik-noor-review-list">${cards}</div><div class="dialog-actions"><button type="button" class="dialog-primary" id="miikNoorReviewSave">حفظ المتابعات المحددة</button><button type="button" class="dialog-cancel" id="miikNoorReviewCancel">إلغاء</button></div>`);
+  document.getElementById('miikNoorReviewCancel')?.addEventListener('click',()=>{draft=null;closeMiikDialog()});
+  document.getElementById('miikNoorReviewSave')?.addEventListener('click',save);
+ }
+ function save(){
+  if(!draft)return;
+  const period=document.getElementById('miikNoorReviewPeriod')?.value||'';
+  if(!PERIODS.includes(period)){showMiikNotice?.('فترة المتابعة','اختر فترة الاختبار أولًا.');return}
+  const latestRoster=read(ROSTER),selected=new Map();
+  for(let i=0;i<draft.rows.length;i++){
+   if(!document.querySelector(`[data-noor-check="${i}"]`)?.checked)continue;
+   const rawIndex=document.querySelector(`[data-noor-student="${i}"]`)?.value??'';
+   const index=rawIndex===''?NaN:Number(rawIndex);
+   const st=draft.roster[index],r=draft.rows[i];
+   if(!st||!Number.isInteger(index)||!rosterOptions(r,draft.roster).some(x=>x.i===index)){
+    showMiikNotice?.('مطابقة الطلاب','اختر طالبًا مسجلًا لكل حالة محددة، أو أزل تحديد الحالة.');return;
+   }
+   if(!latestRoster.some(x=>N(x.name)===N(st.name)&&S(x.stage)===S(st.stage)&&G(x.grade)===G(st.grade)&&C(x.section)===C(st.section))){
+    showMiikNotice?.('تغيرت بيانات الطلاب','تغيرت قائمة الطلاب أثناء المراجعة. أعد فتح المقترحات للتأكد من المطابقة.');return;
+   }
+   if(latestRoster.filter(x=>N(x.name)===N(st.name)).length!==1){
+    showMiikNotice?.('اسم طالب مكرر','الاسم موجود لأكثر من طالب في بيانات مِعِك؛ أزل تحديده وراجع سجل الطلاب قبل إنشاء متابعة مرتبطة بالاسم.');return;
+   }
+   const key=[N(st.name),S(st.stage),G(st.grade),C(st.section)].join('|');
+   if(!selected.has(key))selected.set(key,{st,subjects:new Set()});
+   r.subjects.forEach(x=>selected.get(key).subjects.add(x));
+  }
+  if(!selected.size){showMiikNotice?.('متابعة التحصيل','اختر حالة واحدة على الأقل وطابقها مع بيانات الطلاب.');return}
+  const actions=read(ACTIONS),newActions=[],previous=new Set(actions.filter(x=>x.type==='followup'&&x.miik014?.reason==='التأخر الدراسي').map(x=>N(x.student)+'|'+(aliases[x.miik014?.period]||x.miik014?.period)));
+  let skipped=0;for(const {st,subjects} of selected.values()){
+   const key=N(st.name)+'|'+period;if(previous.has(key)){skipped++;continue}previous.add(key);
+   const list=[...subjects],stamp=Date.now()+newActions.length;
+   newActions.push({_v55id:'noor-followup-'+stamp.toString(36),type:'followup',title:'متابعة طالب',student:st.name,
+    date:new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(new Date()),
+    summary:'التأخر الدراسي · '+period+' · '+list.join('، '),values:['التأخر الدراسي',period,list.join('، ')],
+    miik014:{reason:'التأخر الدراسي',period,subjects:list,note:'',later:'',academicStatus:'new'}});
+  }
+  if(!newActions.length){showMiikNotice?.('متابعة التحصيل','كل الحالات المحددة لديها متابعة محفوظة لهذه الفترة. افتح المتابعة الموجودة.');return}
+  try{localStorage.setItem(ACTIONS,JSON.stringify([...newActions,...actions]))}catch(_){showMiikNotice?.('تعذر الحفظ','لم تُحفظ المتابعات. تحقق من مساحة التخزين ثم حاول مجددًا.');return}
+  draft=null;closeMiikDialog();openModule('متابعة التحصيل الدراسي','متابعة حالات التأخر الدراسي والإجراءات العلاجية المرتبطة بها.');
+  window.miik015Period?.(period);window.miik014AcademicStatus?.('new');
+  showMiikNotice?.('أُنشئت المتابعات',`حُفظت ${newActions.length} متابعة؛ ${skipped?'تجاوزنا '+skipped+' متابعة موجودة. ':''}ابدأ الحالات من «متابعة جديدة»، ثم نفّذ الجلسات أو خطاب معلم المادة من «تحت الإجراء».`);
+ }
+ window.miikNoorReviewFollowups=review;
+})();
+
 </script>
 <style id="miik-cohort-delete-style">
 #studentsPage .miik-cohort-delete{display:block;margin:18px auto 4px;padding:12px 20px;background:#fff7f4;border:1px solid #d5aaa0;border-radius:12px;color:#824a42;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer}
