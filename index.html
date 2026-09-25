@@ -3525,6 +3525,17 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 <script id="miik-beta-1-7-26-identity-source">
 (function(){
   const PROFILE_KEY='miikProfileV58';
+  const GREETING_KEY='miikGirlsGreetingRotation';
+  let girlsGreetingIndex;
+  function nextGirlsGreeting(){
+    if(girlsGreetingIndex!==undefined)return girlsGreetingIndex;
+    try{
+      const previous=Number.parseInt(localStorage.getItem(GREETING_KEY),10);
+      girlsGreetingIndex=(Number.isInteger(previous)?previous+1:0)%3;
+      localStorage.setItem(GREETING_KEY,String(girlsGreetingIndex));
+    }catch(_){girlsGreetingIndex=0}
+    return girlsGreetingIndex;
+  }
   function readProfile(){try{const p=JSON.parse(localStorage.getItem(PROFILE_KEY)||'{}');return p&&typeof p==='object'?p:{}}catch(_){return {}}}
   window.miikSyncIdentity=function(){
     const p=readProfile();
@@ -3532,7 +3543,19 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
     const nameEl=document.querySelector('.profile-wrap>b,.profile>b'); if(nameEl)nameEl.textContent=name||'الموجّه الطلابي';
     const schoolEl=document.querySelector('.school-name'); if(schoolEl)schoolEl.textContent=school||'اسم المدرسة';
     const greeting=document.getElementById('greeting');
-    if(greeting){const h=new Date().getHours(),first=(name.split(/\s+/).filter(Boolean)[0]||'الموجّه'),rose=p.gender==='بنات'&&name?' 🌹':'';const morning=[`صبّحت بالخير ☀️، أ. ${first}${rose} 🤗`,`صبّحك الله بالخير ☀️، أ. ${first}${rose} 🤗`],evening=[`مسّيت بالخير 🌙، أ. ${first}${rose} 🤗`,`مسّاك الله بالخير 🌙، أ. ${first}${rose} 🤗`],pool=h<12?morning:evening;greeting.textContent=pool[new Date().getDate()%pool.length]}
+    if(greeting){
+      const h=new Date().getHours(),first=(name.split(/\s+/).filter(Boolean)[0]||'الموجّه');
+      if(p.gender==='بنات'){
+        const morning=[`صباح الورد، أ. ${first} 🌹`,`صباحك خير ورضا، أ. ${first} 🌹`,`يومك جميل، أ. ${first} 🌹`];
+        const evening=[`مساء الورد، أ. ${first} 🌹`,`مساؤك خير ورضا، أ. ${first} 🌹`,`مساء هادئ وجميل، أ. ${first} 🌹`];
+        greeting.textContent=(h<12?morning:evening)[nextGirlsGreeting()];
+      }else{
+        const morning=[`صبّحت بالخير ☀️، أ. ${first} 🤗`,`صبّحك الله بالخير ☀️، أ. ${first} 🤗`];
+        const evening=[`مسّيت بالخير 🌙، أ. ${first} 🤗`,`مسّاك الله بالخير 🌙، أ. ${first} 🤗`];
+        const pool=h<12?morning:evening;
+        greeting.textContent=pool[new Date().getDate()%pool.length];
+      }
+    }
   };
   window.updateGreeting=window.miikSyncIdentity;
   document.addEventListener('DOMContentLoaded',window.miikSyncIdentity,{once:true});
@@ -4217,7 +4240,7 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
 .miik-noor-choice{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .miik-noor-choice button{border:1px solid #6E8B6B;background:#fffdf8;color:#173f36;padding:12px 17px;border-radius:13px;cursor:pointer;font-weight:700}
 .miik-noor-choice button.active{background:#6E8B6B;color:white}
-.miik-noor-frame{display:block;width:100%;min-height:1200px;border:1px solid #e5ddce;border-radius:16px;background:#f6f2e8}
+.miik-noor-frame{display:block;width:100%;max-width:100%;min-width:0;height:600px;box-sizing:border-box;border:1px solid #e5ddce;border-radius:16px;background:#f6f2e8}
 </style>
 <script id="miik-noor-host">
 (function(){
@@ -4242,7 +4265,13 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
   };
   window.addEventListener('message',function(event){
     const frame=document.querySelector('#moduleGrid.miik-noor-host iframe.miik-noor-frame');
-    if(!frame || event.source!==frame.contentWindow || event.data?.type!=='miik-noor-ready')return;
+    if(!frame || event.source!==frame.contentWindow)return;
+    if(event.data?.type==='miik-noor-height'){
+      const height=Number(event.data.height);
+      if(Number.isFinite(height) && height>0 && height<30000)frame.style.height=height+'px';
+      return;
+    }
+    if(event.data?.type!=='miik-noor-ready')return;
     frame.contentWindow.postMessage({type:'miik-noor-profile',profile:profile()},'*');
   });
   const host=document.getElementById('moduleGrid');

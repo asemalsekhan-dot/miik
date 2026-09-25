@@ -117,7 +117,15 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 .report-signature{margin-top:26px;padding:18px 14px 4px;border-top:1.5px solid var(--olive);display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;width:100%;color:var(--deep);font-size:14px;break-inside:avoid}.report-signature span{font-weight:800}.report-signature b{font-weight:700}
 .report-print-controls{width:100%;display:flex;direction:rtl;align-items:flex-end;justify-content:space-between;gap:16px}.counselor-field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:var(--deep)}.counselor-field input{width:min(100%,260px);min-width:190px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--deep);font:inherit}
 #analysisPrintBtn,#comparePrintBtn{background:var(--olive)!important;color:#fff!important;border:2px solid var(--deep)!important;box-shadow:0 4px 10px rgba(35,63,54,.18);font-weight:800}#analysisPrintBtn:hover,#comparePrintBtn:hover{background:var(--deep)!important}
-@media(max-width:800px){.compare-upload-grid,.compare-summary{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.compare-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+  .wrap{width:100%;max-width:100%;padding:8px}
+  .panel,.compare-panel{width:100%;max-width:100%;margin:10px auto 0;padding:14px}
+  .compare-upload-grid{grid-template-columns:minmax(0,1fr);gap:12px;margin:14px 0}
+  .compare-upload{width:100%;min-width:0;min-height:0;padding:16px 12px}
+  .compare-upload input[type="number"]{max-width:100%}
+  .compare-panel h2{font-size:20px}
+}
 @media print{
   .report-signature{font-size:10px;margin-top:10mm;padding:6mm 0 0;gap:4mm;break-inside:avoid}
   body.print-comparison .wrap>.single-analysis-branch,body.print-comparison #result{display:none!important}
@@ -144,11 +152,6 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 </head>
 <body>
 <div class="wrap">
-  <section class="hero">
-    <h1>مِعِك | مقارنة نتائج نور</h1>
-    <p>ارفع النتيجة السابقة والنتيجة اللاحقة للمجموعة نفسها. تتم القراءة والمقارنة محليًا داخل المتصفح.</p>
-  </section>
-
   <section class="panel single-analysis-branch" hidden>
     <div class="upload">
       <h2 style="margin-top:0">رفع ملف الدرجات</h2>
@@ -1294,10 +1297,14 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 (function(){
   'use strict';
   const individual=new URLSearchParams(location.search).get('mode')==='individual';
-  document.querySelector('.hero h1').textContent=individual?'مِعِك | تحليل نتائج نور':'مِعِك | مقارنة نتائج نور';
-  document.querySelector('.hero p').textContent=individual?'ارفع ملف نور لمراجعة الدرجات واعتماد التحليل. تتم القراءة محليًا داخل المتصفح.':'ارفع النتيجة السابقة واللاحقة للمجموعة نفسها. تتم القراءة والمقارنة محليًا داخل المتصفح.';
   document.querySelector('.single-analysis-branch[hidden]').hidden=!individual;
   document.getElementById('comparisonPanel').hidden=individual;
+  const content=document.querySelector('.wrap');
+  const reportHeight=()=>{
+    if(window.parent!==window)window.parent.postMessage({type:'miik-noor-height',height:Math.ceil(content.getBoundingClientRect().height)+16},'*');
+  };
+  new ResizeObserver(reportHeight).observe(content);
+  window.addEventListener('load',reportHeight);
   window.addEventListener('message',function(event){
     if(event.source!==window.parent || event.data?.type!=='miik-noor-profile')return;
     const p=event.data.profile||{};
