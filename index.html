@@ -93,7 +93,7 @@ window.miikCleanRegion=function(v){
 <details><summary>خطة التوجيه الطلابي</summary><div class="subnav"><button onclick="miikOpenPlanClean('الخطة المعتمدة في مِعِك')">الخطة المعتمدة في مِعِك</button><button onclick="miikOpenPlanClean('خطة الموجّه الطلابي')">خطة الموجّه الطلابي</button></div></details>
 <details><summary>برامج التوجيه الطلابي</summary><div class="subnav">
 <button onclick="openModule('برنامج التهيئة الإرشادية','التنفيذ والتوثيق والتقرير من مصدر واحد.')">برنامج التهيئة الإرشادية</button><button onclick="openModule('خفض العنف بالمدارس (رِفق)','التنفيذ والتوثيق والتقرير من مصدر واحد.')">خفض العنف بالمدارس (رِفق)</button><button onclick="openModule('تعزيز السلوك الإيجابي','التنفيذ والتوثيق والتقرير من مصدر واحد.')">تعزيز السلوك الإيجابي</button><button onclick="openModule('التوجيه المهني','التنفيذ والتوثيق والتقرير من مصدر واحد.')">التوجيه المهني</button><button onclick="openModule('الاستخدام الآمن للإنترنت','التنفيذ والتوثيق والتقرير من مصدر واحد.')">الاستخدام الآمن للإنترنت</button>
-<details><summary>تنمية الدافعية لرفع مستوى التحصيل</summary><div class="subnav deeper"><button onclick="openModule('التحصيل الدراسي','التنفيذ والتوثيق والتقرير لأعمال التحصيل الدراسي.')">التحصيل الدراسي</button><button onclick="openModule('متابعة التحصيل الدراسي','متابعة حالات التأخر الدراسي والإجراءات العلاجية المرتبطة بها.')">متابعة التحصيل الدراسي</button><details><summary>الاختبارات الوطنية والمعيارية</summary><div class="subnav deeper"><button onclick="openModule('اختبارات القدرات','متابعة نتائج اختبارات القدرات وتحليلها.')">اختبارات القدرات</button><button onclick="openModule('الاختبار التحصيلي','متابعة نتائج الاختبار التحصيلي وتحليلها.')">الاختبار التحصيلي</button><button onclick="openModule('اختبارات نافس','متابعة نتائج اختبارات نافس وتحليلها.')">اختبارات نافس</button></div></details></div></details>
+<details><summary>تنمية الدافعية لرفع مستوى التحصيل</summary><div class="subnav deeper"><button onclick="openModule('التحصيل الدراسي','التنفيذ والتوثيق والتقرير لأعمال التحصيل الدراسي.')">التحصيل الدراسي</button><button onclick="openModule('متابعة التحصيل الدراسي','متابعة حالات التأخر الدراسي والإجراءات العلاجية المرتبطة بها.')">متابعة التحصيل الدراسي</button><button onclick="miikNoorHub()">تحليل النتائج</button><details><summary>الاختبارات الوطنية والمعيارية</summary><div class="subnav deeper"><button onclick="openModule('اختبارات القدرات','متابعة نتائج اختبارات القدرات وتحليلها.')">اختبارات القدرات</button><button onclick="openModule('الاختبار التحصيلي','متابعة نتائج الاختبار التحصيلي وتحليلها.')">الاختبار التحصيلي</button><button onclick="openModule('اختبارات نافس','متابعة نتائج اختبارات نافس وتحليلها.')">اختبارات نافس</button></div></details></div></details>
 <button onclick="openModule('التوجيه وقت الأزمات','التنفيذ والتوثيق والتقرير من مصدر واحد.')">التوجيه وقت الأزمات</button><button onclick="openModule('الاحتفاء بطلبة الصف الثالث الثانوي الخريجين','التنفيذ والتوثيق والتقرير من مصدر واحد.')">الاحتفاء بطلبة الصف الثالث الثانوي الخريجين</button><button onclick="openModule('الأيام والمناسبات الوطنية والعالمية','التنفيذ والتوثيق والتقرير من مصدر واحد.')">الأيام والمناسبات الوطنية والعالمية</button><button onclick="openModule('برنامج تعزيز المهارات النفسية والاجتماعية','التنفيذ والتوثيق والتقرير من مصدر واحد.')">برنامج تعزيز المهارات النفسية والاجتماعية</button><div id="miikCustomProgramButtons"></div><button class="miik-add-program-btn" onclick="miikAddCustomProgram()">＋ إضافة برنامج</button></div></details>
 <details><summary>اللجان والمجالس</summary><div class="subnav"><button onclick="openModule('لجنة التوجيه الطلابي','الاجتماعات والمحاضر والقرارات الإدارية البسيطة في مكان واحد.')">لجنة التوجيه الطلابي</button><button onclick="openModule('المجلس الطلابي','الأعضاء والأدوار والاجتماعات والمحاضر والقرارات.')">المجلس الطلابي</button></div></details>
 <button onclick="openCalendar();toggleDrawer()">التقويم</button>
@@ -968,7 +968,7 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
  window.v35PrintMinutes=function(i){let all=read(meetingKey()),x=all[i];if(!x)return;let at=x.attendance||[],no=x.meetingNo||Math.max(1,all.length-i),mins=lines(x.minutes,'لم يسجل نص للمحضر'),dec=lines(x.decision,'لا توجد توصيات');let body=`<h1 class="title">محضر اجتماع ${E(active37)}</h1><div class="meta">الاجتماع رقم (${E(no)}) &nbsp; | &nbsp; التاريخ: ${E(x.date||'')} &nbsp; | &nbsp; الوقت: ${E(x.time||'')}</div><div class="section">موضوع الاجتماع</div><div class="topic">${E(x.topic||'')}</div><div class="section">محضر الاجتماع</div><ul class="points">${mins.map(v=>`<li>${E(v)}</li>`).join('')}</ul><div class="section">التوصيات</div><ul class="points">${dec.map(v=>`<li>${E(v)}</li>`).join('')}</ul><div class="section" style="text-align:center">أعضاء ${isStudent()?'المجلس':'اللجنة'}</div><table class="members"><tr><th class="num">م</th><th>الاسم</th><th class="role">الدور / الصفة</th><th>التوقيع</th></tr>${at.map((a,j)=>`<tr><td class="num">${j+1}</td><td>${E(a.name)}</td><td>${E(a.role||a.position||'')}</td><td class="sign"></td></tr>`).join('')}</table><div class="footer-sign"><div>الموجه الطلابي<br><br>التوقيع: __________________</div><div>مدير المدرسة<br><br>التوقيع: __________________</div></div>`;printOpen37(`محضر اجتماع ${active37}`,body)};
  window.v35PrintMembers=function(){let a=read(memberKey());if(!a.length){showMiikNotice('الطباعة','لا يوجد أعضاء محفوظون.');return}let title=isStudent()?'تشكيل المجلس الطلابي':'لجنة التوجيه الطلابي';let intro=isStudent()?'تم تشكيل المجلس الطلابي بما يحقق مشاركة الطلاب في أعمال المدرسة وتنمية المسؤولية والحوار والمبادرة لديهم.':'بناءً على الصلاحيات والتنظيمات المنظمة لأعمال التوجيه الطلابي في المدرسة، تم تشكيل لجنة التوجيه الطلابي للقيام بمهامها ومتابعة أعمالها وفق التنظيم المعتمد.';let body=`<h1 class="title">${title}</h1><p class="intro">${intro}</p><div class="section" style="text-align:center">أعضاء ${isStudent()?'المجلس':'اللجنة'}</div><table class="members"><tr><th class="num">م</th><th>الاسم</th><th class="role">الدور / الصفة</th>${isStudent()?'<th>الصف</th>':''}<th>التوقيع</th></tr>${a.map((m,i)=>`<tr><td class="num">${i+1}</td><td>${E(m.name)}</td><td>${E(m.role)}${m.position?`<br><small>${E(m.position)}</small>`:''}</td>${isStudent()?`<td>${E(m.grade||'—')}</td>`:''}<td class="sign"></td></tr>`).join('')}</table><div class="footer-sign"><div>الموجه الطلابي<br><br>التوقيع: __________________</div><div>مدير المدرسة<br><br>التوقيع: __________________</div></div>`;printOpen37(title,body)};
  // ensure current open council gets the branded buttons even without reopening from drawer
- setTimeout(()=>{let t=document.getElementById('moduleTitle')?.textContent?.trim();if(t==='لجنة التوجيه الطلابي'||t==='المجلس الطلابي'){active37=t;document.getElementById('modulePage')?.classList.add('v37-council-page')}},50);
+ setTimeout(()=>{let t=window.miikGenderSourceText?.(document.getElementById('moduleTitle'))?.trim();if(t==='لجنة التوجيه الطلابي'||t==='المجلس الطلابي'){active37=t;document.getElementById('modulePage')?.classList.add('v37-council-page')}},50);
 })();
 </script>
 <!-- v38: student data finalization -->
@@ -1818,7 +1818,7 @@ if(typeof final64==='function')window.v57FinalReport=function(kind='مختصر')
 const render64=window.renderMyData58;
 if(typeof render64==='function')window.renderMyData58=function(){render64.apply(this,arguments);const host=document.querySelector('.v58-settings');const stages=[...document.querySelectorAll('.v58-block')].find(x=>x.querySelector(':scope>label')?.textContent.trim()==='المراحل الدراسية');if(!host||!stages||host.querySelector('.v64-gender'))return;let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){}const gender=p.gender||'بنين';const box=document.createElement('div');box.className='v64-gender';box.innerHTML=`<label style="font-weight:800;color:#4b5b61">جنس المدرسة</label><div class="v58-choices"><button type="button" class="v58-chip ${gender==='بنين'?'on':''}" data-g="بنين">بنين</button><button type="button" class="v58-chip ${gender==='بنات'?'on':''}" data-g="بنات">بنات</button></div>`;stages.before(box);box.querySelectorAll('[data-g]').forEach(btn=>btn.onclick=()=>{box.querySelectorAll('[data-g]').forEach(x=>x.classList.remove('on'));btn.classList.add('on');box.dataset.gender=btn.dataset.g});box.dataset.gender=gender};
 const save64=window.saveMyData58;
-if(typeof save64==='function')window.saveMyData58=function(){save64.apply(this,arguments);let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){}const box=document.querySelector('.v64-gender');p.gender=box?.dataset.gender||p.gender||'بنين';localStorage.setItem('miikProfileV58',JSON.stringify(p))};
+if(typeof save64==='function')window.saveMyData58=function(){save64.apply(this,arguments);let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')}catch(e){}const box=document.querySelector('.v64-gender');p.gender=box?.dataset.gender||p.gender||'بنين';localStorage.setItem('miikProfileV58',JSON.stringify(p));window.miikGenderRefresh?.()};
 
 document.addEventListener('DOMContentLoaded',wireBehavior64,{once:true});setTimeout(wireBehavior64,250);
 })();
@@ -2152,7 +2152,7 @@ body.v68-owner-mode .v71-owner-date{display:block!important;white-space:normal;l
   const navLabels=['الرئيسية','المستخدمون','المدارس','الاشتراكات','الدعم','التواصل','الفريق والصلاحيات','المحتوى والخطة','حالة المنصة والإصدارات','إعدادات المنصة'];
   function markOwnerNav(title){
     document.querySelectorAll('.v68-owner-side button').forEach(btn=>{
-      const label=btn.querySelector('span')?.textContent?.trim();
+      const label=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();
       btn.classList.toggle('active',label===title);
     });
     document.querySelector('.v68-owner-side')?.classList.remove('show');
@@ -2265,7 +2265,7 @@ window.v72RenderUsers=function(){
   const sel=document.getElementById('v72EduFilter'); if(sel)sel.innerHTML=eduOptions73(sel.value,'كل إدارات التعليم');
 };
 
-function ownerMark73(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function ownerMark73(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
 function schoolRows73(){return []} // future backend; never fabricate owner data.
 window.v73RenderSchools=function(department=''){
   ownerMark73('المدارس');
@@ -2290,7 +2290,7 @@ window.v68OwnerNav=function(btn,title){if(title==='المدارس'){v73RenderSch
 <script id="v74-script">
 (function(){
 'use strict';
-function mark74(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function mark74(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
 function subscriptions74(){return []} // future backend/API; no fabricated subscription records.
 function esc74(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 window.v74RenderSubscriptions=function(segment=''){
@@ -2342,7 +2342,7 @@ window.v75SaveStudentEdit=function(){
 function injectEdit75(){const box=document.querySelector('#studentFile .student-file-actions');if(!box||box.querySelector('.v75-edit-student'))return;const b=document.createElement('button');b.className='v75-edit-student';b.textContent='تعديل بيانات الطالب';b.onclick=window.v75EditStudent;box.insertBefore(b,box.firstChild)}
 const oldStudent75=window.openStudent;window.openStudent=function(){const r=oldStudent75.apply(this,arguments);setTimeout(injectEdit75,0);return r};
 
-function ownerMark75(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function ownerMark75(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
 function ownerTickets75(){try{return typeof supportRows==='function'?supportRows():[]}catch(e){return[]}}
 window.v75RenderOwnerSupport=function(){
  ownerMark75('الدعم');const main=document.querySelector('.v68-owner-main');if(!main)return;const rows=ownerTickets75();
@@ -2404,7 +2404,7 @@ window.v75SaveStudentEdit=function(){
  if(typeof window.openStudent==='function')window.openStudent(name,grade,section,phone);
  if(typeof showMiikNotice==='function')showMiikNotice('تم الحفظ','تم تحديث بيانات الطالب بنجاح.');
 };
-function mark76(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function mark76(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
 window.v76RenderCommunication=function(){
  mark76('التواصل');const main=document.querySelector('.v68-owner-main');if(!main)return;
  main.innerHTML=`<div class="v72-users-head"><div><h1>التواصل</h1><p>إرسال رسائل مِعِك للمستخدمين عبر القنوات المعتمدة، مع تحديد الفئة المستهدفة بدقة.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
@@ -2422,7 +2422,7 @@ const nav76=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==
 <script id="v77-script">
 (function(){
 'use strict';
-function mark77(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function mark77(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
 window.v77AddTeamMember=function(){
  showMiikDialog(`<h2>إضافة عضو للفريق</h2><p>تجهيز حساب إداري مستقل وتحديد دوره. الإضافة الفعلية ستعمل بعد ربط نظام الحسابات.</p><div class="v77-modal-grid"><div class="full"><label>اسم العضو<input id="v77MemberName" placeholder="الاسم"></label></div><div><label>البريد الإلكتروني<input id="v77MemberEmail" dir="ltr" placeholder="name@example.com"></label></div><div><label>الدور<select id="v77MemberRole"><option>مدير</option><option>دعم</option><option>محتوى</option><option>مشاهدة فقط</option></select></label></div></div><div class="v77-security"><b>الأمان:</b> حسابات الفريق ستكون مستقلة عن حسابات الموجّهين، ومع الإطلاق الفعلي يُفعّل لها التحقق الثنائي وتسجيل العمليات الإدارية.</div><div class="dialog-actions"><button class="dialog-primary" onclick="showMiikNotice('الفريق والصلاحيات','إضافة أعضاء الفريق ستُفعّل عند ربط نظام الحسابات والمصادقة.');closeMiikDialog()">حفظ العضو</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);
 };
@@ -2444,7 +2444,7 @@ const nav77=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==
 <script id="v78-script">
 (function(){
 'use strict';
-function mark78(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function mark78(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
 window.v78RenderContentPlan=function(){
  mark78('المحتوى والخطة');const main=document.querySelector('.v68-owner-main');if(!main)return;
  main.innerHTML=`<div class="v72-users-head"><div><h1>المحتوى والخطة</h1><p>إدارة المحتوى المركزي الذي يصل للموجّهين، مع تجهيز الخطط والقوالب والمناسبات من مكان واحد.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
@@ -2466,7 +2466,7 @@ const nav78=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==
 'use strict';
 function notice79(title){if(typeof showMiikNotice==='function')showMiikNotice(title,'هذا القسم جاهز ضمن مركز تطوير محتوى مِعِك، وستُفعّل أدوات التحرير والنشر الفعلية عند ربط قاعدة المحتوى والخادم.');}
 window.v78RenderContentPlan=function(){
- if(typeof mark78==='function')mark78('المحتوى والخطة'); else {document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t==='المحتوى والخطة')});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+ if(typeof mark78==='function')mark78('المحتوى والخطة'); else {document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();btn.classList.toggle('active',t==='المحتوى والخطة')});document.querySelector('.v68-owner-side')?.classList.remove('show')}
  const main=document.querySelector('.v68-owner-main');if(!main)return;
  const tiles=[
  ['▤','خطة التوجيه الطلابي','تطوير بنية الخطة السنوية والفصلية وعناصرها وطريقة عرضها.'],
@@ -2498,7 +2498,7 @@ window.v78RenderContentPlan=function(){
  main.querySelectorAll('.v79-tile b').forEach(b=>{if(b.textContent.trim()==='القدرات والتحصيلي')b.textContent='الاختبارات الوطنية والمعيارية'});
  main.querySelectorAll('.v79-tile small').forEach(s=>{if(s.textContent.includes('نماذج المتابعة والتحفيز'))s.textContent='تطوير متابعة القدرات والتحصيلي ونافس، ونماذج التحفيز والمحتوى والتقارير المرتبطة بها.'});
 };
-function mark80(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function mark80(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
 window.v80RenderPlatformStatus=function(){
  mark80('حالة المنصة والإصدارات');const main=document.querySelector('.v68-owner-main');if(!main)return;
  main.innerHTML=`<div class="v72-users-head"><div><h1>حالة المنصة والإصدارات</h1><p>متابعة جاهزية مِعِك وإصداراته من مكان واحد، بدون أرقام أو حالات تجريبية.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
@@ -2517,7 +2517,7 @@ const nav80=window.v68OwnerNav;window.v68OwnerNav=function(btn,title){if(title==
 <script id="v81-script">
 (function(){
 'use strict';
-function mark81(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=btn.querySelector('span')?.textContent?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
+function mark81(title){document.querySelectorAll('.v68-owner-side button').forEach(btn=>{const t=window.miikGenderSourceText?.(btn.querySelector('span'))?.trim();btn.classList.toggle('active',t===title)});document.querySelector('.v68-owner-side')?.classList.remove('show')}
 window.v81RenderSettings=function(){
  mark81('إعدادات المنصة');const main=document.querySelector('.v68-owner-main');if(!main)return;
  main.innerHTML=`<div class="v72-users-head"><div><h1>إعدادات المنصة</h1><p>الإعدادات العامة والحساسة لمِعِك؛ مكان واحد لما يخص الهوية والحسابات والتواصل والأمان والتكاملات.</p></div><button class="v72-users-back" onclick="openOwner()">الرئيسية</button></div>
@@ -2927,10 +2927,11 @@ const oldProg86=prog86; prog86=function(){const a=oldProg86(),names=['اختبا
   {keys:'غياب تأخر متابعة المتابعات',title:'المتابعات الطلابية',desc:'متابعة الطلاب والإجراءات',go:()=>openModule('المتابعات الطلابية','متابعة الطلاب والإجراءات.')},
   {keys:'ولي الامر أولياء الامور ولي الأمر أولياء الأمور اسرة الأسرة',title:'أولياء الأمور',desc:'التواصل والشراكة مع الأسرة',go:()=>openModule('أولياء الأمور','التواصل والشراكة مع الأسرة.')},
   {keys:'خطة الخطة الاسبوعية السنوية فصلية أسبوعية',title:'خطة الموجّه الطلابي',desc:'الخطة السنوية والفصلية والأسبوعية',go:()=>openModule('خطة الموجّه الطلابي','الخطة السنوية والفصلية والأسبوعية.')},
+  {keys:'نور تحليل النتائج مقارنة نتيجتين درجات',title:'تحليل النتائج',desc:'تحليل نتيجة نور ومقارنة نتيجتين',go:()=>miikNoorHub()},
   {keys:'تقويم calendar',title:'التقويم',desc:'التقويم وأعمال الخطة',go:()=>openCalendar?.()}
  ];
  window.v96GoRoute=i=>routes[i]?.go();
- window.demoSearch=function(){const q=(document.getElementById('search')?.value||'').trim();if(!q)return;const nq=q.replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').toLowerCase(),norm=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').toLowerCase();const students=(typeof students83==='function'?students83():R96('miikStudentsV39',[])).filter(x=>norm(x.name).includes(nq));const nav=routes.map((x,i)=>({...x,i})).filter(x=>norm(x.keys+' '+x.title+' '+x.desc).includes(nq)||nq.split(/\s+/).some(w=>w.length>1&&norm(x.keys+' '+x.title).includes(w)));const programs=Object.keys(localStorage).filter(k=>k.startsWith('miikExec_')).map(k=>k.slice(9)).filter((x,i,a)=>a.indexOf(x)===i&&norm(x).includes(nq));openModule('نتائج البحث',`نتائج البحث عن: ${E(q)}`);const g=document.getElementById('moduleGrid');const navHtml=nav.map(x=>`<button class="v96-search-result" onclick="v96GoRoute(${x.i})"><div><b>${E96(x.title)}</b><small>${E96(x.desc)}</small></div><span>فتح ←</span></button>`).join('');const progHtml=programs.map(x=>`<button class="v96-search-result" onclick="openModule('${Q96(x)}','برنامج من برامج التوجيه الطلابي')"><div><b>${E96(x)}</b><small>برنامج توجيهي</small></div><span>فتح ←</span></button>`).join('');const stuHtml=students.slice(0,10).map(x=>`<button class="v96-search-result" onclick="window.openStudent('${Q96(x.name)}','${Q96(x.grade||'')}','${Q96(x.section||'')}','${Q96(x.phone||'')}')"><div><b>${E96(x.name)}</b><small>${E96([x.stage,x.grade,x.section].filter(Boolean).join(' · '))}</small></div><span>ملف الطالب ←</span></button>`).join('');g.innerHTML=`<div style="grid-column:1/-1">${navHtml?`<div class="v96-search-group"><h3>في مِعِك</h3>${navHtml}</div>`:''}${progHtml?`<div class="v96-search-group"><h3>البرامج</h3>${progHtml}</div>`:''}${stuHtml?`<div class="v96-search-group"><h3>الطلاب</h3>${stuHtml}</div>`:''}${!navHtml&&!progHtml&&!stuHtml?'<div class="empty-warm">ما لقينا نتيجة مطابقة. جرّب اسم قسم، برنامج، تقرير، خدمة أو طالب.</div>':''}</div>`};
+ window.demoSearch=function(){const q=(document.getElementById('search')?.value||'').trim();if(!q)return;const nq=q.replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').toLowerCase(),norm=s=>String(s||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').toLowerCase();const students=(typeof students83==='function'?students83():R96('miikStudentsV39',[])).filter(x=>norm(x.name).includes(nq));const nav=routes.map((x,i)=>({...x,i})).filter(x=>norm(x.keys+' '+x.title+' '+x.desc).includes(nq)||nq.split(/\s+/).some(w=>w.length>1&&norm(x.keys+' '+x.title).includes(w)));const programs=Object.keys(localStorage).filter(k=>k.startsWith('miikExec_')).map(k=>k.slice(9)).filter((x,i,a)=>a.indexOf(x)===i&&norm(x).includes(nq));openModule('نتائج البحث','نتائج البحث عن: '+q);const g=document.getElementById('moduleGrid');const navHtml=nav.map(x=>`<button class="v96-search-result" onclick="v96GoRoute(${x.i})"><div><b>${E96(x.title)}</b><small>${E96(x.desc)}</small></div><span>فتح ←</span></button>`).join('');const progHtml=programs.map(x=>`<button class="v96-search-result" onclick="openModule('${Q96(x)}','برنامج من برامج التوجيه الطلابي')"><div><b>${E96(x)}</b><small>برنامج توجيهي</small></div><span>فتح ←</span></button>`).join('');const stuHtml=students.slice(0,10).map(x=>`<button class="v96-search-result" onclick="window.openStudent('${Q96(x.name)}','${Q96(x.grade||'')}','${Q96(x.section||'')}','${Q96(x.phone||'')}')"><div><b>${E96(x.name)}</b><small>${E96([x.stage,x.grade,x.section].filter(Boolean).join(' · '))}</small></div><span>ملف الطالب ←</span></button>`).join('');g.innerHTML=`<div style="grid-column:1/-1">${navHtml?`<div class="v96-search-group"><h3>في مِعِك</h3>${navHtml}</div>`:''}${progHtml?`<div class="v96-search-group"><h3>البرامج</h3>${progHtml}</div>`:''}${stuHtml?`<div class="v96-search-group"><h3>الطلاب</h3>${stuHtml}</div>`:''}${!navHtml&&!progHtml&&!stuHtml?'<div class="empty-warm">ما لقينا نتيجة مطابقة. جرّب اسم قسم، برنامج، تقرير، خدمة أو طالب.</div>':''}</div>`};
  const search=document.getElementById('search');if(search){search.placeholder='ابحث في مِعِك: طالب، تقرير، برنامج، خدمة…';search.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();window.demoSearch()}})}
 })();
 </script>
@@ -3270,7 +3271,7 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
  function renderCards(title){const ws=rows(context().term);return `<div class="cal-top"><div><b style="font-size:23px">${esc(title)}</b><div class="muted">${termLabel()} · الخطة المعتمدة مبدئيًا من ملف Word</div></div><button class="miik-plan12-print" onclick="miikPrintPlan12()">طباعة الخطة</button></div><div class="miik-plan12-grid">${ws.map((w,i)=>card(w,i,title==='الخطة الأسبوعية')).join('')}</div><div class="miik-plan12-note">هذه الخطة نسخة أولية قابلة للتطوير. أي تعديل لاحق على محتوى الفصل يمكن تحديثه دون المساس بسجلات التنفيذ.</div>`}
  function renderWeekly(){const ws=rows(context().term);let sel=Number(sessionStorage.getItem('miikWeeklyIndex')||0);if(sel<0||sel>=ws.length)sel=0;const w=ws[sel];return `<div class="miik-week12-title"><div><h3>${esc(w.w)} · ${termLabel()}</h3><span>${esc(w.date)}</span></div><button class="miik-plan12-print" onclick="miikPrintPlan12()">طباعة</button></div><div class="miik-plan12-grid">${ws.map((x,i)=>card(x,i,true)).join('')}</div>`}
  const shellPrev=window.miikOpenPlanTerm;
- window.miikOpenPlanTerm=function(t){const c=context();c.term=String(t);localStorage.setItem('miikAcademicContext',JSON.stringify(c));sessionStorage.setItem('miikWeeklyIndex','0');if(typeof shellPrev==='function')shellPrev(t);setTimeout(()=>{const title=document.getElementById('moduleTitle')?.textContent||'';if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(title))miikRefreshPlan12(title)},0)};
+ window.miikOpenPlanTerm=function(t){const c=context();c.term=String(t);localStorage.setItem('miikAcademicContext',JSON.stringify(c));sessionStorage.setItem('miikWeeklyIndex','0');if(typeof shellPrev==='function')shellPrev(t);setTimeout(()=>{const title=window.miikGenderSourceText?.(document.getElementById('moduleTitle'))||'';if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(title))miikRefreshPlan12(title)},0)};
  window.miikRefreshPlan12=function(title){const box=document.getElementById('miikPlanContent');if(!box)return;box.innerHTML=title==='الخطة الأسبوعية'?renderWeekly():renderCards(title)};
  const openPrev=window.openModule;
  window.openModule=function(title,desc){const r=openPrev.apply(this,arguments);if(miikCustomPrograms().some(x=>x.name===String(title))){setTimeout(()=>{hideAllPages();document.getElementById('modulePage').classList.add('show');document.getElementById('moduleTitle').textContent=title;document.getElementById('moduleDesc').textContent='التنفيذ والتوثيق والتقرير من مصدر واحد.';renderProgram(title,document.getElementById('moduleGrid'));window.scrollTo({top:0,behavior:'smooth'})},0)}else if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(title))setTimeout(()=>miikRefreshPlan12(title),10);return r};
@@ -3280,7 +3281,7 @@ const oldOpen108=window.openModule;window.openModule=function(title,desc){const 
  const calPrev=window.renderCalendarView;
  if(typeof calPrev==='function')window.__miikObsoleteCalendarRender7=function(mode='month'){if(mode==='semester'){document.querySelectorAll('#calendarPage .view-switch button').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));const box=document.querySelector('#calendarPage .monthbox');if(box){const ws=rows(context().term);box.innerHTML=`<div class="month-title">${termLabel()} · العام الدراسي ${esc(context().year)}هـ</div><div class="semester-calendar-grid">${ws.map((w,i)=>`<button type="button" class="semester-week-card" onclick="miikOpenWeek12(${i})"><b>${esc(w.w)}</b><div>${esc(w.date)}</div><small>${esc(w.program)}</small></button>`).join('')}</div>`;return}}return calPrev.apply(this,arguments)};
  // If a plan page is already open after this patch loads, refresh it.
- setTimeout(()=>{const t=document.getElementById('moduleTitle')?.textContent||'';if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(t))miikRefreshPlan12(t)},50);
+ setTimeout(()=>{const t=window.miikGenderSourceText?.(document.getElementById('moduleTitle'))||'';if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(t))miikRefreshPlan12(t)},50);
 })();
 </script>
 <script id="miik-beta-17-print-only-final">
@@ -3498,7 +3499,7 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
    return ws;
  }
  window.miikPlanRows12=mergedRows; window.planWeeks=()=>mergedRows((()=>{try{return JSON.parse(localStorage.getItem('miikAcademicContext')||'{}').term||'1'}catch(_){return'1'}})());
- function refreshOpenPlan(){const t=document.getElementById('moduleTitle')?.textContent||'';if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(t))setTimeout(()=>window.miikRefreshPlan12?.(t),0)}
+ function refreshOpenPlan(){const t=window.miikGenderSourceText?.(document.getElementById('moduleTitle'))||'';if(['الخطة المعتمدة في مِعِك','خطة الموجّه الطلابي','الخطة الأسبوعية'].includes(t))setTimeout(()=>window.miikRefreshPlan12?.(t),0)}
  // Save/edit/delete write to the plan-owned store, then all views read that same plan source.
  function activeTerm(){try{return String(JSON.parse(localStorage.getItem('miikAcademicContext')||'{}').term||'1')}catch(_){return'1'}}
  function weekOptions(term,selected){const ws=(baseRows?baseRows(String(term)):[]);return ws.map((w,i)=>`<option value="${i}" ${String(i)===String(selected)?'selected':''}>${E(w.w)} — ${E(window.miikPlanDateLabel1710?.(w)||w.date||'')}</option>`).join('')}
@@ -3588,7 +3589,7 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
 </script>
 <style id="miik-beta-003-style">
 @media(max-width:720px){.miik-plan12-value,.miik179-sem-card em,.miik1711-link.value,.miik1711-mini.value{display:flex!important;visibility:visible!important;opacity:1!important}.miik-plan12-value{display:inline-flex!important}.miik003-edit-list{max-height:60vh;overflow:auto}.miik003-edit-week{padding:9px;border-bottom:1px solid var(--line)}.miik003-edit-week small{display:block;color:var(--muted);margin:3px 0 6px}.miik003-edit-week input:not([type=checkbox]){width:100%;box-sizing:border-box;margin:3px 0}.miik003-delete{font-size:11px!important;font-weight:700!important;display:flex;gap:5px;align-items:center}}
-</style>\n
+</style>
 
 <style id="miik-beta-007-student-file">
 #studentFile .miik007-timeline-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px}
@@ -4207,6 +4208,45 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
  window.miikTodayPlanPrograms=planProgramsThisWeek;
  window.renderToday=function(){const all=planProgramsThisWeek(),box=document.getElementById('todayList'),more=document.getElementById('todayMore');if(!box)return;const shown=all.slice(0,4);box.innerHTML=shown.length?shown.map((x,i)=>`<div class="today-item home-link" data-plan-today="${i}"><i></i><span class="time">هذا الأسبوع</span><div><b>${miikEscapeHTML(x.title)}</b><br><span style="color:var(--muted)">${miikEscapeHTML(x.kind)}</span></div><span class="go-mark">‹</span></div>`).join(''):'<div class="empty-warm">لا توجد برامج في خطة الموجّه للأسبوع الحالي.</div>';[...box.querySelectorAll('[data-plan-today]')].forEach(n=>n.onclick=()=>miikOpenWork(shown[+n.dataset.planToday]));const rest=all.length-4;more.style.display=rest>0?'block':'none';if(rest>0)more.textContent='عرض بقية برامج الأسبوع ('+rest+')'};
  const refresh=()=>{try{window.renderToday()}catch(_){}};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(refresh,0),{once:true});else setTimeout(refresh,0);
+})();
+</script>
+<script src="miik-language.js"></script>
+
+<style id="miik-noor-host-style">
+#moduleGrid.miik-noor-host{display:block}
+.miik-noor-choice{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.miik-noor-choice button{border:1px solid #6E8B6B;background:#fffdf8;color:#173f36;padding:12px 17px;border-radius:13px;cursor:pointer;font-weight:700}
+.miik-noor-choice button.active{background:#6E8B6B;color:white}
+.miik-noor-frame{display:block;width:100%;min-height:1200px;border:1px solid #e5ddce;border-radius:16px;background:#f6f2e8}
+</style>
+<script id="miik-noor-host">
+(function(){
+  'use strict';
+  function profile(){
+    let p={};try{p=JSON.parse(localStorage.getItem('miikProfileV58')||'{}')||{}}catch(_){/* no profile yet */}
+    return {name:p.name||p.fullName||p.counselorName||p.guideName||'',school:p.school||p.schoolName||'',education:p.region||p.educationRegion||p.education||p.administration||'',gender:p.gender==='بنات'?'بنات':'بنين'};
+  }
+  window.miikNoorHub=function(mode){
+    if(typeof hideAllPages==='function')hideAllPages();
+    document.getElementById('modulePage').classList.add('show');
+    document.getElementById('moduleTitle').textContent='تحليل النتائج';
+    document.getElementById('moduleDesc').textContent='حلّل نتيجة نور أو قارن بين فترتين. ملفات الدرجات تُقرأ داخل المتصفح ولا تُحفظ تلقائيًا.';
+    const grid=document.getElementById('moduleGrid');grid.classList.add('miik-noor-host');
+    grid.innerHTML='<div class="miik-noor-choice"><button type="button" data-mode="individual">تحليل نتيجة واحدة</button><button type="button" data-mode="comparison">مقارنة نتيجتين</button></div><iframe class="miik-noor-frame" title="تحليل نتائج نور" src="noor-reports.html?mode='+ (mode==='comparison'?'comparison':'individual') +'" referrerpolicy="no-referrer"></iframe>';
+    grid.querySelectorAll('[data-mode]').forEach(button=>{
+      button.classList.toggle('active',button.dataset.mode===(mode==='comparison'?'comparison':'individual'));
+      button.addEventListener('click',()=>{if(button.dataset.mode!==mode)miikNoorHub(button.dataset.mode)})
+    });
+    document.getElementById('drawer')?.classList.remove('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+  window.addEventListener('message',function(event){
+    const frame=document.querySelector('#moduleGrid.miik-noor-host iframe.miik-noor-frame');
+    if(!frame || event.source!==frame.contentWindow || event.data?.type!=='miik-noor-ready')return;
+    frame.contentWindow.postMessage({type:'miik-noor-profile',profile:profile()},'*');
+  });
+  const host=document.getElementById('moduleGrid');
+  new MutationObserver(()=>{if(!host.querySelector('iframe.miik-noor-frame'))host.classList.remove('miik-noor-host')}).observe(host,{childList:true});
 })();
 </script>
 </body>
