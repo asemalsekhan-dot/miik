@@ -1152,6 +1152,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 (function(){
   "use strict";
   const $=id=>document.getElementById(id);
+  const E=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
   let A=null,B=null;
   const arNorm=s=>String(s||"").normalize("NFKD").replace(/[\u064B-\u065F\u0670]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/ـ/g,"").replace(/[^\u0621-\u063A\u0641-\u064A0-9A-Za-z]+/g," ").trim().replace(/\s+/g," ").toLowerCase();
   const num=v=>typeof v==="number"&&Number.isFinite(v)?v:(typeof v==="string"&&v.trim()!==""&&Number.isFinite(Number(v))?Number(v):null);
@@ -1212,10 +1213,10 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     const obj={dto,fileName:file.name,inferred:inferScale(dto)};
     if(side==="A") A=obj; else B=obj;
     const c=dto.context||{};
-    $(side==="A"?"compareStateA":"compareStateB").innerHTML='<b>'+file.name+'</b><br>'+[c.stage,c.grade,c.resultType].filter(Boolean).join(' — ')+' — '+(dto.students||[]).length+' طالب'+(obj.inferred?'<br>تم تحديد السلم تلقائيًا: من '+obj.inferred.max+' ('+obj.inferred.source+')':'');
+    $(side==="A"?"compareStateA":"compareStateB").innerHTML='<b>'+E(file.name)+'</b><br>'+[c.stage,c.grade,c.resultType].filter(Boolean).map(E).join(' — ')+' — '+(dto.students||[]).length+' طالب'+(obj.inferred?'<br>تم تحديد السلم تلقائيًا: من '+obj.inferred.max+' ('+E(obj.inferred.source)+')':'');
     $("runComparison").disabled=!(A&&B);
   }
-  function studentMap(dto){const m=new Map();for(const st of dto.students||[]){const k=arNorm(st.studentNameRaw);if(k&&!m.has(k))m.set(k,st)}return m}
+  function studentMap(dto){const m=new Map(),duplicates=new Set();for(const st of dto.students||[]){const k=arNorm(st.studentNameRaw);if(!k)continue;if(m.has(k))duplicates.add(k);else m.set(k,st)}m.duplicates=duplicates;return m}
   function scoreMap(st,fallbackMax){const m=new Map();for(const x of st.subjects||[]){const name=x.subjectName||x.subjectNameRaw;if(!academic(name))continue;const v=num(x.score);if(v===null)continue;const p=num(x.percentage),max=num(x.maxScore);const scale=max!==null&&max>0?max:fallbackMax;const percent=scale!==null&&scale>0?v/scale*100:p;if(percent===null||percent<0||percent>100)continue;const k=subjKey(name);if(k&&!m.has(k))m.set(k,{name,value:percent})}return m}
   function avg(xs){return xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:null}
   function run(){
@@ -1224,7 +1225,13 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     if(arNorm(ca.stage)!==arNorm(cb.stage)||arNorm(ca.grade)!==arNorm(cb.grade)){
       $("compareStatus").className="status bad";$("compareStatus").textContent="الملفان ليسا لنفس المرحلة والصف. أوقفنا المقارنة حتى لا تختلط نتائج مجموعتين مختلفتين.";return;
     }
-    const ma=studentMap(da),mb=studentMap(db),common=[...ma.keys()].filter(k=>mb.has(k));
+    const ma=studentMap(da),mb=studentMap(db);
+    if(ma.duplicates.size||mb.duplicates.size){
+      $("compareStatus").className="status bad";
+      $("compareStatus").textContent="تكرر اسم طالب داخل أحد الملفين. لا يمكن مطابقة النتائج بالاسم وحده في هذه الحالة؛ راجع التكرار والفصل قبل المقارنة.";
+      $("comparisonResult").classList.add("hidden");return;
+    }
+    const common=[...ma.keys()].filter(k=>mb.has(k));
     const onlyA=[...ma.keys()].filter(k=>!mb.has(k)),onlyB=[...mb.keys()].filter(k=>!ma.has(k));
     const enteredMaxA=num($("compareMaxA").value),enteredMaxB=num($("compareMaxB").value);
     const maxA=enteredMaxA??A.inferred?.max??null,maxB=enteredMaxB??B.inferred?.max??null;
@@ -1242,20 +1249,20 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     for(const x of subjectRows)x.comparison=comparePeriods(x.a,x.b);
     const up=studentRows.filter(x=>x.comparison.tier&&x.d>0).sort((x,y)=>y.d-x.d),down=studentRows.filter(x=>x.comparison.tier&&x.d<0).sort((x,y)=>x.d-y.d),flat=studentRows.filter(x=>!x.comparison.tier);
     const lowerA=studentRows.filter(x=>x.a<70).length,lowerB=studentRows.filter(x=>x.b<70).length;
-    $("compareContext").innerHTML='<b>'+[ca.stage,ca.grade].filter(Boolean).join(' — ')+'</b><br><span>'+ (ca.resultType||A.fileName)+' ← '+(cb.resultType||B.fileName)+'</span>';
+    $("compareContext").innerHTML='<b>'+[ca.stage,ca.grade].filter(Boolean).map(E).join(' — ')+'</b><br><span>'+ E(ca.resultType||A.fileName)+' ← '+E(cb.resultType||B.fileName)+'</span>';
     $("comparePrintAdmin").textContent=window.MiikNoorProfile?.education||cb.educationAdmin||ca.educationAdmin||'الإدارة التعليمية';
     $("comparePrintSchool").textContent=window.MiikNoorProfile?.school||cb.schoolName||ca.schoolName||'اسم المدرسة غير وارد في الملف';
     const ministryLogo=document.querySelector('#analysisPanel .official-logo img');
     if(ministryLogo)$("comparePrintLogo").src=ministryLogo.src;
     $("compareCards").innerHTML='<div class="compare-card"><small>طلاب مشتركون</small><b>'+common.length+'</b></div><div class="compare-card"><small>مواد مشتركة</small><b>'+subjectRows.length+'</b></div><div class="compare-card"><small>تحسن متوسطهم</small><b>'+up.length+'</b></div><div class="compare-card"><small>انخفض متوسطهم</small><b>'+down.length+'</b></div><div class="compare-card"><small>مستقرون</small><b>'+flat.length+'</b></div>';
-    $("compareSubjectRows").innerHTML=subjectRows.map(x=>'<tr><td><b>'+x.name+'</b></td><td>'+fmt(x.a)+'</td><td>'+fmt(x.b)+'</td><td>'+deltaHtml(x.d,x.comparison)+'<br><small>'+x.comparison.classification+'</small></td><td>'+x.n+'</td></tr>').join('')||'<tr><td colspan="5">لا توجد مواد مشتركة قابلة للمقارنة.</td></tr>';
+    $("compareSubjectRows").innerHTML=subjectRows.map(x=>'<tr><td><b>'+E(x.name)+'</b></td><td>'+fmt(x.a)+'</td><td>'+fmt(x.b)+'</td><td>'+deltaHtml(x.d,x.comparison)+'<br><small>'+x.comparison.classification+'</small></td><td>'+x.n+'</td></tr>').join('')||'<tr><td colspan="5">لا توجد مواد مشتركة قابلة للمقارنة.</td></tr>';
     const lines=[];
-    if(up.length)lines.push('<b>تحسن المتوسط:</b><br>'+up.map(x=>x.name+' '+deltaHtml(x.d,x.comparison)+' ('+x.comparison.classification+'، '+x.n+' مواد مشتركة)').join('<br>'));
-    if(down.length)lines.push('<b>انخفض المتوسط:</b><br>'+down.map(x=>x.name+' '+deltaHtml(x.d,x.comparison)+' ('+x.comparison.classification+'، '+x.n+' مواد مشتركة)').join('<br>'));
-    if(flat.length)lines.push('<b>مستقرون (الفارق أقل من نقطتين مئويتين):</b> '+flat.map(x=>x.name).join('، '));
+    if(up.length)lines.push('<b>تحسن المتوسط:</b><br>'+up.map(x=>E(x.name)+' '+deltaHtml(x.d,x.comparison)+' ('+x.comparison.classification+'، '+x.n+' مواد مشتركة)').join('<br>'));
+    if(down.length)lines.push('<b>انخفض المتوسط:</b><br>'+down.map(x=>E(x.name)+' '+deltaHtml(x.d,x.comparison)+' ('+x.comparison.classification+'، '+x.n+' مواد مشتركة)').join('<br>'));
+    if(flat.length)lines.push('<b>مستقرون (الفارق أقل من نقطتين مئويتين):</b> '+flat.map(x=>E(x.name)).join('، '));
     $("compareStudents").innerHTML=lines.join('<br><br>')||'لا توجد درجات مشتركة كافية لإجراء مقارنة على مستوى الطلاب.';
     $("compareLowerBand").textContent='من بين '+studentRows.length+' طالبًا قابلًا للمقارنة، كان متوسط المواد المشتركة أقل من 70 لدى '+lowerA+' في النتيجة السابقة، ولدى '+lowerB+' في النتيجة اللاحقة. التغير في عدد الطلاب: '+(lowerB-lowerA>0?'+':'')+(lowerB-lowerA)+'. هذا عدد طلاب، وليس نسبة تغير في المتوسط.';
-    const unmatched=[];if(onlyA.length)unmatched.push('<b>ظهروا في النتيجة السابقة فقط:</b> '+onlyA.map(k=>ma.get(k).studentNameRaw).join('، '));if(onlyB.length)unmatched.push('<b>ظهروا في النتيجة اللاحقة فقط:</b> '+onlyB.map(k=>mb.get(k).studentNameRaw).join('، '));
+    const unmatched=[];if(onlyA.length)unmatched.push('<b>ظهروا في النتيجة السابقة فقط:</b> '+onlyA.map(k=>E(ma.get(k).studentNameRaw)).join('، '));if(onlyB.length)unmatched.push('<b>ظهروا في النتيجة اللاحقة فقط:</b> '+onlyB.map(k=>E(mb.get(k).studentNameRaw)).join('، '));
     $("compareUnmatched").innerHTML=unmatched.join('<br>')||'جميع أسماء الطلاب تطابقت بين الملفين.';
     const allD=studentRows.map(x=>x.d),overall=avg(allD);
     const positiveSubjects=subjectRows.filter(x=>x.comparison.tier&&x.d>0).sort((x,y)=>y.d-x.d);
@@ -1269,8 +1276,8 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     opening+='وعند النظر إلى الطلاب بصورة فردية، ظهر تحسن يتجاوز هامش الاستقرار لدى <b>'+up.length+'</b>، وانخفاض لدى <b>'+down.length+'</b>، بينما بقي <b>'+flat.length+'</b> قريبين من مستواهم السابق. وتبين هذه الأعداد اتجاه النتائج ولا تفسر أسبابها.';
     prose.push(opening);
     let subjects='وعلى مستوى المواد المشتركة، ';
-    if(positiveSubjects.length){const x=positiveSubjects[0];subjects+='برزت مادة <b>'+x.name+'</b> بأكبر ارتفاع في المتوسط، إذ انتقلت من <b>'+fmt(x.a)+'</b> إلى <b>'+fmt(x.b)+'</b> من 100. '}
-    if(negativeSubjects.length){const x=negativeSubjects[0];subjects+='وفي المقابل ظهر أكبر انخفاض عددي في مادة <b>'+x.name+'</b>، من <b>'+fmt(x.a)+'</b> إلى <b>'+fmt(x.b)+'</b> من 100. '}
+    if(positiveSubjects.length){const x=positiveSubjects[0];subjects+='برزت مادة <b>'+E(x.name)+'</b> بأكبر ارتفاع في المتوسط، إذ انتقلت من <b>'+fmt(x.a)+'</b> إلى <b>'+fmt(x.b)+'</b> من 100. '}
+    if(negativeSubjects.length){const x=negativeSubjects[0];subjects+='وفي المقابل ظهر أكبر انخفاض عددي في مادة <b>'+E(x.name)+'</b>، من <b>'+fmt(x.a)+'</b> إلى <b>'+fmt(x.b)+'</b> من 100. '}
     if(!positiveSubjects.length&&!negativeSubjects.length)subjects+='لم تتجاوز الفروق في متوسطاتها هامش الاستقرار المحدد بأقل من نقطتين مئويتين. ';
     if(zeroCases.length)subjects+='وتتضمن النتيجة اللاحقة <b>'+zeroCases.length+'</b> درجة صفرية بعد درجة سابقة موجبة؛ لذا تُراجع هذه الدرجات في نور قبل اعتبار ما ارتبط بها تراجعًا تحصيليًا مؤكدًا.';
     else subjects+='وتُقرأ فروق المواد في ضوء عدد الطلاب المشتركين وسلّم الدرجات في كل اختبار.';
@@ -1284,7 +1291,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     if(zeroCases.length)recommendations.push('التحقق من الدرجات الصفرية في نتيجة الفترة اللاحقة مع جهة الرصد في نور قبل إبلاغ الطالب أو معلم المادة بوجود تراجع تحصيلي؛ ظهرت لدى '+zeroCases.length+' حالة في المواد المشتركة.');
     const verifiedDown=down.filter(x=>!zeroCases.some(z=>z.student===x.name));
     const significantDeclines=subjectRows.filter(x=>x.d<=-5).sort((x,y)=>x.d-y.d);
-    if(significantDeclines.length)recommendations.push('مخاطبة معلمي '+significantDeclines.slice(0,3).map(x=>'مادة '+x.name).join(' و')+' لمراجعة الدرجات والمهارات التي ظهر فيها الانخفاض؛ وعند ثبوت جوانب التعثر، يُنسق معهم لإعداد أنشطة تحسين أو خطة علاجية مناسبة.');
+    if(significantDeclines.length)recommendations.push('مخاطبة معلمي '+significantDeclines.slice(0,3).map(x=>'مادة '+E(x.name)).join(' و')+' لمراجعة الدرجات والمهارات التي ظهر فيها الانخفاض؛ وعند ثبوت جوانب التعثر، يُنسق معهم لإعداد أنشطة تحسين أو خطة علاجية مناسبة.');
     if(lowerB>lowerA)recommendations.push('مراجعة أسماء الطلاب الذين أصبح متوسط موادهم المشتركة أقل من 70، ومناقشة نتائجهم مع معلمي المواد؛ إذ ارتفع عدد هذه الشريحة من '+lowerA+' إلى '+lowerB+'.');
     else if(lowerB<lowerA)recommendations.push('توثيق انخفاض عدد الطلاب الأقل من 70 في متوسط المواد المشتركة من '+lowerA+' إلى '+lowerB+'، ومتابعة استمرار تقدمهم في النتيجة القادمة.');
     if(verifiedDown.length)recommendations.push('إجراء جلسات فردية مع الطلاب الذين انخفض متوسطهم ولم ترتبط نتائجهم بدرجة صفرية تحتاج تحققًا، بحسب مقدار الانخفاض وموادهم؛ والاستماع إليهم قبل تحديد الإجراء الإرشادي المناسب.');
