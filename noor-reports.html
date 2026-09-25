@@ -1090,6 +1090,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   }
 
   $("analysisPrintBtn").addEventListener("click",()=>{
+    if(window.MiikNoorMobilePrint?.("analysis"))return;
     document.body.classList.add("print-analysis");
     const pageStyle=document.createElement("style");
     pageStyle.id="miikAnalysisPageStyle";
@@ -1309,6 +1310,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   // عند الدمج يمرر مِعِك اسم الموجّه من بيانات حسابه؛ تبقى الخانة اليدوية للملف المستقل.
   window.MiikNoorSetCounselorName=setCounselorName;
   $("comparePrintBtn").addEventListener("click",()=>{
+    if(window.MiikNoorMobilePrint?.("comparison"))return;
     document.body.classList.add('print-comparison');
     const pageStyle=document.createElement('style');pageStyle.id='miikComparePageStyle';pageStyle.textContent='@page{size:A4 portrait;margin:9mm;background:#fffdf8}';document.head.appendChild(pageStyle);
     const cleanup=()=>{document.body.classList.remove('print-comparison');pageStyle.remove();window.removeEventListener('afterprint',cleanup)};
@@ -1323,6 +1325,49 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 (function(){
   'use strict';
   const individual=new URLSearchParams(location.search).get('mode')==='individual';
+  window.MiikNoorMobilePrint=function(kind){
+    // طباعة الإطار المضمّن قد لا تفتح في متصفح الهاتف؛ افتح التقرير بمستند علوي محلي.
+    if(window.parent===window || !(matchMedia('(max-width:850px)').matches || navigator.maxTouchPoints>0))return false;
+    const popup=window.open('','_blank');
+    if(!popup){
+      const status=document.getElementById(kind==='analysis'?'status':'compareStatus');
+      if(status){status.hidden=false;status.classList.remove('hidden');status.textContent='تعذر فتح صفحة الطباعة. اسمح بفتح النوافذ لهذا الموقع ثم اضغط زر الطباعة مرة أخرى.'}
+      return true;
+    }
+    const doc=popup.document;
+    doc.title=kind==='analysis'?'تقرير تحليل النتائج':'تقرير مقارنة النتائج';
+    doc.documentElement.lang='ar';doc.documentElement.dir='rtl';
+    const base=doc.createElement('base');base.href=location.href;doc.head.appendChild(base);
+    const charset=doc.createElement('meta');charset.setAttribute('charset','utf-8');doc.head.appendChild(charset);
+    for(const style of document.querySelectorAll('style')){
+      const copy=doc.createElement('style');copy.textContent=style.textContent;doc.head.appendChild(copy);
+    }
+    const extra=doc.createElement('style');
+    extra.textContent=`@page{size:A4 portrait;margin:${kind==='analysis'?'8':'9'}mm;background:#fffdf8}
+      @media screen{
+        body{background:#f6f2e8;padding:0 12px}
+        .miik-print-toolbar{position:sticky;top:0;z-index:20;padding:12px;text-align:center;background:#fffdf8}
+        #analysisPanel,#comparisonPanel,#comparisonResult,.official-print-head{display:block!important}
+        #analysisPanel>h2,#analysisPanel>p.note,#comparisonPanel>h2,#comparisonPanel>p.note,
+        .compare-upload-grid,.compare-actions,#compareStatus,.no-print{display:none!important}
+      }
+      @media print{.miik-print-toolbar{display:none!important}}`;
+    doc.head.appendChild(extra);
+    doc.body.className=kind==='analysis'?'print-analysis':'print-comparison';
+    const toolbar=doc.createElement('div');toolbar.className='miik-print-toolbar';
+    const printButton=doc.createElement('button');printButton.type='button';printButton.className='btn';
+    printButton.textContent='طباعة التقرير';printButton.addEventListener('click',()=>popup.print());
+    toolbar.appendChild(printButton);doc.body.appendChild(toolbar);
+    const background=doc.createElement('div');background.id='miikPrintPageBackground';background.setAttribute('aria-hidden','true');doc.body.appendChild(background);
+    const wrap=doc.createElement('div');wrap.className='wrap';
+    const report=document.getElementById(kind==='analysis'?'analysisPanel':'comparisonPanel').cloneNode(true);
+    report.classList.remove('hidden');report.querySelector('#comparisonResult')?.classList.remove('hidden');
+    wrap.appendChild(report);doc.body.appendChild(wrap);
+    popup.focus();
+    // محاولة الطباعة مباشرة؛ زر الطباعة العلوي متاح إن منع المتصفح المحاولة التلقائية.
+    try{popup.print()}catch(_){/* زر الطباعة في الصفحة المستقلة متاح */}
+    return true;
+  };
   document.querySelector('.single-analysis-branch[hidden]').hidden=!individual;
   document.getElementById('comparisonPanel').hidden=individual;
   const content=document.querySelector('.wrap');
