@@ -153,9 +153,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   body.print-analysis,body.print-comparison{background:#fffdf8!important}
   body.print-analysis #miikPrintPageBackground,body.print-comparison #miikPrintPageBackground{
     display:block!important;position:fixed;inset:-10mm;z-index:0;pointer-events:none;overflow:hidden;
-    background:linear-gradient(135deg,rgba(169,184,154,.15),transparent 28%) left top/75mm 75mm no-repeat,
-      linear-gradient(315deg,rgba(231,201,156,.13),transparent 28%) right bottom/75mm 75mm no-repeat,
-      #fffdf8!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important
+    background-color:#fffdf8!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important
   }
   body.print-analysis #miikPrintPageBackground:before,body.print-comparison #miikPrintPageBackground:before,
   body.print-analysis #miikPrintPageBackground:after,body.print-comparison #miikPrintPageBackground:after{
@@ -1328,6 +1326,48 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   window.MiikNoorMobilePrint=function(kind){
     // طباعة الإطار المضمّن قد لا تفتح في متصفح الهاتف؛ افتح التقرير بمستند علوي محلي.
     if(window.parent===window || !(matchMedia('(max-width:850px)').matches || navigator.maxTouchPoints>0))return false;
+    const installed=matchMedia('(display-mode: standalone)').matches || navigator.standalone===true;
+    if(installed){
+      try{
+        const topWindow=window.top,topDoc=topWindow.document;
+        topDoc.getElementById('miikMobilePrintRoot')?.remove();
+        topDoc.querySelectorAll('style[data-miik-noor-mobile-print]').forEach(style=>style.remove());
+        const printStyles=topDoc.createElement('style');printStyles.dataset.miikNoorMobilePrint='report';
+        printStyles.textContent=Array.from(document.querySelectorAll('style'),style=>style.textContent).join('\n')+`
+          @page{size:A4 portrait;margin:${kind==='analysis'?'8':'9'}mm;background:#fffdf8}
+          body.miik-noor-print-preview> :not(#miikMobilePrintRoot){display:none!important}
+          #miikMobilePrintRoot{display:block;min-height:100vh;background:#fffdf8}
+          .miik-print-toolbar{position:sticky;top:0;z-index:20;padding:12px;text-align:center;background:#fffdf8}
+          .miik-print-toolbar button{margin:0 5px}
+          @media screen{
+            #analysisPanel,#comparisonPanel,#comparisonResult,.official-print-head{display:block!important}
+            #analysisPanel>h2,#analysisPanel>p.note,#comparisonPanel>h2,#comparisonPanel>p.note,
+            .compare-upload-grid,.compare-actions,#compareStatus,.no-print{display:none!important}
+          }
+          @media print{.miik-print-toolbar{display:none!important}#miikMobilePrintRoot{min-height:0;background:transparent!important}}`;
+        topDoc.head.appendChild(printStyles);
+        const root=topDoc.createElement('div');root.id='miikMobilePrintRoot';root.dir='rtl';
+        const toolbar=topDoc.createElement('div');toolbar.className='miik-print-toolbar';
+        const printButton=topDoc.createElement('button');printButton.type='button';printButton.className='btn';printButton.textContent='طباعة التقرير';
+        printButton.addEventListener('click',()=>topWindow.print());toolbar.appendChild(printButton);
+        const closeButton=topDoc.createElement('button');closeButton.type='button';closeButton.className='btn secondary';closeButton.textContent='العودة إلى مِعِك';
+        closeButton.addEventListener('click',()=>{
+          root.remove();printStyles.remove();topDoc.body.classList.remove('miik-noor-print-preview','print-analysis','print-comparison');
+        });toolbar.appendChild(closeButton);root.appendChild(toolbar);
+        const background=topDoc.createElement('div');background.id='miikPrintPageBackground';background.setAttribute('aria-hidden','true');root.appendChild(background);
+        const wrap=topDoc.createElement('div');wrap.className='wrap';
+        const report=topDoc.importNode(document.getElementById(kind==='analysis'?'analysisPanel':'comparisonPanel'),true);
+        report.classList.remove('hidden');report.querySelector('#comparisonResult')?.classList.remove('hidden');
+        wrap.appendChild(report);root.appendChild(wrap);topDoc.body.appendChild(root);
+        topDoc.body.classList.add('miik-noor-print-preview',kind==='analysis'?'print-analysis':'print-comparison');
+        try{topWindow.print()}catch(_){/* يظل زر الطباعة مرئيًا أعلى التقرير */}
+        return true;
+      }catch(_){
+        const status=document.getElementById(kind==='analysis'?'status':'compareStatus');
+        if(status){status.hidden=false;status.classList.remove('hidden');status.textContent='تعذرت الطباعة من وضع التطبيق. افتح مِعِك في Safari لطباعة التقرير.'}
+        return true;
+      }
+    }
     const popup=window.open('','_blank');
     if(!popup){
       const status=document.getElementById(kind==='analysis'?'status':'compareStatus');
