@@ -933,25 +933,26 @@ setTimeout(()=>{refreshHijri();rollingDays();renderToday();renderStudentFollowup
    .committee-document .top-line{height:6px;background:linear-gradient(90deg,#b8bd99,#60785d);border-radius:3px}
    .committee-document h1{text-align:center;color:var(--ink);font-size:19px;margin:14px 0 4px}
    .committee-document .summary{display:grid;grid-template-columns:1fr 1.32fr .93fr 1.2fr;direction:rtl;border:1px solid #bac8b8;border-radius:7px;overflow:hidden;margin:11px 0 13px}
-   .committee-document .summary div{display:flex;align-items:center;min-width:0;min-height:35px;border-left:1px solid #dce3d8;white-space:nowrap;font-size:9.2px}
+   .committee-document .summary div{display:flex;align-items:center;min-width:0;min-height:37px;border-left:1px solid #dce3d8;white-space:nowrap;font-size:10.2px;font-weight:700}
    .committee-document .summary div:last-child{border-left:0}
-   .committee-document .summary b{display:flex;align-items:center;align-self:stretch;background:#e9eee3;color:var(--ink);flex:none;padding:5px 6px;white-space:nowrap}
-   .committee-document .summary span{display:flex;align-items:center;min-width:0;padding:5px 5px;white-space:nowrap}
+   .committee-document .summary b{display:flex;align-items:center;justify-content:center;align-self:stretch;background:#e9eee3;color:var(--ink);flex:none;padding:5px 6px;white-space:nowrap}
+   .committee-document .summary span{display:flex;align-items:center;justify-content:center;flex:1;min-width:0;padding:5px 5px;text-align:center;white-space:nowrap}
    .committee-document .section-box{border:1px solid #bac8b8;border-radius:7px;overflow:hidden;margin:10px 0;break-inside:avoid}
    .committee-document .section-box h2{background:#e6ece0;color:var(--ink);font-size:12px;margin:0;padding:7px 11px}
    .committee-document .section-box .body{min-height:35px;padding:7px 12px}
+   .committee-document .decision-text{white-space:pre-wrap}
    .committee-document ol{margin:0;padding-right:22px}.committee-document li{padding:2px 0}
    .committee-document .attendance-title{color:var(--ink);font-size:12px;margin:15px 0 6px}
    .committee-document table{width:100%;border-collapse:collapse;break-inside:auto}
    .committee-document thead{display:table-header-group}.committee-document tr{break-inside:avoid}
-   .committee-document th,.committee-document td{border:1px solid #a8b9a8;padding:6px 8px;text-align:right}
+   .committee-document th,.committee-document td{border:1px solid #a8b9a8;padding:6px 8px;text-align:center}
    .committee-document th{background:#e9eee3;color:var(--ink)}
    .committee-document th:nth-child(3),.committee-document td:nth-child(3){text-align:center}
    .committee-document .number{width:34px;text-align:center}.committee-document .signature{width:31%;height:30px}
    .committee-document .footer-sign{display:block;width:100%;text-align:center;margin-top:39px;line-height:1.9}
    .committee-document .principal-name{display:block;margin-top:14px}.committee-document .signature-label{display:block;margin-top:24px}
    @media print{.committee-document{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-  </style><div class="committee-document"><div class="top-line"></div><h1>محضر اجتماع لجنة التوجيه الطلابي</h1><div class="summary"><div><b>رقم الاجتماع</b><span>${E(x.meetingNo||Math.max(1,all.length-i))}</span></div><div><b>التاريخ</b><span>${E(x.date||'')}</span></div><div><b>الوقت</b><span>${E(x.time||'')}</span></div><div><b>الحضور</b><span>${at.length} من أعضاء اللجنة</span></div></div><section class="section-box"><h2>موضوع الاجتماع</h2><div class="body">${E(x.topic||'—')}</div></section><section class="section-box"><h2>محاور الاجتماع وما تمت مناقشته</h2><div class="body"><ol>${points(x.minutes)}</ol></div></section><section class="section-box"><h2>القرارات والتوصيات</h2><div class="body"><ol>${points(x.decision)}</ol></div></section><h2 class="attendance-title">أعضاء اللجنة وتوقيعاتهم</h2><table><thead><tr><th class="number">م</th><th>الاسم</th><th>الصفة</th><th class="signature">التوقيع</th></tr></thead><tbody>${at.map((a,j)=>`<tr><td class="number">${j+1}</td><td>${E(a.name)}</td><td>${E(a.role||'عضو')}</td><td class="signature"></td></tr>`).join('')||'<tr><td class="number">1</td><td></td><td></td><td class="signature"></td></tr>'}</tbody></table><div class="footer-sign"><div>مدير المدرسة<span class="principal-name">الاسم: ${E(names.principal)||'__________________'}</span><span class="signature-label">التوقيع:</span></div></div></div>`;
+  </style><div class="committee-document"><div class="top-line"></div><h1>محضر اجتماع لجنة التوجيه الطلابي</h1><div class="summary"><div><b>رقم الاجتماع</b><span>${E(x.meetingNo||Math.max(1,all.length-i))}</span></div><div><b>التاريخ</b><span>${E(x.date||'')}</span></div><div><b>الوقت</b><span>${E(x.time||'')}</span></div><div><b>الحضور</b><span>${at.length} من أعضاء اللجنة</span></div></div><section class="section-box"><h2>موضوع الاجتماع:</h2><div class="body">${E(x.topic||'—')}</div></section><section class="section-box"><h2>محاور الاجتماع وما تمت مناقشته:</h2><div class="body"><ol>${points(x.minutes)}</ol></div></section><section class="section-box"><h2>القرارات والتوصيات:</h2><div class="body decision-text">${E(x.decision||'')}</div></section><h2 class="attendance-title">أعضاء اللجنة وتوقيعاتهم</h2><table><thead><tr><th class="number">م</th><th>الاسم</th><th>الصفة</th><th class="signature">التوقيع</th></tr></thead><tbody>${at.map((a,j)=>`<tr><td class="number">${j+1}</td><td>${E(a.name)}</td><td>${E(a.role||'عضو')}</td><td class="signature"></td></tr>`).join('')||'<tr><td class="number">1</td><td></td><td></td><td class="signature"></td></tr>'}</tbody></table><div class="footer-sign"><div>مدير المدرسة<span class="principal-name">الاسم: ${E(names.principal)||'__________________'}</span><span class="signature-label">التوقيع:</span></div></div></div>`;
   printOpen('محضر اجتماع لجنة التوجيه الطلابي',body);
  }
  const studentTemplates={
