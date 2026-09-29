@@ -76,7 +76,7 @@
     const progress=done===null?'يُتابع في سجله':`${done} من ${planned} · ${Math.min(100,Math.round(done/planned*100))}%`;
     return `<tr><td>${part*7+j+1}</td><td>${E(item.name)}</td><td>${E(meta[0])}</td><td>${E(meta[1])}</td><td>${E(meta[2])}</td><td>${E(item.weeks.join('، '))}</td><td>${E(meta[3])}</td><td>${E(meta[4])}</td><td>${E(progress)}</td></tr>`;}),'ops')+`<p class="note">نسبة التنفيذ = عدد التنفيذات المؤرخة في هذا الفصل ÷ عدد الأسابيع المخطط لها، بحد أقصى 100%. الأعمال ذات السجل المستقل تُراجع في سجلها.</p>`,'الخطة التشغيلية'));
   const weekPages=[];for(let offset=0;offset<weeks.length;offset+=9){const chunk=weeks.slice(offset,offset+9);weekPages.push(page(`<h2>خامسًا: الخطة الأسبوعية التفصيلية</h2>`+table(['م','الأسبوع','التاريخ','المحور / البرنامج','القيمة','أبرز المبادرات','المناسبات','الشاهد'],chunk.map((w,j)=>{const programs=(w.programs||[{name:w.program}]).filter(x=>x.name),titles=programs.map(x=>x.name).join('؛ '),witness=[...new Set(programs.map(x=>detail(x)[4]))].join('؛ ')||'ما يُوثق عند التنفيذ';return `<tr><td>${offset+j+1}</td><td>${E(w.w)}</td><td>${E(w.date)}</td><td>${E(titles||'—')}</td><td>${E(w.value||'—')}</td><td>${E(w.initiatives||'—')}</td><td>${E((w.days||[]).join('، ')||'—')}</td><td>${E(witness)}</td></tr>`;}),'weeks'),'الخطة الأسبوعية'));}
-  const cover=page(`<div class="cover"><div class="basmala">بسم الله الرحمن الرحيم</div><h1>خطة برامج وخدمات التوجيه الطلابي</h1><h2>${E(term)}</h2><h2>العام الدراسي ${E(c.year)}هـ</h2><div class="names"><span>الموجّه الطلابي<br>${E(p.name||'')}</span><span>مدير المدرسة<br>${E(p.principal||'')}</span></div></div>`,term);
+  const cover=page(`<div class="cover"><div class="basmala">بسم الله الرحمن الرحيم</div><h1>خطة برامج وخدمات التوجيه الطلابي</h1><h2>${E(term)} للعام الدراسي ${E(c.year)}هـ</h2><div class="names"><span>الموجّه الطلابي<br>${E(p.name||'')}</span><span>مدير المدرسة<br>${E(p.principal||'')}</span></div></div>`,term);
   const intro=page(`<h2>أولًا: التمهيد ومصادر تحديد الاحتياج</h2><p class="intro">تمثّل هذه الخطة إطارًا تنظيميًا لعمل التوجيه الطلابي خلال ${E(term)}، وتجمع بين الرؤية العامة والبرامج والخدمات والمحاور الأسبوعية، مع مراعاة الجوانب الوقائية والإنمائية والعلاجية واحتياجات الطلبة وواقع المدرسة. وتُنفذ الخطة بمرونة وفق ما يستجد من تعاميم واحتياجات، مع توثيق الأعمال والشواهد ومتابعة أثرها.</p><h3>مصادر تحديد الاحتياج</h3>${table(['المصدر','ما يُستفاد منه'],sourceRows,'sources')}<p class="note">تُستخدم هذه المصادر لفهم واقع المدرسة؛ ويُضاف البرنامج الخاص باحتياج طلبتها إلى خطة الموجّه عند الحاجة.</p>`,'التمهيد ومصادر الاحتياج');
   const objectives=page(`<h2>ثانيًا: الهدف العام والأهداف القابلة للقياس</h2><div class="intro">تنظيم وتنفيذ برامج وخدمات التوجيه الطلابي خلال ${E(term)} بما يدعم التوافق النفسي والتربوي والاجتماعي والمهني للطلبة، ويرفع جودة المتابعة والتوثيق والشراكة مع الأسرة والمدرسة.</div><h3>الأهداف والمؤشرات المقترحة</h3>${table(['م','الهدف','المؤشر','المستهدف','وسيلة القياس'],goalRows,'goals')}<p class="note">تُقرأ مؤشرات التحسن بعد تحديد خط الأساس ومقارنة فترتين متماثلتين؛ وتُقاس أعمال البرامج من التنفيذ المحفوظ، لا من مجرد إدراجها في الخطة.</p>`,'الأهداف والمؤشرات');
   const areas=page(`<h2>ثالثًا: مجالات التوجيه والقيم</h2><div class="fieldgrid">${fields.map(([a,b])=>`<div class="field"><strong>${E(a)}</strong><p>${E(b)}</p></div>`).join('')}</div><h3>القيم والمرتكزات التربوية</h3><div class="values">${['الانضباط','الإيجابية','التسامح','المثابرة','العزيمة','الإتقان','المرونة','الوسطية','الانتماء الوطني'].map(x=>`<span>${E(x)}</span>`).join('')}</div>`,'مجالات التوجيه والقيم');
@@ -84,24 +84,26 @@
   const css=`@page{size:A4 landscape;margin:9mm}*{box-sizing:border-box}html,body{margin:0;padding:0;direction:rtl}body{font:11px Tahoma,Arial,sans-serif;color:#29463d;background:white}.page{position:relative;min-height:190mm;break-after:page;page-break-after:always;padding-bottom:10mm}.page:last-child{break-after:auto;page-break-after:auto}.head{display:grid;grid-template-columns:1fr 112px 1fr;align-items:center;border-bottom:2px solid #7e9489;padding:4px 0 8px;min-height:65px}.gov{text-align:right}.school{text-align:left}.gov,.school{font-size:11px;line-height:1.7;font-weight:800}.min{text-align:center}.min img{max-width:105px;max-height:59px}.cover{height:146mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 45%,#f6f5ed 0,white 58%)}.basmala{font-size:18px;color:#476b5e;margin-bottom:25px}.cover h1{font-size:30px;color:#315c4e;margin:0 0 13px}.cover h2{font-size:19px;color:#61756c;margin:4px}.names{display:grid;grid-template-columns:1fr 1fr;gap:65px;width:76%;margin-top:40px;font-size:13px;font-weight:800;line-height:2}.page h2{font-size:20px;color:#315c4e;border-right:6px solid #93a57d;padding-right:10px;margin:18px 0 13px}.page h3{font-size:15px;color:#315c4e;margin:13px 0 8px}.intro{font-size:13px;line-height:2.1;margin:0 0 12px}table{border-collapse:collapse;table-layout:fixed;width:100%;direction:rtl}th,td{border:1px solid #a5b4a9;padding:6px 7px;vertical-align:middle;text-align:right;line-height:1.7;overflow-wrap:anywhere}th{background:#e2eae0;color:#294b42;text-align:center;font-weight:900}tbody tr{break-inside:avoid;page-break-inside:avoid}.sources{font-size:12px}.sources td:first-child{width:20%;font-weight:bold;background:#f4f6f1}.goals{font-size:10.5px}.goals th:first-child,.goals td:first-child{width:4%;text-align:center}.goals th:nth-child(2){width:22%}.goals th:nth-child(3){width:29%}.goals th:nth-child(4){width:25%}.goals th:nth-child(5){width:20%}.ops{font-size:8.8px}.ops th,.ops td{padding:5px 5px}.ops th:first-child{width:3%}.ops th:nth-child(2){width:15%}.ops th:nth-child(3){width:12%}.ops th:nth-child(4){width:13%}.ops th:nth-child(5){width:13%}.ops th:nth-child(6){width:11%}.ops th:nth-child(7){width:15%}.ops th:nth-child(8){width:11%}.ops th:nth-child(9){width:7%}.ops td:first-child,.ops td:last-child{text-align:center}.weeks{font-size:9.5px}.weeks th,.weeks td{padding:5px}.weeks th:first-child{width:3%}.weeks th:nth-child(2){width:9%}.weeks th:nth-child(3){width:9%}.weeks th:nth-child(4){width:17%}.weeks th:nth-child(5){width:7%}.weeks th:nth-child(6){width:30%}.weeks th:nth-child(7){width:13%}.weeks th:nth-child(8){width:12%}.weeks td:first-child,.weeks td:nth-child(2),.weeks td:nth-child(3){text-align:center}.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:18px 0}.field{background:#e9efe6;border:1px solid #c6d3c7;border-radius:10px;padding:17px;font-size:13px;line-height:1.9}.field strong{font-size:15px;color:#315c4e}.field p{margin:4px 0}.values{display:flex;gap:10px;flex-wrap:wrap}.values span{background:#f2f4ed;border:1px solid #e1e6dc;border-radius:20px;padding:8px 13px;font-weight:bold}.note{font-size:10px;color:#697970;line-height:1.8;margin:10px 0}.continued{text-align:left;color:#718176;margin:-28px 0 8px}.follow{font-size:14px;line-height:2.2}.follow li{margin:12px 0}.sign{display:flex;justify-content:space-around;text-align:center;font-size:13px;font-weight:bold;line-height:2;margin-top:32px}footer{position:absolute;bottom:0;right:0;left:0;border-top:1px solid #d7ddd8;padding-top:4px;color:#718078;text-align:center;font-size:8px}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}`;
   const polishCSS=`
    /* Mِعِك's quiet olive and cream print identity; no product logo. */
-   .page{min-height:183mm;padding-top:5mm;padding-bottom:11mm;background:linear-gradient(155deg,#fff 0%,#fffdf9 55%,#f9f8f1 100%)}
+   html,body{width:100%;max-width:100%;overflow-x:hidden}
+   .page{width:279mm;max-width:100%;min-height:183mm;margin:0 auto;padding:7mm 7mm 11mm;overflow:hidden;background:linear-gradient(155deg,#fff 0%,#fffdf9 55%,#f9f8f1 100%)}
    .page::before,.page::after{content:'';position:absolute;z-index:0;pointer-events:none;border:1px solid rgba(103,128,108,.14);border-radius:7mm;transform:rotate(45deg)}
-   .page::before{width:52mm;height:52mm;left:-34mm;top:36mm}
-   .page::after{width:42mm;height:42mm;right:-28mm;bottom:11mm;background:rgba(222,229,215,.13)}
+   .page::before{width:25mm;height:25mm;left:9mm;top:40mm}
+   .page::after{width:20mm;height:20mm;right:9mm;bottom:17mm;background:rgba(222,229,215,.13)}
    .page>*{position:relative;z-index:1}
-   .page>footer{position:absolute;bottom:0;right:0;left:0}
-   .head{min-height:72px;padding:7px 2px 13px;border-bottom:2px solid #648071}
-   .page h2{font-size:20px;line-height:1.5;margin:23px 0 16px;padding-right:12px;border-right:5px solid #93a57d}
+   .page>footer{position:absolute;bottom:5mm;right:7mm;left:7mm}
+   .head{min-height:72px;grid-template-columns:minmax(0,1fr) 112px minmax(0,1fr);padding:7px 2px 13px;border-bottom:2px solid #648071}
+   .gov,.school{min-width:0;overflow-wrap:anywhere}
+   .page h2{font-size:20px;line-height:1.5;margin:30px 0 19px;padding-right:12px;border-right:5px solid #93a57d}
    .page h3{margin:17px 0 10px;font-size:15px}
-   table{margin-top:12px}
-   .cover{position:relative;height:140mm;background:radial-gradient(circle at 50% 50%,rgba(242,244,232,.7),rgba(255,253,247,.65) 46%,rgba(255,255,255,.2) 72%)}
+   table{width:100%;max-width:100%;table-layout:fixed;margin-top:16px;overflow-wrap:anywhere}
+   .cover{position:relative;width:100%;height:136mm;padding-top:14mm;background:radial-gradient(circle at 50% 50%,rgba(242,244,232,.7),rgba(255,253,247,.65) 46%,rgba(255,255,255,.2) 72%)}
    .cover::before,.cover::after{content:'';position:absolute;border:1px solid rgba(99,127,107,.16);border-radius:4mm;transform:rotate(45deg);background:rgba(154,175,145,.12)}
    .cover::before{width:18mm;height:18mm;top:10mm;left:calc(50% - 17mm)}
    .cover::after{width:16mm;height:16mm;top:13mm;left:calc(50% + 3mm);background:rgba(228,223,200,.22)}
    .cover>*{position:relative;z-index:1}
-   .basmala{font-size:22px;font-weight:800;line-height:1.8;color:#355d4d;margin:15px 0 20px}
-   .cover h1{font-size:30px;line-height:1.6;margin:0 0 8px;color:#2c5446}
-   .cover h2{border:0;margin:0;padding:0;font-size:19px;color:#5e7467;line-height:1.7}
+   .basmala{font-size:22px;font-weight:800;line-height:1.8;color:#355d4d;margin:15px 0 22px}
+   .cover h1{font-size:30px;line-height:1.6;margin:0 0 15px;color:#2c5446}
+   .cover h2{border:0;margin:0;padding:0;font-size:19px;color:#5e7467;line-height:1.7;white-space:nowrap}
    .cover .names{margin-top:37px;width:75%;gap:55px;line-height:1.85}
    .intro{font-size:13.3px;line-height:2.15;background:rgba(243,245,237,.48);border-right:3px solid #a3b398;padding:11px 16px;margin:6px 0 17px;border-radius:3px 8px 8px 3px}
    .sources{font-size:11.5px}
@@ -110,9 +112,9 @@
    .weeks{font-size:9.2px}
    .weeks th,.weeks td{padding:5px 6px;line-height:1.6}
    .follow{margin-top:18px;font-size:13.5px}
-   .sign{margin-top:35px;line-height:1.9}
-   .sign>div{min-width:38%;padding-bottom:18px}
-   @media print{.page{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+   .sign{display:grid;grid-template-columns:1fr 1fr;gap:20mm;margin-top:58px;line-height:1.9}
+   .sign>div{min-width:0;padding-bottom:18px}
+   @media print{html,body{width:279mm}.page{width:279mm;max-width:279mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
   `;
   const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>خطة برامج وخدمات التوجيه الطلابي</title><style>${css}${polishCSS}</style></head><body>${[cover,intro,objectives,areas,...opPages,...weekPages,follow].join('')}</body></html>`;
   if(typeof window.printDoc84==='function')window.printDoc84(html);else{const w=window.open('','_blank');if(!w)return window.showMiikNotice?.('الطباعة','اسمح بفتح نافذة الطباعة.');w.document.write(html);w.document.close();setTimeout(()=>w.print(),350)}
