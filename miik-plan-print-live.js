@@ -1,0 +1,89 @@
+/* The printed operational plan is a view of the counselor's saved plan. */
+(()=>{'use strict';
+ const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||'null')??fallback}catch(_){return fallback}};
+ const termName=t=>String(t)==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول';
+ const fields=[
+  ['النفسي','دعم الصحة النفسية وتقدير الذات والتكيف مع الضغوط والمواقف الطارئة.'],
+  ['التربوي','متابعة التحصيل ورعاية المتفوقين والمتأخرين ودعم مهارات الاستذكار والتنظيم الذاتي.'],
+  ['الاجتماعي','تنمية المهارات الاجتماعية والسلوك الإيجابي، والشراكة مع الأسرة والحد من العنف والتنمر.'],
+  ['المهني','التعريف بالمسارات والفرص المهنية ومساعدة الطلبة على اتخاذ قرارات واعية.']
+ ];
+ const goals=[
+  ['تحسين نتائج الطلبة في المحطات التقويمية','مقارنة نسبة المجتازين في المحطة الثانية بالأولى للمواد والصفوف المتماثلة','تحسّن النتائج؛ يُحدد المقدار المستهدف بعد قراءة المحطة الأولى','تقارير تحليل النتائج'],
+  ['خفض حالات الغياب','مقارنة عدد حالات الغياب في فترتين متماثلتين من بيانات المدرسة','خفض مستهدف 10% بعد تثبيت خط الأساس','إحصاءات إدارة المدرسة'],
+  ['خفض حالات التأخر الصباحي','مقارنة عدد حالات التأخر في فترتين متماثلتين من بيانات المدرسة','خفض مستهدف 10% بعد تثبيت خط الأساس','إحصاءات إدارة المدرسة'],
+  ['الحد من العنف والتنمر','مقارنة الحالات المسجلة، مع توثيق التوعية والتدخلات','تحسن في عدد الحالات؛ يُضبط المستهدف من بيانات المدرسة','سجل الحالات وتقارير التوعية'],
+  ['الاستجابة للحالات المحالة','الفترة بين تاريخ الإحالة وبدء التعامل معها','بدء التعامل مع الحالات المحالة خلال 3 أيام عمل','سجل الإحالات والحالات'],
+  ['تفعيل الشراكة الأسرية','مجلس أولياء أمور واحد، وتوثيق التواصل مع الأسر','حضور 20–30% للمجلس، واستكمال التواصل المطلوب خلال العام','محضر المجلس وسجل التواصل في مِعِك'],
+  ['التوجيه المهني للمرحلة الثانوية','التوجيه الجمعي وتطبيق مقياس الميول الخارجي','تغطية الطلبة المستهدفين؛ لقاء فردي لمن تظهر حاجته','تقرير التوجيه ونتائج المقياس'],
+  ['توثيق الشواهد','حفظ شواهد الأعمال المنفذة ورفع المطلوب منها','توثيق جميع الأعمال المنفذة وفق متطلبات نظام نور','سجلات التنفيذ وتقارير نور']
+ ];
+ // Metadata explains how a program can be carried out. The program name and weeks
+ // always come from the saved plan, including manually added programs.
+ const details=[
+  [/تحليل نتائج|محطات تقويمية/,['جميع الصفوف','تحليل النتائج وإعداد تقرير','الموجّه الطلابي؛ لجنة التحصيل','تقرير خلال أسبوع من صدور نتائج كل محطة','تقرير التحليل وتوصياته']],
+  [/قلق الاختبارات|التهيئة النفسية/,['الطلبة المستهدفون','توجيه جمعي ودعم فردي عند الحاجة','الموجّه الطلابي؛ المعلمون','تنفيذ لقاء توعوي قبيل الاختبارات','تقرير اللقاء وكشف الحضور']],
+  [/التهيئة الإرشادية|الأسبوع التمهيدي|بداية الفصل/,['جميع الطلبة','تعريف بخدمات التوجيه وتهيئة الطلبة','الموجّه الطلابي؛ إدارة المدرسة','تنفيذ أنشطة التهيئة في أسابيعها','تقرير التهيئة وكشوف الحضور']],
+  [/المتفوقين|تحفيز التحصيل|تكريم/,['الطلبة المتفوقون','حصر وتكريم وفق النتائج','الموجّه الطلابي؛ لجنة التحصيل','حصر المستهدفين وتوثيق التكريم','قوائم التكريم والشهادات']],
+  [/تدني التحصيل|المتأخرين دراسي|الدافعية|التحصيل/,['الطلبة المستهدفون','توجيه ومتابعة بالتعاون مع المعلمين','الموجّه الطلابي؛ المعلمون؛ لجنة التحصيل','مراجعة النتائج والخطة العلاجية بعد كل محطة','تحليل النتائج وتقارير المتابعة']],
+  [/المعيدين|الرسوب/,['الطلبة المعيدون','متابعة فردية وتواصل أسري بحسب الحاجة','الموجّه الطلابي؛ المعلمون؛ ولي الأمر','متابعة الحالات المرصودة','سجل المتابعة والتواصل']],
+  [/الأسرة|أولياء الأمور|الشراكة الأسرية/,['أولياء الأمور','مجلس واحد وتواصل موثق طوال العام','الموجّه الطلابي؛ إدارة المدرسة','مجلس واحد في الفصل وتوثيق التواصل','محضر المجلس وسجل التواصل']],
+  [/الفئات الخاصة|الحالات الاجتماعية|الأيتام/,['الطلبة ذوو الاحتياج','حصر ومتابعة سرية بحسب الحالة','الموجّه الطلابي؛ وكيل شؤون الطلاب','تحديث الحصر والمتابعة بحسب الحاجة','السجل السري وتقارير المتابعة']],
+  [/العنف|رفق|التنمر/,['جميع الطلبة','توعية وتدخلات إرشادية عند الحاجة','الموجّه الطلابي؛ وكيل شؤون الطلاب','تنفيذ التوعية ومراجعة الحالات المسجلة','تقارير التوعية وسجل الحالات']],
+  [/المخدرات|المؤثرات العقلية/,['طلبة المرحلتين','حملة توعوية مناسبة للمرحلة','الموجّه الطلابي؛ الجهات المختصة','تنفيذ التوعية في أسابيعها','تقرير الحملة والشواهد']],
+  [/الإنترنت|رقمي|المعلوماتية/,['الطلبة المستهدفون','توعية بالاستخدام الآمن','الموجّه الطلابي؛ المعلمون','تنفيذ التوعية في أسابيعها','تقرير البرنامج وكشف الحضور']],
+  [/المهني|المسارات|المستقبل/,['المرحلة الثانوية والصفوف المستهدفة','توجيه جمعي ومقياس ميول خارجي','الموجّه الطلابي؛ المعلمون','تغطية الطلبة المستهدفين','تقرير التوجيه ونتائج المقياس']],
+  [/الانضباط|الغياب|التأخر الصباحي/,['الطلبة المستهدفون','توعية ومتابعة بالتنسيق مع إدارة المدرسة','الموجّه الطلابي؛ وكيل شؤون الطلاب','تنفيذ ما خُطط له ومراجعة البيانات','تقرير التنفيذ وإحصاءات المدرسة']],
+  [/الصحية|السلامة/,['جميع الطلبة','حملة بالتنسيق مع الصحة المدرسية','الموجّه الطلابي؛ الصحة المدرسية','تنفيذ الحملة في أسبوعها','تقرير الحملة ومحضر التنسيق']],
+  [/الجلسات الإرشادية|الضغوط|الاسترخاء|الأزمات|الفقد/,['من تظهر حاجتهم','توجيه أو جلسات بحسب الحالة','الموجّه الطلابي؛ الجهات المساندة عند الحاجة','تسجيل الإجراءات التي نُفذت','سجل الجلسات والتدخلات']]
+ ];
+ function detail(item){const key=[item.name,item.target?.replace(/^(core|special):/,'')||''].join(' ');return details.find(x=>x[0].test(key))?.[1]||['الفئة المستهدفة بالبرنامج','وفق التنفيذ المسجل للبرنامج','الموجّه الطلابي؛ الشركاء بحسب النشاط','توثيق ما نُفذ في أسبوعه','سجل التنفيذ والتوثيق'];}
+ function planItems(weeks){const out=new Map();weeks.forEach((week,index)=>{
+  const list=Array.isArray(week.programs)?week.programs:[{name:week.program,target:week.programTarget}];
+  list.forEach(program=>{const name=String(program.name||'').trim();if(!name)return;const target=program.target||(!program.custom?week.programTarget:'')||'';
+   const key=(target||'unbound')+'|'+name;let row=out.get(key);if(!row){row={name,target,indices:[],weeks:[]};out.set(key,row)}
+   if(!row.indices.includes(index)){row.indices.push(index);row.weeks.push(String(week.w||'الأسبوع '+(index+1)))}
+  });
+ });return [...out.values()].sort((a,b)=>a.indices[0]-b.indices[0]);}
+ const monthNames=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+ function numbers(s){return String(s||'').replace(/[٠-٩]/g,x=>'٠١٢٣٤٥٦٧٨٩'.indexOf(x)).replace(/[۰-۹]/g,x=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(x));}
+ function entryDate(value){const s=numbers(value);const n=(s.match(/\d+/g)||[]).map(Number),month=monthNames.findIndex(x=>s.includes(x));if(month>=0&&n.length>=2)return{d:n[0],m:month+1,y:n.find(x=>x>1300)||0};if(n.length>=3){if(n[0]>1300)return{y:n[0],m:n[1],d:n[2]};return{d:n[0],m:n[1],y:n[2]}}return null}
+ function termMonths(weeks){const set=new Set();weeks.forEach(w=>{const s=numbers(w.date),m=s.match(/\/(\s*\d{1,2})/g)||[];m.forEach(v=>set.add(Number(v.slice(1).trim())))});return set}
+ function executions(item,c,months){const title=item.target.startsWith('core:')?item.target.slice(5):item.name;
+  if(item.target.startsWith('special:')||!item.target)return null;
+  const stored=read('miikExec_'+title,[]);if(!Array.isArray(stored))return 0;
+  return stored.filter(x=>{const d=entryDate(x.date);return d&&d.y===Number(c.year)&&months.has(d.m)}).length;
+ }
+ function render(){const c=read('miikAcademicContext',{year:'1448',term:'1'}),term=termName(c.term),p=read('miikProfileV58',{});
+  const weeks=typeof window.miikPlanRows12==='function'?window.miikPlanRows12(String(c.term||'1')):[];
+  if(!weeks.length){window.showMiikNotice?.('طباعة الخطة','اعتمد خطة الموجّه الطلابي أولًا، ثم اطبعها.');return}
+  const items=planItems(weeks),months=termMonths(weeks),ministry=new URL('ministry-logo.png',location.href).href;
+  const rawRegion=String(p.education||p.region||p.educationRegion||'').trim();const regionName=rawRegion.replace(/^الإدارة العامة للتعليم\s*/,'').replace(/^إدارة التعليم\s*/,'').replace(/^(?:بمنطقة|منطقة)\s*/,'').trim();const region=regionName?'الإدارة العامة للتعليم بمنطقة '+regionName:'الإدارة العامة للتعليم بمنطقة ................';
+  const header=`<header class="head"><div class="gov">المملكة العربية السعودية<br>وزارة التعليم<br>${E(region)}</div><div class="min"><img src="${ministry}" alt="شعار وزارة التعليم"></div><div class="school">${E(p.school||'اسم المدرسة')}<br>التوجيه الطلابي</div></header>`;
+  const page=(body,foot)=>`<section class="page">${header}${body}<footer>${E(foot)}</footer></section>`;
+  const table=(heads,rows,cls='')=>`<table class="${cls}" dir="rtl"><thead><tr>${heads.map(h=>`<th>${E(h)}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>`;
+  const sourceRows=[
+   ['تحليل النتائج','نتائج المحطات التقويمية والفصل السابق ومؤشرات التحصيل.'],
+   ['إحصاءات المدرسة','الغياب والتأخر الصباحي والسلوكيات التي توفرها إدارة المدرسة وإحالات وكيل شؤون الطلاب.'],
+   ['منسوبو المدرسة','ملاحظات الطلاب والمعلمين والوكيل والمدير عن احتياجات الطلبة والبيئة المدرسية.'],
+   ['المتابعة الشخصية','ما يرصده الموجّه خلال عمله اليومي دون اعتباره بديلًا عن إحصاءات المدرسة.'],
+   ['الحالات السابقة','الحالات المفتوحة والسابقة وما ظهر في سجلات متابعتها.']
+  ].map(([a,b])=>`<tr><td>${E(a)}</td><td>${E(b)}</td></tr>`);
+  const goalRows=goals.map((g,i)=>`<tr><td>${i+1}</td>${g.map(x=>`<td>${E(x)}</td>`).join('')}</tr>`);
+  const opChunks=[];for(let i=0;i<items.length;i+=7)opChunks.push(items.slice(i,i+7));
+  const opPages=opChunks.map((chunk,part)=>page(`<h2>رابعًا: الخطة التشغيلية للبرامج</h2>${part?'<p class="continued">تابع الجدول</p>':''}`+table(['م','البرنامج','الفئة المستهدفة','أسلوب التنفيذ','المسؤول والشركاء','أسابيع التنفيذ','المؤشر','الشاهد','التنفيذ المسجل'],chunk.map((item,j)=>{const meta=detail(item),done=executions(item,c,months),planned=item.indices.length;
+    const progress=done===null?'يُتابع في سجله':`${done} من ${planned} · ${Math.min(100,Math.round(done/planned*100))}%`;
+    return `<tr><td>${part*7+j+1}</td><td>${E(item.name)}</td><td>${E(meta[0])}</td><td>${E(meta[1])}</td><td>${E(meta[2])}</td><td>${E(item.weeks.join('، '))}</td><td>${E(meta[3])}</td><td>${E(meta[4])}</td><td>${E(progress)}</td></tr>`;}),'ops')+`<p class="note">نسبة التنفيذ = عدد التنفيذات المؤرخة في هذا الفصل ÷ عدد الأسابيع المخطط لها، بحد أقصى 100%. الأعمال ذات السجل المستقل تُراجع في سجلها.</p>`,'الخطة التشغيلية'));
+  const weekPages=[];for(let offset=0;offset<weeks.length;offset+=6){const chunk=weeks.slice(offset,offset+6);weekPages.push(page(`<h2>خامسًا: الخطة الأسبوعية التفصيلية</h2>`+table(['م','الأسبوع','التاريخ','المحور / البرنامج','القيمة','أبرز المبادرات','المناسبات','الشاهد'],chunk.map((w,j)=>{const programs=(w.programs||[{name:w.program}]).filter(x=>x.name),titles=programs.map(x=>x.name).join('؛ '),witness=[...new Set(programs.map(x=>detail(x)[4]))].join('؛ ')||'ما يُوثق عند التنفيذ';return `<tr><td>${offset+j+1}</td><td>${E(w.w)}</td><td>${E(w.date)}</td><td>${E(titles||'—')}</td><td>${E(w.value||'—')}</td><td>${E(w.initiatives||'—')}</td><td>${E((w.days||[]).join('، ')||'—')}</td><td>${E(witness)}</td></tr>`;}),'weeks'),'الخطة الأسبوعية'));}
+  const cover=page(`<div class="cover"><div class="basmala">بسم الله الرحمن الرحيم</div><h1>خطة برامج وخدمات التوجيه الطلابي</h1><h2>${E(term)}</h2><h2>العام الدراسي ${E(c.year)}هـ</h2><div class="names"><span>الموجّه الطلابي<br>${E(p.name||'')}</span><span>مدير المدرسة<br>${E(p.principal||'')}</span></div></div>`,term);
+  const intro=page(`<h2>أولًا: التمهيد ومصادر تحديد الاحتياج</h2><p class="intro">تمثّل هذه الخطة إطارًا تنظيميًا لعمل التوجيه الطلابي خلال ${E(term)}، وتجمع بين الرؤية العامة والبرامج والخدمات والمحاور الأسبوعية، مع مراعاة الجوانب الوقائية والإنمائية والعلاجية واحتياجات الطلبة وواقع المدرسة. وتُنفذ الخطة بمرونة وفق ما يستجد من تعاميم واحتياجات، مع توثيق الأعمال والشواهد ومتابعة أثرها.</p><h3>مصادر تحديد الاحتياج</h3>${table(['المصدر','ما يُستفاد منه'],sourceRows,'sources')}<p class="note">تُستخدم هذه المصادر لفهم واقع المدرسة؛ ويُضاف البرنامج الخاص باحتياج طلبتها إلى خطة الموجّه عند الحاجة.</p>`,'التمهيد ومصادر الاحتياج');
+  const objectives=page(`<h2>ثانيًا: الهدف العام والأهداف القابلة للقياس</h2><div class="intro">تنظيم وتنفيذ برامج وخدمات التوجيه الطلابي خلال ${E(term)} بما يدعم التوافق النفسي والتربوي والاجتماعي والمهني للطلبة، ويرفع جودة المتابعة والتوثيق والشراكة مع الأسرة والمدرسة.</div><h3>الأهداف والمؤشرات المقترحة</h3>${table(['م','الهدف','المؤشر','المستهدف','وسيلة القياس'],goalRows,'goals')}<p class="note">تُقرأ مؤشرات التحسن بعد تحديد خط الأساس ومقارنة فترتين متماثلتين؛ وتُقاس أعمال البرامج من التنفيذ المحفوظ، لا من مجرد إدراجها في الخطة.</p>`,'الأهداف والمؤشرات');
+  const areas=page(`<h2>ثالثًا: مجالات التوجيه والقيم</h2><div class="fieldgrid">${fields.map(([a,b])=>`<div class="field"><strong>${E(a)}</strong><p>${E(b)}</p></div>`).join('')}</div><h3>القيم والمرتكزات التربوية</h3><div class="values">${['الانضباط','الإيجابية','التسامح','المثابرة','العزيمة','الإتقان','المرونة','الوسطية','الانتماء الوطني'].map(x=>`<span>${E(x)}</span>`).join('')}</div>`,'مجالات التوجيه والقيم');
+  const follow=page(`<h2>سادسًا: المتابعة والتقويم</h2><ul class="follow"><li>مراجعة المؤشرات شهريًا مع مدير المدرسة أو وكيل شؤون الطلاب، وتعديل الخطة عند الحاجة.</li><li>تبقى سجلات المتابعة الطلابية والجلسات الإرشادية والتواصل الأسري مستقلة، ويُستفاد من شواهدها عند تقويم العمل دون دمجها آليًا بالبرامج.</li><li>حفظ شواهد التنفيذ أولًا بأول ورفع ما يلزم منها في نظام نور.</li><li>إعداد تقرير ختامي يقارن المخطط بالمنفذ، ويعرض التحديات والتوصيات للفصل التالي.</li></ul><div class="sign"><div>الموجّه الطلابي<br>${E(p.name||'')}<br>التوقيع: ................</div><div>مدير المدرسة<br>${E(p.principal||'')}<br>التوقيع: ................</div></div>`,'المتابعة والتقويم');
+  const css=`@page{size:A4 landscape;margin:9mm}*{box-sizing:border-box}html,body{margin:0;padding:0;direction:rtl}body{font:11px Tahoma,Arial,sans-serif;color:#29463d;background:white}.page{position:relative;min-height:190mm;break-after:page;page-break-after:always;padding-bottom:10mm}.page:last-child{break-after:auto;page-break-after:auto}.head{display:grid;grid-template-columns:1fr 112px 1fr;align-items:center;border-bottom:2px solid #7e9489;padding:4px 0 8px;min-height:65px}.gov{text-align:right}.school{text-align:left}.gov,.school{font-size:11px;line-height:1.7;font-weight:800}.min{text-align:center}.min img{max-width:105px;max-height:59px}.cover{height:146mm;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 45%,#f6f5ed 0,white 58%)}.basmala{font-size:18px;color:#476b5e;margin-bottom:25px}.cover h1{font-size:30px;color:#315c4e;margin:0 0 13px}.cover h2{font-size:19px;color:#61756c;margin:4px}.names{display:grid;grid-template-columns:1fr 1fr;gap:65px;width:76%;margin-top:40px;font-size:13px;font-weight:800;line-height:2}.page h2{font-size:20px;color:#315c4e;border-right:6px solid #93a57d;padding-right:10px;margin:18px 0 13px}.page h3{font-size:15px;color:#315c4e;margin:13px 0 8px}.intro{font-size:13px;line-height:2.1;margin:0 0 12px}table{border-collapse:collapse;table-layout:fixed;width:100%;direction:rtl}th,td{border:1px solid #a5b4a9;padding:6px 7px;vertical-align:middle;text-align:right;line-height:1.7;overflow-wrap:anywhere}th{background:#e2eae0;color:#294b42;text-align:center;font-weight:900}tbody tr{break-inside:avoid;page-break-inside:avoid}.sources{font-size:12px}.sources td:first-child{width:20%;font-weight:bold;background:#f4f6f1}.goals{font-size:10.5px}.goals th:first-child,.goals td:first-child{width:4%;text-align:center}.goals th:nth-child(2){width:22%}.goals th:nth-child(3){width:29%}.goals th:nth-child(4){width:25%}.goals th:nth-child(5){width:20%}.ops{font-size:8.8px}.ops th,.ops td{padding:5px 5px}.ops th:first-child{width:3%}.ops th:nth-child(2){width:15%}.ops th:nth-child(3){width:12%}.ops th:nth-child(4){width:13%}.ops th:nth-child(5){width:13%}.ops th:nth-child(6){width:11%}.ops th:nth-child(7){width:15%}.ops th:nth-child(8){width:11%}.ops th:nth-child(9){width:7%}.ops td:first-child,.ops td:last-child{text-align:center}.weeks{font-size:9.5px}.weeks th,.weeks td{padding:5px}.weeks th:first-child{width:3%}.weeks th:nth-child(2){width:9%}.weeks th:nth-child(3){width:9%}.weeks th:nth-child(4){width:17%}.weeks th:nth-child(5){width:7%}.weeks th:nth-child(6){width:30%}.weeks th:nth-child(7){width:13%}.weeks th:nth-child(8){width:12%}.weeks td:first-child,.weeks td:nth-child(2),.weeks td:nth-child(3){text-align:center}.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:18px 0}.field{background:#e9efe6;border:1px solid #c6d3c7;border-radius:10px;padding:17px;font-size:13px;line-height:1.9}.field strong{font-size:15px;color:#315c4e}.field p{margin:4px 0}.values{display:flex;gap:10px;flex-wrap:wrap}.values span{background:#f2f4ed;border:1px solid #e1e6dc;border-radius:20px;padding:8px 13px;font-weight:bold}.note{font-size:10px;color:#697970;line-height:1.8;margin:10px 0}.continued{text-align:left;color:#718176;margin:-28px 0 8px}.follow{font-size:14px;line-height:2.2}.follow li{margin:12px 0}.sign{display:flex;justify-content:space-around;text-align:center;font-size:13px;font-weight:bold;line-height:2;margin-top:32px}footer{position:absolute;bottom:0;right:0;left:0;border-top:1px solid #d7ddd8;padding-top:4px;color:#718078;text-align:center;font-size:8px}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}`;
+  const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>خطة برامج وخدمات التوجيه الطلابي</title><style>${css}</style></head><body>${[cover,intro,objectives,areas,...opPages,...weekPages,follow].join('')}</body></html>`;
+  if(typeof window.printDoc84==='function')window.printDoc84(html);else{const w=window.open('','_blank');if(!w)return window.showMiikNotice?.('الطباعة','اسمح بفتح نافذة الطباعة.');w.document.write(html);w.document.close();setTimeout(()=>w.print(),350)}
+ }
+ window.miikPrintPlan12=render;
+})();
