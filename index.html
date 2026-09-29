@@ -102,7 +102,7 @@ window.miikCleanRegion=function(v){
 <button>قواعد السلوك والمواظبة</button>
 <details><summary>التقارير</summary><div class="subnav"><details><summary>تقارير البرامج</summary><div class="subnav deeper"><button onclick="openModule('برنامج التهيئة الإرشادية','التقرير من التنفيذ المسجل.')">تقرير برنامج التهيئة الإرشادية</button><button>تقرير خفض العنف بالمدارس (رِفق)</button><button>تقرير تعزيز السلوك الإيجابي</button><button>تقرير التوجيه المهني</button><button>تقرير الاستخدام الآمن للإنترنت</button><button>تقرير تنمية الدافعية لرفع مستوى التحصيل</button><button>تقرير اختبارات القدرات</button><button>تقرير الاختبار التحصيلي</button><button>تقرير اختبارات نافس</button><button>تقرير التوجيه وقت الأزمات</button><button>تقرير الاحتفاء بطلبة الصف الثالث الثانوي الخريجين</button><button>تقرير الأيام والمناسبات الوطنية والعالمية</button></div></details><details><summary>التقرير الختامي</summary><div class="subnav deeper"><button onclick="openModule('التقارير','التقرير الختامي المختصر.')">التقرير الختامي المختصر</button><button onclick="openModule('التقارير','التقرير الختامي الشامل.')">التقرير الختامي الشامل</button></div></details></div></details>
 <button onclick="openMiikArchive();toggleDrawer()">الأرشيف</button>
-<details><summary>الإعدادات</summary><div class="subnav"><button onclick="openModule('بياناتي','بيانات الموجّه والمدرسة.')">بياناتي</button><button onclick="openModule('الاشتراك','حالة الاشتراك والتجديد وكود التفعيل.')">الاشتراك</button><button onclick="openModule('سياسة الخصوصية','سياسة الخصوصية.')">سياسة الخصوصية</button><button onclick="openModule('الدعم','الدعم والبلاغات.')">الدعم</button><button onclick="openOwner()">بوابة المالك — معاينة تطويرية</button></div></details>
+<details><summary>الإعدادات</summary><div class="subnav"><button onclick="openModule('بياناتي','بيانات الموجّه والمدرسة.')">بياناتي</button><button onclick="openModule('الاشتراك','حالة الاشتراك والتجديد وكود التفعيل.')">الاشتراك</button><button onclick="openModule('سياسة الخصوصية','سياسة الخصوصية.')">سياسة الخصوصية</button><button onclick="openModule('الدعم','الدعم والبلاغات.')">الدعم</button></div></details>
 </aside></div>
 <div class="action-modal" id="actionModal"><div class="action-box"><div class="action-head"><div><h2 id="actionTitle">إجراء جديد</h2><p id="actionHint">سجّل أقل قدر لازم من المعلومات.</p></div><button class="action-close" onclick="closeAction()">×</button></div><form class="action-form" id="actionForm" onsubmit="saveAction(event)"><label>الطالب<div class="student-picker"><input id="actionStudent" oninput="studentSuggestions(this.value)" placeholder="ابحث باسم الطالب…" required=""/><div class="student-suggestions" id="studentSuggestions"></div></div></label><label>التاريخ الهجري<input id="actionDate" onclick="openHijriPicker(this)" placeholder="اختر التاريخ الهجري" readonly="" required="" type="text"/></label><div id="dynamicFields"></div><button class="action-save" type="submit">حفظ</button><div class="save-note" id="saveNote">تم الحفظ ✓ وظهر الإجراء في سجل الطالب.</div></form></div></div><div class="whatsnew" id="whatsNew"><div class="whatsnew-card"><button class="x" onclick="closeWhatsNew()">×</button><img alt="مِعِك" src="miik-logo.png"/><h2>مِعِك يسابق الريح 🌿</h2><p>جمعنا لك جملة من التطويرات في النسخة المتكاملة:</p><ul><li>رتبنا الخطة إلى مرجع مِعِك وخطة الموجّه التشغيلية.</li><li>أضفنا مسارات المتابعة والجلسات والمواقف والتواصل ودراسة الحالة.</li><li>ربطنا البرامج بالتنفيذ والتوثيق والتقرير.</li><li>حدّثنا القائمة والتقارير والتحصيل وعلاقة الأسرة.</li></ul><strong>غَدِيّه يعجبك 🤗</strong><button class="done" onclick="closeWhatsNew()">تم، أبشر 👍🏼</button></div></div><script>
 // Clean Base RC3: canonical HTML text escaping helper for shared/legacy renderers.
@@ -4777,5 +4777,12 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 })();
 </script>
 <script src="miik-plan-print-live.js"></script>
+<script id="miik-supervisor-preview">
+/* Temporary supervisor review build: the owner portal is disabled in this copy. */
+window.openOwner=function(){
+  document.body.classList.remove('v68-owner-mode');
+  if(typeof window.goHome==='function') window.goHome();
+};
+</script>
 </body>
 </html>
