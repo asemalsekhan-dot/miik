@@ -1,0 +1,10 @@
+.miik-case-guide{margin:14px 0;border:1px solid #d1dccd;background:#f5f7f0;border-radius:13px;padding:12px}
+.miik-guide-toggle,.miik-guide-actions button{border:0;border-radius:10px;background:#718d72;color:white;font:inherit;font-weight:800;padding:10px 14px;cursor:pointer}
+#miikGuidePanel{margin-top:12px}#miikGuidePanel[hidden]{display:none}#miikGuidePanel label{display:block}#miikGuidePanel textarea{width:100%;box-sizing:border-box;min-height:80px}
+.miik-guide-context{font-size:13px;color:#50695d}.miik-guide-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.miik-group-classes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));max-height:190px;overflow:auto;gap:7px;margin:8px 0;padding:8px;border:1px solid #d7e0d3;border-radius:10px}
+.miik-group-class{display:flex!important;align-items:center;gap:6px;padding:7px;border:1px solid #dce4d9;border-radius:9px;background:#fff}
+.miik-group-time{display:flex;gap:6px;direction:ltr}.miik-group-time select{flex:1;min-width:0}
+#g171CustomWrap[hidden]{display:none}
+.miik-exam-row-actions{white-space:nowrap;margin-top:6px}.miik-exam-row-actions button{border:1px solid #c6d5c8;border-radius:8px;background:#f2f5ee;padding:5px 9px;color:#315647;font:inherit;cursor:pointer}
+.miik-exam-row-actions button+button{background:#fff4f1;border-color:#e1cac3;color:#8b4840}
