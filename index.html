@@ -212,7 +212,7 @@ function renderSettings(title,g){if(title==='المعلومات الشخصية'|
 <script id="v12-final-js">
 const hijriMonths=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
 function toggleProfileMenu(e){if(e)e.stopPropagation();document.getElementById('profileMenu')?.classList.toggle('show')}document.addEventListener('click',()=>document.getElementById('profileMenu')?.classList.remove('show'));
-function showMiikNotice(t,m){showMiikDialog(`<h2>${t}</h2><p>${E(m)}</p><div class="dialog-actions"><button class="dialog-primary" onclick="closeMiikDialog()">تم</button></div>`)}
+function showMiikNotice(t,m){showMiikDialog(`<h2>${miikEscapeHTML(t)}</h2><p>${miikEscapeHTML(m)}</p><div class="dialog-actions"><button class="dialog-primary" onclick="closeMiikDialog()">تم</button></div>`)}
 function openHijriPicker(input){showMiikDialog(`<h2>اختر التاريخ الهجري</h2><div style="display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:8px"><label>اليوم<select id="hd">${Array.from({length:30},(_,i)=>`<option>${i+1}</option>`).join('')}</select></label><label>الشهر<select id="hm">${hijriMonths.map(x=>`<option>${x}</option>`).join('')}</select></label><label>السنة<select id="hy"><option>1448</option><option>1449</option></select></label></div><div class="dialog-actions"><button class="dialog-primary" id="hOk">اعتماد التاريخ</button><button class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);document.getElementById('hOk').onclick=()=>{input.value=`${hd.value} ${hm.value} ${hy.value}هـ`;closeMiikDialog()}}
 function studentSuggestions(q){const box=document.getElementById('studentSuggestions');if(!box)return;if(!q.trim()){box.classList.remove('show');return}const hits=[...document.querySelectorAll('.student-card')].filter(x=>x.dataset.name.includes(q)).slice(0,6);window.__miikStudentSuggestionNames=hits.map(x=>x.dataset.name||'');box.innerHTML=hits.map((x,i)=>{const n=x.dataset.name||'',m=x.querySelector('.student-meta')?.innerText.replace(/\n/g,' · ')||'';return `<button type="button" data-miik-student-index="${i}"><b>${E(n)}</b><small>${E(m)}</small></button>`}).join('')||'<div class="empty-warm">ما لقيت طالب بهذا الاسم.</div>';box.querySelectorAll('[data-miik-student-index]').forEach(b=>b.onclick=()=>chooseActionStudent(window.__miikStudentSuggestionNames[+b.dataset.miikStudentIndex]||''));box.classList.add('show')}
 function chooseActionStudent(n){document.getElementById('actionStudent').value=n;document.getElementById('studentSuggestions').classList.remove('show')}
@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded',wireCalendarSwitch);setTimeout(wire
 #shalwaForm .dialog-primary{background:var(--maroon)!important;color:#fff!important}
 </style>
 <script id="v14-home-final-js">
-function miikISODate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${E(m)}-${day}`}
+function miikISODate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
 function miikHijriDay(d){return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{day:'numeric'}).format(d).replace(/\D/g,'')}
 window.miikOpenWorkByIndex=function(i){const item=(window.__miikDayWorkItems||[])[Number(i)];if(item)miikOpenWork(item)};
 function miikOpenWork(item){

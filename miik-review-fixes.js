@@ -11,11 +11,17 @@
   if(typeof currentAction==='undefined'||currentAction!=='emergency')return save.apply(this,arguments);
   if(emergencySaved){event?.preventDefault?.();return false}
   const before=localStorage.getItem(ACTIONS);
-  const result=save.apply(this,arguments);
-  if(localStorage.getItem(ACTIONS)!==before){
-   emergencySaved=true;
-   window.closeAction?.();
-   window.showMiikNotice?.('تم الحفظ','حُفظ الموقف الطارئ في سجل الطالب.');
+  let result;
+  try{result=save.apply(this,arguments)}
+  catch(error){if(localStorage.getItem(ACTIONS)===before)throw error;console.error('تعذر تحديث العرض بعد حفظ الموقف الطارئ',error)}
+  finally{
+   if(localStorage.getItem(ACTIONS)!==before){
+    emergencySaved=true;
+    document.getElementById('saveNote')?.classList.remove('show');
+    window.closeAction?.();
+    document.getElementById('actionModal')?.classList.remove('show');
+    window.showMiikNotice?.('تم الحفظ','حُفظ الموقف الطارئ في سجل الطالب.');
+   }
   }
   return result;
  };
