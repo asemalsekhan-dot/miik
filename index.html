@@ -80,7 +80,7 @@ window.miikCleanRegion=function(v){
 </div>
 <section class="calendar-page" id="calendarPage"><div class="cal-top"><button class="back" onclick="closeCalendar()">→ العودة للرئيسية</button><div class="view-switch"><button>أسبوع</button><button class="active">شهر</button><button>فصل دراسي</button></div></div><div class="monthbox"><div class="month-title">التقويم</div><div style="text-align:center;margin-bottom:10px"><button class="exec-btn" onclick="addReminder()">＋ تذكير بسيط</button></div><div class="monthgrid"><div class="head">الأحد</div><div class="head">الاثنين</div><div class="head">الثلاثاء</div><div class="head">الأربعاء</div><div class="head">الخميس</div><div class="head">الجمعة</div><div class="head">السبت</div><div class="num">30</div><div class="num">31</div><div class="num event-day">1</div><div class="num">2</div><div class="num event-day">3</div><div class="num holiday">4</div><div class="num holiday">5</div><div class="num">6</div><div class="num event-day">7</div><div class="num">8</div><div class="num today-ring">9</div><div class="num">10</div><div class="num holiday">11</div><div class="num holiday">12</div><div class="num event-day">13</div><div class="num">14</div><div class="num">15</div><div class="num event-day">16</div><div class="num">17</div><div class="num holiday">18</div><div class="num holiday">19</div><div class="num">20</div><div class="num event-day">21</div><div class="num">22</div><div class="num event-day">23</div><div class="num">24</div><div class="num holiday">25</div><div class="num holiday">26</div><div class="num">27</div></div><div class="calendar-legend"><span><i></i>يوم عادي</span><span><i class="event"></i>فيه عمل أو موعد</span><span><i class="holiday-key"></i>إجازة</span></div></div></section>
 <section class="students-page" id="studentsPage"><div class="students-shell"><div class="students-top"><div class="students-title"><h1>الطلاب</h1><p>كل ما يتعلق بالطالب في مكان واحد، بدون تكرار للبيانات</p></div><button class="students-back" onclick="closeStudents()">→ العودة للرئيسية</button></div>
-<div class="students-panel active" id="students-list"><div class="student-search"><input id="studentSearch" oninput="filterStudents()" placeholder="ابحث باسم الطالب…"/><button aria-label="بحث">⌕</button></div><div class="student-filters"><button class="filter"><span>المرحلة</span><b>الكل⌄</b></button><button class="filter"><span>الصف</span><b>الكل⌄</b></button><button class="filter"><span>الفصل</span><b>الكل⌄</b></button></div><div class="student-actions"><button class="primary">إضافة طالب</button><button>استيراد بيانات الطلاب</button><button>طباعة بيانات الطلاب</button></div><p class="students-count">إجمالي الطلاب: 0 طالب</p><div class="student-list" id="studentList">
+<div class="students-panel active" id="students-list"><div class="student-search"><input id="studentSearch" oninput="filterStudents()" placeholder="ابحث باسم الطالب…"/><button aria-label="بحث">⌕</button></div><div class="student-filters"><button class="filter"><span>المرحلة</span><b>الكل⌄</b></button><button class="filter"><span>الصف</span><b>الكل⌄</b></button><button class="filter"><span>الفصل</span><b>الكل⌄</b></button></div><div class="student-actions"><button class="primary">إضافة طالب</button><button>استيراد الطلاب من نور (Excel)</button><button>طباعة بيانات الطلاب</button></div><p class="students-count">إجمالي الطلاب: 0 طالب</p><div class="student-list" id="studentList">
 </div><div class="student-empty" id="studentEmpty">ما لقينا طالب بهذا الاسم.</div><nav aria-label="صفحات الطلاب" class="pagination"><button class="active">١</button><button>٢</button><button>٣</button><button>٤</button><button>٥</button><button>…</button><button>١١</button><button>←</button></nav></div>
 </div></section>
 <section class="student-file" id="studentFile"><div class="student-file-box"><div class="student-file-head"><div><h1 id="fileName">ملف الطالب</h1><p id="fileMeta"></p></div><button class="students-back" onclick="backToStudents()">→ بيانات الطلاب</button></div><div class="student-file-grid"><div class="student-stat"><b>0</b>متابعات</div><div class="student-stat"><b>0</b>جلسة إرشادية</div><div class="student-stat"><b>0</b>تواصل ولي الأمر</div></div><div class="student-file-actions"><button onclick="openAction('followup')">متابعة طالب</button><button onclick="openAction('session')">جلسة إرشادية</button><button onclick="openAction('emergency')">موقف طارئ</button><button onclick="openAction('case')">دراسة حالة</button><button onclick="openHealthCard()">الحالة الصحية</button><button id="guardianContact" onclick="openAction('guardian')">توثيق التواصل مع ولي الأمر</button><button class="wa-contact" id="guardianWhatsapp" onclick="openGuardianWhatsapp()">واتساب</button></div><div class="timeline" id="studentTimeline"><h3>السجل الإرشادي</h3><div id="timelineItems"><div class="timeline-item"><b>لا توجد إجراءات مسجلة بعد</b>أي إجراء تسجله من هنا سيظهر في هذا السجل مباشرة.</div></div></div></div></section>
@@ -3803,8 +3803,13 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
  .stat{border:1px solid #cfd8d2;border-radius:8px;padding:9px;text-align:center;background:#f5f4ed}.stat b{display:block;font-size:18px}
  .section{font-size:15px;margin:15px 0 8px;border-bottom:1px solid #d8dfda;padding-bottom:5px;color:#315c4e;font-weight:800}
- .row{border:1px solid #d7ded9;border-radius:8px;padding:9px 11px;margin-bottom:7px;break-inside:avoid;page-break-inside:avoid;background:rgba(255,255,255,.76)}
- .row b{display:block;margin-bottom:4px}.date{color:#718078}
+ .record-table{width:100%;border-collapse:collapse;table-layout:fixed;direction:rtl}
+ .record-table th,.record-table td{border:1px solid #b4c2b9;padding:6px 7px;vertical-align:middle;overflow-wrap:anywhere}
+ .record-table th{text-align:center;background:#e7ede1;color:#294b42;font-weight:900}
+ .record-table td:first-child,.record-table td:nth-child(2),.record-table td:nth-child(3){text-align:center}
+ .record-table th:first-child{width:7%}.record-table th:nth-child(2){width:22%}.record-table th:nth-child(3){width:22%}.record-table th:nth-child(4){width:49%}
+ .record-table tbody tr:nth-child(even){background:#f8f9f5}
+ .record-table thead{display:table-header-group}.record-table tr{break-inside:avoid;page-break-inside:avoid}
  .foot{margin-top:18px;padding-top:9px;border-top:1px solid #9bac9e;text-align:center;color:#294b42;font-weight:800;break-inside:avoid;page-break-inside:avoid}
  .foot strong{display:block;margin-top:7px;font-size:12px}
  .print{display:block;margin:15px auto;padding:9px 22px;border:0;border-radius:10px;background:#315c4e;color:#fff;cursor:pointer}
@@ -3814,7 +3819,9 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  <h1>السجل الإرشادي للطالب</h1><div class="student"><b>${E(currentStudent)}</b> · ${E(meta)}</div>
  <div class="stats"><div class="stat"><b>${c.follow}</b>متابعات</div><div class="stat"><b>${c.session}</b>جلسات إرشادية</div><div class="stat"><b>${c.guardian}</b>تواصل ولي الأمر</div></div>
  <div class="section">الإجراءات المسجلة</div>
- ${all.map(x=>`<div class="row"><b>${E(x.title)} <span class="date">${x.date?'· '+E(x.date):''}</span></b><div>${E(x.detail||'—')}</div></div>`).join('')}
+ <table class="record-table"><thead><tr><th>م</th><th>التاريخ</th><th>نوع الإجراء</th><th>البيان المختصر</th></tr></thead><tbody>
+ ${all.map((x,i)=>`<tr><td>${i+1}</td><td>${E(x.date||'—')}</td><td>${E(x.title)}</td><td>${E(x.detail||'—')}</td></tr>`).join('')}
+ </tbody></table>
  <div class="foot">${role}<strong>${E(p.name||'..............................')}</strong></div>
  </section><button class="print" onclick="print()">طباعة</button></body></html>`;
  w.document.write(html);
@@ -4782,5 +4789,6 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 <script src="miik-people-print.js"></script>
 <link rel="stylesheet" href="miik-followup-refinements.css">
 <script src="miik-followup-refinements.js"></script>
+<script src="miik-review-fixes.js"></script>
 </body>
 </html>
