@@ -30,7 +30,7 @@
  function careHub(){
   const g=document.getElementById('moduleGrid');if(!g)return;
   window.renderProgram(CARE,g);
-  g.firstElementChild?.insertAdjacentHTML('beforeend',`<div class="miik-program-care"><h3>متابعة الطلاب ذوي الظروف الخاصة</h3><div class="program-actions"><button class="program-action" onclick="v56PersonForm('special')">إضافة طالب للفئة الخاصة</button><button class="program-action" onclick="v56SpecialRecords()">سجل الفئات الخاصة</button></div><p>التقرير يجمع التنفيذ والتوثيق وسجل الطلاب المسجلين في هذا البرنامج.</p></div>`);
+  g.querySelector('.program-surface > .execution-log')?.insertAdjacentHTML('beforebegin',`<div class="miik-program-care-actions"><button type="button" class="program-action" onclick="v56PersonForm('special')">إضافة طالب</button><button type="button" class="program-action" onclick="v56SpecialRecords()">سجل الفئات الخاصة</button></div><div class="miik-special-bulk-launch"><button type="button" onclick="miikSpecialBulkOpen()">＋ إضافة عدة طلاب لفئة واحدة</button></div>`);
  }
  const oldOpen=window.openModule;
  window.openModule=function(title,desc){const result=oldOpen.apply(this,arguments);if(title===DISC||title===CARE){setTimeout(()=>{const g=document.getElementById('moduleGrid');if(document.getElementById('moduleTitle')?.textContent!==title)return;title===CARE?careHub():window.renderProgram(title,g)},20)}return result};
