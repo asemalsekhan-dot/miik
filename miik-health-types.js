@@ -30,8 +30,11 @@
  window.v107SavePerson=function(kind,id){
   if(kind!=='health')return oldPersonSave?.apply(this,arguments);
   const type=valid('v56pType');if(!type)return;
-  const student=document.getElementById('v56pStudent')?.value.trim()||'';
-  if(!student){notice('اختر اسم الطالب.');return}
+ const student=document.getElementById('v56pStudent')?.value.trim()||'';
+ if(!student){notice('اختر اسم الطالب.');return}
+  const roster=(()=>{try{return JSON.parse(localStorage.getItem('miikStudentsV39')||'[]')}catch(_){return[]}})();
+  const matches=roster.filter(x=>String(x.name||'').trim()===student);
+  if(matches.length!==1){notice(matches.length?'يوجد أكثر من طالب بهذا الاسم؛ اختر الطالب من ملفه بعد تمييز السجلات.':'اختر طالبًا موجودًا في بيانات الطلاب.');return}
   const a=read(),i=a.findIndex(x=>String(x.id)===String(id));
   const record={...(i>=0?a[i]:{}),id:id||'h'+Date.now().toString(36),student,type,note:document.getElementById('v56pNote')?.value.trim()||''};
   if(i>=0)a[i]=record;else a.unshift(record);

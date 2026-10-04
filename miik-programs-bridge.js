@@ -13,6 +13,7 @@
  function select(value='',id='miikLinkedProgram'){return `<label class="miik-program-link">ربط هذا العمل ببرنامج (اختياري)<select id="${id}"><option value="">بدون ربط</option>${programs.map(p=>`<option value="${E(p)}" ${value===p?'selected':''}>${E(p)}</option>`).join('')}</select></label>`}
  function nav(){
   const drawer=document.getElementById('drawer');if(!drawer)return;
+  if(!drawer.dataset.miikCloseOnNavigation){drawer.dataset.miikCloseOnNavigation='1';drawer.addEventListener('click',event=>{if(event.target.closest('button'))setTimeout(()=>drawer.classList.remove('show'),0)},true)}
   const details=[...drawer.querySelectorAll('details')];
   const programsMenu=details.find(x=>x.querySelector(':scope > summary')?.textContent.trim()==='برامج التوجيه الطلابي');
   const followMenu=details.find(x=>x.querySelector(':scope > summary')?.textContent.trim()==='المتابعة الطلابية');
