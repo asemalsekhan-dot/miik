@@ -4,6 +4,14 @@
  const CATEGORIES=['يتيم الأب','يتيم الأم','يتيم الأبوين','انفصال الوالدين','أحد الوالدين موقوف/مسجون','أبناء شهداء الواجب','ذوو الإعاقة','طلاب دور الملاحظة','ذوو الحاجة المادية','الضمان الاجتماعي','أخرى'];
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
  const norm=s=>String(s??'').trim().replace(/\s+/g,' ').normalize('NFKC');
+ function gradeRank(value){
+  const s=norm(value).replace(/[أإآ]/g,'ا').replace(/[ًٌٍَُِّْ]/g,'');
+  const stage=s.includes('ابتدائي')?0:s.includes('متوسط')?10:s.includes('ثانوي')?20:100;
+  const levels=['اول','ثاني','ثالث','رابع','خامس','سادس'];
+  const level=levels.findIndex(word=>new RegExp('(?:^|\\s)(?:ال)?'+word+'(?:ى|ة)?(?:\\s|$)').test(s));
+  return stage+(level<0?9:level+1);
+ }
+ const compareGrades=(a,b)=>gradeRank(a)-gradeRank(b)||String(a).localeCompare(String(b),'ar',{numeric:true});
  const read=key=>{try{const a=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(a)?a:[]}catch(_){return[]}};
  const notice=(title,message)=>window.showMiikNotice?.(title,message);
  const identity=s=>String(s.miikId||s.id||[s.name,s.stage,s.grade,s.section].map(norm).join('|'));
@@ -35,7 +43,7 @@
  window.miikSpecialBulkOpen=function(){
   roster=uniqueRoster();selected=new Set();saving=false;
   if(!roster.length){notice('الإضافة الجماعية','أضف الطلاب إلى بيانات مِعِك أولًا.');return}
-  const grades=[...new Set(roster.map(s=>s.grade).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'ar',{numeric:true}));
+  const grades=[...new Set(roster.map(s=>s.grade).filter(Boolean))].sort(compareGrades);
   window.showMiikDialog(`<h2>إضافة طلاب لفئة واحدة</h2><p class="miik-bulk-intro">اختر الفئة ثم حدد الطلاب. الطلاب المسجلون فيها يظهرون لك ولا يُضافون مرة ثانية.</p><label>الفئة الخاصة<select id="miikBulkCategory"><option value="">اختر الفئة</option>${CATEGORIES.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></label><label id="miikBulkOtherWrap" hidden>اسم الفئة الأخرى<input id="miikBulkOther" placeholder="اكتب اسم الفئة"></label><div class="miik-bulk-filters"><label>الصف<select id="miikBulkGrade"><option value="">جميع الصفوف</option>${grades.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></label><label>الفصل<select id="miikBulkSection"><option value="">جميع الفصول</option></select></label></div><label>بحث عن طالب<input id="miikBulkSearch" placeholder="اكتب الاسم أو الصف"></label><div id="miikBulkCount" class="miik-bulk-count">المحددون: 0</div><div id="miikBulkList" class="miik-bulk-list"></div><label>ملاحظة مشتركة (اختياري)<textarea id="miikBulkNote" rows="2"></textarea></label><div class="dialog-actions"><button type="button" class="dialog-primary" id="miikBulkSave">حفظ الطلاب المحددين</button><button type="button" class="dialog-cancel" onclick="closeMiikDialog()">إلغاء</button></div>`);
   document.getElementById('miikBulkCategory').addEventListener('change',e=>{document.getElementById('miikBulkOtherWrap').hidden=e.target.value!=='أخرى';draw()});
   document.getElementById('miikBulkOther').addEventListener('input',draw);
