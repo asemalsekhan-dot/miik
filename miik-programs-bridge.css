@@ -1,0 +1,4 @@
+.miik-program-care,.miik-program-related{margin:18px 0 0;padding:16px;border:1px solid #cfdacb;border-radius:16px;background:#f8f7f0;color:#294b42}
+.miik-program-care h3,.miik-program-related h3{margin:0 0 10px}.miik-program-care p{margin:10px 0 0}
+.miik-program-link{display:block;margin:12px 0}.miik-program-link select,.miik171-form select{width:100%;padding:11px;border:1px solid #cad6c8;border-radius:11px;background:#fff;color:#294b42;font:inherit}
+.miik-targets{grid-column:1/-1;border:1px solid #cad6c8;border-radius:12px;padding:12px}.miik-targets legend{font-weight:800;color:#31584a}.miik-targets label{display:inline-flex;align-items:center;gap:7px;margin:5px 10px 5px 0;white-space:normal}.miik-time-parts{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}

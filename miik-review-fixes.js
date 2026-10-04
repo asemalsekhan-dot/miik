@@ -5,7 +5,34 @@
  const read=key=>{try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[]}catch(_){return[]}};
  let emergencySaved=false;
  const open=window.openAction;
- window.openAction=function(type){if(type==='emergency')emergencySaved=false;return open.apply(this,arguments)};
+ window.openAction=function(type){
+  if(type==='emergency')emergencySaved=false;
+  if(type==='session'){
+   const studentLabel=document.getElementById('actionStudent')?.closest('label');
+   if(studentLabel)studentLabel.style.display='';
+  }
+  const result=open.apply(this,arguments);
+  if(type==='session'){
+   document.getElementById('actionTitle').textContent='جلسة إرشادية فردية';
+   document.getElementById('actionHint').textContent='سجّل الجلسة الفردية وملخصها.';
+   document.querySelector('#actionForm > .miik-shalwa-inline')?.remove();
+  }
+  return result;
+ };
+ const openSession=window.v55NewSession;
+ if(typeof openSession==='function')window.v55NewSession=function(kind){
+  const result=openSession.apply(this,arguments);
+  const sessionKind=String(kind).includes('جماعية')?'جلسة إرشادية جماعية':'جلسة إرشادية فردية';
+  setTimeout(()=>{
+   const input=document.getElementById('f1');
+   if(input)input.value=sessionKind;
+   if(document.getElementById('actionModal')?.classList.contains('show')){
+    document.getElementById('actionTitle').textContent=sessionKind;
+    document.getElementById('actionHint').textContent=sessionKind.includes('جماعية')?'سجّل الطلاب المستفيدين وملخص الجلسة الجماعية.':'سجّل الجلسة الفردية وملخصها.';
+   }
+  },80);
+  return result;
+ };
  const save=window.saveAction;
  window.saveAction=function(event){
   if(typeof currentAction==='undefined'||currentAction!=='emergency')return save.apply(this,arguments);
