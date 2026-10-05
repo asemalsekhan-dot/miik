@@ -130,7 +130,23 @@
    .follow{margin-top:18px;font-size:13.5px}
    .sign{display:grid;grid-template-columns:1fr 1fr;gap:20mm;margin-top:58px;line-height:1.9}
    .sign>div{min-width:0;padding-bottom:18px}
-   @media print{html,body{width:279mm}.page{width:279mm;max-width:279mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+   /* Mobile print engines may impose their own paper margins. Let the
+      printable area determine width, and keep footers in normal flow so
+      a physical minimum height cannot create a footer-only extra sheet. */
+   @media print{
+    html,body{width:auto;max-width:none;overflow:visible}
+    .page{width:100%;max-width:none;min-height:0;height:auto;margin:0;padding:5mm 4mm 4mm;overflow:visible;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .page::before,.page::after{display:none}
+    .head{display:flex;align-items:center;width:100%;gap:0}
+    .head .gov,.head .school{flex:0 0 40%;width:40%;min-width:0;white-space:normal;overflow-wrap:anywhere}
+    .head .min{flex:0 0 20%;width:20%;min-width:0}
+    .head .min img{max-width:100%;object-fit:contain}
+    .page>footer{position:static;margin-top:5mm;padding-top:2mm;break-inside:avoid;page-break-inside:avoid}
+    .note{break-inside:avoid;page-break-inside:avoid}
+    .cover{height:125mm;padding-top:40mm}
+    .cover .names{margin-top:35px}
+    .basmala-page{height:165mm;min-height:0}
+   }
   `;
   const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>خطة برامج وخدمات التوجيه الطلابي</title><style>${css}${polishCSS}</style></head><body>${[cover,basmalaPage,intro,objectives,areas,...opPages,...programPages,...weekPages,follow].join('')}</body></html>`;
   if(typeof window.printDoc84==='function')window.printDoc84(html);else{const w=window.open('','_blank');if(!w)return window.showMiikNotice?.('الطباعة','اسمح بفتح نافذة الطباعة.');w.document.write(html);w.document.close();const ready=w.document.fonts?.ready||Promise.resolve();Promise.race([ready,new Promise(resolve=>setTimeout(resolve,2500))]).then(()=>w.print())}
