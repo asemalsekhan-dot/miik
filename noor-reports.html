@@ -950,22 +950,33 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 </script>
 
 
+<style id="miik-noor-result-actions-style">
+.report-print-controls .miik-noor-period-label{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:#315c4e;font-weight:700}.report-print-controls .miik-noor-result-period{max-width:100%;padding:10px;border:1px solid #8da493;border-radius:10px;background:#fff;color:#294b42;font-family:inherit;font-size:14px}.report-print-controls button[hidden]{display:none!important}@media(max-width:650px){.report-print-controls .miik-noor-period-label{width:100%;justify-content:center}.report-print-controls .miik-noor-result-period{width:100%}}
+</style>
 <script id="miik-noor-followup-sender">
 (function(){'use strict';
  const academic=n=>{const s=String(n||'');return s&&!/(نشاط|سلوك|مواظب|حضور|غياب|مواطن)/.test(s)};
  let candidate=null;
  function container(kind){return document.querySelector(kind==='individual'?'#analysisPanel .report-print-controls':'#comparisonResult .report-print-controls')}
+ const HISTORY='نتائج العام الدراسي السابق';
+ const PERIODS=['اختبارات الفترة الأولى للفصل الدراسي الأول','اختبارات الفترة الثانية للفصل الدراسي الأول','اختبارات نهاية الفصل الدراسي الأول','اختبارات الفترة الأولى للفصل الدراسي الثاني','اختبارات الفترة الثانية للفصل الدراسي الثاني',HISTORY];
+ const parentMessage=(type,payload)=>window.parent.postMessage({type,payload},location.protocol==='file:'?'*':location.origin);
+ function sync(kind){
+  const box=container(kind);if(!box)return;const select=box.querySelector('.miik-noor-result-period'),follow=box.querySelector('.miik-noor-followup-btn'),letter=box.querySelector('.miik-noor-history-letter-btn');
+  const chosen=select?.value||'',historical=chosen===HISTORY,ready=!!candidate&&candidate.kind===kind&&window.parent!==window;
+  if(follow){follow.hidden=historical;follow.textContent='إعداد المتابعة التحصيلية ('+(candidate?.rows?.length||0)+')';follow.disabled=!ready||!PERIODS.includes(chosen)||historical||!candidate?.rows?.length;follow.title=!chosen?'اختر فترة النتائج أولًا':!candidate?.rows?.length?'لا توجد حالات مقترحة للمتابعة في هذا التحليل':'مراجعة الطلاب ثم حفظ المتابعات لهذه الفترة'}
+  if(letter){letter.hidden=!historical;letter.disabled=!ready||!historical;letter.title='فتح خطاب عام لمعلم المادة دون أسماء طلاب'}
+ }
  function render(kind){
   const box=container(kind);if(!box)return;
-  let button=box.querySelector('.miik-noor-followup-btn');
-  if(!button){button=document.createElement('button');button.type='button';button.className='btn miik-noor-followup-btn';button.addEventListener('click',()=>{
-   if(!candidate?.rows?.length || window.parent===window)return;
-   window.parent.postMessage({type:'miik-noor-followup-review',payload:candidate},location.protocol==='file:'?'*':location.origin);
-  });box.appendChild(button)}
-  button.textContent='إعداد المتابعة التحصيلية ('+(candidate?.rows?.length||0)+')';
-  button.disabled=!candidate?.rows?.length || candidate.historical || window.parent===window;
-  if(candidate?.historical)button.textContent='نتائج نهاية العام: تحليل وخطاب عام فقط';
-  button.title=candidate?.rows?.length?'راجع الطلاب وفترة الاختبار قبل إنشاء المتابعات':'لم تظهر حالات مقترحة؛ يمكنك إنشاء متابعة يدويًا في مِعِك';
+  let select=box.querySelector('.miik-noor-result-period');
+  if(!select){const label=document.createElement('label');label.className='miik-noor-period-label';label.textContent='فترة النتائج';select=document.createElement('select');select.className='miik-noor-result-period';select.setAttribute('aria-label','فترة النتائج');select.innerHTML='<option value="">اختر فترة النتائج</option>'+PERIODS.map(p=>'<option>'+p+'</option>').join('');select.addEventListener('change',()=>sync(kind));label.appendChild(select);box.appendChild(label)}
+  select.disabled=false;select.value='';
+  let follow=box.querySelector('.miik-noor-followup-btn');
+  if(!follow){follow=document.createElement('button');follow.type='button';follow.className='btn miik-noor-followup-btn';follow.addEventListener('click',()=>{const chosen=select.value;if(!candidate?.rows?.length||candidate.kind!==kind||!PERIODS.includes(chosen)||chosen===HISTORY||window.parent===window)return;parentMessage('miik-noor-followup-review',{...candidate,period:chosen,historical:false})});box.appendChild(follow)}
+  let letter=box.querySelector('.miik-noor-history-letter-btn');
+  if(!letter){letter=document.createElement('button');letter.type='button';letter.className='btn miik-noor-history-letter-btn';letter.textContent='خطاب عام لنتائج العام السابق';letter.addEventListener('click',()=>{if(!candidate||candidate.kind!==kind||select.value!==HISTORY||window.parent===window)return;parentMessage('miik-noor-history-letter',{period:HISTORY})});box.appendChild(letter)}
+  sync(kind);
  }
  function individual(dto){
   const context=dto.context||{},stage=context.stage||'',grade=context.grade||'';
@@ -977,7 +988,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
    }).map(x=>String(x.subjectName||x.subjectNameRaw).trim()))];
    const subjectLevels=Object.fromEntries((st.subjects||[]).filter(x=>subjects.includes(String(x.subjectName||x.subjectNameRaw).trim())).map(x=>[String(x.subjectName||x.subjectNameRaw).trim(),window.MiikNoorResolvedLevel?.(x,stage)]));return {name:String(st.studentNameRaw||'').trim(),stage,grade,section:String(st.className||'').trim(),subjects,subjectLevels};
   }).filter(x=>x.name&&x.subjects.length);
-  return {kind:'individual',rows,historical:/شهادة نهاية العام/.test(context.resultType||'')};
+  return {kind:'individual',rows};
  }
  function comparison(payload){
   if(payload?.dto)return {...individual(payload.dto),kind:'comparison'};
@@ -986,7 +997,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
    section:String(x.section||''),subjects:x.subjects.map(String)
   })).filter(x=>x.name)};
  }
- window.miikNoorClearFollowups=()=>{candidate=null;for(const b of document.querySelectorAll('.miik-noor-followup-btn')){b.disabled=true;b.textContent='إعداد متابعة تحصيلية';}};
+ window.miikNoorClearFollowups=()=>{candidate=null;for(const b of document.querySelectorAll('.miik-noor-followup-btn,.miik-noor-history-letter-btn'))b.disabled=true;for(const select of document.querySelectorAll('.miik-noor-result-period')){select.value='';select.disabled=true}};
  window.miikNoorPrepareFollowups=(kind,data)=>{candidate=kind==='individual'?individual(data):comparison(data);render(kind)};
 })();
 
