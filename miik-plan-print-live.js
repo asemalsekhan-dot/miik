@@ -75,7 +75,7 @@
   const opPages=opChunks.map((chunk,part)=>page(`<h2>رابعًا: الخطة التشغيلية للبرامج والخدمات</h2>${part?'<p class="continued">تابع الجدول</p>':''}`+table(['م','البرنامج أو الخدمة','الفئة المستهدفة','أسلوب التنفيذ','المسؤول والشركاء','أسابيع التنفيذ','المؤشر','الشاهد'],chunk.map((item,j)=>{const meta=detail(item);
     return `<tr><td>${part*7+j+1}</td><td>${E(item.name)}</td><td>${E(meta[0])}</td><td>${E(meta[1])}</td><td>${E(meta[2])}</td><td>${E(item.weeks.join('، '))}</td><td>${E(meta[3])}</td><td>${E(meta[4])}</td></tr>`;}),'ops')+`<p class="note">هذه الخطة تحدد الأعمال والمستفيدين والمؤشرات والشواهد المتوقعة؛ تُعرض النتائج الفعلية في تقارير التنفيذ.</p>`,'الخطة التشغيلية'));
   const programPages=typeof window.miikProgramPlansForAnnual==='function'?window.miikProgramPlansForAnnual(page,weeks):[];
-  const weekPages=[];for(let offset=0;offset<weeks.length;offset+=9){const chunk=weeks.slice(offset,offset+9);weekPages.push(page(`<h2>سادسًا: الخطة الأسبوعية التفصيلية</h2>`+table(['م','الأسبوع','التاريخ','المحور / البرنامج','القيمة','أبرز المبادرات','المناسبات','الشاهد'],chunk.map((w,j)=>{const programs=(w.programs||[{name:w.program}]).filter(x=>x.name),titles=programs.map(x=>x.name).join('؛ '),witness=[...new Set(programs.map(x=>detail(x)[4]))].join('؛ ')||'ما يُوثق عند التنفيذ';return `<tr><td>${offset+j+1}</td><td>${E(w.w)}</td><td>${E(w.date)}</td><td>${E(titles||'—')}</td><td>${E(w.value||'—')}</td><td>${E(w.initiatives||'—')}</td><td>${E((w.days||[]).join('، ')||'—')}</td><td>${E(witness)}</td></tr>`;}),'weeks'),'الخطة الأسبوعية'));}
+  const weeksPerPage=mobile?7:9;const weekPages=[];for(let offset=0;offset<weeks.length;offset+=weeksPerPage){const chunk=weeks.slice(offset,offset+weeksPerPage);weekPages.push(page(`<h2>سادسًا: الخطة الأسبوعية التفصيلية</h2>`+table(['م','الأسبوع','التاريخ','المحور / البرنامج','القيمة','أبرز المبادرات','المناسبات','الشاهد'],chunk.map((w,j)=>{const programs=(w.programs||[{name:w.program}]).filter(x=>x.name),titles=programs.map(x=>x.name).join('؛ '),witness=[...new Set(programs.map(x=>detail(x)[4]))].join('؛ ')||'ما يُوثق عند التنفيذ';return `<tr><td>${offset+j+1}</td><td>${E(w.w)}</td><td>${E(w.date)}</td><td>${E(titles||'—')}</td><td>${E(w.value||'—')}</td><td>${E(w.initiatives||'—')}</td><td>${E((w.days||[]).join('، ')||'—')}</td><td>${E(witness)}</td></tr>`;}),'weeks'),'الخطة الأسبوعية','weekly-plan-page'));}
   const cover=page(`<div class="cover"><h1>خطة برامج وخدمات التوجيه الطلابي</h1><h2>${E(term)} للعام الدراسي ${E(c.year)}هـ</h2><div class="names"><span>الموجّه الطلابي<br>${E(p.name||'')}</span><span>مدير المدرسة<br>${E(p.principal||'')}</span></div></div>`,term);
   const basmalaPage='<section class="page basmala-page"><div class="basmala-calligraphy">بِسْمِ اللّٰهِ الرَّحْمَٰنِ الرَّحِيمِ</div></section>';
   const intro=page(`<h2>أولًا: التمهيد ومصادر تحديد الاحتياج</h2><p class="intro">تمثّل هذه الخطة إطارًا تنظيميًا لعمل التوجيه الطلابي خلال ${E(term)}، وتجمع بين الرؤية العامة والبرامج والخدمات والمحاور الأسبوعية، مع مراعاة الجوانب الوقائية والإنمائية والعلاجية واحتياجات الطلبة وواقع المدرسة. وتُنفذ الخطة بمرونة وفق ما يستجد من تعاميم واحتياجات، مع توثيق الأعمال والشواهد ومتابعة أثرها.</p><h3>مصادر تحديد الاحتياج</h3>${table(['المصدر','ما يُستفاد منه'],sourceRows,'sources')}<p class="note">تُستخدم هذه المصادر لفهم واقع المدرسة؛ ويُضاف البرنامج الخاص باحتياج طلبتها إلى خطة الموجّه عند الحاجة.</p>`,'التمهيد ومصادر الاحتياج');
@@ -142,8 +142,19 @@
     .head .gov,.head .school{flex:0 0 40%;width:40%;min-width:0;white-space:normal;overflow-wrap:anywhere}
     .head .min{flex:0 0 20%;width:20%;min-width:0}
     .head .min img{max-width:100%;object-fit:contain}
-    .page>footer{position:static;margin-top:5mm;padding-top:2mm;break-inside:avoid;page-break-inside:avoid}
+    .page>footer{position:static;margin-top:3mm;padding-top:1mm;break-inside:avoid;page-break-inside:avoid}
     .note{break-inside:avoid;page-break-inside:avoid}
+    /* Reserve space for the note and footer on short landscape sheets.
+       Keep the established font sizes; reduce only surrounding whitespace. */
+    .program-plan-page .head{min-height:65px;padding-bottom:8px}
+    .program-plan-page h2{margin:14px 0 10px}
+    .program-plan-page h3{margin:9px 0 6px}
+    .program-plan-page .intro{padding:7px 12px;margin:3px 0 8px;line-height:1.85}
+    .program-plan-page table{margin-top:8px}
+    .program-plan-page .ops th,.program-plan-page .ops td{padding:5px 8px}
+    .program-plan-page .note{margin:6px 0 0;line-height:1.6}
+    .weekly-plan-page h2{margin:18px 0 12px}
+    .weekly-plan-page table{margin-top:10px}
     .cover{height:125mm;padding-top:40mm}
     .cover .names{margin-top:35px}
     .basmala-page{height:165mm;min-height:0}
