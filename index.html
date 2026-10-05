@@ -3351,7 +3351,7 @@ window.v39PrintNow=function(){
  // Invariant: no week-specific date patch and no calendar-owned week-date table.
  const T1=[
  ['الأسبوع الأول','10 – 14 / 03','التهيئة الإرشادية والأسبوع التمهيدي','عقد مجلس أولياء الأمور؛ تحليل نتائج الطلبة وتصنيفهم تمهيدًا لتقديم الدعم؛ تعريف الطلبة بفن إدارة الوقت',''],
- ['الأسبوع الثاني','17 – 21 / 03','خفض العنف (رفق)','تكريم الطلبة المتفوقين؛ التبصير بقواعد السلوك والمواظبة؛ تطبيق قائمة رصد المشكلات للمرحلتين المتوسطة والثانوية',''],
+ ['الأسبوع الثاني','17 – 21 / 03','خفض العنف (رفق)','تكريم الطلاب المتفوقين؛ التبصير بقواعد السلوك والمواظبة؛ تطبيق قائمة رصد المشكلات للمرحلتين المتوسطة والثانوية',''],
  ['الأسبوع الثالث','24 – 28 / 03','تعزيز السلوك الإيجابي','التبصير بخصائص نمو الطلبة ونظام المسارات؛ المحافظة على الكتب الدراسية؛ طرق الاستذكار الجيد؛ تكريم المتميزين سلوكيًا؛ رعاية المتأخرين والمتغيبين','اليوم الدولي للعمل الخيري|اليوم الدولي لمحو الأمية'],
  ['الأسبوع الرابع','02 – 06 / 04','رعاية الطلبة من الفئات الخاصة','دور المملكة في دعم مسيرة التعليم؛ عقد مجلس أولياء الأمور؛ رعاية الطلبة المتأخرين والمنقطعين',''],
  ['الأسبوع الخامس','09 – 13 / 04','توثيق العلاقة بين الأسرة والمدرسة','تنمية مهارات التواصل لدى الطلبة؛ القيادة تحت سن الثامنة عشرة؛ رعاية المتأخرين والمتغيبين','اليوم الدولي للسلام|اليوم الوطني|اليوم الدولي للغات الإشارة'],
@@ -3371,7 +3371,7 @@ window.v39PrintNow=function(){
  ];
  const T2=[
  ['الأسبوع الأول','09 – 13 / 08','التهيئة الإرشادية لبداية الفصل الثاني','استقبال الطلبة وتعريفهم بخطة الفصل؛ عقد اجتماع لجنة التوجيه والإرشاد؛ مراجعة ملفات الحالات المفتوحة','','الإيجابية'],
- ['الأسبوع الثاني','16 – 20 / 08','تحليل نتائج الفصل الأول','تحليل النتائج إحصائيًا وتصنيف الطلبة تمهيدًا لتقديم الدعم؛ عقد مجلس أولياء الأمور؛ تحديث الخطط العلاجية للمتعثرين','','المثابرة'],
+ ['الأسبوع الثاني','16 – 20 / 08','تحليل نتائج الفصل الأول','تكريم الطلاب المتفوقين؛ تحليل النتائج إحصائيًا وتصنيف الطلبة تمهيدًا لتقديم الدعم؛ عقد مجلس أولياء الأمور؛ تحديث الخطط العلاجية للمتعثرين','','المثابرة'],
  ['الأسبوع الثالث','23 – 27 / 08','تعزيز الانضباط والمواظبة','التبصير بقواعد السلوك والمواظبة بعد الإجازة؛ رصد حالات الغياب المبكر ومتابعتها؛ تكريم المنضبطين','','الانضباط'],
  ['الأسبوع الرابع','30/08 – 04/09','الأمن الفكري والانتماء الوطني','برامج توعوية في سلامة الفكر ومواجهة الشائعات؛ أنشطة تعزز الهوية الوطنية والانتماء','','الوسطية'],
  ['الأسبوع الخامس','07 – 11 / 09','الصحة النفسية والدعم النفسي','جلسات توعوية بأهمية الصحة النفسية؛ تفعيل قنوات التواصل مع الموجّه الطلابي؛ متابعة الحالات ذات الأولوية','','المرونة'],
@@ -3413,6 +3413,21 @@ window.v39PrintNow=function(){
  function referenceRows(term){const src=String(term)==='2'?T2:T1, t1vals=['الانتماء','المسؤولية','الوعي','الطموح','الوطنية','المثابرة'];return src.map((x,i)=>{const days=x[4]?x[4].split('|').filter(Boolean):[];return{w:x[0],date:x[1]+' هـ',program:x[2],initiatives:x[3],days,extras:days.map(text=>{const a=OFFICIAL_DATES[text];return{text,type:'global',date:a?{y:a[0],m:a[1],d:a[2]}:null}}),value:String(term)==='2'?(x[5]||''):t1vals[i%t1vals.length]}})}
  function operationalKey(term){return 'miikCounselorPlanT'+String(term)}
  function rows(term){const ref=referenceRows(term),key=operationalKey(term),adoptKey='miikPlanAdoptedT'+String(term);if(localStorage.getItem(adoptKey)!=='1')return [];try{const saved=JSON.parse(localStorage.getItem(key)||'null');if(Array.isArray(saved)&&saved.length===ref.length)return saved.map((w,i)=>({...ref[i],...w,days:ref[i].days,extras:ref[i].extras}))}catch(_){}return []}
+ // Apply the approved week-two activity to saved plans once, without
+ // replacing the counselor's program, dates or other initiatives.
+ for(const term of ['1','2']){
+  const key=operationalKey(term),marker='miikPlanHonoringWeek2V1T'+term;
+  try{
+   if(localStorage.getItem(marker)==='1')continue;
+   const stored=JSON.parse(localStorage.getItem(key)||'null');
+   if(!Array.isArray(stored)||stored.length<2||!stored[1]||typeof stored[1]!=='object')continue;
+   const before=String(stored[1].initiatives||'');
+   let after=before.replace(/تكريم الطلبة المتفوقين/g,'تكريم الطلاب المتفوقين');
+   if(!after.includes('تكريم الطلاب المتفوقين'))after='تكريم الطلاب المتفوقين'+(after?'؛ '+after:'');
+   if(after!==before){stored[1]={...stored[1],initiatives:after};localStorage.setItem(key,JSON.stringify(stored))}
+   localStorage.setItem(marker,'1');
+  }catch(_){}
+ }
  window.miikReferenceRows003=referenceRows;window.miikOperationalPlanKey003=operationalKey;
  window.miikPlanRows12=rows;
  window.planWeeks=function(){return rows(context().term)};
@@ -4491,7 +4506,7 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
     document.getElementById('moduleTitle').textContent='تحليل النتائج';
     document.getElementById('moduleDesc').textContent='حلّل نتيجة نور أو قارن بين فترتين. ملفات الدرجات تُقرأ داخل المتصفح ولا تُحفظ تلقائيًا.';
     const grid=document.getElementById('moduleGrid');grid.classList.add('miik-noor-host');
-    grid.innerHTML='<div class="miik-noor-choice"><button type="button" data-mode="individual">تحليل نتيجة واحدة</button><button type="button" data-mode="comparison">مقارنة نتيجتين</button></div><iframe class="miik-noor-frame" title="تحليل نتائج نور" src="noor-reports.html?mode='+ (mode==='comparison'?'comparison':'individual') +'" referrerpolicy="no-referrer"></iframe>';
+    grid.innerHTML='<div class="miik-noor-choice"><button type="button" data-mode="individual">تحليل نتيجة واحدة</button><button type="button" data-mode="comparison">مقارنة نتيجتين</button></div><iframe class="miik-noor-frame" title="تحليل نتائج نور" src="noor-reports.html?v=20261005-reader2&mode='+ (mode==='comparison'?'comparison':'individual') +'" referrerpolicy="no-referrer"></iframe>';
     grid.querySelectorAll('[data-mode]').forEach(button=>{
       button.classList.toggle('active',button.dataset.mode===(mode==='comparison'?'comparison':'individual'));
       button.addEventListener('click',()=>{if(button.dataset.mode!==mode)miikNoorHub(button.dataset.mode)})
@@ -4829,7 +4844,7 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 })();
 </script>
 <script src="miik-print-ministry-logo.js"></script>
-<script src="miik-plan-print-live.js?v=20261005-landscape3"></script>
+<script src="miik-plan-print-live.js?v=20261005-honoring4"></script>
 <script src="miik-health-types.js"></script>
 <script src="miik-people-print.js"></script>
 <link rel="stylesheet" href="miik-followup-refinements.css">
@@ -4844,7 +4859,7 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 <script src="miik-backup.js"></script>
 <script src="miik-student-identity.js"></script>
 <link rel="stylesheet" href="miik-program-report-plan.css">
-<script src="miik-program-report-plan.js"></script>
+<script src="miik-program-report-plan.js?v=20261005-honoring4"></script>
 <link rel="stylesheet" href="miik-special-bulk.css">
 <script src="miik-special-bulk.js"></script>
 </body>

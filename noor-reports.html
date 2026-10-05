@@ -95,7 +95,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 }
 
 </style>
-<script src="jszip.min.js"></script><script src="miik-xlsx-local.js"></script>
+<script src="jszip.min.js"></script><script src="miik-xml-sax.js?v=20261005-reader2"></script><script src="miik-xlsx-local.js?v=20261005-reader2"></script>
 
 <style id="comparisonStyle">
 [hidden]{display:none!important}
@@ -336,425 +336,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 </section>
 </div>
 
-<script>
-/* قارئ نتائج نور المشترك. يتوقع Workbook من SheetJS (XLSX.read).
-   الهدف: اكتشاف قوالب نور وتحويلها إلى DTO موحد قبل أي تحليل.
-*/
-(function (global) {
-  "use strict";
-
-  // النشاط يظهر في جدول التدقيق، لكنه لا يدخل لاحقًا في مؤشرات التحصيل الأكاديمي.
-  // السلوك والمواظبة تُقرأ كحقول متابعة مستقلة وليست مواد دراسية.
-  const EXCLUDED_SUBJECTS = new Set([
-    "السلوك", "السلوك الإيجابي", "السلوك المتميز", "المواظبة", "الحضور", "الغياب"
-  ]);
-
-  const clean = v => String(v ?? "").replace(/\s+/g, " ").trim();
-  const ar = v => clean(v).replace(/[ـ]/g, "");
-  const num = v => {
-    if (v === null || v === undefined || v === "") return null;
-    const n = Number(String(v).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(",", "."));
-    return Number.isFinite(n) ? n : null;
-  };
-
-  function matrix(ws) {
-    const ref = ws["!ref"];
-    if (!ref) return [];
-    const range = global.XLSX.utils.decode_range(ref);
-    const rows = [];
-    for (let r=range.s.r; r<=range.e.r; r++) {
-      const row = [];
-      for (let c=range.s.c; c<=range.e.c; c++) {
-        const cell = ws[global.XLSX.utils.encode_cell({r,c})];
-        row.push(cell ? (cell.v ?? cell.w ?? null) : null);
-      }
-      rows.push(row);
-    }
-    return rows;
-  }
-
-  function allText(rows) {
-    return rows.flat().map(clean).filter(Boolean).join(" | ");
-  }
-
-  function findCell(rows, predicate) {
-    for (let r=0;r<rows.length;r++) for (let c=0;c<(rows[r]||[]).length;c++) {
-      const v=clean(rows[r][c]);
-      if (predicate(v,r,c)) return {r,c,v};
-    }
-    return null;
-  }
-
-  function extractClassName(rows) {
-    // قوالب نور لا تستخدم تسمية واحدة للفصل: الثانوية قد تستخدم Section،
-    // والمتوسطة قد تستخدم Class، والعربي يستخدم «الفصل».
-    // نبحث في السطر نفسه فقط حتى لا نلتقط رقمًا عشوائيًا من بيانات أخرى.
-    const labels=[];
-    for(let r=0;r<rows.length;r++) for(let c=0;c<(rows[r]||[]).length;c++){
-      const raw=clean(rows[r][c]);
-      const normalized=ar(raw).replace(/[:：]/g,":").trim();
-
-      // يدعم أيضًا الحالة التي تكون فيها التسمية والقيمة داخل الخلية نفسها مثل Class: 1 أو الفصل: 1.
-      const inline=normalized.match(/^(?:الفصل|Section|Class)\s*:\s*([0-9٠-٩]{1,2}|[أ-يA-Za-z]|[0-9٠-٩]{1,2}\s*[\/\-]\s*[أ-يA-Za-z0-9٠-٩]{1,2})$/i);
-      if(inline){
-        const inlineValue=clean(inline[1]);
-        if(inlineValue) return inlineValue;
-      }
-
-      const key=normalized.replace(/:/g,"").trim();
-      if(key==="الفصل" || /^(Section|Class)$/i.test(key)) labels.push({r,c,key});
-    }
-    const valid=v=>{
-      const x=clean(v);
-      if(!x) return false;
-      if(/^(الفصل|Section|Class)$/i.test(ar(x).replace(/[:：]/g,"").trim())) return false;
-      // رقم فصل معتاد، أو ترميز قصير مثل 1/أ أو أ.
-      if(/^\d{1,2}$/.test(x)) return +x>=1 && +x<=30;
-      if(/^[أ-يA-Za-z]$/.test(x)) return true;
-      if(/^\d{1,2}\s*[\/\-]\s*[أ-يA-Za-z0-9]{1,2}$/.test(x)) return true;
-      return false;
-    };
-    for(const label of labels){
-      const row=rows[label.r]||[];
-      // الإنجليزية غالبًا القيمة بعدها، والعربية في قوالب RTL غالبًا قبلها؛ ثم نجرب الاتجاه الآخر.
-      // بعض قوالب نور تستخدم خلايا مدمجة واسعة؛ قد تفصل القيمة عن التسمية حتى 5–6 أعمدة.
-      // نبقى في السطر نفسه ونوسّع البحث فقط، حتى لا نلتقط رقمًا من سطر آخر.
-      const forward=[1,2,3,4,5,6,7,8], backward=[-1,-2,-3,-4,-5,-6,-7,-8];
-      const preferred = /^(Section|Class)$/i.test(label.key) ? [...forward,...backward] : [...backward,...forward];
-      for(const d of preferred){
-        const c=label.c+d;
-        if(c<0 || c>=row.length) continue;
-        const v=clean(row[c]);
-        if(valid(v)) return v;
-      }
-    }
-    return null;
-  }
-
-  function normalizeSubject(name) {
-    let s=ar(name)
-      .replace(/^\*+/,"")
-      .replace(/\s*\([^)]*\)\s*/g," ")
-      .replace(/\s+/g," ").trim();
-    const aliases = {
-      "القرآن الكريم والدراسات الاسلامية":"القرآن الكريم والدراسات الإسلامية",
-      "الدراسات الاسلامية":"الدراسات الإسلامية",
-      "اللغة الانجليزية":"اللغة الإنجليزية",
-      "المهارات الحياتية والاسرية":"المهارات الحياتية والأسرية",
-      "المهارات الحياتية والأسرية":"المهارات الحياتية والأسرية",
-      "التربية البدنية والدفاع عن النفس":"التربية البدنية والدفاع عن النفس"
-    };
-    return aliases[s] || s;
-  }
-
-  function excluded(name) {
-    const n=normalizeSubject(name);
-    return [...EXCLUDED_SUBJECTS].some(x => n===x || n.includes(x));
-  }
-
-  // أسطر تلخيصية في شهادة نور وليست مواد دراسية.
-  // تُستبعد من المصدر نفسه حتى لا تظهر في المعاينة ولا تدخل أي تحليل.
-  function summaryRow(name) {
-    const n=ar(name).replace(/[:：]/g, "").trim();
-    return /^(مجموع الدرجات الموزونة|مجموع الدرجات الموزنه|الدرجات الموزونة|الدرجات الموزنه|المعدل|المعدل العام|المعدل الفصلي|النسبة المئوية|النسبه المئويه)$/.test(n);
-  }
-
-  function detect(workbook) {
-    const ws=workbook.Sheets[workbook.SheetNames[0]];
-    const rows=matrix(ws), text=allText(rows);
-
-    if (text.includes("إشعار فترة أولى") || text.includes("إشعار فترة ثانية"))
-      return {id:"HIGH_PERIOD_NOTICE", confidence:0.99};
-
-    if (text.includes("كشف درجات الفصل") && text.includes("الثانوي"))
-      return {id:"HIGH_FINAL_NOTICE", confidence:0.99};
-
-    if (text.includes("إشعار بدرجات الفصل الدراسي") && text.includes("المتوسط"))
-      return {id:"MIDDLE_INDIVIDUAL_NOTICE", confidence:0.97};
-
-    return {id:"UNKNOWN", confidence:0};
-  }
-
-  function contextFromText(text, templateId) {
-    let stage = text.includes("الثانوي") ? "الثانوية" : text.includes("المتوسط") ? "المتوسطة" : null;
-    let grade = null;
-    if (/الأول\s+(المتوسط|الثانوي)/.test(text)) grade="الأول";
-    else if (/الثاني\s+(المتوسط|الثانوي)/.test(text)) grade="الثاني";
-    else if (/الثالث\s+(المتوسط|الثانوي)/.test(text)) grade="الثالث";
-
-    let resultType=null;
-
-    // في إشعار المتوسط الفردي، عنوان نور نفسه يحدد نوع النتيجة:
-    // "إشعار بدرجات الفصل الدراسي ... - أولى"  = الفترة الأولى
-    // "إشعار بدرجات الفصل الدراسي ... - ثانية" = الفترة الثانية
-    // نفس العنوان بلا اللاحقة                       = نهاية الفصل
-    // لا نعتمد على كلمات "الفترة" داخل أعمدة جدول الدرجات.
-    if (templateId==="MIDDLE_INDIVIDUAL_NOTICE") {
-      const compact = text.replace(/[–—]/g,"-").replace(/\s+/g," ");
-      const notice = compact.match(/إشعار\s+بدرجات\s+الفصل\s+الدراسي\s+(الأول|الثاني)(?:\s*-\s*(أولى|الأولى|أول|الأول|ثانية|الثانية|ثاني|الثاني))?/);
-      if (notice) {
-        if (["أولى","الأولى","أول","الأول"].includes(notice[2])) resultType="فترة أولى";
-        else if (["ثانية","الثانية","ثاني","الثاني"].includes(notice[2])) resultType="فترة ثانية";
-        else if (notice[1]==="الأول") resultType="نهاية الفصل الأول";
-        else if (notice[1]==="الثاني") resultType="نهاية الفصل الثاني";
-
-      }
-    } else if (templateId==="HIGH_FINAL_NOTICE") {
-      if (text.includes("الفصل الدراسي الأول") || text.includes("الفصل الأول")) resultType="نهاية الفصل الأول";
-      else if (text.includes("الفصل الدراسي الثاني") || text.includes("الفصل الثاني")) resultType="نهاية الفصل الثاني";
-
-    } else if (templateId==="HIGH_PERIOD_NOTICE") {
-      if (text.includes("إشعار فترة أولى") || text.includes("فترة أولى")) resultType="فترة أولى";
-      else if (text.includes("إشعار فترة ثانية") || text.includes("فترة ثانية")) resultType="فترة ثانية";
-    }
-
-    if (!resultType && templateId==="UNKNOWN") {
-      if (text.includes("الفصل الدراسي الأول")) resultType="نهاية الفصل الأول";
-      else if (text.includes("الفصل الدراسي الثاني")) resultType="نهاية الفصل الثاني";
-
-      else if (text.includes("فترة أولى")) resultType="فترة أولى";
-      else if (text.includes("فترة ثانية")) resultType="فترة ثانية";
-    }
-
-    return {stage, grade, resultType, templateId};
-  }
-
-  function extractSchoolName(rows){
-    const labels=["اسم المدرسة","School Name"];
-    for(const label of labels){
-      const hit=findCell(rows,v=>ar(v).toLowerCase().includes(ar(label).toLowerCase()));
-      if(!hit) continue;
-      const row=rows[hit.r]||[];
-      const candidates=[];
-      for(let d=1;d<=14;d++) for(const c of [hit.c-d,hit.c+d]){
-        if(c<0||c>=row.length) continue;
-        const v=clean(row[c]);
-        if(v && !/اسم المدرسة|School Name/i.test(v) && v.length>4) candidates.push({d,v});
-      }
-      if(candidates.length){candidates.sort((a,b)=>a.d-b.d);return candidates[0].v;}
-    }
-    // بعض إشعارات نور تضع اسم المدرسة كسطر مستقل دون عنوان ملاصق.
-    for(const row of rows) for(const cell of (row||[])){
-      const v=clean(cell);
-      if(/(متوسطة|ثانوية|ابتدائية|مدرسة)/.test(v) && !/المرحلة|الصف|مدير المدرسة/.test(v) && v.length>=8) return v;
-    }
-    return null;
-  }
-
-  function extractEducationAdmin(rows){
-    for(const row of rows) for(const cell of (row||[])){
-      const v=clean(cell);
-      if(/الإدارة العامة للتعليم/.test(v)) return v;
-    }
-    return null;
-  }
-
-  function looksArabicStudentName(v){
-    const s=clean(v);
-    if(!s || s.length<5) return false;
-    if(/اسم الطالب|Student Name|الفصل|Section|المدرسة|School Name|الهوية|Identity|الجنسية|Nationality|الميلاد|Birth/i.test(s)) return false;
-    const arabic=(s.match(/[\u0600-\u06FF]/g)||[]).length;
-    return arabic>=4 && /\s/.test(s) && !/^(الأول|الثاني|الثالث|الثانوية|المتوسطة)$/.test(s);
-  }
-
-  function extractName(rows) {
-    // نور قد يضع «اسم الطالب» في أقصى اليمين والاسم داخل خلية مدمجة بعيدة في السطر نفسه.
-    // لذلك لا نعتمد على خلية ملاصقة فقط.
-    const labels=[];
-    for(let r=0;r<rows.length;r++) for(let c=0;c<(rows[r]||[]).length;c++){
-      const v=clean(rows[r][c]);
-      if(/اسم\s*الطالب/.test(v) || /Student\s*Name/i.test(v)) labels.push({r,c,v});
-    }
-    for(const label of labels){
-      const row=rows[label.r]||[];
-      const candidates=[];
-      for(let c=0;c<row.length;c++){
-        if(c===label.c) continue;
-        const v=clean(row[c]);
-        if(looksArabicStudentName(v)) candidates.push({v,d:Math.abs(c-label.c)});
-      }
-      if(candidates.length){ candidates.sort((a,b)=>a.d-b.d); return candidates[0].v; }
-    }
-    // احتياط: بعض القوالب تضع الاسم داخل نفس خلية العنوان.
-    const h=findCell(rows,v=>/اسم\s*الطالب/.test(v) && clean(v.replace(/اسم\s*الطالب\s*:?/g,"")));
-    if(h){ const x=clean(h.v.replace(/اسم\s*الطالب\s*:?/g,"")); if(looksArabicStudentName(x)) return x; }
-    return null;
-  }
-
-  function extractIndicator(rows, labels) {
-    const names=Array.isArray(labels)?labels:[labels];
-    for(const label of names){
-      const hit=findCell(rows,v=>ar(v).includes(ar(label)));
-      if(!hit) continue;
-      const candidates=[];
-      // الأقرب في نفس السطر أولًا، لأن قوالب نور قد تعكس اتجاه الخلايا.
-      for(let d=1;d<=8;d++){
-        for(const c of [hit.c-d,hit.c+d]){
-          if(c>=0 && c<(rows[hit.r]||[]).length){
-            const n=num(rows[hit.r][c]); if(n!==null) candidates.push({d,n});
-          }
-        }
-      }
-      // ثم سطر أعلى/أسفل قريب عند وجود دمج خلايا.
-      for(let dr=1;dr<=2;dr++){
-        for(const rr of [hit.r-dr,hit.r+dr]){
-          if(rr<0||rr>=rows.length) continue;
-          for(let dc=-2;dc<=2;dc++){
-            const c=hit.c+dc; if(c<0||c>=(rows[rr]||[]).length) continue;
-            const n=num(rows[rr][c]); if(n!==null) candidates.push({d:10+dr+Math.abs(dc),n});
-          }
-        }
-      }
-      if(candidates.length){ candidates.sort((a,b)=>a.d-b.d); return candidates[0].n; }
-    }
-    return null;
-  }
-
-  function extractBehavior(rows){
-    let positive=extractIndicator(rows,["السلوك الإيجابي"]);
-    let distinguished=extractIndicator(rows,["السلوك المتميز","السلوك المميز"]);
-    let attendance=extractIndicator(rows,["المواظبة"]);
-
-    // قالب الثانوي قد يجمعها في سطر واحد:
-    // «الإيجابي / المتميز / المواظبة» وبجواره «80 / 20 / 100».
-    if(positive===null || distinguished===null || attendance===null){
-      const hit=findCell(rows,v=>ar(v).includes("الإيجابي") && ar(v).includes("المتميز") && ar(v).includes("المواظبة"));
-      if(hit){
-        const row=rows[hit.r]||[];
-        const vals=[];
-        for(let c=0;c<row.length;c++){
-          if(c===hit.c) continue;
-          const txt=clean(row[c]);
-          const m=txt.match(/(\d+(?:\.\d+)?)\s*[\/\-]\s*(\d+(?:\.\d+)?)\s*[\/\-]\s*(\d+(?:\.\d+)?)/);
-          if(m){ vals.push(+m[1],+m[2],+m[3]); break; }
-        }
-        if(vals.length===3){
-          if(positive===null) positive=vals[0];
-          if(distinguished===null) distinguished=vals[1];
-          if(attendance===null) attendance=vals[2];
-        }
-      }
-    }
-    return {positive,distinguished,attendance};
-  }
-
-  function extractRankOnSameRow(rows, labels){
-    // الترتيب حساس: لا نستخدم البحث التقريبي حول السطر حتى لا نلتقط درجة/معدل قريبًا بالخطأ.
-    // نقبل رقمًا فقط إذا كان موجودًا في نفس سطر عبارة الترتيب الرسمية في نور.
-    const names=Array.isArray(labels)?labels:[labels];
-    for(const label of names){
-      const hit=findCell(rows,v=>ar(v).includes(ar(label)));
-      if(!hit) continue;
-      const row=rows[hit.r]||[];
-      const candidates=[];
-      for(let d=1;d<=12;d++){
-        for(const c of [hit.c-d,hit.c+d]){
-          if(c<0 || c>=row.length) continue;
-          const n=num(row[c]);
-          if(n!==null && Number.isInteger(n) && n>=1) candidates.push({d,n});
-        }
-      }
-      if(candidates.length){ candidates.sort((a,b)=>a.d-b.d); return candidates[0].n; }
-    }
-    return null;
-  }
-
-  function extractRanking(rows){
-    // لا يحسب مِعِك ترتيبًا من الدرجات؛ ينقل ترتيب نور فقط متى كان الرقم ظاهرًا مع خانة الترتيب نفسها.
-    const classRank=extractRankOnSameRow(rows,["الترتيب على الفصل","ترتيب الفصل"]);
-    const gradeRank=extractRankOnSameRow(rows,["الترتيب على الصف","ترتيب الصف"]);
-    return {classRank,gradeRank};
-  }
-
-  function parseMiddleIndividual(workbook, det) {
-    const students=[];
-    for(const sn of workbook.SheetNames){
-      const rows=matrix(workbook.Sheets[sn]), text=allText(rows);
-      const name=extractName(rows); if(!name) continue;
-      const subjectHeader=findCell(rows,v=>ar(v)==="المواد الدراسية");
-      const totalHeader=findCell(rows,v=>ar(v)==="المجموع");
-      const gradeHeader=findCell(rows,v=>ar(v)==="التقدير");
-      if(!subjectHeader || !totalHeader) continue;
-      const subjects=[];
-      for(let r=subjectHeader.r+1;r<rows.length;r++){
-        const raw=clean(rows[r][subjectHeader.c]); if(!raw) continue;
-        if(/التقدير العام|الترتيب|نتيجة الطالب|مدير المدرسة/.test(raw)) break;
-        const subject=normalizeSubject(raw); if(!subject || excluded(subject) || summaryRow(subject)) continue;
-        const parsedScore=num(rows[r][totalHeader.c]);
-        const score=parsedScore; // الخانة الفارغة تبقى null؛ الصفر الحقيقي من نور يبقى 0.
-        const noorGrade=gradeHeader ? clean(rows[r][gradeHeader.c])||null : null;
-        subjects.push({subjectNameRaw:raw, subjectName:subject, score, maxScore:null, percentage:null, noorGrade});
-      }
-      students.push({studentNameRaw:name, className:extractClassName(rows), subjects, behavior:extractBehavior(rows), ranking:extractRanking(rows)});
-    }
-    const first=matrix(workbook.Sheets[workbook.SheetNames[0]]);
-    const context=contextFromText(allText(first),det.id);
-    context.schoolName=extractSchoolName(first);
-    context.educationAdmin=extractEducationAdmin(first);
-    return {context, students, warnings:["maxScore يُستكمل من رؤوس/بنية القالب في مرحلة التحقق التالية."]};
-  }
-
-  function parseHighIndividual(workbook, det) {
-    const students=[];
-    for(const sn of workbook.SheetNames){
-      const rows=matrix(workbook.Sheets[sn]);
-      const name=extractName(rows); if(!name) continue;
-
-      // للثانوي قالبان فرديان معروفان لدينا حاليًا داخل نفس Adapter:
-      // نهاية الفصل: «المواد الدراسية / المجموع / التقدير العام».
-      // إشعار الفترة: «المادة / مجموع / النهاية العظمى» ولا يحتوي تقديرًا نصيًا دائمًا.
-      const sh=findCell(rows,v=>{
-        const x=ar(v).trim(); return x==="المواد الدراسية" || x==="المادة";
-      });
-      const th=findCell(rows,v=>{
-        const x=ar(v).trim(); return x==="المجموع" || x==="مجموع";
-      });
-      const mh=findCell(rows,v=>ar(v).trim()==="النهاية العظمى");
-      const gh=findCell(rows,v=>{
-        const x=ar(v).trim(); return x==="التقدير" || x==="التقدير العام";
-      });
-      if(!sh || !th) continue;
-
-      const subjects=[];
-      for(let r=sh.r+1;r<rows.length;r++){
-        const raw=clean(rows[r][sh.c]); if(!raw) continue;
-        if(/التقدير|نتيجة الطالب|الترتيب|مدير المدرسة/.test(raw)) break;
-        const subject=normalizeSubject(raw);
-        if(!subject || excluded(subject) || summaryRow(subject) || /^(المجموع|مجموع)$/.test(ar(subject))) continue;
-
-        const parsedScore=num(rows[r][th.c]);
-        const score=parsedScore; // الخانة الفارغة تبقى null؛ الصفر الحقيقي من نور يبقى 0.
-        const maxScore=mh ? num(rows[r][mh.c]) : null;
-        let percentage=null;
-        if(score!==null && maxScore!==null && maxScore>0) percentage=(score/maxScore)*100;
-        else if(score!==null && score>=0 && score<=100) percentage=score; // قالب نهاية الفصل: «المجموع» نفسه من 100.
-        const noorGrade=gh ? clean(rows[r][gh.c])||null : null;
-        subjects.push({subjectNameRaw:raw,subjectName:subject,score,maxScore,percentage,noorGrade});
-      }
-      students.push({studentNameRaw:name,className:extractClassName(rows),subjects,behavior:extractBehavior(rows),ranking:extractRanking(rows)});
-    }
-    const first=matrix(workbook.Sheets[workbook.SheetNames[0]]);
-    const context=contextFromText(allText(first),det.id);
-    context.schoolName=extractSchoolName(first);
-    context.educationAdmin=extractEducationAdmin(first);
-    return {context,students,warnings:[]};
-  }
-
-
-  function parse(workbook) {
-    const det=detect(workbook);
-    let dto;
-    if(det.id==="MIDDLE_INDIVIDUAL_NOTICE") dto=parseMiddleIndividual(workbook,det);
-    else if(det.id==="HIGH_PERIOD_NOTICE" || det.id==="HIGH_FINAL_NOTICE") dto=parseHighIndividual(workbook,det);
-    else dto={context:{templateId:"UNKNOWN"},students:[],warnings:["قالب نور غير معروف."]};
-    dto.source={template:det.id,confidence:det.confidence};
-    return dto;
-  }
-
-  global.MiikNoorParser={detect,parse,normalizeSubject,excluded,summaryRow};
-})(window);
-
-</script>
+<script src="miik-noor-parser.js?v=20261005-reader2"></script>
 <script>
 (function(){
   const $=id=>document.getElementById(id);
@@ -862,7 +444,33 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     return n !== "النشاط" && !window.MiikNoorParser.summaryRow(n) && !window.MiikNoorParser.excluded(n);
   }
 
+  const individualAnalysisNote=$("analysisPanel").querySelector('p.note').textContent;
+  function aggregateTable(dto){
+    const a=dto.aggregate,columns=a.columns;
+    return {head:'<tr><th>المادة</th>'+columns.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr>',rows:a.subjects.filter(x=>isAcademicSubject(x.subjectName)).map(x=>'<tr><td>'+esc(x.subjectName)+'</td>'+columns.map(c=>'<td><b>'+x.counts[c]+'</b><br><small>'+((x.counts[c]/a.studentCount)*100).toFixed(2)+'%</small></td>').join('')+'</tr>').join('')};
+  }
+  function renderAggregate(dto,approved){
+    const table=aggregateTable(dto),a=dto.aggregate,c=dto.context;
+    $("result").classList.remove('hidden');$("approvedBox").classList.toggle('hidden',!approved);
+    $("analysisPanel").classList.toggle('hidden',!approved);
+    $("stage").textContent=c.stage||'—';$("grade").textContent=c.grade||'—';$("rtype").textContent=c.resultType||'—';
+    $("sheets").textContent=a.studentCount;$("className").textContent=c.className||'—';
+    $("gradesHead").innerHTML=table.head;$("rows").innerHTML=table.rows;
+    $("issuesBox").className='status warn';$("issuesBox").textContent=dto.warnings.join(' ');
+    $("analysisPanel").querySelector('h2').textContent='تحليل الإحصاءات المجمعة من نور';
+    $("analysisPanel").querySelector('p.note').textContent='تُنقل فئات المصدر كما وردت في الملف؛ لا تُعاد تصنيفها إلى درجات فردية. لا يتيح هذا القالب فصل الدرجات الصفرية أو تحديد أسماء الطلاب. النشاط والسلوك والمواظبة خارج مؤشرات التحصيل.';
+    for(const [id,value] of Object.entries({printStage:c.stage,printGrade:c.grade,printClass:c.className,printResultType:c.resultType,printSchoolName:window.MiikNoorProfile?.school||c.schoolName,printEducationAdmin:window.MiikNoorProfile?.education||c.educationAdmin}))$(id).textContent=value||'—';
+    $("analysisCards").innerHTML='<div class="analysis-card"><small>الطلاب في كشف نور</small><b>'+a.studentCount+'</b></div><div class="analysis-card"><small>المواد الأكاديمية</small><b>'+a.subjects.filter(x=>isAcademicSubject(x.subjectName)).length+'</b></div>';
+    $("subjectAnalysisHead").innerHTML=table.head;$("subjectAnalysisRows").innerHTML=table.rows;
+    for(const id of ['allExcellent','zeroDegreeCases','needsImprovement','behaviorFollow','topFive'])$(id).textContent='غير متاح من الملف الإحصائي المجمع؛ يتطلب كشف الدرجات الفردية.';
+    $("generalReading").textContent='تعرض الإحصاءات توزيع تقديرات '+a.studentCount+' طالبًا حسب المادة. يُستفاد منها في وصف واقع التحصيل وتحديد المواد التي تحتاج إلى دعم، دون الحكم على حالات فردية.';
+    $("guidanceActions").textContent='مناقشة توزيع التقديرات مع معلمي المواد وبناء إجراءات الدعم والإثراء. تُحدد أسماء الطلاب ومتابعاتهم من كشف الدرجات الفردية.';
+    setStatus(approved?'تم اعتماد الإحصاءات المجمعة.':'تمت قراءة الإحصاءات المجمعة والتحقق من أعدادها. راجعها ثم اعتمد التحليل.','ok');
+  }
   function renderAnalysis(dto){
+    if(dto.aggregate){renderAggregate(dto,true);return;}
+    $("analysisPanel").querySelector('h2').textContent='التحليل الأولي للنتائج';
+    $("analysisPanel").querySelector('p.note').textContent=individualAnalysisNote;
     const students=dto.students||[];
     const stage=dto.context?.stage||"";
     $("printStage").textContent=dto.context?.stage||"—";
@@ -1028,6 +636,8 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 
   function render(dto, wb){
     currentDTO=dto;
+    $("approveBtn").disabled=dto.source?.template==='UNKNOWN'||(!dto.aggregate&&!dto.students?.length);
+    if(dto.aggregate){renderAggregate(dto,false);return;}
     $("result").classList.remove("hidden");
     $("approvedBox").classList.add("hidden");
     $("analysisPanel").classList.add("hidden");
@@ -1130,6 +740,8 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   });
 
   $("file").addEventListener("change", async e=>{
+    currentDTO=null;$("approveBtn").disabled=true;
+    $("result").classList.add('hidden');$("analysisPanel").classList.add('hidden');
     const f=e.target.files?.[0]; if(!f)return;
     window.miikNoorClearFollowups?.();
     $("filename").textContent=f.name;
@@ -1142,6 +754,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
       render(dto,wb);
     }catch(err){
       console.error(err);
+      currentDTO=null;$("analysisPanel").classList.add("hidden");
       $("result").classList.add("hidden");
       setStatus("حدث خطأ أثناء القراءة: "+(err?.message||err),"bad");
     }
@@ -1216,6 +829,8 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     const ab=await file.arrayBuffer();
     const wb=await XLSX.read(ab,{type:"array",cellDates:false,cellFormula:true,cellText:true});
     const dto=window.MiikNoorParser.parse(wb);
+    if(dto.aggregate)throw new Error('مقارنة درجات الطلاب تتطلب كشفين فرديين؛ الملف المختار إحصاءات مجمعة بلا أسماء.');
+    if(dto.source?.template==='UNKNOWN'||!dto.students.length)throw new Error('لم تُستخرج درجات طلاب صالحة للمقارنة.');
     const obj={dto,fileName:file.name,inferred:inferScale(dto)};
     if(side==="A") A=obj; else B=obj;
     const c=dto.context||{};

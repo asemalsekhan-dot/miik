@@ -11,6 +11,7 @@
  ];
  const goals=[
   ['تحسين نتائج الطلبة في المحطات التقويمية','مقارنة نسبة المجتازين في المحطة الثانية بالأولى للمواد والصفوف المتماثلة','تحسّن النتائج؛ يُحدد المقدار المستهدف بعد قراءة المحطة الأولى','تقارير تحليل النتائج'],
+  ['تعزيز التفوق الدراسي والمحافظة عليه','تنفيذ تكريم الطلاب المتفوقين ضمن برنامج تنمية الدافعية لرفع مستوى التحصيل','تكريم المستهدفين في الأسبوع الثاني من كل فصل وتوثيق التنفيذ','كشف المكرّمين وشهادات التكريم وتقرير التنفيذ'],
   ['خفض حالات الغياب','مقارنة عدد حالات الغياب في فترتين متماثلتين من بيانات المدرسة','خفض مستهدف 10% بعد تثبيت خط الأساس','إحصاءات إدارة المدرسة'],
   ['خفض حالات التأخر الصباحي','مقارنة عدد حالات التأخر في فترتين متماثلتين من بيانات المدرسة','خفض مستهدف 10% بعد تثبيت خط الأساس','إحصاءات إدارة المدرسة'],
   ['الحد من العنف والتنمر','مقارنة الحالات المسجلة، مع توثيق التوعية والتدخلات','تحسن في عدد الحالات؛ يُضبط المستهدف من بيانات المدرسة','سجل الحالات وتقارير التوعية'],
@@ -45,7 +46,15 @@
    const key=(target||'unbound')+'|'+name;let row=out.get(key);if(!row){row={name,target,indices:[],weeks:[]};out.set(key,row)}
    if(!row.indices.includes(index)){row.indices.push(index);row.weeks.push(String(week.w||'الأسبوع '+(index+1)))}
   });
- });return [...out.values()].sort((a,b)=>a.indices[0]-b.indices[0]);}
+ });
+ const honoring=weeks.map((week,index)=>({week,index})).filter(({week})=>/تكريم (?:الطلاب|الطلبة) المتفوقين/.test(String(week.initiatives||'')));
+ if(honoring.length){
+  let row=[...out.values()].find(x=>/الدافعية/.test(x.name)||/الدافعية/.test(x.target));
+  if(!row){const name='تنمية الدافعية لرفع مستوى التحصيل';row={name,target:'core:'+name,indices:[],weeks:[]};out.set('core:'+name+'|'+name,row)}
+  row.honoringWeeks=honoring.map(({week,index})=>String(week.w||'الأسبوع '+(index+1)));
+  for(const {index} of honoring)if(!row.indices.includes(index))row.indices.push(index);
+ }
+ return [...out.values()].sort((a,b)=>a.indices[0]-b.indices[0]);}
  const monthNames=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
  function numbers(s){return String(s||'').replace(/[٠-٩]/g,x=>'٠١٢٣٤٥٦٧٨٩'.indexOf(x)).replace(/[۰-۹]/g,x=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(x));}
  function entryDate(value){const s=numbers(value);const n=(s.match(/\d+/g)||[]).map(Number),month=monthNames.findIndex(x=>s.includes(x));if(month>=0&&n.length>=2)return{d:n[0],m:month+1,y:n.find(x=>x>1300)||0};if(n.length>=3){if(n[0]>1300)return{y:n[0],m:n[1],d:n[2]};return{d:n[0],m:n[1],y:n[2]}}return null}
@@ -72,8 +81,10 @@
   ].map(([a,b])=>`<tr><td>${E(a)}</td><td>${E(b)}</td></tr>`);
   const goalRows=goals.map((g,i)=>`<tr><td>${i+1}</td>${g.map(x=>`<td>${E(x)}</td>`).join('')}</tr>`);
   const opChunks=[];for(let i=0;i<items.length;i+=7)opChunks.push(items.slice(i,i+7));
-  const opPages=opChunks.map((chunk,part)=>page(`<h2>رابعًا: الخطة التشغيلية للبرامج والخدمات</h2>${part?'<p class="continued">تابع الجدول</p>':''}`+table(['م','البرنامج أو الخدمة','الفئة المستهدفة','أسلوب التنفيذ','المسؤول والشركاء','أسابيع التنفيذ','المؤشر','الشاهد'],chunk.map((item,j)=>{const meta=detail(item);
-    return `<tr><td>${part*7+j+1}</td><td>${E(item.name)}</td><td>${E(meta[0])}</td><td>${E(meta[1])}</td><td>${E(meta[2])}</td><td>${E(item.weeks.join('، '))}</td><td>${E(meta[3])}</td><td>${E(meta[4])}</td></tr>`;}),'ops')+`<p class="note">هذه الخطة تحدد الأعمال والمستفيدين والمؤشرات والشواهد المتوقعة؛ تُعرض النتائج الفعلية في تقارير التنفيذ.</p>`,'الخطة التشغيلية'));
+  const opPages=opChunks.map((chunk,part)=>page(`<h2>رابعًا: الخطة التشغيلية للبرامج والخدمات</h2>${part?'<p class="continued">تابع الجدول</p>':''}`+table(['م','البرنامج أو الخدمة','الفئة المستهدفة','أسلوب التنفيذ','المسؤول والشركاء','أسابيع التنفيذ','المؤشر','الشاهد'],chunk.map((item,j)=>{let meta=detail(item);let schedule=item.weeks.join('، '),activity='';
+    if(item.honoringWeeks?.length){meta=[meta[0]+'؛ الطلاب المتفوقون',meta[1]+'؛ تكريم الطلاب المتفوقين',meta[2],meta[3]+'؛ تنفيذ التكريم وتوثيق المستفيدين',meta[4]+'؛ كشف المكرّمين وشهادات التكريم وتقرير التنفيذ'];schedule+=(schedule?'؛ ':'')+'التكريم: '+item.honoringWeeks.join('، ');activity='<br><strong>نشاط: تكريم الطلاب المتفوقين</strong>'}
+
+    return `<tr><td>${part*7+j+1}</td><td>${E(item.name)}${activity}</td><td>${E(meta[0])}</td><td>${E(meta[1])}</td><td>${E(meta[2])}</td><td>${E(schedule)}</td><td>${E(meta[3])}</td><td>${E(meta[4])}</td></tr>`;}),'ops')+`<p class="note">هذه الخطة تحدد الأعمال والمستفيدين والمؤشرات والشواهد المتوقعة؛ تُعرض النتائج الفعلية في تقارير التنفيذ.</p>`,'الخطة التشغيلية'));
   const programPages=typeof window.miikProgramPlansForAnnual==='function'?window.miikProgramPlansForAnnual(page,weeks):[];
   const weeksPerPage=mobile?7:9;const weekPages=[];for(let offset=0;offset<weeks.length;offset+=weeksPerPage){const chunk=weeks.slice(offset,offset+weeksPerPage);weekPages.push(page(`<h2>سادسًا: الخطة الأسبوعية التفصيلية</h2>`+table(['م','الأسبوع','التاريخ','المحور / البرنامج','القيمة','أبرز المبادرات','المناسبات','الشاهد'],chunk.map((w,j)=>{const programs=(w.programs||[{name:w.program}]).filter(x=>x.name),titles=programs.map(x=>x.name).join('؛ '),witness=[...new Set(programs.map(x=>detail(x)[4]))].join('؛ ')||'ما يُوثق عند التنفيذ';return `<tr><td>${offset+j+1}</td><td>${E(w.w)}</td><td>${E(w.date)}</td><td>${E(titles||'—')}</td><td>${E(w.value||'—')}</td><td>${E(w.initiatives||'—')}</td><td>${E((w.days||[]).join('، ')||'—')}</td><td>${E(witness)}</td></tr>`;}),'weeks'),'الخطة الأسبوعية','weekly-plan-page'));}
   const cover=page(`<div class="cover"><h1>خطة برامج وخدمات التوجيه الطلابي</h1><h2>${E(term)} للعام الدراسي ${E(c.year)}هـ</h2><div class="names"><span>الموجّه الطلابي<br>${E(p.name||'')}</span><span>مدير المدرسة<br>${E(p.principal||'')}</span></div></div>`,term);
