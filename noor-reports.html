@@ -926,7 +926,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     recommendations.push('متابعة الموجّه الطلابي مع معلمي المواد تنفيذ ما يُتفق عليه، ثم إعادة قياس النتائج في الفترة التالية للطلاب أنفسهم وتوثيق مقدار التحسن الفعلي.');
     $("compareRecommendations").innerHTML='<ul>'+recommendations.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
     $("comparisonResult").classList.remove("hidden");
-    window.miikNoorPrepareFollowups?.('comparison',{context:cb,rows:studentRows.filter(x=>x.subjects.length&&(x.b<70||x.d<=-5))});
+    window.miikNoorPrepareFollowups?.('comparison',{context:cb,dto:db});
     $("comparisonResult").scrollIntoView({behavior:"smooth",block:"start"});
   }
   $("compareFileA").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;try{await load(f,"A")}catch(err){$("compareStateA").textContent="تعذر قراءة الملف: "+(err?.message||err)}});
@@ -962,8 +962,9 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
    if(!candidate?.rows?.length || window.parent===window)return;
    window.parent.postMessage({type:'miik-noor-followup-review',payload:candidate},location.protocol==='file:'?'*':location.origin);
   });box.appendChild(button)}
-  button.textContent='إعداد متابعة تحصيلية ('+(candidate?.rows?.length||0)+')';
-  button.disabled=!candidate?.rows?.length || window.parent===window;
+  button.textContent='إعداد المتابعة التحصيلية ('+(candidate?.rows?.length||0)+')';
+  button.disabled=!candidate?.rows?.length || candidate.historical || window.parent===window;
+  if(candidate?.historical)button.textContent='نتائج نهاية العام: تحليل وخطاب عام فقط';
   button.title=candidate?.rows?.length?'راجع الطلاب وفترة الاختبار قبل إنشاء المتابعات':'لم تظهر حالات مقترحة؛ يمكنك إنشاء متابعة يدويًا في مِعِك';
  }
  function individual(dto){
@@ -974,11 +975,12 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     return academic(name)&&x.score!==null&&x.score!==''&&Number.isFinite(score)&&score>0&&
       ['مقبول','ضعيف','راسب'].includes(window.MiikNoorResolvedLevel?.(x,stage));
    }).map(x=>String(x.subjectName||x.subjectNameRaw).trim()))];
-   return {name:String(st.studentNameRaw||'').trim(),stage,grade,section:String(st.className||'').trim(),subjects};
+   const subjectLevels=Object.fromEntries((st.subjects||[]).filter(x=>subjects.includes(String(x.subjectName||x.subjectNameRaw).trim())).map(x=>[String(x.subjectName||x.subjectNameRaw).trim(),window.MiikNoorResolvedLevel?.(x,stage)]));return {name:String(st.studentNameRaw||'').trim(),stage,grade,section:String(st.className||'').trim(),subjects,subjectLevels};
   }).filter(x=>x.name&&x.subjects.length);
-  return {kind:'individual',rows};
+  return {kind:'individual',rows,historical:/شهادة نهاية العام/.test(context.resultType||'')};
  }
  function comparison(payload){
+  if(payload?.dto)return {...individual(payload.dto),kind:'comparison'};
   return {kind:'comparison',rows:(payload?.rows||[]).filter(x=>x&&x.subjects?.length).map(x=>({
    name:String(x.name||'').trim(),stage:String(payload.context?.stage||''),grade:String(payload.context?.grade||''),
    section:String(x.section||''),subjects:x.subjects.map(String)
