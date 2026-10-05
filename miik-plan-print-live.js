@@ -55,7 +55,7 @@
   const stored=read('miikExec_'+title,[]);if(!Array.isArray(stored))return 0;
   return stored.filter(x=>{const d=entryDate(x.date);return d&&d.y===Number(c.year)&&months.has(d.m)}).length;
  }
- function render(){const c=read('miikAcademicContext',{year:'1448',term:'1'}),term=termName(c.term),p=read('miikProfileV58',{});
+ function render(){const mobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);const c=read('miikAcademicContext',{year:'1448',term:'1'}),term=termName(c.term),p=read('miikProfileV58',{});
   const weeks=typeof window.miikPlanRows12==='function'?window.miikPlanRows12(String(c.term||'1')):[];
   if(!weeks.length){window.showMiikNotice?.('طباعة الخطة','اعتمد خطة الموجّه الطلابي أولًا، ثم اطبعها.');return}
   const items=planItems(weeks),months=termMonths(weeks),ministry=window.miikMinistryLogoData||new URL('ministry-logo.png',location.href).href,amiriFont=new URL('Amiri-Bold.ttf',location.href).href;
@@ -133,7 +133,8 @@
    /* Mobile print engines may impose their own paper margins. Let the
       printable area determine width, and keep footers in normal flow so
       a physical minimum height cannot create a footer-only extra sheet. */
-   @media print{
+   @media print{html,body{width:279mm}.page{width:279mm;max-width:279mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+   ${mobile?`@media print{
     html,body{width:auto;max-width:none;overflow:visible}
     .page{width:100%;max-width:none;min-height:0;height:auto;margin:0;padding:5mm 4mm 4mm;overflow:visible;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .page::before,.page::after{display:none}
@@ -146,10 +147,39 @@
     .cover{height:125mm;padding-top:40mm}
     .cover .names{margin-top:35px}
     .basmala-page{height:165mm;min-height:0}
-   }
+   }`:""}
   `;
   const html=`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>خطة برامج وخدمات التوجيه الطلابي</title><style>${css}${polishCSS}</style></head><body>${[cover,basmalaPage,intro,objectives,areas,...opPages,...programPages,...weekPages,follow].join('')}</body></html>`;
+  if(mobile){printMobilePlan(html);return}
   if(typeof window.printDoc84==='function')window.printDoc84(html);else{const w=window.open('','_blank');if(!w)return window.showMiikNotice?.('الطباعة','اسمح بفتح نافذة الطباعة.');w.document.write(html);w.document.close();const ready=w.document.fonts?.ready||Promise.resolve();Promise.race([ready,new Promise(resolve=>setTimeout(resolve,2500))]).then(()=>w.print())}
+ }
+ // A top-level preview avoids printing a 1px iframe on phones. The print
+ // button is enabled only after images, used fonts and layout are ready.
+ function printMobilePlan(html){
+  const preview=window.open('','_blank');
+  if(!preview){window.showMiikNotice?.('طباعة الخطة','اسمح بفتح صفحة الطباعة في المتصفح ثم حاول مرة أخرى.');return}
+  const base=document.createElement('base');base.href=new URL('.',location.href).href;
+  const toolbarCSS='<style>@media screen{html,body{width:100%;max-width:none;overflow:visible}.miik-print-toolbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #ccd6cc;padding:12px;text-align:center;font:14px/1.6 Tahoma,Arial,sans-serif;color:#29463d}.miik-print-toolbar button{background:#315c4e;color:#fff;border:0;border-radius:8px;padding:10px 24px;margin:4px;font:inherit}.miik-print-toolbar button:disabled{opacity:.5}.miik-print-toolbar p{margin:5px}}@media print{.miik-print-toolbar{display:none!important}}</style>';
+  html=html.replace('<head>','<head>'+base.outerHTML+'<meta name="viewport" content="width=1055">'+toolbarCSS);
+  html=html.replace('<body>','<body><div class="miik-print-toolbar"><p id="miikPlanPrintStatus">جارٍ تجهيز الشعار والخطوط…</p><button id="miikPlanPrintButton" type="button" disabled>طباعة</button><button id="miikPlanPrintBack" type="button">العودة إلى معك</button></div>');
+  const d=preview.document;d.open();d.write(html);d.close();
+  const button=d.getElementById('miikPlanPrintButton'),status=d.getElementById('miikPlanPrintStatus');
+  d.getElementById('miikPlanPrintBack').onclick=()=>preview.close();
+  button.onclick=()=>{preview.focus();preview.print()};
+  const images=Array.from(d.images,img=>new Promise((resolve,reject)=>{
+   const loaded=()=>{if(!img.naturalWidth){reject(Error('image'));return}if(img.decode)img.decode().then(resolve,reject);else resolve()};
+   if(img.complete)loaded();else{img.addEventListener('load',loaded,{once:true});img.addEventListener('error',()=>reject(Error('image')),{once:true})}
+  }));
+  // Force style calculation before asking for the set of used fonts.
+  void d.body.offsetHeight;
+  const settled=Promise.all([...images,d.fonts?.ready||Promise.resolve()]);
+  let timer;
+  Promise.race([settled,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),15000)})]).then(()=>{
+   clearTimeout(timer);if(preview.closed)return;
+   preview.requestAnimationFrame(()=>preview.requestAnimationFrame(()=>{
+    if(preview.closed)return;status.textContent='الخطة جاهزة للطباعة';button.disabled=false;
+   }));
+  }).catch(()=>{clearTimeout(timer);if(!preview.closed)status.textContent='لم يكتمل تحميل الشعار أو الخطوط. أغلق الصفحة وأعد فتح الطباعة.'});
  }
  window.miikPrintPlan12=render;
 })();
