@@ -117,7 +117,7 @@
   // تُستبعد من المصدر نفسه حتى لا تظهر في المعاينة ولا تدخل أي تحليل.
   function summaryRow(name) {
     const n=ar(name).replace(/[:：]/g, "").trim();
-    return /^(مجموع الدرجات الموزونة|مجموع الدرجات الموزنه|الدرجات الموزونة|الدرجات الموزنه|المعدل|المعدل العام|المعدل الفصلي|النسبة المئوية|النسبه المئويه)$/.test(n);
+    return /^(مجموع الدرجات الموزونة|مجموع الدرجات الموزنه|المجموع الكلي للدرجة الموزونة|الدرجات الموزونة|الدرجات الموزنه|المعدل|المعدل العام|المعدل الفصلي|المعدل التراكمي|النسبة المئوية|النسبه المئويه)$/.test(n);
   }
 
   function detect(workbook) {
@@ -126,6 +126,11 @@
 
     if (/عدد الطلاب الحاصلين على تقدير|توزيع أعداد الطلاب على مستويات الأداء/.test(text))
       return {id:"NOOR_AGGREGATE", confidence:0.99};
+
+    if(/شهادة الصف (الأول|الثاني|الثالث) المتوسط/.test(text)&&text.includes('الدرجة المتحصلة'))
+      return {id:'MIDDLE_ANNUAL_CERTIFICATE',confidence:0.99};
+    if(/شهادة الصف (الأول|الثاني|الثالث) الثانوي/.test(text)&&text.includes('المستوى الدراسي'))
+      return {id:'HIGH_ANNUAL_CERTIFICATE',confidence:0.99};
 
     if (text.includes("إشعار فترة أولى") || text.includes("إشعار فترة ثانية"))
       return {id:"HIGH_PERIOD_NOTICE", confidence:0.99};
@@ -186,6 +191,8 @@
   }
 
   function extractSchoolName(rows){
+    const inline=findCell(rows,v=>/^اسم المدرسة\s*[:：]\s*\S/.test(v));
+    if(inline)return inline.v.replace(/^اسم المدرسة\s*[:：]\s*/,'');
     const labels=["اسم المدرسة","School Name"];
     for(const label of labels){
       const hit=findCell(rows,v=>ar(v).toLowerCase().includes(ar(label).toLowerCase()));
@@ -429,6 +436,61 @@
   }
 
 
+  function certificateName(rows,high){
+    const inline=findCell(rows,v=>/^اسم\s*الطالب\s*[:：]\s*\S/.test(v));
+    if(inline)return clean(inline.v.replace(/^اسم\s*الطالب\s*[:：]\s*/,''));
+    if(high){
+      const label=findCell(rows,v=>ar(v)==='اسم الطالب');
+      if(label)for(let dr=1;dr<=3;dr++)for(const dc of [0,-1,-2,-3,1,2,3]){
+        const value=rows[label.r+dr]?.[label.c+dc];
+        if(looksArabicStudentName(value))return clean(value);
+      }
+      return null;
+    }
+    return extractName(rows);
+  }
+
+  function parseCertificate(workbook,det){
+    const high=det.id==='HIGH_ANNUAL_CERTIFICATE',students=[],levels=new Set();
+    for(const sn of workbook.SheetNames){
+      const rows=matrix(workbook.Sheets[sn]),name=certificateName(rows,high);
+      if(!name)throw Error('تعذر استخراج اسم الطالب من شهادة '+sn);
+      const subjectHeader=findCell(rows,v=>ar(v)===(high?'المادة':'المواد'));
+      const scoreHeader=findCell(rows,v=>high?/^الدرجة\s+Mark$/i.test(v):ar(v)==='الدرجة المتحصلة');
+      const levelHeader=high?findCell(rows,v=>ar(v)==='المستوى الدراسي'):null;
+      if(!subjectHeader||!scoreHeader||(high&&!levelHeader))throw Error('تعذر تحديد أعمدة درجات الشهادة '+sn);
+      const subjects=[],behavior={general:null,attendance:null},seen=new Set();let level=null;
+      for(let r=subjectHeader.r+1;r<rows.length;r++){
+        const raw=clean(rows[r][subjectHeader.c]);
+        if(high){const value=clean(rows[r][levelHeader.c]);const match=value.match(/المستوى\s+(الأول|الثاني|الثالث|الرابع|الخامس|السادس|السابع|الثامن|التاسع)/);if(match){level=match[0];levels.add(level)}}
+        if(!raw||raw===(high?'المادة':'المواد')||summaryRow(raw)||/^(التقدير العام|النتيجة|رمز الشهادة)/.test(raw))continue;
+        const score=num(rows[r][scoreHeader.c]);
+        if(raw==='السلوك'){behavior.general=score;continue}
+        if(raw==='المواظبة'){behavior.attendance=score;continue}
+        if(excluded(raw))continue;
+        if(score!==null&&(score<0||score>100))throw Error('درجة متحصلة خارج النطاق في مادة '+raw);
+        const base=normalizeSubject(raw),subjectName=base+(high&&level?' — '+level:'');
+        if(high&&!level)throw Error('المستوى الدراسي غير محدد لمادة '+raw);
+        if(seen.has(subjectName))throw Error('مادة مكررة داخل المستوى نفسه في شهادة '+sn);
+        seen.add(subjectName);
+        subjects.push({subjectNameRaw:raw,subjectName,baseSubjectName:base,studyLevel:level,score,maxScore:100,percentage:score,noorGrade:null});
+      }
+      if(high){
+        for(const [key,label]of [['general','السلوك'],['attendance','المواظبة']]){
+          const cell=findCell(rows,v=>ar(v).split(' ')[0]===label);
+          if(cell){const values=rows[cell.r];for(let d=1;d<=4;d++){const value=num(values[cell.c-d]);if(value!==null){behavior[key]=value;break}}}
+        }
+      }
+      if(!subjects.length)throw Error('لم تُستخرج مواد من شهادة '+sn);
+      students.push({studentNameRaw:name,className:null,subjects,behavior,ranking:{classRank:null,gradeRank:null}});
+    }
+    const first=matrix(workbook.Sheets[workbook.SheetNames[0]]),context=contextFromText(allText(first),det.id);
+    context.resultType='شهادة نهاية العام الدراسي'+(context.academicYear?' '+context.academicYear:'');
+    context.schoolName=extractSchoolName(first);context.educationAdmin=extractEducationAdmin(first);
+    context.studyLevels=[...levels];
+    return {context,students,warnings:high?['تُعرض المادة مستقلة بحسب المستوى الدراسي الوارد في الشهادة.']:[]};
+  }
+
   function parseAggregate(workbook,det){
     const rows=matrix(workbook.Sheets[workbook.SheetNames[0]]);
     const field=label=>{const hit=findCell(rows,v=>ar(v).replace(/[:：]/g,'').trim()===label);if(!hit)return null;return rows[hit.r].map(clean).find((v,c)=>c!==hit.c&&v&&v!==':')||null};
@@ -458,7 +520,8 @@
   function parse(workbook) {
     const det=detect(workbook);
     let dto;
-    if(det.id==="NOOR_AGGREGATE") dto=parseAggregate(workbook,det);
+    if(det.id==='MIDDLE_ANNUAL_CERTIFICATE'||det.id==='HIGH_ANNUAL_CERTIFICATE')dto=parseCertificate(workbook,det);
+    else if(det.id==="NOOR_AGGREGATE") dto=parseAggregate(workbook,det);
     else if(det.id==="MIDDLE_INDIVIDUAL_NOTICE") dto=parseMiddleIndividual(workbook,det);
     else if(det.id==="HIGH_PERIOD_NOTICE" || det.id==="HIGH_FINAL_NOTICE") dto=parseHighIndividual(workbook,det);
     else dto={context:{templateId:"UNKNOWN"},students:[],warnings:["قالب نور غير معروف."]};

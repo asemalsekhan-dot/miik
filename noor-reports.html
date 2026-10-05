@@ -95,7 +95,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 }
 
 </style>
-<script src="jszip.min.js"></script><script src="miik-xml-sax.js?v=20261005-reader2"></script><script src="miik-xlsx-local.js?v=20261005-reader2"></script>
+<script src="jszip.min.js"></script><script src="miik-xml-sax.js?v=20261005-reader3"></script><script src="miik-xlsx-local.js?v=20261005-reader3"></script>
 
 <style id="comparisonStyle">
 [hidden]{display:none!important}
@@ -336,7 +336,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 </section>
 </div>
 
-<script src="miik-noor-parser.js?v=20261005-reader2"></script>
+<script src="miik-noor-parser.js?v=20261005-reader3"></script>
 <script>
 (function(){
   const $=id=>document.getElementById(id);
@@ -372,7 +372,8 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
         else if(isExplicitZero(x.score)) issues.push({student:st.studentNameRaw,field:subject,type:"صفر"});
       }
       const b=st.behavior||{};
-      for(const [key,label] of [["positive","السلوك الإيجابي"],["distinguished","السلوك المتميز"],["attendance","المواظبة"]]){
+      const fields=Object.hasOwn(b,'general')?[["general","السلوك"],["attendance","المواظبة"]]:[["positive","السلوك الإيجابي"],["distinguished","السلوك المتميز"],["attendance","المواظبة"]];
+      for(const [key,label] of fields){
         if(!hasNumericValue(b[key])) issues.push({student:st.studentNameRaw,field:label,type:"غير مرصود"});
         else if(isExplicitZero(b[key])) issues.push({student:st.studentNameRaw,field:label,type:"صفر"});
       }
@@ -441,7 +442,8 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   function isAcademicSubject(name){
     const n=String(name||"").replace(/\s+/g," ").trim();
     // النشاط يظهر في المعاينة فقط ولا يدخل في التحصيل الأكاديمي.
-    return n !== "النشاط" && !window.MiikNoorParser.summaryRow(n) && !window.MiikNoorParser.excluded(n);
+    const base=n.split(' — ')[0];
+    return base !== "النشاط" && !window.MiikNoorParser.summaryRow(base) && !window.MiikNoorParser.excluded(base);
   }
 
   const individualAnalysisNote=$("analysisPanel").querySelector('p.note').textContent;
@@ -499,6 +501,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     for(const st of students){
       const b=st.behavior||{};
       const notes=[];
+      if(hasNumericValue(b.general) && Number(b.general)<100) notes.push('السلوك '+b.general+'/100');
       if(hasNumericValue(b.positive) && Number(b.positive)<80) notes.push('السلوك الإيجابي '+b.positive+'/80');
       if(hasNumericValue(b.distinguished) && Number(b.distinguished)<20) notes.push('السلوك المتميز '+b.distinguished+'/20');
       if(hasNumericValue(b.attendance) && Number(b.attendance)<100) notes.push('المواظبة '+b.attendance+'/100');
@@ -571,7 +574,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
       ? 'لم يظهر طلاب حاصلون على تقدير مقبول أو ضعيف أو راسب في المواد المقروءة حاليًا.'
       : 'لم يظهر طلاب حاصلون على تقدير مقبول أو راسب في المواد المقروءة حاليًا.');
 
-    $("behaviorFollow").innerHTML=behaviorCases.length ? behaviorCases.map(x=>esc(x.name)+' — '+x.notes.map(esc).join('، ')).join('<br>') : '<span class="follow-ok">لم تظهر درجات ناقصة عن 80/20/100 في السلوك والمواظبة.</span>';
+    $("behaviorFollow").innerHTML=behaviorCases.length ? behaviorCases.map(x=>esc(x.name)+' — '+x.notes.map(esc).join('، ')).join('<br>') : '<span class="follow-ok">لم تظهر درجات ناقصة في السلوك والمواظبة المقروءة من الملف.</span>';
 
     const ranked=students.filter(st=>{
       const r=st.ranking||{};
@@ -653,10 +656,11 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     const subjects=new Set();
     for(const st of students) for(const x of (st.subjects||[])) subjects.add(x.subjectName||x.subjectNameRaw);
     const subjectList=[...subjects];
+    const generalBehavior=students.some(st=>Object.hasOwn(st.behavior||{},'general'));
 
     $("gradesHead").innerHTML="<tr><th>#</th><th>الطالب</th><th>الفصل</th>"+
       subjectList.map(x=>"<th>"+esc(x)+"</th>").join("")+
-      '<th class="special-head">السلوك الإيجابي /80</th><th class="special-head">السلوك المتميز /20</th><th class="special-head">المواظبة /100</th></tr>';
+      (generalBehavior?'<th class="special-head">السلوك /100</th>':'<th class="special-head">السلوك الإيجابي /80</th><th class="special-head">السلوك المتميز /20</th>')+'<th class="special-head">المواظبة /100</th></tr>';
 
     const tbody=$("rows"); tbody.innerHTML="";
     students.forEach((st,i)=>{
@@ -665,7 +669,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
         const x=bySubject.get(subject); return issueCell(x?.score,!x || !hasNumericValue(x?.score));
       }).join("");
       const b=st.behavior||{};
-      const special=[b.positive,b.distinguished,b.attendance].map(v=>issueCell(v,!hasNumericValue(v))).join("");
+      const special=(generalBehavior?[b.general,b.attendance]:[b.positive,b.distinguished,b.attendance]).map(v=>issueCell(v,!hasNumericValue(v))).join("");
       const tr=document.createElement("tr");
       tr.innerHTML="<td>"+(i+1)+"</td><td><b>"+esc(st.studentNameRaw)+"</b></td><td>"+esc(st.className||"—")+"</td>"+subjectCells+special;
       tbody.appendChild(tr);

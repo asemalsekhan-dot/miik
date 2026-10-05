@@ -4506,7 +4506,7 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
     document.getElementById('moduleTitle').textContent='تحليل النتائج';
     document.getElementById('moduleDesc').textContent='حلّل نتيجة نور أو قارن بين فترتين. ملفات الدرجات تُقرأ داخل المتصفح ولا تُحفظ تلقائيًا.';
     const grid=document.getElementById('moduleGrid');grid.classList.add('miik-noor-host');
-    grid.innerHTML='<div class="miik-noor-choice"><button type="button" data-mode="individual">تحليل نتيجة واحدة</button><button type="button" data-mode="comparison">مقارنة نتيجتين</button></div><iframe class="miik-noor-frame" title="تحليل نتائج نور" src="noor-reports.html?v=20261005-reader2&mode='+ (mode==='comparison'?'comparison':'individual') +'" referrerpolicy="no-referrer"></iframe>';
+    grid.innerHTML='<div class="miik-noor-choice"><button type="button" data-mode="individual">تحليل نتيجة واحدة</button><button type="button" data-mode="comparison">مقارنة نتيجتين</button></div><iframe class="miik-noor-frame" title="تحليل نتائج نور" src="noor-reports.html?v=20261005-reader3&mode='+ (mode==='comparison'?'comparison':'individual') +'" referrerpolicy="no-referrer"></iframe>';
     grid.querySelectorAll('[data-mode]').forEach(button=>{
       button.classList.toggle('active',button.dataset.mode===(mode==='comparison'?'comparison':'individual'));
       button.addEventListener('click',()=>{if(button.dataset.mode!==mode)miikNoorHub(button.dataset.mode)})
