@@ -461,7 +461,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 
     $("analysisCards").innerHTML=
       '<div class="analysis-card"><small>الطلاب</small><b>'+students.length+'</b></div>'+ 
-      '<div class="analysis-card"><small>المواد</small><b>'+subjectOrder.length+'</b></div>';
+      '<div class="analysis-card"><small>'+((high&&dto.context?.studyLevels?.length>1)?'المقررات بحسب المستوى الدراسي':'المواد')+'</small><b>'+subjectOrder.length+'</b></div>';
 
     const rows=[];
     for(const subject of subjectOrder){
@@ -484,10 +484,10 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     table.hidden=high;
     if(high){
       const host=document.createElement('div');host.id='official-high-distribution';
-      host.innerHTML=[categories.slice(0,5),categories.slice(5)].map(part=>'<table class="analysis-table official-distribution"><thead><tr><th>المقرر</th>'+part.map(k=>'<th>'+esc(k)+'<br>'+esc(window.MiikNoorOfficial.symbol(k))+'</th>').join('')+'</tr></thead><tbody>'+subjectOrder.map(subject=>{
+      host.innerHTML='<table class="analysis-table official-distribution"><colgroup><col style="width:30%">'+categories.map(()=>'<col style="width:7%">').join('')+'</colgroup><thead><tr><th>المقرر والمستوى</th>'+categories.map(k=>'<th title="'+esc(k)+'"><bdi>'+esc(window.MiikNoorOfficial.symbol(k))+'</bdi></th>').join('')+'</tr></thead><tbody>'+subjectOrder.map(subject=>{
         const entries=students.map(st=>(st.subjects||[]).find(q=>(q.subjectName||q.subjectNameRaw)===subject)).map(x=>resolvedLevel(x,stage)).filter(Boolean);
-        return '<tr><td>'+esc(subject)+'</td>'+part.map(k=>'<td>'+countPct(entries.filter(x=>x===k).length,entries.length)+'</td>').join('')+'</tr>';
-      }).join('')+'</tbody></table>').join('');table.parentElement.appendChild(host);
+        return '<tr><td>'+esc(subject)+'</td>'+categories.map(k=>'<td>'+countPct(entries.filter(x=>x===k).length,entries.length)+'</td>').join('')+'</tr>';
+      }).join('')+'</tbody></table><div class="official-grade-legend">'+categories.map(k=>'<span><bdi>'+esc(window.MiikNoorOfficial.symbol(k))+'</bdi>: '+esc(k)+'</span>').join(' · ')+'</div>';table.parentElement.appendChild(host);
     }
     const excellent=[];
     for(const st of students){
@@ -541,7 +541,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     const title=$('topFive').parentElement.querySelector('h3');
     title.textContent=['percentage','incomplete'].includes(top.source)?'العشرة الأوائل بحسب المعدل الوارد في شهادة نور':'العشرة الأوائل بحسب ترتيب نور';
     if(top.rows.length){
-      $('topFive').innerHTML='<table class="analysis-table top-ten-table"><thead><tr><th>المركز</th><th>اسم الطالب</th><th>النسبة</th></tr></thead><tbody>'+top.rows.map(x=>'<tr><td>'+x.rank+'</td><td>'+esc(x.student.studentNameRaw)+'</td><td>'+(x.percent===null?'—':x.percent.toFixed(2)+'%')+'</td></tr>').join('')+'</tbody></table>';
+      $('topFive').innerHTML=top.rows.map(x=>'<div class="top-ten-item">'+x.rank+'. '+esc(x.student.studentNameRaw)+(x.percent===null?'':' — <bdi>'+x.percent.toFixed(2)+'%</bdi>')+'</div>').join('');
     }else{$('topFive').textContent=top.source==='incomplete'?'لم يُعرض ترتيب كامل: المعدل غير موجود لدى '+top.missing+' من '+top.total+' طالبًا. يلزم استكمال النسب من نور.':'لا تتوفر نسب لجميع الطلاب ولا ترتيب رسمي مكتمل؛ لم يُنشأ ترتيب بديل من متوسط درجات المواد.';}
 
     // قراءة وصفية عملية: تُبنى من النتائج نفسها دون اختراع أسباب أو أحكام على الطلاب.
@@ -558,7 +558,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
     const strongPct=assessed?((strong/assessed)*100).toFixed(2):"0.00";
     const generalParts=[];
     if(assessed){
-      generalParts.push('تُظهر قراءة النتائج أن <b>'+strongPct+'%</b> من التقديرات المصنفة جاءت ضمن فئات ممتاز وجيد جدًا، بما يشمل التقديرات المرتفعة، وهو ما يستدعي مواصلة الاهتمام بالطلاب المتفوقين وتعزيز تميزهم والمحافظة على مستوياتهم المرتفعة.');
+      generalParts.push('تُظهر قراءة النتائج أن <b>'+strongPct+'%</b> من التقديرات المصنفة'+((high&&dto.context?.studyLevels?.length>1)?' في جميع المستويات الواردة بالشهادة':'')+' جاءت ضمن فئات ممتاز وجيد جدًا، بما يشمل التقديرات المرتفعة، وهو ما يستدعي مواصلة الاهتمام بالطلاب المتفوقين وتعزيز تميزهم والمحافظة على مستوياتهم المرتفعة.');
     }
     if(improvementCount){
       generalParts.push('وفي المقابل ظهر <b>'+improvementCount+'</b> '+(improvementCount===1?'طالب':'طلاب')+' بحاجة إلى متابعة تحصيلية في مادة أو أكثر وفق الفئات الموضحة أعلاه.');
@@ -1073,7 +1073,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 </script>
 <script src="miik-language.js"></script>
 <style>
-.official-distribution{margin:12px 0;width:100%;table-layout:fixed}.official-distribution th,.official-distribution td{font-size:13px;padding:7px 4px;overflow-wrap:anywhere;text-align:center}.official-distribution th:first-child,.official-distribution td:first-child{width:28%}.top-ten-table th:first-child,.top-ten-table td:first-child{width:12%!important}.top-ten-table th:last-child,.top-ten-table td:last-child{width:22%}
-@media print{body.print-analysis .official-distribution{width:100%;font-size:10px;margin:3mm 0;break-inside:auto}body.print-analysis .official-distribution th,body.print-analysis .official-distribution td{font-size:10px;padding:1.5mm .8mm;line-height:1.3}body.print-analysis .official-distribution .countpct b{font-size:10px}body.print-analysis .official-distribution .countpct small{font-size:8px}body.print-analysis .official-distribution thead{display:table-header-group}body.print-analysis .official-distribution tr{break-inside:avoid}body.print-analysis .top-ten-table{font-size:11px;width:100%}body.print-analysis .top-ten-table th,body.print-analysis .top-ten-table td{padding:1.5mm;font-size:11px}body.print-analysis [hidden]{display:none!important}}
+.official-distribution{margin:10px 0;width:100%;table-layout:fixed}.official-distribution th,.official-distribution td{font-size:12px;padding:5px 2px;text-align:center}.official-distribution th:first-child,.official-distribution td:first-child{width:30%;overflow-wrap:anywhere}.official-distribution th:not(:first-child),.official-distribution td:not(:first-child){width:7%;white-space:nowrap}.official-distribution .countpct{display:block}.official-grade-legend{font-size:11px;line-height:1.7;color:#315c4e;margin:5px 0}.official-grade-legend span{display:inline-block;white-space:nowrap}.top-ten-item{break-inside:avoid;line-height:1.7}
+@media print{body.print-analysis .official-distribution{width:100%;margin:2mm 0;break-inside:auto}body.print-analysis .official-distribution th,body.print-analysis .official-distribution td{font-size:9px;padding:.7mm .3mm;line-height:1.2}body.print-analysis .official-distribution th:first-child,body.print-analysis .official-distribution td:first-child{width:30%;font-size:10px;text-align:center!important}body.print-analysis .official-distribution .countpct b{font-size:9px}body.print-analysis .official-distribution .countpct small{font-size:8px}body.print-analysis .official-distribution thead{display:table-header-group}body.print-analysis .official-distribution tr{break-inside:avoid}body.print-analysis .official-grade-legend{font-size:9px;line-height:1.6;break-inside:avoid}body.print-analysis .top-ten-item{font-size:inherit;line-height:1.5}body.print-analysis [hidden]{display:none!important}}
 </style></body>
 </html>
