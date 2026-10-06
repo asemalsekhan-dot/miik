@@ -14,11 +14,11 @@
   return {education:'الإدارة العامة للتعليم بمنطقة '+(region&&region!=='المنطقة'?region:'القصيم'),school:school&&school!=='اسم المدرسة'&&school!=='المدرسة'?school:'مدرسة التوجيه الطلابي',name:String(p.name||p.fullName||p.counselorName||p.guideName||'').trim()};
  }
  window.v56PrintPeople=function(kind){
-  const health=kind==='health', records=read(health?'miikV56Health':'miikV56Special')||[];
+  const health=kind==='health', records=health&&window.miikHealthGrouped?window.miikHealthGrouped():read(health?'miikV56Health':'miikV56Special')||[];
   if(!Array.isArray(records)||!records.length){window.showMiikNotice?.('الطباعة','لا توجد سجلات للطباعة.');return}
   const roster=read('miikStudentsV39')||[], students=new Map();
   (Array.isArray(roster)?roster:[]).forEach(s=>{const key=norm(s.name);if(key&&!students.has(key))students.set(key,s)});
-  const rows=records.map(x=>{const s=students.get(norm(x.student))||{};return {name:x.student||'',grade:s.grade||x.grade||'',section:s.section||x.section||'',type:x.type||'',note:x.note||''}}).sort((a,b)=>rank(a.grade)-rank(b.grade)||fallback(a.section).localeCompare(fallback(b.section),'ar',{numeric:true})||a.name.localeCompare(b.name,'ar'));
+  const rows=records.map(x=>{const s=(x.studentId?roster.find(s=>s.miikId===x.studentId):null)||students.get(norm(x.student))||{};return {name:x.student||'',grade:s.grade||x.grade||'',section:s.section||x.section||'',type:x.type||'',note:x.note||''}}).sort((a,b)=>rank(a.grade)-rank(b.grade)||fallback(a.section).localeCompare(fallback(b.section),'ar',{numeric:true})||a.name.localeCompare(b.name,'ar'));
   const p=identity(),title=health?'سجل الحالات الصحية':'سجل الفئات الخاصة',label=health?'الحالة الصحية':'الفئة الخاصة';
   const logo=new URL('ministry-logo.png',location.href).href;
   const body=rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.name)}</td><td>${esc(fallback(r.grade))}</td><td>${esc(fallback(r.section))}</td><td>${esc(r.type)}</td><td>${esc(r.note)}</td></tr>`).join('');

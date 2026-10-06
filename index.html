@@ -1697,7 +1697,7 @@ document.addEventListener('DOMContentLoaded',()=>{try{wire()}catch(e){console.er
 <script id="v56-js">
 (()=>{
 const esc56=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const read56=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}, write56=(k,a)=>localStorage.setItem(k,JSON.stringify(a));
+const read56=k=>{try{const a=JSON.parse(localStorage.getItem(k)||'[]');return k==='miikV56Health'&&window.miikHealthGrouped?window.miikHealthGrouped(a):a}catch(e){return[]}}, write56=(k,a)=>localStorage.setItem(k,JSON.stringify(a));
 function module56(title,desc){hideAllPages();modulePage.classList.add('show');moduleTitle.textContent=title;moduleDesc.textContent=desc;moduleGrid.innerHTML='';drawer.classList.remove('show');window.scrollTo({top:0,behavior:'smooth'})}
 function hub56(title,desc,cards){module56(title,desc);moduleGrid.innerHTML='<div class="v56-hub">'+cards.join('')+'</div>'}
 
@@ -4845,8 +4845,7 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 </script>
 <script src="miik-print-ministry-logo.js"></script>
 <script src="miik-plan-print-live.js?v=20261006-values1"></script>
-<script src="miik-health-types.js"></script>
-<script src="miik-people-print.js"></script>
+<script src="miik-people-print.js?v=20261006-multi1"></script>
 <link rel="stylesheet" href="miik-followup-refinements.css">
 <script src="miik-followup-refinements.js"></script>
 <script src="miik-review-fixes.js"></script>
@@ -4864,5 +4863,6 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 <script src="miik-special-bulk.js"></script>
 <link rel="stylesheet" href="miik-academic-workflow.css?v=20261005-bulk1">
 <script src="miik-academic-workflow.js?v=20261005-bulk1"></script>
+<script src="miik-health-types.js?v=20261006-multi1"></script>
 </body>
 </html>
