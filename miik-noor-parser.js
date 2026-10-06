@@ -4,7 +4,7 @@
 (function (global) {
   "use strict";
 
-  // النشاط يظهر في جدول التدقيق، لكنه لا يدخل لاحقًا في مؤشرات التحصيل الأكاديمي.
+  // النشاط المستقل ذو الدرجة يدخل التحليل؛ السلوك والمواظبة منفصلان.
   // السلوك والمواظبة تُقرأ كحقول متابعة مستقلة وليست مواد دراسية.
   const EXCLUDED_SUBJECTS = new Set([
     "السلوك", "السلوك الإيجابي", "السلوك المتميز", "المواظبة", "الحضور", "الغياب"
@@ -332,11 +332,18 @@
     return null;
   }
 
+  function extractCertificatePercent(rows){
+    // قيمة المعدل فقط، في سطر التسمية نفسه؛ لا نحسب متوسطًا بديلًا.
+    const hit=findCell(rows,v=>/^(المعدل(?: العام| الفصلي| التراكمي)?|النسبة(?: العامة| المئوية)?)(?:\s*[:：]|\s*(?:CGP|GPA)|$)/i.test(v));
+    if(!hit)return null;
+    const inline=hit.v.match(/[:：]\s*([0-9٠-٩]+(?:[.,][0-9٠-٩]+)?)\s*%?$/);
+    if(inline){const n=num(inline[1]);return n!==null&&n>=0&&n<=100?n:null}
+    const row=rows[hit.r]||[];for(let d=1;d<row.length;d++){const values=[];for(const c of [hit.c-d,hit.c+d]){if(c<0||c>=row.length)continue;const n=num(clean(row[c]).replace(/%$/,''));if(n!==null&&n>=0&&n<=100)values.push(n)}if(values.length)return values.length===1?values[0]:null}return null;
+  }
   function extractRanking(rows){
-    // لا يحسب مِعِك ترتيبًا من الدرجات؛ ينقل ترتيب نور فقط متى كان الرقم ظاهرًا مع خانة الترتيب نفسها.
     const classRank=extractRankOnSameRow(rows,["الترتيب على الفصل","ترتيب الفصل"]);
     const gradeRank=extractRankOnSameRow(rows,["الترتيب على الصف","ترتيب الصف"]);
-    return {classRank,gradeRank};
+    return {classRank,gradeRank,certificatePercent:extractCertificatePercent(rows)};
   }
 
   function parseMiddleIndividual(workbook, det) {
@@ -482,7 +489,7 @@
         }
       }
       if(!subjects.length)throw Error('لم تُستخرج مواد من شهادة '+sn);
-      students.push({studentNameRaw:name,className:null,subjects,behavior,ranking:{classRank:null,gradeRank:null}});
+      students.push({studentNameRaw:name,className:null,subjects,behavior,ranking:extractRanking(rows)});
     }
     const first=matrix(workbook.Sheets[workbook.SheetNames[0]]),context=contextFromText(allText(first),det.id);
     context.resultType='شهادة نهاية العام الدراسي'+(context.academicYear?' '+context.academicYear:'');

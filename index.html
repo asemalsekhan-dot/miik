@@ -4512,7 +4512,7 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
     document.getElementById('moduleTitle').textContent='تحليل النتائج';
     document.getElementById('moduleDesc').textContent='حلّل نتيجة نور أو قارن بين فترتين. ملفات الدرجات تُقرأ داخل المتصفح ولا تُحفظ تلقائيًا.';
     const grid=document.getElementById('moduleGrid');grid.classList.add('miik-noor-host');
-    grid.innerHTML='<div class="miik-noor-choice"><button type="button" data-mode="individual">تحليل نتيجة واحدة</button><button type="button" data-mode="comparison">مقارنة نتيجتين</button></div><iframe class="miik-noor-frame" title="تحليل نتائج نور" src="noor-reports.html?v=20261006-merge1&mode='+ (mode==='comparison'?'comparison':'individual') +'" referrerpolicy="no-referrer"></iframe>';
+    grid.innerHTML='<div class="miik-noor-choice"><button type="button" data-mode="individual">تحليل نتيجة واحدة</button><button type="button" data-mode="comparison">مقارنة نتيجتين</button></div><iframe class="miik-noor-frame" title="تحليل نتائج نور" src="noor-reports.html?v=20261006-official1&mode='+ (mode==='comparison'?'comparison':'individual') +'" referrerpolicy="no-referrer"></iframe>';
     grid.querySelectorAll('[data-mode]').forEach(button=>{
       button.classList.toggle('active',button.dataset.mode===(mode==='comparison'?'comparison':'individual'));
       button.addEventListener('click',()=>{if(button.dataset.mode!==mode)miikNoorHub(button.dataset.mode)})
@@ -4578,7 +4578,7 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
   const rows=payload.rows.map(row=>({
    name:String(row.name||'').trim().slice(0,130),stage:String(row.stage||'').trim().slice(0,90),
    grade:String(row.grade||'').trim().slice(0,90),section:String(row.section||'').trim().slice(0,90),
-   subjects:[...new Set((Array.isArray(row.subjects)?row.subjects:[]).slice(0,25).map(x=>String(x||'').trim().slice(0,90)).filter(Boolean))],subjectLevels:Object.fromEntries(Object.entries(row.subjectLevels||{}).filter(([k,v])=>['مقبول','ضعيف','راسب'].includes(v)))
+   subjects:[...new Set((Array.isArray(row.subjects)?row.subjects:[]).slice(0,25).map(x=>String(x||'').trim().slice(0,90)).filter(Boolean))],subjectLevels:Object.fromEntries(Object.entries(row.subjectLevels||{}).filter(([k,v])=>['مقبول مرتفع','مقبول','ضعيف','راسب'].includes(v)))
   })).filter(x=>x.name&&x.subjects.length);
   if(!rows.length){showMiikNotice?.('متابعة من نتائج نور','لا توجد حالات تحصيلية مقترحة في هذا التحليل.');return}
   draft={rows,roster};
@@ -4862,7 +4862,7 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 <link rel="stylesheet" href="miik-special-bulk.css">
 <script src="miik-special-bulk.js"></script>
 <link rel="stylesheet" href="miik-academic-workflow.css?v=20261005-bulk1">
-<script src="miik-academic-workflow.js?v=20261005-bulk1"></script>
+<script src="miik-academic-workflow.js?v=20261006-official1"></script>
 <script src="miik-health-types.js?v=20261006-multi1"></script>
 </body>
 </html>
