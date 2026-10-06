@@ -8,8 +8,8 @@
  const read=k=>{try{const a=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(a)?a:[]}catch(_){return[]}};
  const write=(k,a)=>localStorage.setItem(k,JSON.stringify(a));
  const q=s=>String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
- const programs=[DISC,MOT,CARE,'خفض العنف بالمدارس (رِفق)','تعزيز السلوك الإيجابي','التوجيه المهني'];
- function inferred(topic){if(/غياب|تأخر صباح|انضباط|مواظبة/.test(topic))return DISC;if(/دافع|تحصيل|تأخر دراسي|تفوق/.test(topic))return MOT;if(/ظروف خاصة|يتيم|إعاقة|ضمان|مادية/.test(topic))return CARE;if(/تنمر|عنف/.test(topic))return 'خفض العنف بالمدارس (رِفق)';return ''}
+ const programs=[DISC,MOT,CARE,'برنامج تعزيز القيم والانتماء الوطني','خفض العنف بالمدارس (رِفق)','تعزيز السلوك الإيجابي','التوجيه المهني'];
+ function inferred(topic){if(/تعزيز القيم|الانتماء الوطني/.test(topic))return 'برنامج تعزيز القيم والانتماء الوطني';if(/غياب|تأخر صباح|انضباط|مواظبة/.test(topic))return DISC;if(/دافع|تحصيل|تأخر دراسي|تفوق/.test(topic))return MOT;if(/ظروف خاصة|يتيم|إعاقة|ضمان|مادية/.test(topic))return CARE;if(/تنمر|عنف/.test(topic))return 'خفض العنف بالمدارس (رِفق)';return ''}
  function select(value='',id='miikLinkedProgram'){return `<label class="miik-program-link">ربط هذا العمل ببرنامج (اختياري)<select id="${id}"><option value="">بدون ربط</option>${programs.map(p=>`<option value="${E(p)}" ${value===p?'selected':''}>${E(p)}</option>`).join('')}</select></label>`}
  function nav(){
   const drawer=document.getElementById('drawer');if(!drawer)return;
