@@ -951,7 +951,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
 
 
 <style id="miik-noor-result-actions-style">
-.report-print-controls .miik-noor-period-label{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:#315c4e;font-weight:700}.report-print-controls .miik-noor-result-period{max-width:100%;padding:10px;border:1px solid #8da493;border-radius:10px;background:#fff;color:#294b42;font-family:inherit;font-size:14px}.report-print-controls button[hidden]{display:none!important}@media(max-width:650px){.report-print-controls .miik-noor-period-label{width:100%;justify-content:center}.report-print-controls .miik-noor-result-period{width:100%}}
+.report-print-controls .miik-noor-period-label{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:#315c4e;font-weight:700}.report-print-controls .miik-noor-result-period{max-width:100%;padding:10px;border:1px solid #8da493;border-radius:10px;background:#fff;color:#294b42;font-family:inherit;font-size:14px}.miik-period-picker{position:relative;max-width:100%;min-width:250px}.report-print-controls .miik-period-toggle{width:100%;background:#f5f3ea;color:#294b42;border:1px solid #8da493;text-align:right}.miik-period-toggle:after{content:" ▾"}.miik-period-options{position:absolute;bottom:100%;right:0;min-width:100%;width:max-content;max-width:min(90vw,480px);max-height:300px;overflow:auto;z-index:30;padding:6px;background:#fffdf8;border:1px solid #8da493;border-radius:12px;box-shadow:0 8px 24px #173f3620}.report-print-controls .miik-period-options button{display:block;width:100%;margin:0;padding:10px;text-align:right;background:#fffdf8;color:#294b42;border:0;border-radius:6px;white-space:normal}.report-print-controls .miik-period-options button:hover,.report-print-controls .miik-period-options button:focus-visible,.report-print-controls .miik-period-options button[aria-pressed="true"]{background:#718d70;color:#fff}.miik-period-options[hidden],.report-print-controls select[hidden]{display:none!important}.report-print-controls button[hidden]{display:none!important}@media(max-width:650px){.report-print-controls .miik-noor-period-label{width:100%;justify-content:center}.report-print-controls .miik-noor-result-period{width:100%}}
 </style>
 <script id="miik-noor-followup-sender">
 (function(){'use strict';
@@ -961,9 +961,21 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
  const HISTORY='نتائج العام الدراسي السابق';
  const PERIODS=['اختبارات الفترة الأولى للفصل الدراسي الأول','اختبارات الفترة الثانية للفصل الدراسي الأول','اختبارات نهاية الفصل الدراسي الأول','اختبارات الفترة الأولى للفصل الدراسي الثاني','اختبارات الفترة الثانية للفصل الدراسي الثاني',HISTORY];
  const parentMessage=(type,payload)=>window.parent.postMessage({type,payload},location.protocol==='file:'?'*':location.origin);
+
+ function installPeriodPicker(select){
+  if(!select.parentElement||select.parentElement.querySelector('.miik-period-picker'))return;
+  const host=document.createElement('div');host.className='miik-period-picker';
+  const button=document.createElement('button');button.type='button';button.className='miik-period-toggle';button.setAttribute('aria-expanded','false');button.setAttribute('aria-label','فترة النتائج');
+  const list=document.createElement('div');list.className='miik-period-options';list.hidden=true;list.setAttribute('role','group');list.setAttribute('aria-label','اختر فترة النتائج');
+  const update=()=>{button.textContent=select.value||'اختر فترة النتائج';button.disabled=select.disabled;list.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.value===select.value)));if(select.disabled){list.hidden=true;button.setAttribute('aria-expanded','false')}};
+  for(const period of PERIODS){const item=document.createElement('button');item.type='button';item.dataset.value=period;item.textContent=period;item.onclick=()=>{if(select.disabled)return;select.value=period;select.dispatchEvent(new Event('change',{bubbles:true}));list.hidden=true;button.setAttribute('aria-expanded','false');update();button.focus()};list.appendChild(item)}
+  button.onclick=()=>{list.hidden=!list.hidden;button.setAttribute('aria-expanded',String(!list.hidden))};host.onkeydown=e=>{if(e.key==='Escape'){list.hidden=true;button.setAttribute('aria-expanded','false');button.focus()}};
+  host.appendChild(button);host.appendChild(list);select.parentElement.appendChild(host);select.hidden=true;
+  select._miikUpdate=update;select.addEventListener('change',update);new MutationObserver(update).observe(select,{attributes:true,attributeFilter:['disabled']});document.addEventListener('click',e=>{if(!host.contains(e.target)){list.hidden=true;button.setAttribute('aria-expanded','false')}});update();
+ }
  function sync(kind){
   const box=container(kind);if(!box)return;const select=box.querySelector('.miik-noor-result-period'),follow=box.querySelector('.miik-noor-followup-btn'),letter=box.querySelector('.miik-noor-history-letter-btn');
-  const chosen=select?.value||'',historical=chosen===HISTORY,ready=!!candidate&&candidate.kind===kind&&window.parent!==window;
+  select?._miikUpdate?.();const chosen=select?.value||'',historical=chosen===HISTORY,ready=!!candidate&&candidate.kind===kind&&window.parent!==window;
   if(follow){follow.hidden=historical;follow.textContent='إعداد المتابعة التحصيلية ('+(candidate?.rows?.length||0)+')';follow.disabled=!ready||!PERIODS.includes(chosen)||historical||!candidate?.rows?.length;follow.title=!chosen?'اختر فترة النتائج أولًا':!candidate?.rows?.length?'لا توجد حالات مقترحة للمتابعة في هذا التحليل':'مراجعة الطلاب ثم حفظ المتابعات لهذه الفترة'}
   if(letter){letter.hidden=!historical;letter.disabled=!ready||!historical;letter.title='فتح خطاب عام لمعلم المادة دون أسماء طلاب'}
  }
@@ -971,7 +983,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}th,td{b
   const box=container(kind);if(!box)return;
   let select=box.querySelector('.miik-noor-result-period');
   if(!select){const label=document.createElement('label');label.className='miik-noor-period-label';label.textContent='فترة النتائج';select=document.createElement('select');select.className='miik-noor-result-period';select.setAttribute('aria-label','فترة النتائج');select.innerHTML='<option value="">اختر فترة النتائج</option>'+PERIODS.map(p=>'<option>'+p+'</option>').join('');select.addEventListener('change',()=>sync(kind));label.appendChild(select);box.appendChild(label)}
-  select.disabled=false;select.value='';
+  select.disabled=false;select.value='';installPeriodPicker(select);
   let follow=box.querySelector('.miik-noor-followup-btn');
   if(!follow){follow=document.createElement('button');follow.type='button';follow.className='btn miik-noor-followup-btn';follow.addEventListener('click',()=>{const chosen=select.value;if(!candidate?.rows?.length||candidate.kind!==kind||!PERIODS.includes(chosen)||chosen===HISTORY||window.parent===window)return;parentMessage('miik-noor-followup-review',{...candidate,period:chosen,historical:false})});box.appendChild(follow)}
   let letter=box.querySelector('.miik-noor-history-letter-btn');

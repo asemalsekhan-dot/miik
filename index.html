@@ -4510,7 +4510,7 @@ const render024=window.renderAcademic;if(typeof render024==='function')window.re
     document.getElementById('moduleTitle').textContent='تحليل النتائج';
     document.getElementById('moduleDesc').textContent='حلّل نتيجة نور أو قارن بين فترتين. ملفات الدرجات تُقرأ داخل المتصفح ولا تُحفظ تلقائيًا.';
     const grid=document.getElementById('moduleGrid');grid.classList.add('miik-noor-host');
-    grid.innerHTML='<div class="miik-noor-choice"><button type="button" data-mode="individual">تحليل نتيجة واحدة</button><button type="button" data-mode="comparison">مقارنة نتيجتين</button></div><iframe class="miik-noor-frame" title="تحليل نتائج نور" src="noor-reports.html?v=20261005-actions2&mode='+ (mode==='comparison'?'comparison':'individual') +'" referrerpolicy="no-referrer"></iframe>';
+    grid.innerHTML='<div class="miik-noor-choice"><button type="button" data-mode="individual">تحليل نتيجة واحدة</button><button type="button" data-mode="comparison">مقارنة نتيجتين</button></div><iframe class="miik-noor-frame" title="تحليل نتائج نور" src="noor-reports.html?v=20261006-merge1&mode='+ (mode==='comparison'?'comparison':'individual') +'" referrerpolicy="no-referrer"></iframe>';
     grid.querySelectorAll('[data-mode]').forEach(button=>{
       button.classList.toggle('active',button.dataset.mode===(mode==='comparison'?'comparison':'individual'));
       button.addEventListener('click',()=>{if(button.dataset.mode!==mode)miikNoorHub(button.dataset.mode)})
@@ -4853,8 +4853,8 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 <link rel="stylesheet" href="miik-reminders-fix.css">
 <script src="miik-reminders-fix.js"></script>
 <script src="miik-navigation-history.js"></script>
-<link rel="stylesheet" href="miik-backup.css">
-<script src="miik-backup.js"></script>
+<link rel="stylesheet" href="miik-backup.css?v=20261006-merge1">
+<script src="miik-backup.js?v=20261006-merge1"></script>
 <script src="miik-student-identity.js?v=20261005-workflow1"></script>
 <link rel="stylesheet" href="miik-program-report-plan.css">
 <script src="miik-program-report-plan.js?v=20261005-workflow1"></script>
