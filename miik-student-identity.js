@@ -10,7 +10,7 @@
   if(!students.length)return students;
   for(const type of [A,H,P]){const rows=read(type);let dirty=false;for(const x of rows){if(x.studentId||x._miikIdentityReview)continue;const candidates=students.filter(s=>norm(s.name)===norm(x.student));let selected=null;if(x.miik009Class){const exact=candidates.filter(s=>['stage','grade','section'].every(k=>!x.miik009Class[k]||norm(s[k])===norm(x.miik009Class[k])));if(exact.length===1)selected=exact[0]}
     if(!selected&&!x.miik009Class&&candidates.length===1)selected=candidates[0];if(selected)x.studentId=selected.miikId;else x._miikIdentityReview=true;dirty=true}
-   if(dirty)save(type,rows)}return students}
+   if(dirty)save(type,rows)}window.MiikGroupRecords?.migrate(students);return students}
  window.miikStudentIdentityMigrate=migrate;
  window.miikCurrentStudentId='';
  const oldOpen=window.openStudent;
@@ -29,7 +29,23 @@
  if(typeof oldImport==='function')window.v39DoImport=async function(){migrate();const result=await oldImport.apply(this,arguments);migrate();return result};
  const oldEdit=window.v75SaveStudentEdit;
  if(typeof oldEdit==='function')window.v75SaveStudentEdit=function(){const id=window.miikCurrentStudentId;migrate();const result=oldEdit.apply(this,arguments);const students=read(S);if(id&&students.some(x=>x.miikId===id))window.miikCurrentStudentId=id;return result};
- const oldDelete=window.miikRC10ConfirmDelete;
- if(typeof oldDelete==='function')window.miikRC10ConfirmDelete=function(){const target=window.__miikRC10Delete;if(target){const students=migrate(),matched=students.find(x=>key(x)===key(target));if(matched){window.__miikRC10Delete={...target,miikId:matched.miikId};for(const k of [A,H,P]){const rows=read(k);const filtered=rows.filter(x=>x.studentId!==matched.miikId);if(filtered.length!==rows.length)save(k,filtered)}}}const result=oldDelete.apply(this,arguments);window.miikCurrentStudentId='';return result};
+ window.miikRC10ConfirmDelete=function(){
+ const rec=window.__miikRC10Delete;if(!rec)return;
+ const strictRead=k=>{const v=JSON.parse(localStorage.getItem(k)||'[]');if(!Array.isArray(v))throw Error('Invalid storage');return v};
+ let writes={},prev={};try{
+ const students=strictRead(S),matches=rec.miikId?students.filter(s=>s.miikId===rec.miikId):students.filter(s=>key(s)===key(rec));if(matches.length!==1)throw Error('Ambiguous student');const target=matches[0];if(!target.miikId)throw Error('Missing identity');
+ const remaining=students.filter(s=>s.miikId!==target.miikId),shared=remaining.some(s=>norm(s.name)===norm(target.name));writes[S]=remaining;
+ const belongs=x=>x.studentId?x.studentId===target.miikId:!shared&&norm(x.student||x.studentName)===norm(target.name);
+ for(const k of [A,H,P])writes[k]=strictRead(k).map(x=>k===A&&window.MiikGroupRecords?.isGroup(x)?window.MiikGroupRecords.remove(x,target,students):belongs(x)?null:x).filter(Boolean);
+ // Preserve unrelated programme evidence; remove only explicit participant references in other records.
+ for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!/^miik/i.test(k)||Object.hasOwn(writes,k))continue;let value;try{value=JSON.parse(localStorage.getItem(k))}catch(_){continue}let dirty=false;
+ const walk=v=>{if(Array.isArray(v))return v.map(walk).filter(x=>x!==null);if(!v||typeof v!=='object')return v;let y={...v};if(y.studentId===target.miikId&&!Array.isArray(y.groupStudentIds)){dirty=true;return null}if(Array.isArray(y.groupStudentIds)){const j=y.groupStudentIds.indexOf(target.miikId);if(j>=0){y.groupStudentIds=y.groupStudentIds.filter(id=>id!==target.miikId);if(Array.isArray(y.groupStudents))y.groupStudents=y.groupStudents.filter((_,i)=>i!==j);dirty=true;}}for(const field of ['studentIds','beneficiaryIds'])if(Array.isArray(y[field])){const a=y[field].filter(id=>id!==target.miikId);if(a.length!==y[field].length){y[field]=a;dirty=true}}return Object.fromEntries(Object.entries(y).map(([k,v])=>[k,walk(v)]))};const result=walk(value);if(dirty)writes[k]=result;
+ }
+ for(const k of Object.keys(writes))prev[k]=localStorage.getItem(k);
+ for(const [k,v] of Object.entries(writes))localStorage.setItem(k,JSON.stringify(v));
+ }catch(e){let restored=true;for(const [k,v] of Object.entries(prev)){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(_){restored=false}}window.showMiikNotice?.('تعذر الحذف',restored?'لم يكتمل الحذف؛ البيانات السابقة محفوظة. راجع السجل أو مساحة التخزين.':'تعذر استرجاع بعض البيانات؛ استعد النسخة الاحتياطية قبل متابعة العمل.');return}
+ window.miikCurrentStudentId='';window.currentStudent='';window.closeMiikDialog?.();try{window.openStudents?.()}catch(_){}delete window.__miikRC10Delete;window.showMiikNotice?.('تم حذف الطالب','حُذف سجل الطالب وحُفظت الجلسات الجماعية لبقية المشاركين.');
+ };
+
  migrate();
 })();
