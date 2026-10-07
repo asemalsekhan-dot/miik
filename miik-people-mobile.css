@@ -1,0 +1,28 @@
+/* Only health/special record screens on phones; desktop and print stay tables. */
+@media screen and (max-width:720px){
+ #moduleGrid:has(.miik-people-records){min-width:0;grid-template-columns:minmax(0,1fr)}
+ #moduleGrid .miik-people-records{width:100%;max-width:100%;min-width:0;box-sizing:border-box;padding:14px;border-radius:18px;font-size:14px}
+ .miik-people-records *{box-sizing:border-box}
+ .miik-people-records .v56-list-head{display:flex;flex-direction:column;align-items:stretch;gap:12px}
+ .miik-people-records .v56-list-head h3{margin:0;font-size:20px;line-height:1.5}
+ .miik-people-records .v56-list-head>div{display:flex;gap:8px}
+ .miik-people-records .v56-mini{flex:1;min-height:44px;font:inherit;font-weight:700}
+ .miik-people-records .miik009-filterbar{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px!important;width:100%;min-width:0}
+ .miik-people-records .miik009-filterbar label{min-width:0!important;max-width:100%;font-size:13px!important;gap:7px}
+ .miik-people-records .miik009-filterbar label:last-child{grid-column:1/-1}
+ .miik-people-records .miik009-filterbar select,.miik-people-records .miik-choice{width:100%;max-width:100%;min-width:0!important;font-size:14px!important}
+ .miik-people-records .miik-choice-btn{min-width:0;min-height:46px;font-size:14px;white-space:normal;overflow-wrap:anywhere}
+ .miik-people-records .miik-choice-option{font-size:14px;white-space:normal}
+ .miik-people-records>p{font-size:14px;line-height:1.7;margin:16px 0}
+ .miik-people-records .miik-people-table-wrap{overflow:visible!important;min-width:0}
+ .miik-people-records .v56-table,.miik-people-records .v56-table tbody{display:block;width:100%;min-width:0}
+ .miik-people-records .v56-table thead{display:none}
+ .miik-people-records .v56-table tr{display:grid;grid-template-columns:minmax(0,1fr);gap:0;margin:0 0 12px;border:1px solid #d8dfd5;border-radius:15px;background:#fffdf8;padding:10px 12px;box-shadow:0 3px 10px rgba(38,65,53,.04)}
+ .miik-people-records .v56-table td{display:grid;grid-template-columns:88px minmax(0,1fr);gap:8px;width:100%;min-width:0;border:0;padding:7px 0;text-align:right;line-height:1.7;white-space:normal;overflow-wrap:anywhere;font-size:14px}
+ .miik-people-records .v56-table td::before{content:attr(data-label);color:#718078;font-size:12px;font-weight:700}
+ .miik-people-records .v56-table td:nth-child(2){font-size:16px;font-weight:800;color:#294b42}
+ .miik-people-records .v56-table td.v56-actions{display:flex;flex-wrap:wrap;gap:8px;border-top:1px solid #e4e9e4;margin-top:8px;padding-top:12px}
+ .miik-people-records .v56-actions::before{display:none}
+ .miik-people-records .v56-actions button{flex:1;min-height:44px;font:inherit;font-weight:700}
+}
+@media screen and (max-width:350px){.miik-people-records .miik009-filterbar{grid-template-columns:minmax(0,1fr)}.miik-people-records .v56-table td{grid-template-columns:74px minmax(0,1fr)}}

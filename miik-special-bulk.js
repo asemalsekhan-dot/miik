@@ -1,7 +1,7 @@
 /* Fast entry for a shared special category, while preserving the existing records. */
 (()=>{'use strict';
  const STORE='miikV56Special',ROSTER='miikStudentsV39';
- const CATEGORIES=['يتيم الأب','يتيم الأم','يتيم الأبوين','انفصال الوالدين','أحد الوالدين موقوف/مسجون','أبناء شهداء الواجب','ذوو الإعاقة','طلاب دور الملاحظة','ذوو الحاجة المادية','الضمان الاجتماعي','أخرى'];
+ const CATEGORIES=['يتيم الأب','يتيم الأم','يتيم الأبوين','انفصال الوالدين','أحد الوالدين موقوف/مسجون','أبناء شهداء الواجب','ذوو الإعاقة','طلاب دور الملاحظة','ذوو الحاجة المادية','الضمان الاجتماعي','تكافل','أخرى'];
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
  const norm=s=>String(s??'').trim().replace(/\s+/g,' ').normalize('NFKC');
  function gradeRank(value){
