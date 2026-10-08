@@ -2764,7 +2764,7 @@ function printDoc84(html){
  const ready=Promise.all([...d.images].map(img=>img.complete?(img.naturalWidth>0?Promise.resolve():Promise.reject(new Error('image'))):new Promise((resolve,reject)=>{img.addEventListener('load',resolve,{once:true});img.addEventListener('error',()=>reject(new Error('image')),{once:true})})));
  const fonts=d.fonts?.ready||Promise.resolve();
  Promise.race([Promise.all([ready,fonts]),new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),10000))]).then(()=>{
-  if(!f.isConnected)return;printed=true;f.contentWindow.addEventListener('afterprint',cleanup,{once:true});
+  if(!f.isConnected)return;f.contentWindow.miikPreparePrint?.();printed=true;f.contentWindow.addEventListener('afterprint',cleanup,{once:true});
   try{f.contentWindow.focus();f.contentWindow.print()}catch(e){printed=false;showMiikNotice?.('الطباعة','تعذر فتح الطباعة. حاول مرة أخرى.');cleanup();return}
   cleanupTimer=setTimeout(cleanup,60000);
  }).catch(()=>{if(!printed){showMiikNotice?.('الطباعة','لم تكتمل صورة الترويسة. تحقق من الاتصال ثم حاول الطباعة مرة أخرى.');cleanup()}})
@@ -4870,7 +4870,7 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 <script src="miik-backup.js?v=20261006-merge1"></script>
 <script src="miik-student-identity.js?v=20261007-group1"></script>
 <link rel="stylesheet" href="miik-program-report-plan.css">
-<script src="miik-program-report-plan.js?v=20261008-final-layout"></script>
+<script src="miik-program-report-plan.js?v=20261008-expanded"></script>
 <link rel="stylesheet" href="miik-special-bulk.css">
 <script src="miik-special-bulk.js"></script>
 <link rel="stylesheet" href="miik-academic-workflow.css?v=20261005-bulk1">
@@ -4878,5 +4878,6 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 <script src="miik-health-types.js?v=20261006-multi1"></script>
 <script src="miik-people-filters.js?v=20261007-mobile2"></script>
 <script src="miik-followup-print.js?v=20261007-one2"></script>
+<script src="miik-final-expanded.js?v=20261008-expanded"></script>
 </body>
 </html>
