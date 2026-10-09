@@ -10,16 +10,18 @@ window.miikApplyApprovedSchedule=function(rows,term){
   const career=p=>/التوجيه المهني|مسارات المستقبل/.test(p.name||'');
   if(!second){items=items.filter(p=>p.custom||!career(p));if(/التوجيه المهني|مسارات المستقبل/.test(w.program||'')){w.program=title.skills;w.programTarget='core:'+title.skills;}}
   const add=name=>{if(!items.some(p=>p.name===name))items.push({name,custom:false,target:'core:'+name});};
+  if(n===8){items=items.filter(p=>p.custom||!/المهارات النفسية والاجتماعية/.test(p.name||''));if(/المهارات النفسية والاجتماعية/.test(w.program||'')){w.program='';w.programTarget='';}}
+  items=items.map(p=>!p.custom&&/المهارات النفسية والاجتماعية/.test(p.name||'')?{...p,name:title.skills,target:'core:'+title.skills}:p);
   if(n===9)add(title.skills);
   if(n===(second?2:9)){add(title.qudurat);add(title.tahsili);}
   if(second&&n===1)add(title.nafs);
-  if((w.days||[]).length||(w.extras||[]).some(x=>x.type==='global'))add(title.occasions);
+  items=items.filter(p=>p.custom||p.name!==title.occasions);if([...(w.days||[]),...(w.extras||[]).map(x=>x.text||'')].some(x=>/اليوم الوطني|يوم العلم/.test(x)))add(title.occasions);
   if(!items.length&&w.program)add(w.program);
   w.programs=items;return w;
  });
 };
 const career=S.plans.find(p=>p.id==='career');if(career){career.target='طلبة الصف الثالث الثانوي — وفق تخصيص خطة المدرسة.';career.source='خطة برامج وخدمات التوجيه الطلابي 1448: البرنامج للطلبة طوال العام؛ تخصص خطة المدرسة لقاءاته للثالث الثانوي في الفصل الثاني.';}
-const record=window.recordProgram;window.recordProgram=function(name){record(name);if(window.miikProgramPlan(name)?.id==='career'){window.miikDevAudienceType('cohort');const select=document.getElementById('miikDevCohort');if(select&&[...select.options].some(x=>x.value==='ثالث ثانوي')){select.value='ثالث ثانوي';window.miikDevAddCohort();}const form=document.getElementById('miikProgramExecution');if(form){const note=document.createElement('p');note.className='muted';note.textContent='الفئة المعتمدة في خطة المدرسة: الثالث الثانوي. موعد اللقاءات في الفصل الثاني؛ يمكن تسجيل أي تنفيذ فعلي بتاريخه الصحيح.';form.prepend(note);}}};
+const record=window.recordProgram;window.recordProgram=function(name){record(name);if(window.miikProgramPlan(name)?.id==='career'){window.miikDevAudienceType('cohort');const select=document.getElementById('miikDevCohort');if(select){const values=[...select.options].filter(x=>x.value.startsWith('ثالث ثانوي')).map(x=>x.value);for(const value of values){document.getElementById('miikDevCohort').value=value;window.miikDevAddCohort();}}const form=document.getElementById('miikProgramExecution');if(form){const note=document.createElement('p');note.className='muted';note.textContent='الفئة المعتمدة في خطة المدرسة: الثالث الثانوي. موعد اللقاءات في الفصل الثاني؛ يمكن تسجيل أي تنفيذ فعلي بتاريخه الصحيح.';form.prepend(note);}}};
 const openDay=window.miikOpenGlobalDay12;
 window.miikOpenGlobalDay12=function(day){openDay?.(day);window.recordProgram(title.occasions);const form=document.getElementById('miikProgramExecution');if(form){form.elements.namedItem('execTitle').value=day;const field=form.elements.namedItem('d_occasion');if(field)field.value=day;}};
 const months=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
