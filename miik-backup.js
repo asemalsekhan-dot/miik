@@ -18,26 +18,34 @@
  const recordId=x=>plain(x)?(['miikId','_v55id','id','uid'].find(k=>x[k]!=null&&x[k]!=='')||''):'';
  function fallbackRecord(row,key){if(!plain(row))return '';if(/^miikExec_/.test(key)&&row.date&&row.execTitle)return 'execution:'+row.date+'|'+row.execTitle;if(/^miikCouncil_/.test(key)&&row.date&&row.topic)return 'meeting:'+row.date+'|'+row.topic;return ''}
  function mergePlan(current,incoming,choices={}){
-  const conflicts=[],stats={added:0},ids=new Map(),src=JSON.parse(JSON.stringify(incoming));
+  const conflicts=[],stats={added:0,identical:0},identical=[],ids=new Map(),src=JSON.parse(JSON.stringify(incoming));
   const localStudents=parse(current.miikStudentsV39||'[]'),remoteStudents=parse(src.miikStudentsV39||'[]');
   if(Array.isArray(localStudents)&&Array.isArray(remoteStudents))for(const r of remoteStudents){const matches=localStudents.filter(l=>studentKey(l)===studentKey(r));if(r.miikId&&matches.length===1&&matches[0].miikId&&r.name&&r.grade){ids.set(r.miikId,matches[0].miikId);r.miikId=matches[0].miikId}}
   function remap(x,k=''){if(Array.isArray(x))return x.map(v=>remap(v,k));if(plain(x)){const out=Object.create(null);for(const [a,b]of Object.entries(x))out[a]=remap(b,a);return out}return typeof x==='string'&&/^(studentId|miikId|groupStudentIds|studentIds)$/.test(k)&&ids.has(x)?ids.get(x):x}
   for(const k of Object.keys(src)){const v=parse(src[k]);if(typeof v==='object'&&v!==null)src[k]=JSON.stringify(remap(v))}
-  function conflict(a,b,path,label){const id=JSON.stringify(path);conflicts.push({id,label,current:a,incoming:b});return choices[id]==='incoming'?b:a}
+  function conflict(a,b,path,label){const id=JSON.stringify(path);conflicts.push({id,label,path:path.slice(),current:a,incoming:b});return choices[id]==='incoming'?b:a}
   function merge(a,b,path,label){
-   if(canon(a)===canon(b))return a;
+   if(canon(a)===canon(b)){if(path.length===1&&Array.isArray(a)){stats.identical+=a.length;for(const row of a)identical.push({label:keyLabel(path[0]),record:recordLabel(row)})}return a;}
    if(Array.isArray(a)&&Array.isArray(b)){
     // Ordered field arrays (form values) must remain one coherent value.
     if(path[path.length-1]==='values')return conflict(a,b,path,label);
-    const out=a.slice();for(const row of b){if(out.some(x=>canon(x)===canon(row)))continue;const field=recordId(row);const fallback=fallbackRecord(row,path[0]);const matches=field?out.map((x,i)=>plain(x)&&x[field]===row[field]?i:-1).filter(i=>i>=0):fallback?out.map((x,i)=>fallbackRecord(x,path[0])===fallback?i:-1).filter(i=>i>=0):[];const i=matches.length===1?matches[0]:-1;if(i<0){out.push(row);stats.added++}else out[i]=merge(out[i],row,path.concat('record:'+(field?field+':'+row[field]:fallback)),row.name||row.student||row.title||label)}return out;
+    const out=a.slice();for(const row of b){if(out.some(x=>canon(x)===canon(row))){stats.identical++;identical.push({label:keyLabel(path[0]),record:recordLabel(row)});continue;}const field=recordId(row);const fallback=fallbackRecord(row,path[0]);const matches=field?out.map((x,i)=>plain(x)&&x[field]===row[field]?i:-1).filter(i=>i>=0):fallback?out.map((x,i)=>fallbackRecord(x,path[0])===fallback?i:-1).filter(i=>i>=0):[];const i=matches.length===1?matches[0]:-1;if(i<0){out.push(row);stats.added++}else out[i]=merge(out[i],row,path.concat('record:'+(field?field+':'+row[field]:fallback)),row.name||row.student||row.title||label)}return out;
    }
    if(plain(a)&&plain(b)){const out=Object.create(null);for(const [k,v]of Object.entries(a))out[k]=v;for(const [k,v]of Object.entries(b)){if(!Object.prototype.hasOwnProperty.call(out,k)){out[k]=v;stats.added++}else out[k]=merge(out[k],v,path.concat(k),label)}return out}
    return conflict(a,b,path,label);
   }
   const entries={...current};for(const [k,v]of Object.entries(src)){if(!(k in current)){entries[k]=v;stats.added++;continue}const a=parse(current[k]),b=parse(v);let json=true;try{JSON.parse(current[k]);JSON.parse(v)}catch(_){json=false}const merged=merge(a,b,[k],keyLabel(k));entries[k]=json?JSON.stringify(merged):typeof merged==='string'?merged:JSON.stringify(merged)}
-  return{entries,conflicts,stats};
+  return{entries,conflicts,stats,identical};
  }
- function keyLabel(k){return({'miikStudentsV39':'بيانات الطلاب','miik-demo-actions':'سجلات الإجراءات','miikV56Special':'الفئات الخاصة','miikProgramReportNotesV1':'تقييم البرامج','miik-group-guidance-v1':'التوجيه الجماعي'})[k]||(/council|مجلس/i.test(k)?'المجلس الطلابي':/program/i.test(k)?'البرامج':/plan/i.test(k)?'الخطة':'بيانات مِعِك')}
+ function keyLabel(k){return({'miikStudentsV39':'بيانات الطلاب','miik-demo-actions':'سجلات الإجراءات','miikV56Special':'الفئات الخاصة','miikV56Health':'الحالات الصحية','miikFinalPeriodNotesV1':'التقرير الختامي','miikProgramReportNotesV1':'تقييم البرامج','miik-group-guidance-v1':'التوجيه الجماعي'})[k]||(/^miikExec_/.test(k)?'تنفيذ برنامج: '+k.slice(9):/council|مجلس/i.test(k)?'المجلس الطلابي':/program/i.test(k)?'البرامج':/plan/i.test(k)?'الخطة':'بيانات مِعِك')}
+
+ const fieldLabels={result:'النتائج / الخلاصة العامة',obstacles:'المعوقات',recommendations:'التوصيات',note:'الوصف / الملاحظات',name:'الاسم',student:'الطالب',grade:'الصف',section:'الفصل',stage:'المرحلة',date:'التاريخ',count:'عدد المستفيدين',execTitle:'عنوان التنفيذ',method:'طريقة التنفيذ',executor:'المنفذ',values:'بيانات الإجراء',type:'نوع السجل',summary:'البيان',principal:'مدير المدرسة',school:'اسم المدرسة',conditions:'الحالات الصحية',beneficiaries:'المستفيدون'};
+ function recordLabel(row){if(!plain(row))return typeof row==='string'?row:'سجل مطابق';return [row.name||row.student||row.execTitle||row.title||row.topic||row.summary||row.type||'سجل مطابق',row.grade,row.section?'الفصل '+row.section:'',row.date].filter(Boolean).join(' · ')}
+ function conflictContext(c){const p=c.path||JSON.parse(c.id),parts=[];for(const key of p.slice(1)){if(/^record:/.test(key))continue;if(/^14\d{2}\|(?:1|2|all)$/.test(key)){const [year,term]=key.split('|');parts.push(year+'هـ · '+(term==='all'?'العام كاملًا':term==='2'?'الفصل الدراسي الثاني':'الفصل الدراسي الأول'))}else parts.push(fieldLabels[key]||key)}return parts.join(' / ')}
+ function displayValue(v){return typeof v==='string'?v:v===null?'فارغ':JSON.stringify(v,null,2)}
+ function highlightPair(a,b){const left=displayValue(a).split(/(\s+)/),right=displayValue(b).split(/(\s+)/);let start=0,end=0;while(start<left.length&&start<right.length&&left[start]===right[start])start++;while(end<left.length-start&&end<right.length-start&&left[left.length-1-end]===right[right.length-1-end])end++;const mark=(tokens,side)=>{const last=tokens.length-end,changed=tokens.slice(start,last).join('');return esc(tokens.slice(0,start).join(''))+(changed?'<mark class="miik-difference '+side+'">'+esc(changed)+'</mark>':'<span class="miik-empty-difference">لا يوجد نص في هذا الموضع</span>')+esc(end?tokens.slice(last).join(''):'')};return[mark(left,'current'),mark(right,'incoming')]}
+ function reviewHTML(plan){return `<h3>مراجعة الدمج</h3><p>السجلات المتطابقة تُحفظ مرة واحدة. راجع النص المحدد لكل اختلاف واختر النسخة التي تريد اعتمادها.</p><div class="miik-merge-summary"><span>سجلات متطابقة: <b>${plan.stats.identical}</b></span><span>اختلافات تحتاج اختيارك: <b>${plan.conflicts.length}</b></span></div>`+(plan.identical.length?`<details class="miik-identical-list"><summary>عرض السجلات المتطابقة (${plan.stats.identical})</summary><ul>${plan.identical.slice(0,50).map(x=>`<li><b>${esc(x.label)}</b> · ${esc(x.record)}</li>`).join('')}</ul>${plan.identical.length>50?'<p>تُعرض أول ٥٠ سجلًا مطابقًا.</p>':''}</details>`:'')+plan.conflicts.map((c,i)=>{const [current,incoming]=highlightPair(c.current,c.incoming);return `<section class="miik-backup-conflict"><h4>اختلاف ${i+1} من ${plan.conflicts.length} · ${esc(c.label)}</h4><p class="miik-conflict-context">${esc(conflictContext(c))}</p><p class="miik-diff-help">النص المحدد أدناه هو موضع الاختلاف.</p><div class="miik-diff-columns"><div><b>الموجود على هذا الجهاز</b><pre>${current}</pre></div><div><b>القادم من ملف النسخة</b><pre>${incoming}</pre></div></div><label for="miikMergeChoice${i}">اختر النسخة المعتمدة لهذا الحقل</label><select id="miikMergeChoice${i}"><option value="">اختر بعد المراجعة</option><option value="current">إبقاء الموجود على هذا الجهاز</option><option value="incoming">اعتماد القادم من الملف</option></select></section>`}).join('')}
+ window.miikBackupReviewHTML=reviewHTML;
  window.miikBackupMergePlan=mergePlan;
  let candidate=null,safetyReady=false,safetySnapshot=null,mergeBase=null,plan=null;
  function status(message,bad=false){const box=document.getElementById('miikBackupStatus');if(box){box.textContent=message;box.classList.toggle('bad',bad)}}
@@ -49,7 +57,7 @@
  window.miikBackupReviewMerge=function(){
   document.getElementById('miikBackupConflicts')?.remove();if(!candidate||document.getElementById('miikBackupMode').value!=='merge')return;
   plan=mergePlan(mergeBase,candidate.entries);const box=document.createElement('div');box.id='miikBackupConflicts';
-  box.innerHTML=`<h3>مراجعة الدمج</h3><p>تُضاف الأعمال الجديدة دون حذف الموجودة. السجلات المتطابقة لا تتكرر. اختلافات تحتاج اختيارك: ${plan.conflicts.length}.</p>`+plan.conflicts.map((c,i)=>`<div class="miik-backup-conflict"><b>${esc(c.label)}</b><p>الموجود بالجهاز:</p><pre>${esc(typeof c.current==='string'?c.current:JSON.stringify(c.current,null,2))}</pre><p>الموجود بالملف:</p><pre>${esc(typeof c.incoming==='string'?c.incoming:JSON.stringify(c.incoming,null,2))}</pre><label>النسخة المعتمدة <select id="miikMergeChoice${i}"><option value="">اختر بعد المراجعة</option><option value="current">إبقاء الموجود بالجهاز</option><option value="incoming">اعتماد الموجود بالملف</option></select></label></div>`).join('');
+  box.innerHTML=reviewHTML(plan);
   document.getElementById('miikBackupPreview').appendChild(box);
  };
  window.miikBackupRestore=function(){
