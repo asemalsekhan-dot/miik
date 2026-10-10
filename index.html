@@ -3767,8 +3767,10 @@ document.addEventListener('DOMContentLoaded',ensureNav,{once:true});setTimeout(e
  function parseCustom(s){const raw=norm(s),ns=(raw.match(/\d+/g)||[]).map(Number),mi=MONTHS.findIndex(m=>raw.includes(m));if(mi>=0){const y=ns.find(n=>n>=1400),d=ns.find(n=>n>0&&n<32);return y&&d?{y,m:mi+1,d}:null}return ns.length>=3?(ns[0]>=1400?{y:ns[0],m:ns[1],d:ns[2]}:{d:ns[0],m:ns[1],y:ns[2]}):null}
  // Calendar performance: build one day index per plan state instead of rebuilding the whole plan for every cell.
  let calCache={sig:'',rows:[],dayMap:new Map(),weekIndex:new Map()};
- function cacheSignature(){const c=ctx();return [c.year,c.term,localStorage.getItem(keyPlan())||'',localStorage.getItem('miikPlanCustomPrograms')||localStorage.getItem('miikCustomPrograms')||''].join('|')}
- function calendarData(){const sig=cacheSignature();if(calCache.sig===sig)return calCache;const ws=rows(),dayMap=new Map(),weekIndex=new Map();ws.forEach((w,i)=>{const ds=planDays(w);ds.forEach(h=>{const k=hkey(h);dayMap.set(k,w);weekIndex.set(k,i)})});calCache={sig,rows:ws,dayMap,weekIndex};return calCache}
+ // Resolved rows include approved scheduling loaded after this script. Raw
+ // storage can stay unchanged while the plan shown to the counselor changes.
+ function cacheSignature(ws){const c=ctx();return JSON.stringify([c.year,c.term,ws])}
+ function calendarData(){const ws=rows(),sig=cacheSignature(ws);if(calCache.sig===sig)return calCache;const dayMap=new Map(),weekIndex=new Map();ws.forEach((w,i)=>{const ds=planDays(w);ds.forEach(h=>{const k=hkey(h);dayMap.set(k,w);weekIndex.set(k,i)})});calCache={sig,rows:ws,dayMap,weekIndex};return calCache}
  function weekFor(h,data){return (data||calendarData()).dayMap.get(hkey(h))||null}
  function resolve(input,m,d,data){const gd=input instanceof Date?input:null,h=gd?hp(gd):{y:+input,m:+m,d:+d},source=data||calendarData(),w=weekFor(h,source),items=[];if(w){const ps=w.programs?.length?w.programs:[{name:w.program,custom:false,target:w.programTarget||""}];ps.forEach(p=>{const ph=p.custom&&p.date?parseCustom(p.date):null;if(!p.custom||!p.date||same(ph,h))items.push({kind:'program',label:p.name,sub:p.custom?'برنامج مضاف':'البرنامج',action:`miikOpenPlanProgram12('${Q(p.name)}','${Q(p.target||'')}')`})});if(w.value)items.push({kind:'value',label:w.value,sub:'القيمة',action:`miikOpenPlanValue12('${Q(w.value)}')`});(w.extras||[]).filter(x=>x?.type==='global'&&x.text&&same(x.date,h)).forEach(x=>items.push({kind:'global',label:x.text,sub:'يوم أو مناسبة عالمية',action:`miikOpenGlobalDay12('${Q(x.text)}')`}))}const holiday=(h.y===1448&&h.m===4&&(h.d===12||h.d===13));if(holiday)items.push({kind:'holiday',label:'إجازة اليوم الوطني',sub:'إجازة رسمية',action:''});return{hijri:h,week:w,items,holiday,weekend:gd?(gd.getDay()===5||gd.getDay()===6):false,hasAny:items.length>0}}
  window.miikCalendarDaySnapshot1713=(a,m,d)=>resolve(a,m,d);window.miikCalendarDayData003=window.miikCalendarDaySnapshot1713;
@@ -4861,7 +4863,7 @@ if(typeof window.print86==='function')window.print86(html);else{const w=window.o
 })();
 </script>
 <script src="miik-print-ministry-logo.js"></script>
-<script src="miik-plan-print-live.js?v=20261010-weeks2"></script>
+<script src="miik-plan-print-live.js?v=20261010-layout4"></script>
 <script src="miik-people-print.js?v=20261007-filter1"></script>
 <link rel="stylesheet" href="miik-followup-refinements.css">
 <script src="miik-followup-refinements.js"></script>

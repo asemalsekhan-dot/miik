@@ -85,13 +85,15 @@
    ['الحالات السابقة','الحالات المفتوحة والسابقة وما ظهر في سجلات متابعتها.']
   ].map(([a,b])=>`<tr><td>${E(a)}</td><td>${E(b)}</td></tr>`);
   const goalRows=goals.map((g,i)=>`<tr><td>${i+1}</td>${g.map(x=>`<td>${E(x)}</td>`).join('')}</tr>`);
-  const opChunks=[];for(let i=0;i<items.length;i+=5)opChunks.push(items.slice(i,i+5));
+  // Balance the rows across sheets instead of leaving a final one-row sheet.
+  const opRowsPerPage=Math.ceil(items.length/Math.max(1,Math.ceil(items.length/11)));
+  const opChunks=[];for(let i=0;i<items.length;i+=opRowsPerPage)opChunks.push(items.slice(i,i+opRowsPerPage));
   const opPages=opChunks.map((chunk,part)=>page(`<h2>رابعًا: الخطة التشغيلية للبرامج والخدمات</h2>${part?'<p class="continued">تابع الجدول</p>':''}`+table(['م','البرنامج أو الخدمة','الفئة المستهدفة','أسلوب التنفيذ','المسؤول والشركاء','أسابيع التنفيذ','المؤشر','الشاهد'],chunk.map((item,j)=>{let meta=detail(item);let schedule=item.weeks.join('، '),activity='';
     if(item.honoringWeeks?.length){meta=[meta[0]+'؛ الطلاب المتفوقون',meta[1]+'؛ تكريم الطلاب المتفوقين',meta[2],meta[3]+'؛ تنفيذ التكريم وتوثيق المستفيدين',meta[4]+'؛ كشف المكرّمين وشهادات التكريم وتقرير التنفيذ'];schedule+=(schedule?'؛ ':'')+'التكريم: '+item.honoringWeeks.join('، ');activity='<br><strong>نشاط: تكريم الطلاب المتفوقين</strong>'}
 
-    return `<tr><td>${part*5+j+1}</td><td>${E(item.name)}${activity}</td><td>${E(meta[0])}</td><td>${E(meta[1])}</td><td>${E(meta[2])}</td><td>${E(schedule)}</td><td>${E(meta[3])}</td><td>${E(meta[4])}</td></tr>`;}),'ops')+`<p class="note">هذه الخطة تحدد الأعمال والمستفيدين والمؤشرات والشواهد المتوقعة؛ تُعرض النتائج الفعلية في تقارير التنفيذ.</p>`,'الخطة التشغيلية'));
+    return `<tr><td>${part*opRowsPerPage+j+1}</td><td>${E(item.name)}${activity}</td><td>${E(meta[0])}</td><td>${E(meta[1])}</td><td>${E(meta[2])}</td><td>${E(schedule)}</td><td>${E(meta[3])}</td><td>${E(meta[4])}</td></tr>`;}),'ops')+`<p class="note">هذه الخطة تحدد الأعمال والمستفيدين والمؤشرات والشواهد المتوقعة؛ تُعرض النتائج الفعلية في تقارير التنفيذ.</p>`,'الخطة التشغيلية','operational-plan-page'));
   const programPages=typeof window.miikProgramPlansForAnnual==='function'?window.miikProgramPlansForAnnual(page,weeks):[];
-  const weeksPerPage=5;const weekPages=[];for(let offset=0;offset<weeks.length;offset+=weeksPerPage){const chunk=weeks.slice(offset,offset+weeksPerPage);weekPages.push(page(`<h2>سادسًا: الخطة الأسبوعية التفصيلية</h2>`+table(['م','الأسبوع','التاريخ','المحور / البرنامج','القيمة','أبرز المبادرات','المناسبات','الشاهد'],chunk.map((w,j)=>{const programs=(w.programs||[{name:w.program}]).filter(x=>x.name),titles=programs.map(x=>x.name).join('؛ '),witness=[...new Set(programs.map(x=>detail(x)[4]))].join('؛ ')||'ما يُوثق عند التنفيذ';return `<tr><td>${offset+j+1}</td><td>${E(w.w)}</td><td>${E(w.date)}</td><td>${E(titles||'—')}</td><td>${E(w.value||'—')}</td><td>${E(w.initiatives||'—')}</td><td>${E((w.days||[]).join('، ')||'—')}</td><td>${E(witness)}</td></tr>`;}),'weeks'),'الخطة الأسبوعية','weekly-plan-page'));}
+  const weeksPerPage=Math.ceil(weeks.length/Math.max(1,Math.ceil(weeks.length/10)));const weekPages=[];for(let offset=0;offset<weeks.length;offset+=weeksPerPage){const chunk=weeks.slice(offset,offset+weeksPerPage);weekPages.push(page(`<h2>سادسًا: الخطة الأسبوعية التفصيلية</h2>`+table(['م','الأسبوع','التاريخ','المحور / البرنامج','القيمة','أبرز المبادرات','المناسبات','الشاهد'],chunk.map((w,j)=>{const programs=(w.programs||[{name:w.program}]).filter(x=>x.name),titles=programs.map(x=>x.name).join('؛ '),witness=[...new Set(programs.map(x=>detail(x)[4]))].join('؛ ')||'ما يُوثق عند التنفيذ';return `<tr><td>${offset+j+1}</td><td>${E(w.w)}</td><td>${E(w.date)}</td><td>${E(titles||'—')}</td><td>${E(w.value||'—')}</td><td>${E(w.initiatives||'—')}</td><td>${E((w.days||[]).join('، ')||'—')}</td><td>${E(witness)}</td></tr>`;}),'weeks'),'الخطة الأسبوعية','weekly-plan-page'));}
   const cover=page(`<div class="cover"><h1>خطة برامج وخدمات التوجيه الطلابي</h1><h2>${E(term)} للعام الدراسي ${E(c.year)}هـ</h2><div class="names"><span>الموجّه الطلابي<br>${E(p.name||'')}</span><span>مدير المدرسة<br>${E(p.principal||'')}</span></div></div>`,term);
   const basmalaPage='<section class="page basmala-page"><div class="basmala-calligraphy">بِسْمِ اللّٰهِ الرَّحْمَٰنِ الرَّحِيمِ</div></section>';
   const intro=page(`<h2>أولًا: التمهيد ومصادر تحديد الاحتياج</h2><p class="intro">تمثّل هذه الخطة إطارًا تنظيميًا لعمل التوجيه الطلابي خلال ${E(term)}، وتجمع بين الرؤية العامة والبرامج والخدمات والمحاور الأسبوعية، مع مراعاة الجوانب الوقائية والإنمائية والعلاجية واحتياجات الطلبة وواقع المدرسة. وتُنفذ الخطة بمرونة وفق ما يستجد من تعاميم واحتياجات، مع توثيق الأعمال والشواهد ومتابعة أثرها.</p><h3>مصادر تحديد الاحتياج</h3>${table(['المصدر','ما يُستفاد منه'],sourceRows,'sources')}<p class="note">تُستخدم هذه المصادر لفهم واقع المدرسة؛ ويُضاف البرنامج الخاص باحتياج طلبتها إلى خطة الموجّه عند الحاجة.</p>`,'التمهيد ومصادر الاحتياج');
@@ -143,6 +145,36 @@
    .program-plan-page .ops td:first-child{font-weight:700}
    .weeks{font-size:9.2px}
    .weeks th,.weeks td{padding:5px 6px;line-height:1.6}
+   /* Eight-column tables: widths sum to 100%, with a real serial column.
+      Scope these rules to numbered tables; program profiles have text first cells. */
+   .operational-plan-page h2,.weekly-plan-page h2{margin:16px 0 12px;font-size:18px}
+   .operational-plan-page table,.weekly-plan-page table{margin-top:10px}
+   .operational-plan-page .ops,.weekly-plan-page .weeks{font-size:9.2px}
+   .operational-plan-page .ops th,.operational-plan-page .ops td,
+   .weekly-plan-page .weeks th,.weekly-plan-page .weeks td{padding:4px;line-height:1.5}
+   .operational-plan-page .ops th:nth-child(1){width:5%}
+   .operational-plan-page .ops th:nth-child(2){width:17%}
+   .operational-plan-page .ops th:nth-child(3){width:11%}
+   .operational-plan-page .ops th:nth-child(4){width:14%}
+   .operational-plan-page .ops th:nth-child(5){width:13%}
+   .operational-plan-page .ops th:nth-child(6){width:11%}
+   .operational-plan-page .ops th:nth-child(7){width:14%}
+   .operational-plan-page .ops th:nth-child(8){width:15%}
+   .weekly-plan-page .weeks th:nth-child(1){width:5%}
+   .weekly-plan-page .weeks th:nth-child(2){width:10%}
+   .weekly-plan-page .weeks th:nth-child(3){width:9%}
+   .weekly-plan-page .weeks th:nth-child(4){width:18%}
+   .weekly-plan-page .weeks th:nth-child(5){width:7%}
+   .weekly-plan-page .weeks th:nth-child(6){width:27%}
+   .weekly-plan-page .weeks th:nth-child(7){width:12%}
+   .weekly-plan-page .weeks th:nth-child(8){width:12%}
+   .operational-plan-page .ops th:first-child,.operational-plan-page .ops td:first-child,
+   .weekly-plan-page .weeks th:first-child,.weekly-plan-page .weeks td:first-child,
+   .objectives-page .goals th:first-child,.objectives-page .goals td:first-child{
+    white-space:nowrap;overflow-wrap:normal;word-break:normal;direction:ltr;padding-left:2px;padding-right:2px;text-align:center
+   }
+   .operational-plan-page,.weekly-plan-page{overflow:visible}
+   .operational-plan-page>footer,.weekly-plan-page>footer{position:static;margin-top:6mm}
    .follow{margin-top:18px;font-size:13.5px}
    .sign{display:grid;grid-template-columns:1fr 1fr;gap:20mm;margin-top:58px;line-height:1.9}
    .sign>div{min-width:0;padding-bottom:18px}
