@@ -5,23 +5,47 @@ const title={skills:'برنامج تعزيز المهارات النفسية و�
 window.miikApplyApprovedSchedule=function(rows,term){
  const second=String(term)==='2';
  return rows.map((row,i)=>{
-  const w={...row},n=Number(row.w)||i+1;
+  const w={...row},n=i+1;
   let items=(row.programs||[{name:row.program,custom:false,target:row.programTarget||''}]).map(p=>({...p}));
-  const career=p=>/التوجيه المهني|مسارات المستقبل/.test(p.name||'');
-  if(!second){items=items.filter(p=>p.custom||!career(p));if(/التوجيه المهني|مسارات المستقبل/.test(w.program||'')){w.program=title.skills;w.programTarget='core:'+title.skills;}}
-  const add=name=>{if(!items.some(p=>p.name===name))items.push({name,custom:false,target:'core:'+name});};
-  if(n===8){items=items.filter(p=>p.custom||!/المهارات النفسية والاجتماعية/.test(p.name||''));if(/المهارات النفسية والاجتماعية/.test(w.program||'')){w.program='';w.programTarget='';}}
+  const remove=pattern=>{items=items.filter(p=>p.custom||!pattern.test(p.name||''));};
+  const add=(name,target='core:'+name)=>{const existing=items.find(p=>!p.custom&&p.name===name);if(existing)existing.target=target;else items.push({name,custom:false,target});};
+  const primary=(name,target='core:'+name)=>{w.program=name;w.programTarget=target;add(name,target);};
+  if(!second){
+   const schedule={
+    2:['برنامج رعاية ودعم الطلاب ذوي الظروف الخاصة','core:برنامج رعاية ودعم الطلاب ذوي الظروف الخاصة','حصر الطلبة ذوي الظروف الخاصة وتحديد احتياجاتهم بسرية؛ تنسيق الدعم المناسب؛ تكريم الطلاب المتفوقين وفق النتائج المتاحة'],
+    3:['تنمية الدافعية لرفع مستوى التحصيل','core:تنمية الدافعية لرفع مستوى التحصيل','تحليل نتائج الطلبة المتاحة وتصنيف احتياجاتهم؛ التنسيق مع المعلمين لخطة الدعم؛ تعزيز الدافعية ومهارات الاستذكار'],
+    4:['خفض العنف بالمدارس (رِفق)','core:خفض العنف بالمدارس (رِفق)','التوعية بالرفق والوقاية من العنف والتنمر؛ تشكيل المجلس الطلابي وعقد اجتماعه'],
+    5:['برنامج تعزيز القيم والانتماء الوطني','core:برنامج تعزيز القيم والانتماء الوطني','تعزيز الانتماء الوطني وبناء شخصية الطالب بالتعاون مع النشاط الطلابي؛ تفعيل اليوم الوطني وفق أيام الدراسة المتاحة'],
+    6:['تعزيز السلوك الإيجابي','core:تعزيز السلوك الإيجابي','تعزيز الممارسات الإيجابية والقيمة الأسبوعية؛ تكريم المتميزين سلوكيًا؛ متابعة احتياجات الطلبة'],
+    7:[title.qudurat,'core:'+title.qudurat,'التنسيق مع معلمي القدرات والتحصيلي؛ تسليم خطة التدريب والاختبار التشخيصي؛ تحديد مواعيد التطبيق ومراجعة النتائج المتاحة'],
+    8:['التوجيه وقت الأزمات','core:التوجيه وقت الأزمات','التوعية بالتعامل مع الضغوط والمواقف الصعبة؛ تعريف الطلبة بقنوات طلب المساعدة؛ متابعة الحالات التي تحتاج مساندة'],
+    9:[title.skills,'core:'+title.skills,'تنمية المهارات النفسية والاجتماعية؛ تعزيز التواصل والتعاون وحل المشكلات بأنشطة مناسبة للطلبة'],
+    10:['متابعة رعاية الفئات الخاصة','core:برنامج رعاية ودعم الطلاب ذوي الظروف الخاصة','متابعة احتياجات الفئات الخاصة؛ مراجعة الدعم المقدم؛ التنسيق مع المعلمين عند الحاجة وتحديد الإجراءات الإضافية'],
+    11:['التوعية بأضرار التدخين والتدخين الإلكتروني','core:تعزيز السلوك الإيجابي','التوعية بأضرار التدخين والتدخين الإلكتروني؛ تعزيز السلوك الصحي واتخاذ القرار المناسب؛ تنفيذ إذاعة أو لقاء توجيهي'],
+    13:['متابعة الانضباط المدرسي والحد من الغياب والتأخر','core:برنامج الانضباط المدرسي والحد من الغياب والتأخر الصباحي','مراجعة سجلات الغياب والتأخر؛ متابعة الحالات والتواصل مع الأسر؛ تعزيز الانتظام في الحضور'],
+    14:[title.career,'core:'+title.career,'التعريف بالمسارات التعليمية والمهنية لطلبة المرحلة الثانوية؛ استكشاف الميول بأنشطة مناسبة لكل صف؛ الاستفادة من أدوات خارجية عند توفرها'],
+    15:['متابعة القدرات','core:'+title.qudurat,'مراجعة نتائج الاختبار التشخيصي المتاحة مع المعلمين؛ متابعة تقدم التدريب والصعوبات؛ جمع المرئيات وتعديل الخطة عند الحاجة؛ تسجيل الاختبار البعدي عند إجرائه'],
+    17:['متابعة دعم الطلبة المتأخرين دراسيًا','core:تنمية الدافعية لرفع مستوى التحصيل','مراجعة تقدم الطلبة المتأخرين دراسيًا وفق النتائج المتاحة؛ متابعة الدعم مع المعلمين والأسر؛ تحديد ما يحتاج استكمالًا']
+   };
+   if(schedule[n]){const [name,target,initiatives]=schedule[n];items=items.filter(p=>p.custom);primary(name,target);w.initiatives=initiatives;}
+   if(n===4)add('المجلس الطلابي','special:council');
+   if(n===7)add(title.tahsili);
+   if(n===15)add('متابعة التحصيلي','core:'+title.tahsili);
+   if(n===16){w.programTarget='special:family';items=items.map(p=>p.custom?p:{...p,target:'special:family'});}
+  }else{
+   if(n===8){remove(/المهارات النفسية والاجتماعية/);if(/المهارات النفسية والاجتماعية/.test(w.program||'')){w.program='';w.programTarget='';}}
+   if(n===9)add(title.skills);
+   if(n===2){add(title.qudurat);add(title.tahsili);}
+   if(n===1)add(title.nafs);
+   if(n===11){remove(/التوجيه المهني|مسارات المستقبل/);primary(title.career);w.initiatives='لقاءات عن المسارات التعليمية والمهنية والتخصصات لطلبة المرحلة الثانوية؛ أنشطة لاستكشاف الميول بحسب الصف؛ الاستفادة من أدوات خارجية عند توفرها';}
+  }
   items=items.map(p=>!p.custom&&/المهارات النفسية والاجتماعية/.test(p.name||'')?{...p,name:title.skills,target:'core:'+title.skills}:p);
-  if(n===9)add(title.skills);
-  if(n===(second?2:9)){add(title.qudurat);add(title.tahsili);}
-  if(second&&n===1)add(title.nafs);
-  items=items.filter(p=>p.custom||p.name!==title.occasions);if([...(w.days||[]),...(w.extras||[]).map(x=>x.text||'')].some(x=>/اليوم الوطني|يوم العلم/.test(x)))add(title.occasions);
-  if(!items.length&&w.program)add(w.program);
+  remove(new RegExp('^'+title.occasions+'$'));
+  if(!items.length&&w.program)add(w.program,w.programTarget||'core:'+w.program);
   w.programs=items;return w;
  });
 };
-const career=S.plans.find(p=>p.id==='career');if(career){career.target='طلبة الصف الثالث الثانوي — وفق تخصيص خطة المدرسة.';career.source='خطة برامج وخدمات التوجيه الطلابي 1448: البرنامج للطلبة طوال العام؛ تخصص خطة المدرسة لقاءاته للثالث الثانوي في الفصل الثاني.';}
-const record=window.recordProgram;window.recordProgram=function(name){record(name);if(window.miikProgramPlan(name)?.id==='career'){window.miikDevAudienceType('cohort');const select=document.getElementById('miikDevCohort');if(select){const values=[...select.options].filter(x=>x.value.startsWith('ثالث ثانوي')).map(x=>x.value);for(const value of values){document.getElementById('miikDevCohort').value=value;window.miikDevAddCohort();}}const form=document.getElementById('miikProgramExecution');if(form){const note=document.createElement('p');note.className='muted';note.textContent='الفئة المعتمدة في خطة المدرسة: الثالث الثانوي. موعد اللقاءات في الفصل الثاني؛ يمكن تسجيل أي تنفيذ فعلي بتاريخه الصحيح.';form.prepend(note);}}};
+const career=S.plans.find(p=>p.id==='career');if(career){career.target='طلبة المرحلة الثانوية: الأول والثاني والثالث، بحسب موضوع التنفيذ.';career.source='دليل التوجيه المهني لوزارة التعليم؛ الجدولة في الفصلين وفق خطة المدرسة.';}
 const openDay=window.miikOpenGlobalDay12;
 window.miikOpenGlobalDay12=function(day){openDay?.(day);window.recordProgram(title.occasions);const form=document.getElementById('miikProgramExecution');if(form){form.elements.namedItem('execTitle').value=day;const field=form.elements.namedItem('d_occasion');if(field)field.value=day;}};
 const months=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
